@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TEIA — Custom Storefront
+
+B2B industrial components storefront built on **Next.js 16 App Router**, talking to a **Magento 2.4.8** backend exclusively via REST API.
+
+## Tech Stack
+
+| | |
+|---|---|
+| Framework | Next.js 16.2.2 (App Router, Turbopack in dev) |
+| React | 19.2.4 |
+| Language | TypeScript (strict) |
+| Styling | Tailwind CSS v4 |
+| i18n | next-intl v4.9+ — locales: **de** (default), **en**, **fr** |
+| Backend | Magento 2.4.8-p4 REST API |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Prerequisites
+
+A running Magento instance. For local development, start the PHP built-in server from the Magento project root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+php -S localhost:8000 -t pub/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create `.env.local` in the project root (never commit this file):
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+MAGENTO_URL=http://localhost:8000
+MAGENTO_MEDIA_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_MAGENTO_MEDIA_BASE_URL=http://localhost:8000
+MAGENTO_ADMIN_USER=nextjs_api
+MAGENTO_ADMIN_PASSWORD=<password>
+```
 
-## Learn More
+> **Note:** `MAGENTO_MEDIA_BASE_URL` and `NEXT_PUBLIC_MAGENTO_MEDIA_BASE_URL` must always be identical. A mismatch causes React hydration errors on every product image.
+>
+> On production (Apache from project root) both values should be `http://46.224.237.247/pub`.
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Install and run
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev       # http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If you see Turbopack FATAL panics after an interrupted install, run a clean reinstall:
 
-## Deploy on Vercel
+```bash
+rm -rf node_modules .next
+npm install
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environments
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Environment | URL |
+|---|---|
+| Local frontend | http://localhost:3000 |
+| Local Magento | http://localhost:8000 |
+| Dev server | http://46.224.237.247/ |
+| Magento admin | http://46.224.237.247/admin |
+
+## Project Documentation
+
+| File | Contents |
+|---|---|
+| [`AGENTS.md`](./AGENTS.md) | Full architecture, data flow, API reference, i18n rules, page status, remaining work, common pitfalls — read this before writing any code |
+| [`DESIGN.md`](./DESIGN.md) | Design system: color tokens, typography, component rules, do's and don'ts |
+
+## Key Conventions
+
+- **i18n is mandatory.** Every user-visible string must be a translation key in all three message files (`src/messages/de.json`, `en.json`, `fr.json`). Never hardcode text.
+- **Links** must use `Link` from `@/i18n/navigation`, never `next/link`.
+- **Prices** must use `formatAmount(eurPrice)` from `useCurrency()`. Never hardcode a currency symbol.
+- **No 1px solid borders** for layout sectioning — use tonal background color shifts instead (see `DESIGN.md`).
+- **Cart page is intentionally SSR-disabled.** The cart lives in `localStorage`; skipping SSR prevents hydration mismatches.
