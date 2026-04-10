@@ -1,4 +1,4 @@
-# TEIA — Custom Storefront
+# TEIA — SWR Storefront
 
 B2B industrial components storefront built on **Next.js 16 App Router**, talking to a **Magento 2.4.8** backend exclusively via REST API.
 
