@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 import LocaleSwitcher from "./LocaleSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
 import SearchBar from "./ui/SearchBar";
@@ -13,12 +14,21 @@ interface HeaderProps {
 
 export default async function Header({ locale }: HeaderProps) {
   const t = await getTranslations({ locale, namespace: "nav" });
+  const tAuth = await getTranslations({ locale, namespace: "auth" });
 
-  const mobileLinks = [
-    { href: "/products", label: t("products") },
-    { href: "/orders", label: t("orderHistory") },
-    { href: "/account", label: t("account") },
-  ];
+  const cookieStore = await cookies();
+  const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
+
+  const mobileLinks = isAuthenticated
+    ? [
+        { href: "/products", label: t("products") },
+        { href: "/orders", label: t("orderHistory") },
+        { href: "/account", label: t("account") },
+      ]
+    : [
+        { href: "/products", label: t("products") },
+        { href: "/account/login", label: tAuth("login") },
+      ];
 
   return (
     <header className="sticky top-0 z-50" style={{ boxShadow: "0 10px 30px rgba(26,28,28,0.06)" }}>
@@ -67,20 +77,32 @@ export default async function Header({ locale }: HeaderProps) {
             >
               {t("products")}
             </Link>
-            <Link
-              href="/orders"
-              className="text-sm font-medium transition-colors whitespace-nowrap"
-              style={{ color: "#3d4448" }}
-            >
-              {t("orderHistory")}
-            </Link>
-            <Link
-              href="/account"
-              className="text-sm font-medium transition-colors whitespace-nowrap"
-              style={{ color: "#3d4448" }}
-            >
-              {t("account")}
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/orders"
+                  className="text-sm font-medium transition-colors whitespace-nowrap"
+                  style={{ color: "#3d4448" }}
+                >
+                  {t("orderHistory")}
+                </Link>
+                <Link
+                  href="/account"
+                  className="text-sm font-medium transition-colors whitespace-nowrap"
+                  style={{ color: "#3d4448" }}
+                >
+                  {t("account")}
+                </Link>
+              </>
+            ) : (
+              <Link
+                href="/account/login"
+                className="text-sm font-medium transition-colors whitespace-nowrap"
+                style={{ color: "#3d4448" }}
+              >
+                {tAuth("login")}
+              </Link>
+            )}
 
             {/* Icon buttons */}
             <button

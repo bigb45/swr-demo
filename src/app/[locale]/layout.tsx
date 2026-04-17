@@ -23,19 +23,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "TEIA — Industrial Components",
-    template: "%s | TEIA",
-  },
-  description:
-    "Precision-engineered industrial components. 500,000+ parts ready for same-day shipment. Certified ISO 9001:2015 supplier.",
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "footer" });
+  return {
+    title: {
+      default: t("metaTitle"),
+      template: t("metaTitleTemplate"),
+    },
+    description: t("metaDescription"),
+    icons: {
+      icon: "/favicon.png",
+      shortcut: "/favicon.png",
+      apple: "/favicon.png",
+    },
+  };
+}
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -118,10 +125,10 @@ export default async function LocaleLayout({
                   {/* Right: company name + tagline */}
                   <div className="flex flex-col items-start md:items-end gap-1">
                     <span className="text-sm font-bold tracking-wider uppercase text-white">
-                      TEIA
+                      SWR Handelsgesellschaft mbH
                     </span>
                     <span className="text-xs text-white/60">
-                      {t("tagline")}
+                      Qualität verbindet.
                     </span>
                   </div>
                 </div>

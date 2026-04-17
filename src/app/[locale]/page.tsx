@@ -170,14 +170,22 @@ export default async function HomePage({ params }: HomePageProps) {
           <section
             className="relative overflow-hidden"
             style={{
-              background: "linear-gradient(135deg, #003a63 0%, #005288 100%)",
+              background: "linear-gradient(160deg, #003a63 0%, #005288 100%)",
               borderRadius: "var(--radius-card)",
               minHeight: "367px",
             }}
           >
-            {/* Background decorative element */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute right-0 top-0 w-1/2 h-full bg-primary-container" />
+            {/* Valve product image — decorative overlay, right half */}
+            <div className="absolute bottom-0 left-1/2 right-0 top-0 mix-blend-overlay opacity-30 pointer-events-none select-none">
+              {/* desaturate the image so it reads as a tonal texture */}
+              <div aria-hidden="true" className="absolute inset-0 bg-white mix-blend-saturation" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt=""
+                src="/hero-valve.png"
+                className="absolute w-full object-cover object-center"
+                style={{ top: "-20%", height: "141%" }}
+              />
             </div>
 
             <div className="relative z-10 px-6 py-8 sm:px-12 sm:py-12 max-w-[672px]">
