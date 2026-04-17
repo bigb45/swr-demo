@@ -1,23 +1,25 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { useState } from "react";
 import { useCart } from "@/components/CartProvider";
+import { useCurrency } from "@/components/CurrencyProvider";
 import type { MagentoProduct } from "@/types/magento";
 
 interface AddToCartClusterProps {
   product: MagentoProduct;
-  addToCartLabel: string;
-  qtyLabel: string;
 }
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export default function AddToCartCluster({
   product,
-  addToCartLabel,
-  qtyLabel,
 }: AddToCartClusterProps) {
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
+  const locale = useLocale();
+  const t = useTranslations("products");
   const [qty, setQty] = useState(1);
   const [inputVal, setInputVal] = useState("1");
   const [status, setStatus] = useState<Status>("idle");
@@ -33,6 +35,12 @@ export default function AddToCartCluster({
     const clamped = Math.max(1, parseInt(inputVal, 10) || 1);
     setQty(clamped);
     setInputVal(String(clamped));
+  }
+
+  function stepQty(delta: number) {
+    const next = Math.max(1, qty + delta);
+    setQty(next);
+    setInputVal(String(next));
   }
 
   async function handleAddToCart() {
@@ -51,18 +59,97 @@ export default function AddToCartCluster({
 
   const isLoading = status === "loading";
   const isSuccess = status === "success";
+  const sortedTiers = [...(product.tier_prices ?? [])].sort((a, b) => a.qty - b.qty);
+  const activeTier = sortedTiers.reduce<typeof sortedTiers[number] | undefined>(
+    (best, tier) => (qty >= tier.qty ? tier : best),
+    undefined
+  );
+  const nextTier = sortedTiers.find((tier) => qty < tier.qty);
+  const currentUnitPrice = activeTier?.value ?? product.price;
+  const hasActiveDiscount =
+    product.price > 0 && currentUnitPrice > 0 && currentUnitPrice < product.price;
+  const currentSavings =
+    activeTier?.extension_attributes?.percentage_value ??
+    (hasActiveDiscount
+      ? Math.round(((product.price - currentUnitPrice) / product.price) * 100)
+      : undefined);
+
+  const formattedBasePrice =
+    product.price > 0 ? formatPrice(product.price, locale) : t("priceOnRequest");
+  const formattedCurrentPrice =
+    currentUnitPrice > 0
+      ? formatPrice(currentUnitPrice, locale)
+      : t("priceOnRequest");
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-stretch gap-0 h-[60px]">
-        {/* QTY cluster */}
+      {sortedTiers.length > 0 && (
+        <div className="rounded-(--radius-input) border border-outline-variant/40 bg-surface-container-low p-3">
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
+            {t("bulkPricing")}
+          </p>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            {hasActiveDiscount && (
+              <span className="text-sm text-on-surface-variant line-through decoration-on-surface-variant/70">
+                {formattedBasePrice}
+              </span>
+            )}
+            <span className="text-lg font-bold text-on-surface">
+              {formattedCurrentPrice}
+            </span>
+            {currentUnitPrice > 0 && (
+              <span className="text-xs text-on-surface-variant">{t("exclVat")}</span>
+            )}
+            {hasActiveDiscount && currentSavings ? (
+              <span className="text-xs font-semibold text-secondary">
+                {Math.round(currentSavings)}% {t("savings")}
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-1 text-xs text-on-surface-variant">
+            {activeTier
+              ? nextTier
+                ? `${t("bulkPricingUnlocked", { qty: activeTier.qty })} ${t(
+                    "bulkPricingHint",
+                    {
+                      qty: nextTier.qty,
+                      price:
+                        nextTier.value > 0
+                          ? formatPrice(nextTier.value, locale)
+                          : t("priceOnRequest"),
+                    }
+                  )}`
+                : t("bulkPricingBestTier")
+              : nextTier
+                ? t("bulkPricingHint", {
+                    qty: nextTier.qty,
+                    price:
+                      nextTier.value > 0
+                        ? formatPrice(nextTier.value, locale)
+                        : t("priceOnRequest"),
+                  })
+                : null}
+          </p>
+        </div>
+      )}
+
+      <div className="flex items-stretch gap-2 h-[60px]">
+        {/* QTY stepper */}
         <div
-          className="flex items-center bg-surface-container-lowest border border-[rgba(193,199,209,0.3)] px-3 gap-2 shrink-0"
-          style={{ borderRadius: "var(--radius-btn) 0 0 var(--radius-btn)" }}
+          className="flex items-center bg-surface-container-lowest border border-[rgba(193,199,209,0.3)] shrink-0"
+          style={{ borderRadius: "var(--radius-btn)" }}
         >
-          <span className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
-            {qtyLabel}
-          </span>
+          <button
+            type="button"
+            onClick={() => stepQty(-1)}
+            disabled={isLoading || qty <= 1}
+            aria-label={t("decreaseQuantity")}
+            className="flex items-center justify-center w-10 h-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
           <input
             type="number"
             min={1}
@@ -70,9 +157,21 @@ export default function AddToCartCluster({
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={isLoading}
-            className="w-12 text-center text-sm font-medium bg-transparent border-0 border-b-2 border-b-outline-variant focus:border-b-primary focus:outline-none py-1 text-on-surface disabled:opacity-50"
-            aria-label={qtyLabel}
+            className="w-10 text-center text-sm font-medium bg-transparent border-0 border-x border-x-[rgba(193,199,209,0.3)] focus:outline-none py-1 text-on-surface disabled:opacity-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            aria-label={t("qty")}
           />
+          <button
+            type="button"
+            onClick={() => stepQty(1)}
+            disabled={isLoading}
+            aria-label={t("increaseQuantity")}
+            className="flex items-center justify-center w-10 h-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
         </div>
 
         {/* Add to Cart button */}
@@ -84,7 +183,7 @@ export default function AddToCartCluster({
               ? "bg-green-600"
               : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
           }`}
-          style={{ borderRadius: "0 var(--radius-btn) var(--radius-btn) 0" }}
+          style={{ borderRadius: "var(--radius-btn)" }}
         >
           {isLoading ? (
             <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -101,7 +200,7 @@ export default function AddToCartCluster({
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
           )}
-          {isLoading ? "" : isSuccess ? "Added!" : addToCartLabel}
+          {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
         </button>
       </div>
 

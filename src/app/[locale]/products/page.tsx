@@ -77,9 +77,29 @@ export default async function ProductsPage({
           <p className="text-xs text-red-500 mt-1 font-mono">{error}</p>
         </div>
       ) : productList?.total_count === 0 && query ? (
-        <p className="text-sm text-on-surface-variant py-16 text-center">
-          {t("searchEmpty", { query })}
-        </p>
+        <div className="py-20 flex flex-col items-center gap-5 text-center">
+          <div className="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="text-on-surface-variant/40">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              <line x1="8" y1="11" x2="14" y2="11" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-base font-bold text-primary mb-1">
+              {t("searchEmpty", { query })}
+            </p>
+            <p className="text-sm text-on-surface-variant max-w-[320px]">
+              {t("searchEmptyHint")}
+            </p>
+          </div>
+          <a
+            href={`/${locale}/products`}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary border border-primary/30 px-5 py-2.5 rounded-(--radius-btn) hover:bg-primary/5 transition-colors"
+          >
+            ← {t("searchEmptyClear")}
+          </a>
+        </div>
       ) : (
         <>
           <ProductGrid products={productList?.items ?? []} />

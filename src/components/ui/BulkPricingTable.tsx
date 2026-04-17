@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
+
 interface BulkPricingRow {
   quantityLabel: string;
-  priceLabel: string;
+  priceNode: ReactNode;
   savingsLabel?: string;
 }
 
@@ -51,7 +53,7 @@ export default function BulkPricingTable({
                 {row.quantityLabel}
               </td>
               <td className="px-4 py-2 text-sm font-medium text-on-surface">
-                {row.priceLabel}
+                {row.priceNode}
               </td>
               <td className="px-4 py-2 text-sm">
                 {row.savingsLabel ? (

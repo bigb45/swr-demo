@@ -144,12 +144,40 @@ export default async function ProductDetailPage({
     }
   }
 
-  /* Bulk pricing tiers — static demo tiers, real pricing would come from Magento tier_prices */
-  const bulkRows = [
-    { quantityLabel: t("qty1to9"), priceLabel: "", savingsLabel: undefined },
-    { quantityLabel: t("qty10to49"), priceLabel: "", savingsLabel: t("save17") },
-    { quantityLabel: t("qty50plus"), priceLabel: "", savingsLabel: t("save32") },
-  ];
+  /* Bulk pricing tiers — sourced from Magento tier_prices */
+  const tiers = product.tier_prices ?? [];
+  // Sort ascending by qty so the table reads naturally
+  const sortedTiers = [...tiers].sort((a, b) => a.qty - b.qty);
+  const bulkRows = sortedTiers.map((tier, idx) => {
+    const nextTier = sortedTiers[idx + 1];
+    const qtyLabel = nextTier
+      ? `${tier.qty} – ${nextTier.qty - 1}`
+      : `${tier.qty}+`;
+    const pct = tier.extension_attributes?.percentage_value;
+    const savingsLabel = pct ? `${Math.round(pct)}% ${t("savings")}` : undefined;
+    return {
+      quantityLabel: qtyLabel,
+      priceNode: (
+        <div className="flex flex-col gap-0.5">
+          {product.price > 0 && tier.value < product.price && (
+            <ProductPrice
+              eurPrice={product.price}
+              exclVatLabel=""
+              priceOnRequestLabel={t("priceOnRequest")}
+              className="text-xs font-medium text-on-surface-variant line-through decoration-on-surface-variant/70"
+            />
+          )}
+          <ProductPrice
+            eurPrice={tier.value}
+            exclVatLabel=""
+            priceOnRequestLabel={t("priceOnRequest")}
+            className="text-sm font-medium text-on-surface"
+          />
+        </div>
+      ),
+      savingsLabel,
+    };
+  });
 
   return (
     <div className="flex min-h-full">
@@ -239,25 +267,30 @@ export default async function ProductDetailPage({
                   )}
                 </div>
 
-                {/* Bulk pricing */}
-                <BulkPricingTable
-                  headers={{
-                    quantity: t("quantity"),
-                    pricePerUnit: t("pricePerUnit"),
-                    savings: t("savings"),
-                  }}
-                  rows={bulkRows.map((row) => ({
-                    ...row,
-                    priceLabel: product.price > 0 ? `—` : t("priceOnRequest"),
-                  }))}
-                />
+                {/* Bulk pricing — only rendered when Magento has tier prices configured */}
+                {bulkRows.length > 0 && (
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant mb-1">
+                        {t("bulkPricing")}
+                      </p>
+                      <p className="text-sm text-on-surface-variant">
+                        {t("bulkPricingTableHint")}
+                      </p>
+                    </div>
+                    <BulkPricingTable
+                      headers={{
+                        quantity: t("quantity"),
+                        pricePerUnit: t("pricePerUnit"),
+                        savings: t("savings"),
+                      }}
+                      rows={bulkRows}
+                    />
+                  </div>
+                )}
 
                 {/* Add to cart */}
-                <AddToCartCluster
-                  product={product}
-                  addToCartLabel={t("addToCart")}
-                  qtyLabel={t("qty")}
-                />
+                <AddToCartCluster product={product} />
               </div>
 
               {/* Technical Specifications */}

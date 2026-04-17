@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 interface GalleryImage {
   src: string;
@@ -17,7 +17,7 @@ interface ProductGalleryProps {
 /**
  * Product image gallery with main view + thumbnail strip.
  * Client component — manages active image state.
- * 5px radius on main image container, 0px on thumbnails.
+ * Supports left/right chevron navigation and touch swipe on mobile.
  */
 export default function ProductGallery({
   images,
@@ -26,6 +26,25 @@ export default function ProductGallery({
 }: ProductGalleryProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const active = images[activeIdx] ?? images[0];
+  const touchStartX = useRef<number | null>(null);
+
+  const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length);
+  const next = () => setActiveIdx((i) => (i + 1) % images.length);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) > 40) {
+      delta < 0 ? next() : prev();
+    }
+    touchStartX.current = null;
+  };
+
+  const showNav = images.length > 1;
 
   return (
     <div className="flex flex-col gap-4">
@@ -33,6 +52,8 @@ export default function ProductGallery({
       <div
         className="relative aspect-square bg-surface-container-lowest shadow-ambient overflow-hidden"
         style={{ borderRadius: "var(--radius-card)" }}
+        onTouchStart={showNav ? handleTouchStart : undefined}
+        onTouchEnd={showNav ? handleTouchEnd : undefined}
       >
         {active ? (
           <Image
@@ -70,6 +91,46 @@ export default function ProductGallery({
             {inStockLabel}
           </span>
         )}
+
+        {/* Chevron navigation — only when multiple images */}
+        {showNav && (
+          <>
+            <button
+              onClick={prev}
+              aria-label="Previous image"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full shadow-md hover:brightness-110 transition-all"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next image"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full shadow-md hover:brightness-110 transition-all"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+
+            {/* Dot indicators */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveIdx(idx)}
+                  aria-label={`Go to image ${idx + 1}`}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    idx === activeIdx
+                      ? "bg-primary w-3"
+                      : "bg-primary/30 hover:bg-primary/60"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Thumbnail strip */}
@@ -81,7 +142,7 @@ export default function ProductGallery({
               onClick={() => setActiveIdx(idx)}
               className={`relative w-20 h-20 shrink-0 bg-surface-container-lowest overflow-hidden transition-all ${
                 idx === activeIdx
-                  ? "opacity-100"
+                  ? "opacity-100 ring-2 ring-primary ring-offset-1"
                   : "opacity-60 hover:opacity-100"
               }`}
               style={{ borderRadius: "var(--radius-table)" }}

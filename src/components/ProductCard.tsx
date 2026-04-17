@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { MagentoProduct } from "@/types/magento";
 import { getProductImageUrl, getCustomAttribute } from "@/lib/magento";
 import { useCurrency } from "./CurrencyProvider";
+import { useCart } from "./CartProvider";
 
 interface ProductCardProps {
   product: MagentoProduct;
 }
+
+type AddStatus = "idle" | "loading" | "success" | "error";
 
 export default function ProductCard({ product }: ProductCardProps) {
   const imageUrl = getProductImageUrl(product);
@@ -17,11 +21,31 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { formatPrice } = useCurrency();
   const locale = useLocale();
   const t = useTranslations("products");
+  const { addItem } = useCart();
+  const [status, setStatus] = useState<AddStatus>("idle");
+
+  const canAdd = product.price > 0 && product.status === 1;
+
+  async function handleAdd(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!canAdd || status === "loading") return;
+
+    setStatus("loading");
+    try {
+      await addItem(product, 1);
+      setStatus("success");
+      window.setTimeout(() => setStatus("idle"), 1600);
+    } catch {
+      setStatus("error");
+      window.setTimeout(() => setStatus("idle"), 2400);
+    }
+  }
 
   return (
     <Link
       href={`/products/${encodeURIComponent(product.sku)}`}
-      className="group flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition-all duration-200"
+      className="group flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 transition-all duration-200"
     >
       <div className="relative aspect-square bg-gray-50 overflow-hidden">
         {imageUrl ? (
@@ -64,15 +88,48 @@ export default function ProductCard({ product }: ProductCardProps) {
             dangerouslySetInnerHTML={{ __html: shortDescription }}
           />
         )}
-        <div className="mt-auto pt-3 flex items-center justify-between">
+        <div className="mt-auto pt-3 flex items-center justify-between gap-3">
           <span className="text-lg font-bold text-gray-900">
             {product.price > 0
               ? formatPrice(product.price, locale)
               : t("priceOnRequest")}
           </span>
-          <span className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
-            {t("view")}
-          </span>
+          {canAdd && (
+            <button
+              type="button"
+              onClick={handleAdd}
+              disabled={status === "loading"}
+              aria-label={t("addToCart")}
+              className={`flex items-center justify-center w-10 h-10 shrink-0 rounded-(--radius-btn) text-white transition-all disabled:cursor-not-allowed ${
+                status === "success"
+                  ? "bg-green-600"
+                  : status === "error"
+                    ? "bg-red-600"
+                    : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+              }`}
+            >
+              {status === "loading" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-spin">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              ) : status === "success" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : status === "error" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                </svg>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </Link>
