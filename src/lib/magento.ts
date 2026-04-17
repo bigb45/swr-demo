@@ -24,10 +24,10 @@ export const MEDIA_BASE =
 let cachedToken: string | null = null;
 let tokenExpiresAt = 0;
 
-async function getAdminToken(): Promise<string> {
+async function getAdminToken(forceRefresh = false): Promise<string> {
   const now = Date.now();
   // Refresh 5 minutes before expiry (tokens last 1 hour by default)
-  if (cachedToken && now < tokenExpiresAt - 5 * 60 * 1000) {
+  if (!forceRefresh && cachedToken && now < tokenExpiresAt - 5 * 60 * 1000) {
     return cachedToken;
   }
 
@@ -57,24 +57,39 @@ async function getAdminToken(): Promise<string> {
   return token;
 }
 
+function invalidateAdminToken() {
+  cachedToken = null;
+  tokenExpiresAt = 0;
+}
+
 export async function magentoGet<T>(
   path: string,
   revalidate: number | false = 60
 ): Promise<T> {
-  const token = await getAdminToken();
-
   const nextOptions =
     revalidate === false
       ? { cache: "no-store" as const }
       : { next: { revalidate } };
 
-  const res = await fetch(`${BASE}/rest/V1${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    ...nextOptions,
-  });
+  const doFetch = async (token: string) =>
+    fetch(`${BASE}/rest/V1${path}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      ...nextOptions,
+    });
+
+  let token = await getAdminToken();
+  let res = await doFetch(token);
+
+  // If Magento rejected the cached token (e.g. admin re-login, token revoked,
+  // or server-side TTL shorter than our cache), refresh once and retry.
+  if (res.status === 401) {
+    invalidateAdminToken();
+    token = await getAdminToken(true);
+    res = await doFetch(token);
+  }
 
   if (!res.ok) {
     throw new Error(
