@@ -4,7 +4,7 @@ Copy everything below this line and paste it as your first message in the new pr
 
 ---
 
-You are continuing development on the **TEIA** Next.js 16 frontend — a B2B industrial components storefront that talks to a Magento 2.4.8-p4 backend via REST API.
+You are continuing development on the **SWR Handelsgesellschaft mbH** Next.js 16 frontend — a B2B industrial components storefront (Schweißtechnik, Werkzeuge, Reparatur) that talks to a Magento 2.4.8-p4 backend via REST API.
 
 Read `AGENTS.md` in the project root before doing anything else. It contains the full architecture, data flow, i18n rules, design system rules, and a complete list of what is done and what still needs to be built.
 

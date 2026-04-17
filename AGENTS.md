@@ -1,8 +1,8 @@
-# AGENTS.md — TEIA Next.js Frontend
+# AGENTS.md — SWR Next.js Frontend
 
 ## What This Project Is
 
-This is the **TEIA** custom storefront — a **Next.js 16 App Router** application that serves as the customer-facing frontend for a **Magento 2.4.8-p4** backend. It was previously located inside the Magento monorepo at `custom-frontend/` and has been extracted into its own standalone repository.
+This is the **SWR Handelsgesellschaft mbH** custom storefront — a **Next.js 16 App Router** application that serves as the customer-facing frontend for a **Magento 2.4.8-p4** backend. It was previously located inside the Magento monorepo at `custom-frontend/` and has been extracted into its own standalone repository.
 
 The frontend talks to Magento **exclusively via the Magento REST API** over HTTP. There are no filesystem dependencies on the Magento codebase.
 

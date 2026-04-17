@@ -1,6 +1,6 @@
-# TEIA — Custom Storefront
+# SWR Lörrach — Custom Storefront
 
-B2B industrial components storefront built on **Next.js 16 App Router**, talking to a **Magento 2.4.8** backend exclusively via REST API.
+B2B storefront for [SWR Handelsgesellschaft mbH](https://www.swr-loerrach.de/) — Schweißtechnik, Werkzeuge, Reparatur. Built on **Next.js 16 App Router**, talking to a **Magento 2.4.8** backend exclusively via REST API.
 
 ## Tech Stack
 
