@@ -5,28 +5,85 @@ import { Link } from "@/i18n/navigation";
 import { useCart } from "@/components/CartProvider";
 import { useCurrency } from "@/components/CurrencyProvider";
 import Image from "next/image";
-import { useState } from "react";
-
-type ShippingOption = "standard" | "expedited";
-
-const VAT_RATE = 0.19;
-const EXPEDITED_COST = 45;
+import { useEffect, useRef, useState } from "react";
 
 export default function CartContent() {
   const t = useTranslations("cart");
-  const { items, updateQty, removeItem } = useCart();
+  const { items, totals, updateQty, removeItem, restoreItem } = useCart();
   const { formatAmount } = useCurrency();
-  const [shipping, setShipping] = useState<ShippingOption>("standard");
+  const [cartError, setCartError] = useState<string | null>(null);
+  const [removedItem, setRemovedItem] = useState<(typeof items)[number] | null>(null);
+  const [undoLoading, setUndoLoading] = useState(false);
+  const undoTimeoutRef = useRef<number | null>(null);
 
-  const subtotal = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
-  const shippingCost = shipping === "expedited" ? EXPEDITED_COST : 0;
-  const vat = (subtotal + shippingCost) * VAT_RATE;
-  const total = subtotal + shippingCost + vat;
+  // Use Magento-calculated totals when available; fall back to client-side
+  // estimates while the fetch is in flight (e.g. on first render).
+  const subtotal =
+    totals?.subtotal_with_discount ??
+    items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+
+  useEffect(() => {
+    return () => {
+      if (undoTimeoutRef.current) {
+        window.clearTimeout(undoTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  async function handleQtyCommit(itemId: number, sku: string, qty: number) {
+    setCartError(null);
+    try {
+      await updateQty(itemId, sku, qty);
+    } catch (err) {
+      setCartError(err instanceof Error ? err.message : t("updateError"));
+      throw err;
+    }
+  }
+
+  async function handleRemove(item: (typeof items)[number]) {
+    if (undoTimeoutRef.current) {
+      window.clearTimeout(undoTimeoutRef.current);
+    }
+
+    setRemovedItem(null);
+    setCartError(null);
+    setUndoLoading(false);
+    try {
+      await removeItem(item.itemId);
+      setRemovedItem(item);
+
+      undoTimeoutRef.current = window.setTimeout(() => {
+        setRemovedItem(null);
+        undoTimeoutRef.current = null;
+      }, 6000);
+    } catch (err) {
+      setCartError(err instanceof Error ? err.message : t("updateError"));
+    }
+  }
+
+  async function handleUndoRemove() {
+    if (!removedItem) return;
+
+    setUndoLoading(true);
+    setCartError(null);
+    try {
+      await restoreItem(removedItem);
+      setRemovedItem(null);
+      if (undoTimeoutRef.current) {
+        window.clearTimeout(undoTimeoutRef.current);
+        undoTimeoutRef.current = null;
+      }
+    } catch (err) {
+      setCartError(err instanceof Error ? err.message : t("updateError"));
+    } finally {
+      setUndoLoading(false);
+    }
+  }
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-start">
+    <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
       {/* ── Left: Cart Items ──────────────────────────────────────── */}
-      <section className="flex-1 min-w-0">
+      <section className="w-full flex-1 min-w-0">
         {/* Back link */}
         <Link
           href="/products"
@@ -47,21 +104,60 @@ export default function CartContent() {
           <p className="text-sm text-on-surface-variant">{t("subheading")}</p>
         </div>
 
+        {cartError && (
+          <div className="mb-6 rounded-card border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            {cartError}
+          </div>
+        )}
+
+        {removedItem && (
+          <div className="mb-6 border-y border-outline-variant/40 bg-surface px-4 py-5 sm:px-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-on-surface">
+                <span className="font-semibold text-primary">{removedItem.name}</span>{" "}
+                {t("removedNotice")}
+              </p>
+              <button
+                type="button"
+                onClick={handleUndoRemove}
+                disabled={undoLoading}
+                className="self-start text-sm font-semibold text-secondary underline underline-offset-2 hover:text-primary disabled:opacity-50 disabled:no-underline"
+              >
+                {undoLoading ? t("undoing") : t("undo")}
+              </button>
+            </div>
+          </div>
+        )}
+
         {items.length === 0 ? (
-          <div className="py-16 text-center text-on-surface-variant">
-            <p className="text-lg font-medium mb-4">{t("empty")}</p>
+          <div className="py-20 flex flex-col items-center gap-6 text-center">
+            {/* Cart illustration */}
+            <div className="w-20 h-20 rounded-full bg-surface-container-low flex items-center justify-center">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="text-on-surface-variant/40">
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-base font-bold text-primary mb-1">{t("empty")}</p>
+              <p className="text-sm text-on-surface-variant max-w-[280px]">{t("emptyHint")}</p>
+            </div>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-white text-sm font-bold uppercase tracking-wide hover:brightness-110 transition-all rounded-(--radius-btn)"
             >
-              ← {t("continueProcurement")}
+              {t("browseProducts")}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         ) : (
           <>
             {/* Table header — desktop only */}
             <div
-              className="hidden sm:grid text-xs font-semibold uppercase tracking-wide text-on-surface-variant bg-surface-container-low px-4 py-2"
+              className="hidden lg:grid text-xs font-semibold uppercase tracking-wide text-on-surface-variant bg-surface-container-low px-4 py-2"
               style={{ gridTemplateColumns: "1fr 126px 126px 126px" }}
             >
               <span>{t("colItem")}</span>
@@ -78,7 +174,7 @@ export default function CartContent() {
                   <div key={item.itemId} className="py-5 px-4">
                     {/* Desktop: 4-column grid */}
                     <div
-                      className="hidden sm:grid items-center gap-4"
+                      className="hidden lg:grid items-center gap-4"
                       style={{ gridTemplateColumns: "1fr 126px 126px 126px" }}
                     >
                       {/* Product info */}
@@ -96,26 +192,27 @@ export default function CartContent() {
                           <p className="text-sm font-semibold text-primary leading-snug line-clamp-2">{item.name}</p>
                           <p className="text-xs text-on-surface-variant">{t("skuLabel")}: {item.sku}</p>
                           <StockBadge status={item.stockStatus} label={item.stockLabel} />
-                          <button onClick={() => removeItem(item.itemId)} className="mt-1 text-xs text-on-surface-variant/60 hover:text-red-600 transition-colors text-left">
-                            {t("remove")}
-                          </button>
                         </div>
                       </div>
                       <div className="text-center text-sm font-medium text-on-surface">{formatAmount(item.unitPrice)}</div>
                       <div className="flex justify-center">
-                        <div className="relative flex items-center border border-outline-variant/50 rounded-(--radius-input) overflow-hidden h-8 w-16">
-                          <input type="number" min={1} value={item.qty} onChange={(e) => updateQty(item.itemId, item.sku, Math.max(1, parseInt(e.target.value) || 1))} className="w-full text-center text-sm font-medium bg-transparent border-0 focus:outline-none py-1 pr-4 text-on-surface" aria-label={t("qtyAriaLabel", { name: item.name })} />
-                          <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col border-l border-outline-variant/30">
-                            <button onClick={() => updateQty(item.itemId, item.sku, item.qty + 1)} className="flex-1 flex items-center justify-center text-[8px] text-on-surface-variant hover:bg-surface-container-low leading-none" aria-label="Increase">▲</button>
-                            <button onClick={() => updateQty(item.itemId, item.sku, item.qty - 1)} className="flex-1 flex items-center justify-center text-[8px] text-on-surface-variant hover:bg-surface-container-low border-t border-outline-variant/30 leading-none" aria-label="Decrease">▼</button>
-                          </div>
-                        </div>
+                        <QtyStepper
+                          qty={item.qty}
+                          onDecrease={() => handleQtyCommit(item.itemId, item.sku, item.qty - 1)}
+                          onIncrease={() => handleQtyCommit(item.itemId, item.sku, item.qty + 1)}
+                          onCommit={(v) => handleQtyCommit(item.itemId, item.sku, v)}
+                          onRemove={() => handleRemove(item)}
+                          ariaLabel={t("qtyAriaLabel", { name: item.name })}
+                          decreaseLabel={t("decreaseQuantity")}
+                          increaseLabel={t("increaseQuantity")}
+                          removeLabel={t("removeItem")}
+                        />
                       </div>
                       <div className="text-right text-sm font-bold text-primary">{formatAmount(lineTotal)}</div>
                     </div>
 
                     {/* Mobile: stacked card */}
-                    <div className="sm:hidden flex gap-3">
+                    <div className="lg:hidden flex gap-3">
                       <div className="w-16 h-16 bg-surface-container-low shrink-0 overflow-hidden rounded-card">
                         {item.imageUrl ? (
                           <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="w-full h-full object-cover" />
@@ -130,19 +227,18 @@ export default function CartContent() {
                         <p className="text-xs text-on-surface-variant">{t("skuLabel")}: {item.sku}</p>
                         <StockBadge status={item.stockStatus} label={item.stockLabel} />
                         <div className="flex items-center justify-between mt-1">
-                          <div className="relative flex items-center border border-outline-variant/50 rounded-(--radius-input) overflow-hidden h-8 w-16">
-                            <input type="number" min={1} value={item.qty} onChange={(e) => updateQty(item.itemId, item.sku, Math.max(1, parseInt(e.target.value) || 1))} className="w-full text-center text-sm font-medium bg-transparent border-0 focus:outline-none py-1 pr-4 text-on-surface" aria-label={t("qtyAriaLabel", { name: item.name })} />
-                            <div className="absolute right-0 top-0 bottom-0 w-4 flex flex-col border-l border-outline-variant/30">
-                              <button onClick={() => updateQty(item.itemId, item.sku, item.qty + 1)} className="flex-1 flex items-center justify-center text-[8px] text-on-surface-variant hover:bg-surface-container-low leading-none" aria-label="Increase">▲</button>
-                              <button onClick={() => updateQty(item.itemId, item.sku, item.qty - 1)} className="flex-1 flex items-center justify-center text-[8px] text-on-surface-variant hover:bg-surface-container-low border-t border-outline-variant/30 leading-none" aria-label="Decrease">▼</button>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-primary">{formatAmount(lineTotal)}</span>
-                            <button onClick={() => removeItem(item.itemId)} className="text-xs text-on-surface-variant/60 hover:text-red-600 transition-colors">
-                              {t("remove")}
-                            </button>
-                          </div>
+                          <QtyStepper
+                            qty={item.qty}
+                            onDecrease={() => handleQtyCommit(item.itemId, item.sku, item.qty - 1)}
+                            onIncrease={() => handleQtyCommit(item.itemId, item.sku, item.qty + 1)}
+                            onCommit={(v) => handleQtyCommit(item.itemId, item.sku, v)}
+                            onRemove={() => handleRemove(item)}
+                            ariaLabel={t("qtyAriaLabel", { name: item.name })}
+                            decreaseLabel={t("decreaseQuantity")}
+                            increaseLabel={t("increaseQuantity")}
+                            removeLabel={t("removeItem")}
+                          />
+                          <span className="text-sm font-bold text-primary">{formatAmount(lineTotal)}</span>
                         </div>
                       </div>
                     </div>
@@ -152,7 +248,7 @@ export default function CartContent() {
             </div>
 
             {/* Actions row */}
-            <div className="flex gap-3 justify-end mt-6 pt-4 border-t border-outline-variant/30">
+            <div className="mt-6 flex flex-col gap-3 border-t border-outline-variant/30 pt-4 sm:flex-row sm:justify-end">
                 <button
                   onClick={() => {
                     const csv = [
@@ -189,8 +285,8 @@ export default function CartContent() {
         )}
       </section>
 
-      {/* ── Right: Order Summary Sidebar ─────────────────────────── */}
-      <aside className="w-full lg:w-[395px] lg:shrink-0">
+      {/* ── Right: Order Summary Sidebar — only shown when cart has items ── */}
+      {items.length > 0 && <aside className="w-full lg:w-[395px] lg:shrink-0">
         <div
           className="bg-surface-container-lowest p-6 rounded-card"
           style={{ boxShadow: "var(--shadow-ambient)" }}
@@ -206,124 +302,27 @@ export default function CartContent() {
           </div>
 
           {/* Subtotal */}
-          <div className="flex justify-between items-center mb-6 text-sm">
+          <div className="flex justify-between items-center mb-3 text-sm">
             <span className="text-on-surface-variant font-medium">
               {t("subtotal", { count: items.reduce((s, i) => s + i.qty, 0) })}
             </span>
             <span className="font-semibold text-on-surface">{formatAmount(subtotal)}</span>
           </div>
 
-          {/* Logistics Strategy */}
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant mb-3">
-              {t("logisticsStrategy")}
-            </p>
-            <div className="flex flex-col gap-2">
-              {/* Standard */}
-              <label
-                className={`flex items-center justify-between px-4 py-3 border cursor-pointer transition-colors rounded-(--radius-input) ${
-                  shipping === "standard"
-                    ? "border-primary bg-primary-fixed/30"
-                    : "border-outline-variant/50 hover:border-outline-variant"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      shipping === "standard" ? "border-primary" : "border-outline-variant"
-                    }`}
-                  >
-                    {shipping === "standard" && (
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-on-surface">
-                      {t("standardFreight")}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant">{t("standardFreightDays")}</p>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-secondary">{t("free")}</span>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="standard"
-                  checked={shipping === "standard"}
-                  onChange={() => setShipping("standard")}
-                  className="sr-only"
-                />
-              </label>
+          <p className="text-[11px] text-on-surface-variant/70 mb-6 leading-relaxed">
+            {t("shippingAndTaxNote")}
+          </p>
 
-              {/* Expedited */}
-              <label
-                className={`flex items-center justify-between px-4 py-3 border cursor-pointer transition-colors rounded-(--radius-input) ${
-                  shipping === "expedited"
-                    ? "border-primary bg-primary-fixed/30"
-                    : "border-outline-variant/50 hover:border-outline-variant"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      shipping === "expedited" ? "border-primary" : "border-outline-variant"
-                    }`}
-                  >
-                    {shipping === "expedited" && (
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-on-surface">
-                      {t("expeditedLogistics")}
-                    </p>
-                    <p className="text-[11px] text-on-surface-variant">{t("expeditedLogisticsDays")}</p>
-                  </div>
-                </div>
-                <span className="text-xs font-semibold text-on-surface">
-                  {formatAmount(EXPEDITED_COST)}
-                </span>
-                <input
-                  type="radio"
-                  name="shipping"
-                  value="expedited"
-                  checked={shipping === "expedited"}
-                  onChange={() => setShipping("expedited")}
-                  className="sr-only"
-                />
-              </label>
-            </div>
-          </div>
-
-          {/* VAT */}
-          <div className="flex justify-between items-center py-4 border-t border-outline-variant/30 text-sm">
-            <span className="text-on-surface-variant">{t("estimatedVat")}</span>
-            <span className="font-medium text-on-surface">{formatAmount(vat)}</span>
-          </div>
-
-          {/* Total */}
-          <div className="flex justify-between items-end py-4 border-t border-outline-variant/30 mb-6">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-on-surface-variant mb-0.5">
-                {t("totalAmountDue")}
-              </p>
-              <p className="text-[11px] text-on-surface-variant/70">{t("inclSurcharges")}</p>
-            </div>
-            <span className="text-2xl font-black text-primary tabular-nums">
-              {formatAmount(total)}
-            </span>
-          </div>
-
-          {/* CTA */}
-          <button
-            disabled={items.length === 0}
-            className="w-full flex items-center justify-between px-6 py-4 bg-secondary text-white font-bold text-sm uppercase tracking-wide hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all disabled:opacity-40 disabled:cursor-not-allowed rounded-(--radius-btn)"
+          {/* CTA → checkout flow */}
+          <Link
+            href="/checkout/address"
+            className="w-full flex items-center justify-between px-6 py-4 bg-secondary text-white font-bold text-sm tracking-wide hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all rounded-(--radius-btn)"
           >
-            <span>{t("placeAuthorizationOrder")}</span>
+            <span>{t("proceedToCheckout")}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </button>
+          </Link>
 
           {/* Legal disclaimer */}
           <p className="text-[10px] text-on-surface-variant/60 text-center mt-4 leading-relaxed">
@@ -352,7 +351,129 @@ export default function CartContent() {
             description={t("trustSupportDesc")}
           />
         </div>
-      </aside>
+      </aside>}
+    </div>
+  );
+}
+
+function QtyStepper({
+  qty,
+  onDecrease,
+  onIncrease,
+  onCommit,
+  onRemove,
+  ariaLabel,
+  decreaseLabel,
+  increaseLabel,
+  removeLabel,
+}: {
+  qty: number;
+  onDecrease: () => Promise<void>;
+  onIncrease: () => Promise<void>;
+  onCommit: (v: number) => Promise<void>;
+  onRemove: () => Promise<void>;
+  ariaLabel: string;
+  decreaseLabel: string;
+  increaseLabel: string;
+  removeLabel: string;
+}) {
+  const [inputValue, setInputValue] = useState(String(qty));
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    setInputValue(String(qty));
+  }, [qty]);
+
+  async function runAction(action: () => Promise<void>, fallback = String(qty)) {
+    setIsPending(true);
+    try {
+      await action();
+    } catch {
+      setInputValue(fallback);
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  async function commitTypedValue() {
+    const raw = inputValue.trim();
+    const parsed = Number.parseInt(raw, 10);
+
+    if (!raw || Number.isNaN(parsed) || parsed < 1) {
+      setInputValue(String(qty));
+      return;
+    }
+
+    if (parsed === qty) {
+      setInputValue(String(qty));
+      return;
+    }
+
+    await runAction(() => onCommit(parsed));
+  }
+
+  return (
+    <div className="flex items-center border border-outline-variant/50 rounded-(--radius-input) overflow-hidden h-9">
+      {qty <= 1 ? (
+        <button
+          onClick={() => void runAction(onRemove)}
+          disabled={isPending}
+          aria-label={removeLabel}
+          className="flex items-center justify-center w-8 h-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6M14 11v6" />
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+          </svg>
+        </button>
+      ) : (
+        <button
+          onClick={() => void runAction(onDecrease)}
+          disabled={isPending}
+          aria-label={decreaseLabel}
+          className="flex items-center justify-center w-8 h-full text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+      )}
+      <input
+        type="number"
+        min={1}
+        inputMode="numeric"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onFocus={(e) => e.currentTarget.select()}
+        onClick={(e) => e.currentTarget.select()}
+        onBlur={() => void commitTypedValue()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            void commitTypedValue();
+          }
+          if (e.key === "Escape") {
+            setInputValue(String(qty));
+            e.currentTarget.blur();
+          }
+        }}
+        disabled={isPending}
+        className="w-9 text-center text-sm font-medium bg-transparent border-x border-outline-variant/30 focus:outline-none py-1 text-on-surface disabled:opacity-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        aria-label={ariaLabel}
+      />
+      <button
+        onClick={() => void runAction(onIncrease)}
+        disabled={isPending}
+        aria-label={increaseLabel}
+        className="flex items-center justify-center w-8 h-full text-on-surface-variant hover:bg-surface-container-low transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </button>
     </div>
   );
 }

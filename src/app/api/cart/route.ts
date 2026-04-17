@@ -4,8 +4,19 @@
  */
 
 import { NextRequest } from "next/server";
+import { getProductBySku, getProductImageUrl } from "@/lib/magento";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
+
+interface MagentoCartItem {
+  item_id: number;
+  sku: string;
+  qty: number;
+  name: string;
+  price: number;
+  product_type: string;
+  quote_id: string;
+}
 
 export async function POST() {
   const res = await fetch(`${MAGENTO}/rest/V1/guest-carts`, {
@@ -37,6 +48,27 @@ export async function GET(req: NextRequest) {
     return Response.json({ error: "Failed to fetch cart" }, { status: 502 });
   }
 
-  const [items, totals] = await Promise.all([itemsRes.json(), totalsRes.json()]);
-  return Response.json({ items, totals });
+  const [items, totals] = await Promise.all([
+    itemsRes.json() as Promise<MagentoCartItem[]>,
+    totalsRes.json(),
+  ]);
+
+  const productsBySku = new Map(
+    await Promise.all(
+      [...new Set(items.map((item) => item.sku))].map(async (sku) => {
+        try {
+          const product = await getProductBySku(sku);
+          return [sku, getProductImageUrl(product)] as const;
+        } catch {
+          return [sku, null] as const;
+        }
+      })
+    )
+  );
+
+  const itemsWithImages = items.map((item) => ({
+    ...item,
+    imageUrl: productsBySku.get(item.sku) ?? null,
+  }));
+  return Response.json({ items: itemsWithImages, totals });
 }
