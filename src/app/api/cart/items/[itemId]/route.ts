@@ -6,6 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { extractMagentoMessage } from "@/lib/checkout";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -24,7 +25,10 @@ export async function PUT(req: NextRequest, ctx: Ctx) {
 
   const data = await res.json();
   if (!res.ok) {
-    return Response.json({ error: data.message ?? "Failed to update item" }, { status: res.status });
+    return Response.json(
+      { error: extractMagentoMessage(data, "Failed to update item") },
+      { status: res.status },
+    );
   }
   return Response.json(data);
 }
@@ -40,7 +44,10 @@ export async function DELETE(req: NextRequest, ctx: Ctx) {
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    return Response.json({ error: data.message ?? "Failed to remove item" }, { status: res.status });
+    return Response.json(
+      { error: extractMagentoMessage(data, "Failed to remove item") },
+      { status: res.status },
+    );
   }
 
   return Response.json({ success: true });

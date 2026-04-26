@@ -6,6 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { extractMagentoMessage } from "@/lib/checkout";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -37,9 +38,10 @@ export async function POST(req: NextRequest) {
 
   if (!res.ok) {
     const body = await res.json().catch(() => null);
-    const message =
-      body?.message ?? "Registration failed. Please try again.";
-    return Response.json({ error: message }, { status: res.status });
+    return Response.json(
+      { error: extractMagentoMessage(body, "Registration failed. Please try again.") },
+      { status: res.status },
+    );
   }
 
   return Response.json({ ok: true, pendingApproval: true }, { status: 201 });

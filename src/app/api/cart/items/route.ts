@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { extractMagentoMessage } from "@/lib/checkout";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -24,7 +25,10 @@ export async function POST(req: NextRequest) {
   const data = await res.json();
 
   if (!res.ok) {
-    return Response.json({ error: data.message ?? "Failed to add item" }, { status: res.status });
+    return Response.json(
+      { error: extractMagentoMessage(data, "Failed to add item") },
+      { status: res.status },
+    );
   }
 
   return Response.json(data);

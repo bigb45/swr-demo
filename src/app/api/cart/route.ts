@@ -45,7 +45,11 @@ export async function GET(req: NextRequest) {
   ]);
 
   if (!itemsRes.ok || !totalsRes.ok) {
-    return Response.json({ error: "Failed to fetch cart" }, { status: 502 });
+    // Pass Magento's 404 through so the client can drop a stale cart id; only
+    // map non-4xx upstream failures to 502.
+    const upstream = !itemsRes.ok ? itemsRes.status : totalsRes.status;
+    const status = upstream >= 400 && upstream < 500 ? upstream : 502;
+    return Response.json({ error: "Failed to fetch cart" }, { status });
   }
 
   const [items, totals] = await Promise.all([
