@@ -2,6 +2,17 @@
   "nav": {
     "allProducts": "All Products",
     "products": "Products",
+    "shop": "Shop",
+    "catalog": "Catalog",
+    "services": "Services",
+    "industries": "Industries",
+    "about": "About",
+    "contact": "Contact",
+    "partners": "Partners",
+    "careers": "Careers",
+    "certificates": "Certificates",
+    "offers": "Offers",
+    "fleet": "My Fleet",
     "orderHistory": "Order History",
     "account": "Account",
     "cart": "Cart",
@@ -9,7 +20,16 @@
     "searchPlaceholder": "Enter part number, keyword, or spec...",
     "settings": "Settings",
     "help": "Help",
-    "technicalSupport": "Technical Support"
+    "technicalSupport": "Technical Support",
+    "bookConsultation": "Book a Consultation",
+    "home": "SWR Lörrach — Home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mobileNavLabel": "Mobile navigation",
+    "primaryNavLabel": "Primary",
+    "selectCurrency": "Select currency",
+    "selectLanguage": "Select language",
+    "preferences": "Preferences"
   },
   "hero": {
     "title": "Welding, Tools & Repair.",
@@ -18,25 +38,112 @@
     "requestQuote": "Request Consultation"
   },
   "home": {
-    "featuredProducts": "Featured Products",
-    "featuredSubtitle": "A selection from our range",
-    "viewAll": "View all →",
-    "topCategories": "Product Categories",
-    "viewAllCategories": "View All {count} Categories",
-    "newArrivals": "Current Products & Specifications",
-    "updatedRecently": "Updated 2m ago",
-    "colPartNumber": "Part #",
-    "colDescription": "Description",
-    "colMaterial": "Material",
-    "colStock": "Stock Status",
-    "colPrice": "Unit Price",
-    "customMillingTitle": "Service & Repair",
-    "customMillingDesc": "Tools and machines are critical to your production process. Our service team handles repairs and maintenance — fast, reliable, and on-site.",
-    "uploadCadFile": "Submit Repair Request",
-    "viewCapabilities": "Learn More About Our Service",
-    "complianceCenterTitle": "Customs & Delivery",
-    "complianceCenterDesc": "We deliver with our own fleet and handle all customs clearance for customers in Switzerland. Fast, secure, and hassle-free.",
-    "accessDocuments": "Learn More"
+    "hero": {
+      "eyebrow": "Lörrach. Since 1987.",
+      "title": "Who do you call when the welder dies on Friday afternoon?",
+      "subtitle": "We are a family-run industrial supplier in Lörrach. Eleven people who pick up the phone, run the workshop, drive the deliveries, and know the catalog by heart.",
+      "openShop": "Open the shop",
+      "openCatalog": "Open the catalog"
+    },
+    "reality": {
+      "heading": "How the shop actually runs",
+      "years": {
+        "value": "1987",
+        "label": "Family-run since",
+        "sublabel": "Second-generation owners, same address."
+      },
+      "skus": {
+        "value": "12,000+",
+        "label": "Active SKUs",
+        "sublabel": "Stocked, picked, and shipped from Lörrach."
+      },
+      "repair": {
+        "value": "48 h",
+        "label": "Average repair turnaround",
+        "sublabel": "Most tools back on your bench in two days."
+      },
+      "brands": {
+        "value": "60+",
+        "label": "Brand partners",
+        "sublabel": "Authorised dealer for the manufacturers we carry."
+      }
+    },
+    "intents": {
+      "eyebrow": "Start here",
+      "heading": "Tell us what you came for.",
+      "part": {
+        "question": "I need a part now.",
+        "answer": "Browse the live shop with stock and pricing. Same-day dispatch on stock items ordered before noon.",
+        "cta": "Open the shop"
+      },
+      "repair": {
+        "question": "My tool is broken.",
+        "answer": "Drop it off in Lörrach or send it in. Diagnosis within 24 hours, most repairs in 48. Loaner equipment available.",
+        "cta": "Open the repair portal"
+      },
+      "swiss": {
+        "question": "I'm shipping to Switzerland.",
+        "answer": "We file customs ourselves, pay the duties upfront, and invoice the landed cost. AEO-certified.",
+        "cta": "Swiss delivery center"
+      },
+      "catalog": {
+        "question": "I want to read a brand catalog.",
+        "answer": "Searchable library of manufacturer brochures, manuals, datasheets and certificates. Read in your browser.",
+        "cta": "Open the catalog"
+      }
+    },
+    "catalogPreview": {
+      "heading": "Read before you buy.",
+      "subheading": "Brand catalogs from the manufacturers we carry — searchable, filterable, downloadable.",
+      "cta": "Open the document library"
+    },
+    "services": {
+      "eyebrow": "Beyond the product",
+      "heading": "Four things we promise.",
+      "subheading": "Specific commitments — not generic value props. If we miss them, tell us and we will make it right.",
+      "cta": "All services",
+      "consulting": "On-site consultation in the three-country region. We respond within 4 working hours and visit at your convenience.",
+      "repair": "In-house workshop with loaner equipment. Most repairs back on your bench within 48 hours of drop-off.",
+      "delivery": "Own delivery fleet on daily routes through Lörrach, Basel and Mulhouse. Stock items dispatched same-day before noon.",
+      "customs": "AEO-certified customs status. We file the paperwork, pay the duties, and invoice the landed cost in CHF or EUR."
+    },
+    "industries": {
+      "eyebrow": "Branches we know",
+      "heading": "Which workshop do you run?",
+      "questions": {
+        "welding": "Schweißbetrieb?",
+        "tools": "Werkzeughandel?",
+        "power-tools": "Elektrohandwerk?",
+        "machines": "Stationäre Maschinen?",
+        "facility-equipment": "Werkstatteinrichtung?",
+        "workshop-supplies": "Verbrauchsmaterial?",
+        "occupational-safety": "Arbeitsschutz?"
+      }
+    },
+    "featured": {
+      "heading": "Recently in the shop",
+      "subheading": "A live slice of the catalog — stocked, shipped, and serviced in-house.",
+      "cta": "Browse the full shop"
+    },
+    "people": {
+      "eyebrow": "Real names. Real desks.",
+      "heading": "When you call, a person answers.",
+      "body": "We are eleven on the team. The same person you talk to about a quote will recognise your voice when you call about the repair. Meet us on the about page.",
+      "cta": "Meet the team",
+      "featured": {
+        "name": "SWR Lörrach Team",
+        "role": "Sales & Service",
+        "quote": "If you cannot find what you need in the shop or the catalog, ring us. We probably keep it on the back shelf."
+      }
+    },
+    "workshop": {
+      "eyebrow": "Talk to us",
+      "heading": "We don't auto-respond. A real human reads every email.",
+      "body": "Send us a short brief, ring the workshop, or book a consultation. We reply within one working day with a firm answer or the next question we need to ask.",
+      "phoneLabel": "Phone",
+      "emailLabel": "Email",
+      "hoursLabel": "Hours"
+    }
   },
   "products": {
     "title": "All Products",
@@ -46,11 +153,25 @@
     "searchEmpty": "No results found for \"{query}\".",
     "searchEmptyHint": "Try a different part number, keyword, or specification.",
     "searchEmptyClear": "Clear search",
+    "noFilterResults": "No products match these filters.",
+    "filter": {
+      "heading": "Filters",
+      "clearAll": "Clear all",
+      "category": "Category",
+      "allCategories": "All categories",
+      "price": "Price",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "apply": "Apply"
+    },
     "empty": "No products found.",
     "view": "View",
     "priceOnRequest": "Price on request",
     "exclVat": "excl. VAT",
     "inStock": "IN STOCK",
+    "lowStock": "LOW STOCK",
+    "outOfStock": "OUT OF STOCK",
+    "lowStockRemaining": "Only {qty} left — ships while supplies last.",
     "unavailable": "Unavailable",
     "addToCart": "Add to Cart",
     "requestQuote": "Request Quote",
@@ -105,11 +226,17 @@
   "footer": {
     "rights": "All rights reserved.",
     "copyright": "© {year} SWR Handelsgesellschaft mbH. All rights reserved.",
+    "imprint": "Imprint",
     "termsOfSale": "Terms of Sale",
     "privacyPolicy": "Privacy Policy",
     "compliance": "Compliance",
     "isoCertification": "ISO Certification",
     "sdsSheets": "SDS Sheets",
+    "shopHeading": "Shop",
+    "servicesHeading": "360 Service",
+    "companyHeading": "Company",
+    "legalHeading": "Legal",
+    "contactHeading": "Contact Us",
     "metaTitle": "SWR Lörrach — Welding, Tools & Repair",
     "metaTitleTemplate": "%s | SWR Lörrach",
     "metaDescription": "SWR Handelsgesellschaft mbH — Your B2B partner for welding technology, power tools, machinery and workplace safety. Qualität verbindet."
@@ -177,6 +304,75 @@
     "section2Body": "Safety data sheets contain important information on the safe handling, storage and disposal of products. Please read them carefully before use.",
     "contact": "SDS requests: sds@swr-loerrach.de"
   },
+  "imprint": {
+    "heading": "Imprint",
+    "intro": "Legal information pursuant to § 5 TMG.",
+    "companyHeading": "Company",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach",
+    "country": "Germany",
+    "contactHeading": "Contact",
+    "phoneLabel": "Phone",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "Email",
+    "email": "info@swr-loerrach.de",
+    "representativeHeading": "Authorized Representative",
+    "representativeBody": "Managing Director, SWR Handelsgesellschaft mbH.",
+    "registrationHeading": "Commercial Register",
+    "registrationBody": "Registered at the local court (Amtsgericht) Freiburg i. Br. under HRB 703221.",
+    "vatHeading": "VAT Identification",
+    "vatBody": "VAT ID pursuant to § 27 a of the German VAT Act: available on request.",
+    "disputeHeading": "Online Dispute Resolution",
+    "disputeBody": "The European Commission provides a platform for online dispute resolution (ODR) at https://ec.europa.eu/consumers/odr. We are not obliged nor willing to participate in dispute resolution proceedings before a consumer arbitration board.",
+    "contact": "For legal enquiries please contact info@swr-loerrach.de."
+  },
+  "about": {
+    "eyebrow": "Since 1986",
+    "heading": "Quality Connects.",
+    "subheading": "SWR Handelsgesellschaft mbH is your 360° service partner in Lörrach for welding, tools, machines, and safety equipment — with expert consultation, fast delivery, and repair service across Germany, Switzerland, and France.",
+    "bookConsultation": "Book a Consultation",
+    "explore360": "Explore 360° Service",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH has supplied industry and trade in the three-country region around Lörrach with premium tools, welding equipment, machines, and workplace safety gear for nearly four decades.",
+    "missionHeading": "Our Mission",
+    "missionBody": "We equip workshops, manufacturers, and tradespeople with professional-grade products — and pair them with the consultation, repair, and customs services that keep operations running.",
+    "approachHeading": "Our Approach",
+    "approachBody": "Our engineers and application specialists know our assortment inside out. We listen first, then recommend exactly what the job needs — no upselling, no shortcuts.",
+    "valuesHeading": "What We Stand For",
+    "values": {
+      "qualityTitle": "Premium Brand Quality",
+      "qualityBody": "We stock only audited, professional-grade products from leading manufacturers. Every SKU meets the relevant European standards.",
+      "service360Title": "360° Service",
+      "service360Body": "From consultation and delivery to on-site repair and customs clearance — a single partner for the entire lifecycle.",
+      "partnershipTitle": "Long-term Partnership",
+      "partnershipBody": "We build relationships that last. Our customers stay because we deliver on what we promise, year after year."
+    },
+    "ctaHeading": "Let's talk about your next project.",
+    "ctaBody": "Whether you need a single quote or a long-term supply agreement, our specialists are ready to help."
+  },
+  "contact": {
+    "eyebrow": "We're here to help",
+    "heading": "Get in Touch",
+    "subheading": "Talk to our team in Lörrach for quotes, technical consultation, repair requests, or customs advice.",
+    "reachOutHeading": "Reach out",
+    "reachOutBody": "Phone and email are the fastest way to reach our team during business hours. For urgent repair requests, please call us directly.",
+    "consultationHeading": "On-site consultation",
+    "consultationBody": "Our specialists visit customers throughout the three-country region. Book a consultation and we'll come to you.",
+    "cardTitle": "SWR Handelsgesellschaft mbH",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach, Germany",
+    "phoneLabel": "Phone",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "Email",
+    "email": "info@swr-loerrach.de",
+    "hoursLabel": "Hours",
+    "hours": "Mon-Fri 07:30-17:00"
+  },
   "auth": {
     "loginHeading": "Sign In",
     "email": "Email address",
@@ -197,7 +393,20 @@
     "registerPending": "Your account has been created and is awaiting approval by our team. You will receive an email once your account has been activated.",
     "passwordMismatch": "Passwords do not match.",
     "registerError": "Registration failed. Please try again.",
-    "backToLogin": "← Back to Sign In"
+    "backToLogin": "← Back to Sign In",
+    "forgotLink": "Forgot your password?",
+    "forgotHeading": "Reset Password",
+    "forgotDescription": "Enter the email address on your account and we'll send you a link to set a new password.",
+    "forgotSent": "If that address is on file, a password-reset email is on its way. Check your inbox.",
+    "forgotError": "Could not send the reset email.",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending…",
+    "resetHeading": "Set New Password",
+    "newPassword": "New Password",
+    "setNewPassword": "Save Password",
+    "saving": "Saving…",
+    "resetError": "Could not reset the password.",
+    "resetTokenMissing": "Reset link is incomplete. Request a new one."
   },
   "account": {
     "heading": "My Account",
@@ -205,7 +414,26 @@
     "orderHistory": "Order History",
     "quotations": "Quotations",
     "addresses": "Addresses",
-    "logout": "Sign Out"
+    "profile": "Profile & Password",
+    "profileHeading": "Profile",
+    "fleet": "My Fleet",
+    "service": "Returns & Service",
+    "logout": "Sign Out",
+    "firstname": "First Name",
+    "lastname": "Last Name",
+    "email": "Email address",
+    "changePassword": "Change Password",
+    "changePasswordHint": "Leave blank to keep your current password.",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "passwordMismatch": "Passwords do not match.",
+    "currentPasswordRequired": "Enter your current password to change email or password.",
+    "profileSaved": "Profile updated.",
+    "profileSaveError": "Could not update profile.",
+    "save": "Save Changes",
+    "saving": "Saving…",
+    "cancel": "Cancel"
   },
   "addresses": {
     "heading": "Saved Addresses",
@@ -230,7 +458,8 @@
     "street2": "Address line 2 (optional)",
     "city": "City",
     "postcode": "Postal Code",
-    "region": "Region / State (optional)",
+    "region": "Region / State",
+    "regionOptional": "optional",
     "country": "Country",
     "countryHint": "ISO 2-letter country code (e.g. DE, CH, FR)",
     "telephone": "Telephone",
@@ -257,6 +486,9 @@
     "continueToShipping": "Continue to shipping",
     "chooseShippingMethod": "Choose a shipping method",
     "noShippingMethods": "No shipping methods are available for this address. Please choose a different address.",
+    "shippingLoadError": "We could not retrieve shipping options.",
+    "shippingLoadErrorHint": "The shipping service is temporarily unavailable. Please try a different address or contact support.",
+    "contactSupport": "Contact support",
     "noMethodSelected": "Please choose a shipping method.",
     "shippingTo": "Shipping to",
     "continueToReview": "Continue to review",
@@ -270,6 +502,8 @@
     "shippingMethod": "Shipping method",
     "methodNotSet": "Not selected",
     "change": "Change",
+    "paymentMethod": "Payment method",
+    "paymentMethodFallback": "Using default invoice method.",
     "poNumber": "Purchase order reference",
     "optional": "Optional",
     "poNumberPlaceholder": "e.g. PO-2026-001",
@@ -293,6 +527,11 @@
     "viewOrder": "Details →",
     "orderNumber": "Order #{id}",
     "backToOrders": "← Back to Order History",
+    "reorder": "Reorder",
+    "reordering": "Adding to cart…",
+    "reorderSummary": "{added} added, {problems} need attention.",
+    "reorderNeedsOptions": "Re-add on product page",
+    "reorderGoToCart": "Go to cart →",
     "colProduct": "Product",
     "colSku": "SKU",
     "colQty": "Qty",
@@ -331,6 +570,7 @@
     "trackingNumber": "Tracking",
     "noTracking": "No tracking information provided.",
     "noDocuments": "No documents issued yet.",
+    "comments": "Comments from SWR",
     "status": {
       "pending": "Pending",
       "processing": "In Progress",
@@ -379,12 +619,362 @@
       "rejected": "Rejected",
       "expired": "Expired",
       "converted": "Converted"
+    },
+    "acceptToCart": "Accept and add to cart",
+    "accepting": "Accepting…",
+    "acceptError": {
+      "not_found": "Quotation not found.",
+      "already_converted": "This quotation has already been accepted.",
+      "expired": "This quotation has expired.",
+      "out_of_stock": "Some items on this quotation are out of stock:",
+      "unknown": "Could not accept quotation. Please try again."
     }
   },
   "breadcrumb": {
     "home": "Home",
     "products": "Products",
     "catalog": "Catalog"
+  },
+  "catalog": {
+    "metaTitle": "Document Catalog — manuals, datasheets, brochures",
+    "metaDescription": "Browse manufacturer catalogs, manuals, datasheets, certificates, and safety sheets for the brands we carry. Search, filter, and read PDFs in your browser.",
+    "eyebrow": "Document Library",
+    "heading": "The catalog. Searchable.",
+    "subheading": "Brand catalogs, price lists, manuals, datasheets, certificates and safety sheets — for every brand we carry. Read in your browser, download, or print.",
+    "searchPlaceholder": "Search by brand, product, or keyword…",
+    "resultsCount": "{count} documents",
+    "emptyState": "No documents match these filters.",
+    "pageCount": "{count} pp.",
+    "breadcrumbCatalog": "Catalog",
+    "filters": {
+      "category": "Category",
+      "type": "Document Type",
+      "brand": "Brand",
+      "language": "Language",
+      "clearAll": "Clear all filters",
+      "title": "Filter System",
+      "subtitle": "Technical Refinement",
+      "activeFilters": "Active Filters:",
+      "manufacturerSearch": "Find manufacturer...",
+      "resultsShowing": "Showing {count, plural, =0 {no results} =1 {1 result} other {# results}}"
+    },
+    "types": {
+      "catalog": "Catalog",
+      "price-list": "Price list",
+      "datasheet": "Datasheet",
+      "manual": "Manual",
+      "certificate": "Certificate",
+      "sds": "Safety data sheet",
+      "instructions": "Instructions",
+      "technical-info": "Technical info",
+      "performance": "Performance declaration",
+      "presentation": "Brochure",
+      "video": "Video",
+      "misc": "Other"
+    },
+    "categories": {
+      "welding": "Welding technology",
+      "tools": "Tools",
+      "power-tools": "Power tools",
+      "machines": "Machines",
+      "facility-equipment": "Facility equipment",
+      "workshop-supplies": "Workshop supplies",
+      "occupational-safety": "Occupational safety",
+      "compressed-air": "Compressed air"
+    },
+    "languages": {
+      "de": "German",
+      "en": "English",
+      "fr": "French",
+      "it": "Italian",
+      "es": "Spanish",
+      "nl": "Dutch",
+      "pl": "Polish",
+      "pt": "Portuguese"
+    },
+    "viewer": {
+      "download": "Download",
+      "print": "Print",
+      "openInNewTab": "Open",
+      "backToList": "Back",
+      "notice": "PDF is rendered by your browser. Use the download button to save a local copy.",
+      "externalNotice": "This document is hosted by the manufacturer and cannot be previewed inline. Open it on the manufacturer's site or download a copy.",
+      "externalCta": "Open on manufacturer's site",
+      "watchOnYoutube": "Watch on YouTube",
+      "videoNotice": "Video is streamed from the publisher. Use fullscreen for a larger view.",
+      "unsupportedVideo": "This video is hosted on a platform we cannot embed directly. Open it on the publisher's site to watch it.",
+      "unsupportedVideoCta": "Open video"
+    },
+    "meta": {
+      "heading": "Document details",
+      "brand": "Brand",
+      "type": "Type",
+      "language": "Language",
+      "pages": "Pages",
+      "fileSize": "File size",
+      "published": "Published",
+      "categories": "Categories"
+    }
+  },
+  "fleet": {
+    "metaTitle": "My machine fleet",
+    "metaDescription": "Track the machines on file for your account — warranty, service history, and one-click repair requests.",
+    "heading": "My machine fleet",
+    "subheading": "Every machine we have on file for your account, with warranty status and the full service history.",
+    "backToAccount": "Back to account",
+    "backToFleet": "Back to fleet",
+    "counters": {
+      "machines": "Machines",
+      "underWarranty": "Under warranty",
+      "serviceEvents": "Service events",
+      "brands": "Brands"
+    },
+    "categoryLabels": {
+      "welding": "Welding",
+      "power-tools": "Power tools",
+      "pneumatic": "Pneumatic",
+      "machines": "Machines",
+      "measuring": "Measuring",
+      "safety": "Safety equipment"
+    },
+    "card": {
+      "serial": "Serial",
+      "purchased": "Purchased",
+      "warrantyUntil": "Warranty until",
+      "statusActive": "In warranty",
+      "statusExpiring": "Expiring soon",
+      "statusExpired": "Out of warranty",
+      "viewDetails": "View",
+      "lastService": "Last service",
+      "noService": "No service yet"
+    },
+    "detail": {
+      "serial": "Serial number",
+      "category": "Category",
+      "purchased": "Purchase date",
+      "warrantyUntil": "Warranty end",
+      "maintenanceCount": "Service events",
+      "product": "Product"
+    },
+    "actions": {
+      "eyebrow": "Quick actions",
+      "heading": "Need something for this machine?",
+      "body": "Repair, calibration, consumables — start here and we route it to the right person in Lörrach.",
+      "contact": "Contact your rep"
+    },
+    "log": {
+      "eyebrow": "Service history",
+      "heading": "Maintenance log.",
+      "subheading": "Every visit to the workshop, every on-site service. Documents (when available) link straight into the catalog.",
+      "openDocument": "Document",
+      "empty": "No service events on file yet — once a repair, calibration or inspection is logged, it will appear here.",
+      "columns": {
+        "date": "Date",
+        "kind": "Type",
+        "title": "Title",
+        "technician": "Technician",
+        "document": "Document"
+      },
+      "kinds": {
+        "service": "Service",
+        "repair": "Repair",
+        "calibration": "Calibration",
+        "inspection": "Inspection",
+        "warranty": "Warranty"
+      }
+    },
+    "empty": {
+      "heading": "No machines on file yet.",
+      "body": "Fleet builds itself as we deliver and service equipment for your account. New machines purchased through SWR are registered automatically.",
+      "bullets": {
+        "import": "We import your machines from past invoices on request.",
+        "register": "Send us a serial number for any machine and we will add it.",
+        "track": "Once registered, every service event lands here automatically."
+      },
+      "ctaContact": "Talk to us",
+      "ctaOrders": "View past orders"
+    }
+  },
+  "service": {
+    "metaTitle": "Returns & service",
+    "metaDescription": "Returns, repair cases, and calibration requests — one portal, one status view across your orders and machine fleet.",
+    "heading": "Returns & service",
+    "subheading": "Every return, repair and calibration case on your account — from first request to final resolution, with the same status timeline our workshop uses.",
+    "backToAccount": "Back to account",
+    "backToHub": "Back to service",
+    "viewCase": "Open case",
+    "orderLabel": "Order",
+    "machineLabel": "Machine",
+    "updated": "Updated",
+    "kind": {
+      "return": "Return",
+      "repair": "Repair",
+      "inspection": "Inspection"
+    },
+    "status": {
+      "submitted": "Submitted",
+      "received": "Received",
+      "in_progress": "In progress",
+      "awaiting_customer": "Needs your input",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "reason": {
+      "damaged_in_transit": "Damaged in transit",
+      "defective": "Defective on arrival",
+      "wrong_item": "Wrong item shipped",
+      "not_needed": "No longer needed",
+      "warranty": "Warranty claim",
+      "breakdown": "Machine breakdown",
+      "calibration": "Calibration / inspection",
+      "other": "Other"
+    },
+    "actions": {
+      "return": {
+        "eyebrow": "Returns",
+        "title": "Send something back",
+        "body": "Start a return against any order with items still within the return window.",
+        "cta": "Start return"
+      },
+      "repair": {
+        "eyebrow": "Repair",
+        "title": "Open a repair case",
+        "body": "Log a breakdown or fault for any machine in your fleet — we route it to the right workshop.",
+        "cta": "Open repair case"
+      },
+      "inspection": {
+        "eyebrow": "Calibration & inspection",
+        "title": "Schedule calibration",
+        "body": "Request annual calibration, safety inspection, or a service visit.",
+        "cta": "Request inspection"
+      }
+    },
+    "counters": {
+      "total": "Cases on file",
+      "open": "Open",
+      "awaiting": "Awaiting you",
+      "closed": "Closed"
+    },
+    "sections": {
+      "open": "Open cases",
+      "closed": "Closed cases"
+    },
+    "empty": {
+      "heading": "No service activity yet.",
+      "body": "When you start a return, open a repair case, or request calibration, it appears here — with live status from our workshop.",
+      "ctaReturn": "Start a return",
+      "ctaRepair": "Open a repair case"
+    },
+    "detail": {
+      "opened": "Opened",
+      "updated": "Last update",
+      "reason": "Reason",
+      "order": "Linked order",
+      "machine": "Linked machine",
+      "serial": "Serial",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "items": "Items",
+      "resolution": "Resolution"
+    },
+    "attachments": {
+      "eyebrow": "Evidence",
+      "heading": "Attachments."
+    },
+    "timeline": {
+      "eyebrow": "Activity",
+      "heading": "Status timeline.",
+      "subheading": "The same state our workshop logs against your case. Newest on top.",
+      "customer": "You",
+      "swr": "SWR"
+    },
+    "awaitingCustomer": {
+      "heading": "We need a decision from you.",
+      "body": "This case is paused until we hear back. The latest note from our workshop is in the timeline above.",
+      "cta": "Reply to workshop"
+    },
+    "new": {
+      "metaTitle": "New service request",
+      "metaDescription": "Open a return, repair or inspection case against your account.",
+      "return": {
+        "heading": "Start a return",
+        "subheading": "Pick the items, tell us why, and attach any photos of the problem. We will pick up the case within one business day.",
+        "submit": "Submit return request"
+      },
+      "repair": {
+        "heading": "Open a repair case",
+        "subheading": "Describe the fault and attach any diagnostic material. We will confirm pickup or drop-off within one business day.",
+        "submit": "Submit repair request"
+      },
+      "inspection": {
+        "heading": "Request inspection or calibration",
+        "subheading": "Schedule an annual calibration, safety check, or preventive service for a machine in your fleet.",
+        "submit": "Request inspection"
+      },
+      "contextOrder": "Order",
+      "contextMachine": "Machine",
+      "fieldsHeading": "Case details",
+      "description": "Describe the issue",
+      "descriptionHint": "Include fault symptoms, when it started, and any steps you have already taken. The more context, the faster we close the case.",
+      "reason": "Reason",
+      "reasonChoose": "Select a reason…",
+      "itemsHeading": "Items",
+      "itemsHint": "Only items with a quantity above zero are included in the return.",
+      "itemQty": "Return qty",
+      "contactHeading": "Contact",
+      "contactName": "Your name",
+      "contactEmail": "Email",
+      "contactPhone": "Phone",
+      "attachmentsHeading": "Photos & documents",
+      "attachmentsHint": "Photos of the damage, diagnostic reports, or screenshots all speed up the case. Images and PDFs up to 10 MB each.",
+      "attachmentsAdd": "Add photos or documents",
+      "attachmentsSelectedOne": "1 file selected — add more or submit",
+      "attachmentsSelectedMany": "{count} files selected",
+      "attachmentsNote": "Uploads are attached to the case record. Bytes are not transferred in this preview build — filenames are captured so our team can follow up for full files.",
+      "submitting": "Submitting…",
+      "errorMissing": "Please fill in the description and your name before submitting.",
+      "picker": {
+        "heading": "Pick a machine from your fleet",
+        "subheading": "Tap one of the machines we already have on file. Warranty status, serial, and last service are shown so you can decide in seconds.",
+        "selectCta": "Select",
+        "warranty": {
+          "active": "In warranty",
+          "expiring": "Expiring soon",
+          "expired": "Out of warranty"
+        },
+        "warrantyUntil": "Warranty until",
+        "serial": "Serial",
+        "lastService": "Last service",
+        "noService": "No service yet",
+        "empty": {
+          "heading": "No machines registered yet.",
+          "body": "Your fleet is empty, so there's nothing to pick from. You can still describe the machine manually below, or ask us to import it from a past invoice.",
+          "cta": "Contact us"
+        }
+      },
+      "notInFleet": {
+        "heading": "Not in your fleet?",
+        "toggle": "Enter the machine details manually",
+        "hint": "Use this for machines that haven't been registered on your account yet. Brand and model are enough — serial speeds things up if you have it.",
+        "brand": "Brand",
+        "model": "Model",
+        "serial": "Serial number"
+      },
+      "contextBanner": {
+        "changeMachine": "Change"
+      }
+    },
+    "orderSection": {
+      "heading": "Returns & service",
+      "startReturn": "Start a return",
+      "empty": "No service cases against this order yet."
+    },
+    "machineSection": {
+      "eyebrow": "Live service",
+      "heading": "Open service cases.",
+      "subheading": "Every ticket we have open for this machine, with the same status view our workshop uses."
+    }
   },
   "cart": {
     "heading": "Your Procurement Cart",
@@ -404,10 +994,22 @@
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
     "exportCsv": "Export as CSV",
+    "csvImport": {
+      "button": "Import CSV",
+      "importing": "Importing…",
+      "hint": "Two columns: SKU, quantity. First row may be a header.",
+      "summary": "Added {added} items. {problems} problems.",
+      "row": "Row {n}",
+      "errMissingSku": "Missing SKU",
+      "errInvalidQty": "Invalid quantity",
+      "errEmpty": "No rows found in file"
+    },
     "saveForLater": "Save for Later",
     "removedNotice": "was removed from the shopping basket.",
     "undo": "Undo",
     "undoing": "Undoing…",
+    "loading": "Loading your cart…",
+    "fetchError": "We could not load your cart. Please check your connection and try again.",
     "updateError": "Could not update the cart. Please try again.",
     "orderSummary": "Order Summary",
     "subtotal": "Subtotal ({count} items)",
@@ -418,5 +1020,595 @@
     "trustIsoDesc": "All components undergo rigorous material testing and structural validation.",
     "trustSupport": "Technical Support Active",
     "trustSupportDesc": "Dedicated application engineers are available for technical inquiries."
+  },
+  "services": {
+    "bookConsultation": "Book a Consultation",
+    "requestService": "Request Service",
+    "hub": {
+      "eyebrow": "360° Service",
+      "heading": "Beyond the Product.",
+      "subheading": "Consultation, repair, delivery, and customs clearance — four pillars that keep your operation running. One partner, one point of contact.",
+      "learnMore": "Learn More",
+      "bookConsultation": "Book a Consultation"
+    },
+    "consulting": {
+      "eyebrow": "Consulting",
+      "title": "Expert Consultation",
+      "shortBody": "Tool selection, workflow optimization, and technical application advice from specialists who know our catalog inside out.",
+      "subtitle": "Our engineers and application specialists visit your site, analyze your requirements, and recommend exactly what the job needs.",
+      "body1": "Choosing the right equipment is rarely straightforward. Welding parameters, tool geometry, safety regulations, and total cost of ownership all factor in — and one wrong decision can cost weeks of production.",
+      "body2": "Our team of application specialists has decades of combined experience across welding, machining, and workshop equipment. We visit your site, understand your process, and recommend the exact setup that fits — without upselling.",
+      "body3": "Consultation is always free for existing and prospective customers. If you're unsure whether a product is right for your application, ask us first.",
+      "ctaHeading": "Ready to talk?",
+      "ctaBody": "Book a 30-minute consultation and we'll come to you."
+    },
+    "repair": {
+      "eyebrow": "Repair",
+      "title": "Service & Repair Portal",
+      "shortBody": "Tools and machines are critical to your production. Our service team handles repairs and maintenance — fast, reliable, and on-site.",
+      "subtitle": "Drop off in Lörrach, send it in, or have us pick it up. Diagnostics within 24 hours, most repairs back on your bench in 48.",
+      "body1": "Downtime is expensive. When a welding machine or power tool fails, every hour matters — which is why our repair workshop is staffed year-round and most repairs are completed within 48 hours.",
+      "body2": "We service all major brands: welding equipment, power tools, pneumatic tools, and workshop machines. Loaner equipment is available for longer repairs to keep your production moving.",
+      "body3": "Preventive maintenance contracts are available for high-usage customers. Regular inspection extends service life and prevents unplanned downtime.",
+      "ctaHeading": "Need a repair now?",
+      "ctaBody": "Call us for urgent service requests and loaner equipment.",
+      "categories": {
+        "eyebrow": "What we repair",
+        "heading": "Six categories. One workshop.",
+        "subheading": "If it's tools, machines, or workshop equipment from a brand we carry, we probably service it. Click any category to start a repair request.",
+        "requestQuote": "Start a request",
+        "items": {
+          "welding": {
+            "eyebrow": "Welding equipment",
+            "title": "MIG, TIG, MMA, plasma",
+            "body": "Power sources, wire feeders, torches and accessories from Fronius, EWM, Lorch, Esab and more. Calibration on request."
+          },
+          "powerTools": {
+            "eyebrow": "Power tools",
+            "title": "Cordless and corded",
+            "body": "Drills, grinders, impact drivers, circular saws — Bosch, Makita, Metabo, Fein. Battery diagnostics included."
+          },
+          "pneumatic": {
+            "eyebrow": "Pneumatic tools",
+            "title": "Compressors and air tools",
+            "body": "Aircraft, Schneider and Atlas Copco compressors, air wrenches, sanders and grinders. Hose and fitting service too."
+          },
+          "machines": {
+            "eyebrow": "Workshop machines",
+            "title": "Stationary equipment",
+            "body": "Drill presses, band saws, bench grinders, fume extractors. We come to you for machines that don't move easily."
+          },
+          "measuring": {
+            "eyebrow": "Measuring instruments",
+            "title": "Calibration & service",
+            "body": "Calipers, micrometers, multimeters and laser measurement tools. Calibration certificates issued on request."
+          },
+          "safety": {
+            "eyebrow": "Safety equipment",
+            "title": "Helmets, harnesses, masks",
+            "body": "Periodic inspection of fall arrest equipment, welding helmets and respirators per legal interval."
+          }
+        }
+      },
+      "timeline": {
+        "eyebrow": "How it works",
+        "heading": "From drop-off to pickup.",
+        "calloutValue": "Ø 48h",
+        "calloutLabel": "Average turnaround",
+        "steps": {
+          "dropoff": {
+            "title": "Drop-off",
+            "body": "Bring your tool to Lörrach during opening hours, or schedule a pickup with our delivery fleet."
+          },
+          "diagnosis": {
+            "title": "Diagnosis",
+            "body": "We assess fault and parts availability within 24 hours and quote the repair before any work starts."
+          },
+          "repair": {
+            "title": "Repair",
+            "body": "Approved repairs go straight onto the bench. Most are finished the same day — loaner equipment for longer ones."
+          },
+          "pickup": {
+            "title": "Pickup",
+            "body": "Collect in Lörrach or have it delivered on our next route. Tested, cleaned, and warrantied."
+          }
+        }
+      },
+      "form": {
+        "recipientEmail": "service@swr-loerrach.de",
+        "heading": "Request a repair",
+        "subheading": "Fill in what you can — we will reply within one working day with diagnosis steps and a transport option.",
+        "machineMake": "Brand",
+        "machineModel": "Model",
+        "serial": "Serial number",
+        "fault": "Describe the fault",
+        "contactName": "Your name",
+        "company": "Company (optional)",
+        "phone": "Phone",
+        "email": "Email",
+        "submit": "Send request",
+        "note": "Submitting opens your email client with the request pre-filled. Replace the email transport later if you prefer not to use mailto."
+      }
+    },
+    "delivery": {
+      "eyebrow": "Delivery",
+      "title": "Fast Delivery, Own Fleet",
+      "shortBody": "We deliver with our own fleet across the Lörrach region and ship nationwide. Same-day dispatch for stock items ordered before noon.",
+      "subtitle": "Our own delivery fleet keeps your schedule predictable. Same-day dispatch, transparent tracking, and no third-party surprises.",
+      "body1": "We maintain a fleet of delivery vehicles operated by our own drivers — the same people who unload at your facility know our products and can answer questions on the spot.",
+      "body2": "Stock items ordered before noon ship same-day. Regional deliveries (Lörrach, Basel, Mulhouse and surrounding areas) typically arrive within 24 hours.",
+      "body3": "Nationwide shipments go via established freight partners with full tracking. For urgent projects we offer express delivery options — contact us to coordinate.",
+      "ctaHeading": "Have a large order?",
+      "ctaBody": "Ask us about scheduled delivery windows and bulk shipping."
+    },
+    "customs": {
+      "eyebrow": "Customs",
+      "title": "Swiss Delivery Center",
+      "shortBody": "Complete customs handling for Swiss customers. We file paperwork, pay duties, and deliver ready-for-use across the border.",
+      "subtitle": "Lörrach sits 10 minutes from the Swiss border. We turn that geography into a true cross-border service: AEO-cleared, VAT-correct, delivered in CHF or EUR.",
+      "body1": "Cross-border trade involves tariff codes, preferential origin documentation, VAT recovery, and freight forwarding — any mistake triggers delays or unexpected costs.",
+      "body2": "For Swiss customers we file all customs declarations ourselves, pay duties upfront, and invoice the landed cost in CHF or EUR. Your shipment arrives as if it were a domestic order.",
+      "body3": "We hold the AEO (Authorised Economic Operator) status with German customs, which means faster processing and fewer inspections at the border.",
+      "ctaHeading": "Shipping to Switzerland?",
+      "ctaBody": "We handle the paperwork. You get the goods.",
+      "facts": {
+        "aeo": { "value": "AEO-F", "label": "Authorised Economic Operator" },
+        "delivery": { "value": "1–3 days", "label": "Transit, border to door" },
+        "currency": {
+          "value": "CHF / EUR",
+          "label": "Invoice currency on request"
+        },
+        "team": { "value": "1 contact", "label": "Same person, every shipment" }
+      },
+      "zones": {
+        "eyebrow": "Shipping zones",
+        "heading": "From Lörrach to anywhere in Switzerland.",
+        "subheading": "Our own fleet handles Basel-area customers. The rest of Switzerland goes via our long-standing forwarder partners with cleared paperwork.",
+        "columns": {
+          "zone": "Zone",
+          "regions": "Cantons / regions",
+          "transit": "Transit time",
+          "freight": "From"
+        },
+        "rows": {
+          "basel": {
+            "zone": "Zone 1",
+            "regions": "BS, BL, AG (Fricktal)",
+            "transit": "Same day or next day",
+            "freight": "CHF 28"
+          },
+          "north": {
+            "zone": "Zone 2",
+            "regions": "ZH, SH, TG, SG (north)",
+            "transit": "1 working day",
+            "freight": "CHF 42"
+          },
+          "central": {
+            "zone": "Zone 3",
+            "regions": "BE, SO, LU, ZG, NW, OW",
+            "transit": "1–2 working days",
+            "freight": "CHF 48"
+          },
+          "east": {
+            "zone": "Zone 4",
+            "regions": "GR, GL, UR, SZ",
+            "transit": "2 working days",
+            "freight": "CHF 58"
+          },
+          "south": {
+            "zone": "Zone 5",
+            "regions": "TI, VS, GE, VD, NE, JU, FR",
+            "transit": "2–3 working days",
+            "freight": "CHF 62"
+          }
+        },
+        "disclaimer": "Indicative rates for parcels up to 30 kg. Pallet freight, oversized goods and express slots quoted on request."
+      },
+      "duties": {
+        "eyebrow": "Duty rates",
+        "heading": "What customers really pay at the border.",
+        "subheading": "Approximate Swiss duty + import VAT (8.1%) for typical shop categories. Final amounts depend on tariff classification and origin documents — we file both for you.",
+        "columns": {
+          "type": "Category",
+          "rate": "Duty + VAT",
+          "note": "Notes"
+        },
+        "rows": {
+          "tools": {
+            "type": "Hand tools",
+            "rate": "≈ 8.1% VAT",
+            "note": "Most hand tools enter Switzerland duty-free under the EU–CH agreement; only import VAT applies."
+          },
+          "machines": {
+            "type": "Power tools & machines",
+            "rate": "≈ 8.1% VAT",
+            "note": "Duty-free with EUR.1 / supplier declaration of preferential origin, which we issue."
+          },
+          "consumables": {
+            "type": "Welding consumables",
+            "rate": "≈ 0.5–8.6% + VAT",
+            "note": "Filler wire and electrodes carry small specific duties depending on alloy class."
+          },
+          "ppe": {
+            "type": "PPE & safety",
+            "rate": "≈ 8.1% VAT",
+            "note": "Helmets, gloves, harnesses — typically duty-free with origin documentation."
+          },
+          "spareParts": {
+            "type": "Spare parts",
+            "rate": "≈ 8.1% VAT",
+            "note": "Original spare parts often qualify for the simplified procedure with same-day clearance."
+          }
+        },
+        "disclaimer": "Indicative figures only — Swiss duty is calculated on weight + value combinations. We provide a binding landed cost on each quote."
+      },
+      "filed": {
+        "eyebrow": "What we file for you",
+        "heading": "Six documents, zero work for you.",
+        "subheading": "Every Swiss shipment leaves our warehouse with a complete customs file. You sign the order, we handle the rest.",
+        "items": {
+          "tariff": {
+            "title": "Tariff classification",
+            "body": "Correct HS code (Swiss Tares) chosen for every line — no over-declaration, no surprises."
+          },
+          "origin": {
+            "title": "EUR.1 / origin declaration",
+            "body": "Preferential origin paperwork to keep duty-eligible goods truly duty-free."
+          },
+          "vat": {
+            "title": "Swiss import VAT",
+            "body": "Filed and paid upfront via our forwarder; we recover input VAT for German customers separately."
+          },
+          "exportDecl": {
+            "title": "German export declaration",
+            "body": "Atlas export filing on the German side, including reduced-data procedures where allowed."
+          },
+          "duties": {
+            "title": "Duties paid (DDP)",
+            "body": "Delivered Duty Paid is the default — landed cost on the invoice, no border calls for the recipient."
+          },
+          "deliveryNote": {
+            "title": "Bilingual delivery note",
+            "body": "Delivery and packing list in German and French so the receiving team finds what they ordered."
+          }
+        }
+      },
+      "compliance": {
+        "eyebrow": "Compliance documents",
+        "heading": "Pull declarations from the catalog, not from email.",
+        "subheading": "All declarations of conformity, datasheets, safety data sheets and performance declarations live in the catalog and stay versioned by manufacturer.",
+        "openCatalog": "Open catalog",
+        "docs": {
+          "certificate": {
+            "eyebrow": "DoC",
+            "title": "Declarations of conformity",
+            "body": "CE / UKCA declarations from each manufacturer — required for customs and audit files."
+          },
+          "datasheet": {
+            "eyebrow": "Datasheet",
+            "title": "Technical datasheets",
+            "body": "Power, weight, dimensions and standards — what your forwarder and your QA both want to see."
+          },
+          "sds": {
+            "eyebrow": "SDS",
+            "title": "Safety data sheets",
+            "body": "Required for any chemical product crossing the border — filler wire fluxes, lubricants, sprays."
+          },
+          "performance": {
+            "eyebrow": "DoP",
+            "title": "Declarations of performance",
+            "body": "Construction Products Regulation (CPR) declarations for site-installed products."
+          }
+        }
+      },
+      "crossLink": {
+        "eyebrow": "Inside Germany",
+        "heading": "Same fleet, same precision — domestic side.",
+        "body": "If your delivery address is German, you don't need customs at all. Our own fleet covers the Lörrach region same-day and we ship the rest of Germany via parcel and pallet networks.",
+        "cta": "See domestic delivery"
+      }
+    }
+  },
+  "industries": {
+    "browseCatalog": "Browse Catalog",
+    "featuredHeading": "Featured Products",
+    "viewAll": "View All",
+    "rangeComingSoon": "Our full range for this industry is being added to the catalog — contact us for availability.",
+    "hub": {
+      "eyebrow": "Industries We Serve",
+      "heading": "Equipment for Every Trade.",
+      "subheading": "From welding shops to facility maintenance teams — explore our ranges by industry and find the right equipment fast.",
+      "exploreIndustry": "Explore"
+    },
+    "weldingHub": {
+      "eyebrow": "Welding Technology",
+      "title": "Welding Hub: machines, gas, consumables.",
+      "subtitle": "Six welding processes, hundreds of consumables, and a service workshop that knows every machine on this page. Specified for the bench, not the brochure.",
+      "body1": "Welding is the most service-heavy category we sell. We carry welding stations from Fronius, EWM, Lorch and Esab, with a workshop that calibrates and repairs them on-site.",
+      "body2": "If you're not sure which process or filler material fits your job, talk to us before you buy — application advice is free, and we'd rather sell you the right machine the first time.",
+      "subCategories": {
+        "eyebrow": "Browse by process",
+        "heading": "Pick the process. Find the machine.",
+        "subheading": "Each process points to the right machines, torches, and consumables in the catalog.",
+        "cta": "View range",
+        "items": {
+          "mig": {
+            "eyebrow": "MIG / MAG",
+            "title": "Wire-fed for production",
+            "body": "Fastest deposition rate. Right choice for repetitive structural work in carbon steel, stainless and aluminium."
+          },
+          "tig": {
+            "eyebrow": "TIG / WIG",
+            "title": "Precision and finish",
+            "body": "Clean, controlled welds for thin material, stainless, aluminium and exotic alloys. Visible welds and pipework."
+          },
+          "mma": {
+            "eyebrow": "MMA / E-hand",
+            "title": "Stick electrode",
+            "body": "Rugged and portable. Outdoor work, repair welding, and fieldwork where shielding gas isn't practical."
+          },
+          "plasma": {
+            "eyebrow": "Plasma cutting",
+            "title": "Cut clean, cut fast",
+            "body": "Plasma cutters from 30 A to 200 A for sheet, structural and stainless. Air-cooled and water-cooled options."
+          },
+          "spot": {
+            "eyebrow": "Spot welding",
+            "title": "Sheet metal joining",
+            "body": "Resistance and stud welders for body shops and sheet metal fabrication."
+          },
+          "consumables": {
+            "eyebrow": "Consumables",
+            "title": "Wire, rod, gas, tips",
+            "body": "Filler wires, electrodes, contact tips, nozzles, gas and PPE. Stocked in Lörrach for next-day pickup."
+          }
+        }
+      },
+      "products": {
+        "heading": "Featured welding equipment",
+        "subheading": "A small slice of the welding range — see the full catalog for hundreds of stations, torches and accessories."
+      },
+      "gasTable": {
+        "eyebrow": "Gas selection",
+        "heading": "Right gas, right amperage.",
+        "subheading": "Quick reference for the most common shielding gases. The catalog has full SDS sheets and regulator pairings.",
+        "columns": {
+          "mix": "Gas / mix",
+          "use": "Process & material",
+          "current": "Typical current",
+          "notes": "Notes"
+        },
+        "rows": {
+          "argon": {
+            "mix": "Ar 100 %",
+            "use": "TIG — stainless, aluminium, copper",
+            "current": "DC 20–250 A",
+            "notes": "Inert. Pure argon for almost all TIG work."
+          },
+          "argonCo2": {
+            "mix": "Ar 82 % / CO₂ 18 %",
+            "use": "MIG / MAG — carbon steel",
+            "current": "DC 60–300 A",
+            "notes": "Standard mix for spray and short-arc on mild steel."
+          },
+          "co2": {
+            "mix": "CO₂ 100 %",
+            "use": "MIG / MAG — heavy steel",
+            "current": "DC 80–400 A",
+            "notes": "More penetration, more spatter. Cheaper option for thick structural work."
+          },
+          "argonH2": {
+            "mix": "Ar 95 % / H₂ 5 %",
+            "use": "TIG — austenitic stainless",
+            "current": "DC 50–200 A",
+            "notes": "Faster travel speed and brighter arc on stainless."
+          },
+          "argonHe": {
+            "mix": "Ar 70 % / He 30 %",
+            "use": "MIG — aluminium > 8 mm",
+            "current": "DC 150–350 A",
+            "notes": "Better penetration on thick aluminium sections."
+          },
+          "oxygen": {
+            "mix": "O₂ + acetylene",
+            "use": "Brazing, flame cutting",
+            "current": "n/a",
+            "notes": "Bottle storage and regulator service available."
+          }
+        },
+        "safetyHeading": "Gas safety, on us.",
+        "safetyBody": "Cylinder transport, leak testing and regulator service are part of every gas delivery. We refuse to leave a faulty regulator in the field — it's too easy to fix it on the spot."
+      },
+      "guides": {
+        "eyebrow": "Technical guides",
+        "heading": "Guides, datasheets and SDS — all in the catalog.",
+        "subheading": "Filtered into the document catalog by type. No more chasing PDFs through email.",
+        "openCatalog": "Open in catalog",
+        "items": {
+          "gasSelection": {
+            "eyebrow": "Application notes",
+            "title": "Gas selection guides",
+            "body": "Manufacturer guides on shielding gas mixes for each process and material.",
+            "docType": "technical-info"
+          },
+          "wirePrep": {
+            "eyebrow": "How-to",
+            "title": "Wire and rod handling",
+            "body": "Storage, drying and handling of filler wire and stick electrodes — humidity matters.",
+            "docType": "instructions"
+          },
+          "ppe": {
+            "eyebrow": "Safety",
+            "title": "PPE datasheets",
+            "body": "Helmet shade tables, glove ratings, and fume extraction guidance.",
+            "docType": "datasheet"
+          },
+          "currentSettings": {
+            "eyebrow": "Reference",
+            "title": "Manufacturer manuals",
+            "body": "Operating manuals for our most-used welding stations from Fronius, EWM and Lorch.",
+            "docType": "manual"
+          }
+        }
+      },
+      "catalogRail": {
+        "heading": "Welding documents",
+        "subheading": "Real catalogs, datasheets and manuals — pulled from manufacturers we represent.",
+        "viewAll": "All welding documents"
+      },
+      "installer": {
+        "eyebrow": "Service & installation",
+        "heading": "We sell it. We service it.",
+        "body": "Welding stations don't ship and forget — they need calibration, consumable matching, and the occasional repair. Our certified workshop in Lörrach handles all of it.",
+        "ctaRepair": "Repair portal",
+        "ctaConsult": "Talk to a technician",
+        "items": {
+          "calibration": {
+            "title": "Calibration",
+            "body": "Power and voltage calibration with certificate, on-site or in the workshop."
+          },
+          "loaner": {
+            "title": "Loaner machines",
+            "body": "Loaner station while yours is in service so production doesn't stop."
+          },
+          "onsite": {
+            "title": "On-site visits",
+            "body": "Service van in the Lörrach / Basel region — repairs without shipping the machine."
+          },
+          "training": {
+            "title": "Operator training",
+            "body": "Brief operator handover for new machines. Welding-process workshops on request."
+          }
+        }
+      }
+    },
+    "slugs": {
+      "welding": {
+        "eyebrow": "Welding",
+        "title": "Welding Technology",
+        "shortBody": "MIG, TIG, MMA and plasma equipment, filler materials, safety gear, and fume extraction — everything for the welding shop.",
+        "subtitle": "Welding machines, filler materials, protective equipment, and fume extraction from leading brands.",
+        "body1": "From hobby-grade MIG welders to heavy industrial TIG stations, we stock welding equipment for every application — with application consultation to match machine and consumables to the job.",
+        "body2": "Gases, wires, electrodes, protective clothing, and fume extraction systems round out the range. One partner for the entire welding workstation."
+      },
+      "tools": {
+        "eyebrow": "Hand Tools",
+        "title": "Hand Tools",
+        "shortBody": "Professional-grade hand tools for mechanics, fitters, and fabricators — wrenches, screwdrivers, measuring instruments and more.",
+        "subtitle": "Premium hand tools from trusted manufacturers: wrenches, screwdrivers, pliers, measuring instruments.",
+        "body1": "Hand tools are the foundation of any workshop. We carry professional-grade brands tested to withstand daily use — with warranty and service support from the manufacturers.",
+        "body2": "From single tools to complete workshop sets, we help you equip your bench exactly to your workflow."
+      },
+      "power-tools": {
+        "eyebrow": "Power Tools",
+        "title": "Power Tools",
+        "shortBody": "Corded and cordless power tools for construction, metalwork, and assembly — drills, grinders, saws, impact drivers.",
+        "subtitle": "Corded and cordless power tools from leading brands — with repair service and consumables from stock.",
+        "body1": "Drills, impact drivers, grinders, circular saws, and more — we stock the professional ranges from major brands, supported by our own repair workshop.",
+        "body2": "Battery platforms and accessories are available from stock so you can expand your cordless system without compatibility worries."
+      },
+      "machines": {
+        "eyebrow": "Machines",
+        "title": "Workshop Machines",
+        "shortBody": "Bench grinders, drill presses, band saws, and larger fabrication machines — delivered, installed, and serviced.",
+        "subtitle": "Stationary workshop machines: drill presses, band saws, grinders, and fabrication equipment — delivered and installed.",
+        "body1": "Workshop machines are a long-term investment. We help with specification, handle delivery and installation, and provide ongoing service through our repair workshop.",
+        "body2": "Financing and leasing options are available on request for larger capital purchases."
+      },
+      "facility-equipment": {
+        "eyebrow": "Facility",
+        "title": "Facility Equipment",
+        "shortBody": "Workbenches, storage systems, material handling, and shop floor equipment — build an efficient working environment.",
+        "subtitle": "Workbenches, shelving, material handling — turn your shop floor into an efficient working environment.",
+        "body1": "A productive workshop starts with the right infrastructure. We plan and supply workbench systems, storage, and material handling equipment tailored to your space.",
+        "body2": "On-site consultation is available to design ergonomic, efficient workstations from scratch or optimize existing layouts."
+      },
+      "workshop-supplies": {
+        "eyebrow": "Supplies",
+        "title": "Workshop Supplies",
+        "shortBody": "Consumables, cleaning, lubricants, adhesives, fasteners — everything the shop uses up every week.",
+        "subtitle": "Consumables, cleaning products, lubricants, and fasteners — keep the shop stocked with one order.",
+        "body1": "The items a workshop runs through every week — consumables, cleaning and maintenance supplies, lubricants, adhesives, and fasteners — all from one supplier.",
+        "body2": "Stock replenishment programs are available for high-volume customers: we monitor usage and deliver before you run out."
+      },
+      "occupational-safety": {
+        "eyebrow": "PPE & Safety",
+        "title": "Occupational Safety",
+        "shortBody": "PPE, safety signage, first aid, and ergonomic equipment — meet your duty of care with professional-grade gear.",
+        "subtitle": "Personal protective equipment, signage, first aid, and ergonomics — keep your team safe and compliant.",
+        "body1": "Occupational safety is regulated — and the wrong equipment exposes your company to liability. We carry only certified PPE that meets current EU standards.",
+        "body2": "Consultation on hazard assessment and PPE selection is available for new customers building out or renewing their safety programs."
+      }
+    }
+  },
+  "partners": {
+    "eyebrow": "Partners",
+    "heading": "Brands we trust. Partners who trust us.",
+    "subheading": "We work with the leading manufacturers in welding, tools, safety, and facility equipment — and they back us with dealer-level support.",
+    "logoStripHeading": "Selected brand partners",
+    "intro": "Every product we sell comes with service behind it. By partnering with the category leaders, we can offer authorised dealer pricing, warranty handling, and technical support directly from the manufacturer.",
+    "criteriaHeading": "How we choose partners",
+    "criteriaBody": "We only add a brand to our range when we are confident in its quality, supply reliability, and after-sales support. Our buyers test products in our own workshop before they go into the catalogue.",
+    "coverageHeading": "What our partnerships give you",
+    "coverageBody": "Fast lead times, warranty handling in-house, technical hotlines to the manufacturer, and access to stock we do not list publicly. If you need something a brand makes, ask us — we can almost always source it."
+  },
+  "careers": {
+    "eyebrow": "Careers",
+    "heading": "Work at SWR.",
+    "subheading": "A family-run business in its third generation, offering stable work, apprenticeships, and a team that actually knows each other's names.",
+    "applyCta": "Apply now",
+    "applicationEmail": "jobs@swr-loerrach.de",
+    "intro": "We build long careers. Many of our team have been with the company for a decade or more — because we invest in people, not just payroll. If you are looking for stable, skilled work in the Lörrach area, we would like to hear from you.",
+    "whyUsHeading": "Why work here",
+    "whyUsBody": "Predictable hours, competitive pay, and real responsibility from day one. Small company, flat hierarchy, no politics — if you can do the work, we give you the space to do it.",
+    "apprenticeshipHeading": "Apprenticeships",
+    "apprenticeshipBody": "We train every year in commercial and warehouse roles. Our apprentices learn every part of the business — from product to customer to ERP — and most of them stay with us after qualifying.",
+    "openRolesHeading": "Open positions",
+    "openRolesBody": "Even if we have not advertised a specific opening, we are always interested in talking to skilled warehouse, sales, and counter staff. Send us a CV and we will reply.",
+    "applicationHeading": "Apply",
+    "applicationBody": "Send us a short CV and a few lines about yourself. We reply to every application.",
+    "applicationHint": "You do not need a polished cover letter — we care more about who you are and what you have worked on."
+  },
+  "certificates": {
+    "eyebrow": "Certificates",
+    "heading": "Certifications and compliance.",
+    "subheading": "Quality, environmental, customs, and welding certifications — available on request for your own supplier audits.",
+    "requestCopy": "Request a certificate",
+    "download": "Download PDF",
+    "intro": "As a B2B supplier, we maintain the certifications our customers need for their own quality and compliance processes. All current certificates are available on request — and we send them directly to your buyer or QA contact.",
+    "requestNote": "Certificate PDFs are issued on request so we can always send you the current, signed version. Contact us and we will email the document you need within one working day.",
+    "items": {
+      "iso9001": {
+        "title": "ISO 9001 — Quality Management",
+        "issuer": "Issued by TÜV",
+        "validUntil": "Renewed annually"
+      },
+      "iso14001": {
+        "title": "ISO 14001 — Environmental Management",
+        "issuer": "Issued by TÜV",
+        "validUntil": "Renewed annually"
+      },
+      "aeo": {
+        "title": "AEO — Authorised Economic Operator",
+        "issuer": "German Customs (Hauptzollamt)",
+        "validUntil": "Permanent, subject to audits"
+      },
+      "welding": {
+        "title": "DIN EN ISO 3834 — Welding Quality",
+        "issuer": "Issued by accredited body",
+        "validUntil": "Renewed as required"
+      }
+    }
+  },
+  "offers": {
+    "eyebrow": "Offers",
+    "heading": "Current offers and promotions.",
+    "subheading": "Seasonal promotions, end-of-range deals, and clearance — for existing customers and new buyers alike.",
+    "shopAll": "Shop all products",
+    "featuredHeading": "Featured right now",
+    "intro": "We run focused promotions rather than constant sales. If it is listed here, there is a real reason — a manufacturer campaign, a closing size range, or a volume deal we have negotiated on your behalf.",
+    "howHeading": "How offers work",
+    "howBody": "Most offers apply to existing B2B customers automatically at checkout. For larger volumes or custom bundles, contact your account manager or the sales team — we can often improve on the listed price when quantity makes sense.",
+    "emptyState": "No active promotions right now — check back soon or contact us for custom pricing on larger orders."
   }
 }

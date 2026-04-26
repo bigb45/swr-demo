@@ -2,6 +2,17 @@
   "nav": {
     "allProducts": "Alle Produkte",
     "products": "Produkte",
+    "shop": "Shop",
+    "catalog": "Katalog",
+    "services": "Service",
+    "industries": "Branchen",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "partners": "Partner",
+    "careers": "Karriere",
+    "certificates": "Zertifikate",
+    "offers": "Angebote",
+    "fleet": "Mein Maschinenpark",
     "orderHistory": "Bestellhistorie",
     "account": "Konto",
     "cart": "Warenkorb",
@@ -9,7 +20,16 @@
     "searchPlaceholder": "Artikelnummer, Stichwort oder Spezifikation eingeben...",
     "settings": "Einstellungen",
     "help": "Hilfe",
-    "technicalSupport": "Technischer Support"
+    "technicalSupport": "Technischer Support",
+    "bookConsultation": "Beratung vereinbaren",
+    "home": "SWR Lörrach — Startseite",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "mobileNavLabel": "Mobile Navigation",
+    "primaryNavLabel": "Hauptnavigation",
+    "selectCurrency": "Währung auswählen",
+    "selectLanguage": "Sprache auswählen",
+    "preferences": "Einstellungen"
   },
   "hero": {
     "title": "Schweißtechnik, Werkzeuge & Reparatur.",
@@ -18,25 +38,112 @@
     "requestQuote": "Beratung anfragen"
   },
   "home": {
-    "featuredProducts": "Ausgewählte Produkte",
-    "featuredSubtitle": "Eine Auswahl aus unserem Sortiment",
-    "viewAll": "Alle ansehen →",
-    "topCategories": "Produktkategorien",
-    "viewAllCategories": "Alle {count} Kategorien anzeigen",
-    "newArrivals": "Aktuelle Produkte & Spezifikationen",
-    "updatedRecently": "Vor 2 Min. aktualisiert",
-    "colPartNumber": "Art.-Nr.",
-    "colDescription": "Beschreibung",
-    "colMaterial": "Material",
-    "colStock": "Lagerstatus",
-    "colPrice": "Stückpreis",
-    "customMillingTitle": "Service & Reparatur",
-    "customMillingDesc": "Werkzeuge und Maschinen in Ihrem Produktionsprozess sind entscheidend für Ihren Erfolg. Unser Serviceteam übernimmt Reparatur und Wartung – schnell, zuverlässig und vor Ort.",
-    "uploadCadFile": "Reparaturanfrage stellen",
-    "viewCapabilities": "Mehr über unseren Service",
-    "complianceCenterTitle": "Zollabwicklung & Lieferung",
-    "complianceCenterDesc": "Wir liefern mit eigenem Fuhrpark und übernehmen die komplette Zollabwicklung für Kunden in der Schweiz. Schnell, sicher und unkompliziert.",
-    "accessDocuments": "Mehr erfahren"
+    "hero": {
+      "eyebrow": "Lörrach. Seit 1987.",
+      "title": "Wen rufen Sie an, wenn das Schweißgerät am Freitagnachmittag stehen bleibt?",
+      "subtitle": "Wir sind ein familiengeführter Industriefachhandel in Lörrach. Elf Personen, die ans Telefon gehen, die Werkstatt führen, die Auslieferung fahren und das Sortiment im Kopf haben.",
+      "openShop": "Zum Shop",
+      "openCatalog": "Zum Katalog"
+    },
+    "reality": {
+      "heading": "So läuft der Betrieb",
+      "years": {
+        "value": "1987",
+        "label": "Familiengeführt seit",
+        "sublabel": "Zweite Generation, gleicher Standort."
+      },
+      "skus": {
+        "value": "12.000+",
+        "label": "Aktive Artikel",
+        "sublabel": "Bevorratet, kommissioniert und versendet aus Lörrach."
+      },
+      "repair": {
+        "value": "48 Std.",
+        "label": "Reparatur-Durchlaufzeit",
+        "sublabel": "Die meisten Werkzeuge nach zwei Tagen wieder in der Werkstatt."
+      },
+      "brands": {
+        "value": "60+",
+        "label": "Markenpartner",
+        "sublabel": "Autorisierter Händler für die Hersteller in unserem Sortiment."
+      }
+    },
+    "intents": {
+      "eyebrow": "Hier starten",
+      "heading": "Sagen Sie uns, weshalb Sie wirklich hier sind.",
+      "part": {
+        "question": "Ich brauche jetzt ein Teil.",
+        "answer": "Im Live-Shop mit Lagerbestand und Preisen stöbern. Versand am selben Tag bei Bestellung bis 12 Uhr.",
+        "cta": "Zum Shop"
+      },
+      "repair": {
+        "question": "Mein Werkzeug ist kaputt.",
+        "answer": "In Lörrach abgeben oder einsenden. Diagnose innerhalb von 24 Stunden, die meisten Reparaturen in 48. Leihgeräte verfügbar.",
+        "cta": "Zum Reparaturportal"
+      },
+      "swiss": {
+        "question": "Ich liefere in die Schweiz.",
+        "answer": "Wir verzollen selbst, legen die Abgaben aus und stellen den Endpreis frei Haus. AEO-zertifiziert.",
+        "cta": "Schweiz-Center"
+      },
+      "catalog": {
+        "question": "Ich möchte einen Markenkatalog lesen.",
+        "answer": "Durchsuchbare Bibliothek mit Herstellerprospekten, Anleitungen, Datenblättern und Zertifikaten — direkt im Browser.",
+        "cta": "Zum Katalog"
+      }
+    },
+    "catalogPreview": {
+      "heading": "Erst lesen, dann kaufen.",
+      "subheading": "Markenkataloge der Hersteller in unserem Sortiment — durchsuchbar, filterbar, herunterladbar.",
+      "cta": "Zur Dokumentenbibliothek"
+    },
+    "services": {
+      "eyebrow": "Mehr als das Produkt",
+      "heading": "Vier Versprechen.",
+      "subheading": "Konkrete Zusagen — keine Marketingfloskeln. Wenn wir sie nicht einhalten, sagen Sie uns Bescheid und wir bringen es in Ordnung.",
+      "cta": "Alle Services",
+      "consulting": "Vor-Ort-Beratung im Dreiländereck. Antwort innerhalb von 4 Arbeitsstunden, Termine zu Ihrer Zeit.",
+      "repair": "Eigene Werkstatt mit Leihgeräten. Die meisten Reparaturen sind innerhalb von 48 Stunden nach Abgabe wieder einsatzbereit.",
+      "delivery": "Eigener Fuhrpark mit Tagesrouten in Lörrach, Basel und Mulhouse. Lagerware bis 12 Uhr — Versand am selben Tag.",
+      "customs": "AEO-zertifizierter Zollstatus. Wir filen die Papiere, legen die Zölle aus und stellen den Endpreis in CHF oder EUR."
+    },
+    "industries": {
+      "eyebrow": "Branchen, die wir kennen",
+      "heading": "Welche Werkstatt führen Sie?",
+      "questions": {
+        "welding": "Schweißbetrieb?",
+        "tools": "Werkzeughandel?",
+        "power-tools": "Elektrohandwerk?",
+        "machines": "Stationäre Maschinen?",
+        "facility-equipment": "Werkstatteinrichtung?",
+        "workshop-supplies": "Verbrauchsmaterial?",
+        "occupational-safety": "Arbeitsschutz?"
+      }
+    },
+    "featured": {
+      "heading": "Aktuell aus dem Shop",
+      "subheading": "Ein Live-Ausschnitt aus dem Sortiment — bevorratet, versendet und im eigenen Haus serviciert.",
+      "cta": "Kompletten Shop durchsuchen"
+    },
+    "people": {
+      "eyebrow": "Echte Namen. Echte Schreibtische.",
+      "heading": "Wenn Sie anrufen, geht ein Mensch ran.",
+      "body": "Wir sind elf im Team. Die Person, mit der Sie über das Angebot sprechen, erkennt Ihre Stimme bei der Reparatur wieder. Lernen Sie uns auf der Über-uns-Seite kennen.",
+      "cta": "Zum Team",
+      "featured": {
+        "name": "SWR Lörrach Team",
+        "role": "Verkauf & Service",
+        "quote": "Wenn Sie im Shop oder im Katalog nicht finden, was Sie brauchen, rufen Sie an. Wahrscheinlich liegt es bei uns im hinteren Regal."
+      }
+    },
+    "workshop": {
+      "eyebrow": "Sprechen Sie uns an",
+      "heading": "Keine Auto-Antworten. Jede Mail liest ein Mensch.",
+      "body": "Schreiben Sie uns kurz, rufen Sie die Werkstatt an oder vereinbaren Sie eine Beratung. Antwort innerhalb eines Arbeitstags — mit einer verbindlichen Aussage oder der nächsten Rückfrage.",
+      "phoneLabel": "Telefon",
+      "emailLabel": "E-Mail",
+      "hoursLabel": "Öffnungszeiten"
+    }
   },
   "products": {
     "title": "Alle Produkte",
@@ -46,11 +153,25 @@
     "searchEmpty": "Keine Ergebnisse für \"{query}\" gefunden.",
     "searchEmptyHint": "Versuchen Sie eine andere Artikelnummer, ein anderes Stichwort oder eine andere Spezifikation.",
     "searchEmptyClear": "Suche zurücksetzen",
+    "noFilterResults": "Keine Produkte entsprechen diesen Filtern.",
+    "filter": {
+      "heading": "Filter",
+      "clearAll": "Alle löschen",
+      "category": "Kategorie",
+      "allCategories": "Alle Kategorien",
+      "price": "Preis",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "apply": "Anwenden"
+    },
     "empty": "Keine Produkte gefunden.",
     "view": "Ansehen",
     "priceOnRequest": "Preis auf Anfrage",
     "exclVat": "zzgl. MwSt.",
     "inStock": "AUF LAGER",
+    "lowStock": "GERINGER BESTAND",
+    "outOfStock": "NICHT VORRÄTIG",
+    "lowStockRemaining": "Nur noch {qty} vorrätig — solange der Vorrat reicht.",
     "unavailable": "Nicht verfügbar",
     "addToCart": "In den Warenkorb",
     "requestQuote": "Angebot anfordern",
@@ -105,11 +226,17 @@
   "footer": {
     "rights": "Alle Rechte vorbehalten.",
     "copyright": "© {year} SWR Handelsgesellschaft mbH. Alle Rechte vorbehalten.",
-    "termsOfSale": "Verkaufsbedingungen",
-    "privacyPolicy": "Datenschutzrichtlinie",
+    "imprint": "Impressum",
+    "termsOfSale": "AGB",
+    "privacyPolicy": "Datenschutz",
     "compliance": "Compliance",
     "isoCertification": "ISO-Zertifizierung",
-    "sdsSheets": "SDS-Blätter",
+    "sdsSheets": "Sicherheitsdatenblätter",
+    "shopHeading": "Shop",
+    "servicesHeading": "360° Service",
+    "companyHeading": "Unternehmen",
+    "legalHeading": "Rechtliches",
+    "contactHeading": "Kontakt",
     "metaTitle": "SWR Lörrach — Schweißtechnik, Werkzeuge, Reparatur",
     "metaTitleTemplate": "%s | SWR Lörrach",
     "metaDescription": "SWR Handelsgesellschaft mbH — Ihr B2B-Partner für Schweißtechnik, Elektrowerkzeuge, Maschinen und Arbeitsschutz. Qualität verbindet."
@@ -177,6 +304,75 @@
     "section2Body": "Die Sicherheitsdatenblätter enthalten wichtige Informationen zur sicheren Handhabung, Lagerung und Entsorgung der Produkte. Bitte lesen Sie diese vor der Verwendung sorgfältig durch.",
     "contact": "SDS-Anfragen: sds@swr-loerrach.de"
   },
+  "imprint": {
+    "heading": "Impressum",
+    "intro": "Angaben gemäß § 5 TMG.",
+    "companyHeading": "Unternehmen",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach",
+    "country": "Deutschland",
+    "contactHeading": "Kontakt",
+    "phoneLabel": "Telefon",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "E-Mail",
+    "email": "info@swr-loerrach.de",
+    "representativeHeading": "Vertretungsberechtigt",
+    "representativeBody": "Geschäftsführung der SWR Handelsgesellschaft mbH.",
+    "registrationHeading": "Handelsregister",
+    "registrationBody": "Eingetragen beim Amtsgericht Freiburg i. Br. unter HRB 703221.",
+    "vatHeading": "Umsatzsteuer-ID",
+    "vatBody": "Umsatzsteuer-Identifikationsnummer gemäß § 27 a UStG: auf Anfrage.",
+    "disputeHeading": "Online-Streitbeilegung",
+    "disputeBody": "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr. Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+    "contact": "Rechtliche Anfragen bitte an info@swr-loerrach.de."
+  },
+  "about": {
+    "eyebrow": "Seit 1986",
+    "heading": "Qualität verbindet.",
+    "subheading": "SWR Handelsgesellschaft mbH ist Ihr 360°-Servicepartner in Lörrach für Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz — mit kompetenter Beratung, schneller Lieferung und Reparaturservice in Deutschland, der Schweiz und Frankreich.",
+    "bookConsultation": "Beratung vereinbaren",
+    "explore360": "360°-Service entdecken",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH beliefert seit fast vier Jahrzehnten Industrie und Handwerk im Dreiländereck rund um Lörrach mit hochwertigen Werkzeugen, Schweißtechnik, Maschinen und Arbeitsschutz.",
+    "missionHeading": "Unser Auftrag",
+    "missionBody": "Wir rüsten Werkstätten, Hersteller und Handwerker mit professionellen Produkten aus — und verbinden sie mit den Beratungs-, Reparatur- und Zolldienstleistungen, die den Betrieb am Laufen halten.",
+    "approachHeading": "Unser Ansatz",
+    "approachBody": "Unsere Ingenieure und Anwendungsspezialisten kennen unser Sortiment in- und auswendig. Wir hören zuerst zu und empfehlen dann genau das, was der Auftrag erfordert — ohne unnötiges Up-Selling.",
+    "valuesHeading": "Wofür wir stehen",
+    "values": {
+      "qualityTitle": "Markenqualität",
+      "qualityBody": "Wir führen ausschließlich geprüfte Profi-Produkte führender Hersteller. Jeder Artikel entspricht den einschlägigen europäischen Normen.",
+      "service360Title": "360°-Service",
+      "service360Body": "Von Beratung und Lieferung über Vor-Ort-Reparatur bis zur Zollabwicklung — ein Partner für den gesamten Lebenszyklus.",
+      "partnershipTitle": "Langfristige Partnerschaft",
+      "partnershipBody": "Wir bauen Beziehungen auf, die halten. Unsere Kunden bleiben, weil wir Jahr für Jahr liefern, was wir versprechen."
+    },
+    "ctaHeading": "Sprechen wir über Ihr nächstes Projekt.",
+    "ctaBody": "Ob einmaliges Angebot oder langfristige Lieferbeziehung — unsere Spezialisten sind für Sie da."
+  },
+  "contact": {
+    "eyebrow": "Wir sind für Sie da",
+    "heading": "Kontakt aufnehmen",
+    "subheading": "Sprechen Sie mit unserem Team in Lörrach — für Angebote, technische Beratung, Reparaturanfragen oder Zollabwicklung.",
+    "reachOutHeading": "So erreichen Sie uns",
+    "reachOutBody": "Während der Geschäftszeiten sind Telefon und E-Mail der schnellste Weg zu unserem Team. Bei dringenden Reparaturanfragen rufen Sie uns bitte direkt an.",
+    "consultationHeading": "Vor-Ort-Beratung",
+    "consultationBody": "Unsere Spezialisten besuchen Kunden im gesamten Dreiländereck. Vereinbaren Sie einen Termin, und wir kommen zu Ihnen.",
+    "cardTitle": "SWR Handelsgesellschaft mbH",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach, Deutschland",
+    "phoneLabel": "Telefon",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "E-Mail",
+    "email": "info@swr-loerrach.de",
+    "hoursLabel": "Öffnungszeiten",
+    "hours": "Mo-Fr 07:30-17:00"
+  },
   "auth": {
     "loginHeading": "Anmelden",
     "email": "E-Mail-Adresse",
@@ -197,7 +393,20 @@
     "registerPending": "Ihr Konto wurde erstellt und wartet auf Freigabe durch unser Team. Sie erhalten eine E-Mail, sobald Ihr Konto aktiviert wurde.",
     "passwordMismatch": "Die Passwörter stimmen nicht überein.",
     "registerError": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "backToLogin": "← Zurück zur Anmeldung"
+    "backToLogin": "← Zurück zur Anmeldung",
+    "forgotLink": "Passwort vergessen?",
+    "forgotHeading": "Passwort zurücksetzen",
+    "forgotDescription": "Geben Sie die E-Mail-Adresse Ihres Kontos ein. Wir senden Ihnen einen Link zum Festlegen eines neuen Passworts.",
+    "forgotSent": "Falls die Adresse hinterlegt ist, wurde eine E-Mail zum Zurücksetzen des Passworts verschickt. Bitte prüfen Sie Ihr Postfach.",
+    "forgotError": "Zurücksetz-E-Mail konnte nicht versendet werden.",
+    "sendResetLink": "Link senden",
+    "sending": "Wird gesendet…",
+    "resetHeading": "Neues Passwort festlegen",
+    "newPassword": "Neues Passwort",
+    "setNewPassword": "Passwort speichern",
+    "saving": "Wird gespeichert…",
+    "resetError": "Passwort konnte nicht zurückgesetzt werden.",
+    "resetTokenMissing": "Der Link ist unvollständig. Bitte neuen Link anfordern."
   },
   "account": {
     "heading": "Mein Konto",
@@ -205,7 +414,26 @@
     "orderHistory": "Bestellhistorie",
     "quotations": "Angebote",
     "addresses": "Adressen",
-    "logout": "Abmelden"
+    "profile": "Profil & Passwort",
+    "profileHeading": "Profil",
+    "fleet": "Mein Maschinenpark",
+    "service": "Retouren & Service",
+    "logout": "Abmelden",
+    "firstname": "Vorname",
+    "lastname": "Nachname",
+    "email": "E-Mail-Adresse",
+    "changePassword": "Passwort ändern",
+    "changePasswordHint": "Leer lassen, um das aktuelle Passwort zu behalten.",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein.",
+    "currentPasswordRequired": "Bitte aktuelles Passwort eingeben, um E-Mail oder Passwort zu ändern.",
+    "profileSaved": "Profil aktualisiert.",
+    "profileSaveError": "Profil konnte nicht aktualisiert werden.",
+    "save": "Änderungen speichern",
+    "saving": "Wird gespeichert…",
+    "cancel": "Abbrechen"
   },
   "addresses": {
     "heading": "Gespeicherte Adressen",
@@ -230,7 +458,8 @@
     "street2": "Adresszusatz (optional)",
     "city": "Stadt",
     "postcode": "Postleitzahl",
-    "region": "Region / Bundesland (optional)",
+    "region": "Region / Bundesland",
+    "regionOptional": "optional",
     "country": "Land",
     "countryHint": "ISO 2-Zeichen-Ländercode (z. B. DE, CH, FR)",
     "telephone": "Telefon",
@@ -257,6 +486,9 @@
     "continueToShipping": "Weiter zum Versand",
     "chooseShippingMethod": "Versandart auswählen",
     "noShippingMethods": "Für diese Adresse sind keine Versandmethoden verfügbar. Bitte wählen Sie eine andere Adresse.",
+    "shippingLoadError": "Versandoptionen konnten nicht geladen werden.",
+    "shippingLoadErrorHint": "Der Versanddienst ist vorübergehend nicht verfügbar. Bitte probieren Sie eine andere Adresse oder kontaktieren Sie den Support.",
+    "contactSupport": "Support kontaktieren",
     "noMethodSelected": "Bitte wählen Sie eine Versandart.",
     "shippingTo": "Lieferung an",
     "continueToReview": "Weiter zur Übersicht",
@@ -270,6 +502,8 @@
     "shippingMethod": "Versandart",
     "methodNotSet": "Nicht ausgewählt",
     "change": "Ändern",
+    "paymentMethod": "Zahlungsart",
+    "paymentMethodFallback": "Standardmäßig Rechnungszahlung.",
     "poNumber": "Bestellreferenz",
     "optional": "Optional",
     "poNumberPlaceholder": "z. B. PO-2026-001",
@@ -293,6 +527,11 @@
     "viewOrder": "Details →",
     "orderNumber": "Bestellung #{id}",
     "backToOrders": "← Zurück zur Bestellhistorie",
+    "reorder": "Erneut bestellen",
+    "reordering": "Wird zum Warenkorb hinzugefügt…",
+    "reorderSummary": "{added} hinzugefügt, {problems} benötigen Aufmerksamkeit.",
+    "reorderNeedsOptions": "Bitte auf Produktseite erneut hinzufügen",
+    "reorderGoToCart": "Zum Warenkorb →",
     "colProduct": "Produkt",
     "colSku": "Art.-Nr.",
     "colQty": "Menge",
@@ -331,6 +570,7 @@
     "trackingNumber": "Sendungsnummer",
     "noTracking": "Keine Sendungsinformationen vorhanden.",
     "noDocuments": "Noch keine Dokumente ausgestellt.",
+    "comments": "Anmerkungen von SWR",
     "status": {
       "pending": "Offen",
       "processing": "In Bearbeitung",
@@ -379,12 +619,362 @@
       "rejected": "Abgelehnt",
       "expired": "Abgelaufen",
       "converted": "Umgewandelt"
+    },
+    "acceptToCart": "Annehmen und in den Warenkorb",
+    "accepting": "Annehmen…",
+    "acceptError": {
+      "not_found": "Angebot nicht gefunden.",
+      "already_converted": "Dieses Angebot wurde bereits angenommen.",
+      "expired": "Dieses Angebot ist abgelaufen.",
+      "out_of_stock": "Einige Artikel dieses Angebots sind nicht verfügbar:",
+      "unknown": "Angebot konnte nicht angenommen werden. Bitte erneut versuchen."
     }
   },
   "breadcrumb": {
     "home": "Startseite",
     "products": "Produkte",
     "catalog": "Katalog"
+  },
+  "catalog": {
+    "metaTitle": "Dokumentenkatalog — Anleitungen, Datenblätter, Prospekte",
+    "metaDescription": "Hauptkataloge, Bedienungsanleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter für alle Marken in unserem Sortiment. Online lesen, herunterladen oder ausdrucken.",
+    "eyebrow": "Dokumentenbibliothek",
+    "heading": "Der Katalog. Durchsuchbar.",
+    "subheading": "Markenkataloge, Preislisten, Anleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter — für jede Marke aus unserem Sortiment. Im Browser lesen, herunterladen oder ausdrucken.",
+    "searchPlaceholder": "Nach Marke, Produkt oder Stichwort suchen…",
+    "resultsCount": "{count} Dokumente",
+    "emptyState": "Keine Dokumente entsprechen diesen Filtern.",
+    "pageCount": "{count} S.",
+    "breadcrumbCatalog": "Katalog",
+    "filters": {
+      "category": "Kategorie",
+      "type": "Dokumenttyp",
+      "brand": "Marke",
+      "language": "Sprache",
+      "clearAll": "Alle Filter zurücksetzen",
+      "title": "Filtersystem",
+      "subtitle": "Technische Verfeinerung",
+      "activeFilters": "Aktive Filter:",
+      "manufacturerSearch": "Hersteller suchen...",
+      "resultsShowing": "{count, plural, =0 {Keine Ergebnisse} =1 {1 Ergebnis} other {# Ergebnisse}}"
+    },
+    "types": {
+      "catalog": "Katalog",
+      "price-list": "Preisliste",
+      "datasheet": "Datenblatt",
+      "manual": "Bedienungsanleitung",
+      "certificate": "Zertifikat",
+      "sds": "Sicherheitsdatenblatt",
+      "instructions": "Anweisungen",
+      "technical-info": "Technische Information",
+      "performance": "Leistungserklärung",
+      "presentation": "Prospekt",
+      "video": "Video",
+      "misc": "Sonstiges"
+    },
+    "categories": {
+      "welding": "Schweißtechnik",
+      "tools": "Werkzeuge",
+      "power-tools": "Elektrowerkzeuge",
+      "machines": "Maschinen",
+      "facility-equipment": "Betriebseinrichtung",
+      "workshop-supplies": "Werkstattbedarf",
+      "occupational-safety": "Arbeitsschutz",
+      "compressed-air": "Drucklufttechnik"
+    },
+    "languages": {
+      "de": "Deutsch",
+      "en": "Englisch",
+      "fr": "Französisch",
+      "it": "Italienisch",
+      "es": "Spanisch",
+      "nl": "Niederländisch",
+      "pl": "Polnisch",
+      "pt": "Portugiesisch"
+    },
+    "viewer": {
+      "download": "Download",
+      "print": "Drucken",
+      "openInNewTab": "Öffnen",
+      "backToList": "Zurück",
+      "notice": "Das PDF wird vom Browser angezeigt. Über den Download-Button speichern Sie eine lokale Kopie.",
+      "externalNotice": "Dieses Dokument liegt beim Hersteller und kann nicht direkt eingebettet werden. Öffnen Sie es auf der Herstellerseite oder laden Sie eine Kopie herunter.",
+      "externalCta": "Auf Herstellerseite öffnen",
+      "watchOnYoutube": "Auf YouTube ansehen",
+      "videoNotice": "Das Video wird vom Anbieter gestreamt. Für eine größere Ansicht den Vollbildmodus nutzen.",
+      "unsupportedVideo": "Dieses Video liegt auf einer Plattform, die wir nicht direkt einbetten können. Zum Ansehen auf der Anbieterseite öffnen.",
+      "unsupportedVideoCta": "Video öffnen"
+    },
+    "meta": {
+      "heading": "Dokumentdetails",
+      "brand": "Marke",
+      "type": "Typ",
+      "language": "Sprache",
+      "pages": "Seiten",
+      "fileSize": "Dateigröße",
+      "published": "Veröffentlicht",
+      "categories": "Kategorien"
+    }
+  },
+  "fleet": {
+    "metaTitle": "Mein Maschinenpark",
+    "metaDescription": "Behalten Sie Ihre Maschinen im Blick — Garantie, Servicehistorie und Reparaturanfrage mit einem Klick.",
+    "heading": "Mein Maschinenpark",
+    "subheading": "Alle Maschinen, die wir für Ihr Konto führen — mit Garantiestatus und vollständiger Servicehistorie.",
+    "backToAccount": "Zurück zum Konto",
+    "backToFleet": "Zurück zum Maschinenpark",
+    "counters": {
+      "machines": "Maschinen",
+      "underWarranty": "In Garantie",
+      "serviceEvents": "Serviceeinsätze",
+      "brands": "Marken"
+    },
+    "categoryLabels": {
+      "welding": "Schweißtechnik",
+      "power-tools": "Elektrowerkzeuge",
+      "pneumatic": "Druckluft",
+      "machines": "Maschinen",
+      "measuring": "Messmittel",
+      "safety": "Sicherheitsausrüstung"
+    },
+    "card": {
+      "serial": "Seriennummer",
+      "purchased": "Gekauft am",
+      "warrantyUntil": "Garantie bis",
+      "statusActive": "In Garantie",
+      "statusExpiring": "Läuft bald ab",
+      "statusExpired": "Außer Garantie",
+      "viewDetails": "Anzeigen",
+      "lastService": "Letzter Service",
+      "noService": "Noch kein Service"
+    },
+    "detail": {
+      "serial": "Seriennummer",
+      "category": "Kategorie",
+      "purchased": "Kaufdatum",
+      "warrantyUntil": "Garantieende",
+      "maintenanceCount": "Serviceeinsätze",
+      "product": "Produkt"
+    },
+    "actions": {
+      "eyebrow": "Schnellaktionen",
+      "heading": "Brauchen Sie etwas für diese Maschine?",
+      "body": "Reparatur, Kalibrierung, Verbrauchsmaterial — hier starten und wir leiten es an die richtige Person in Lörrach.",
+      "contact": "Ansprechpartner kontaktieren"
+    },
+    "log": {
+      "eyebrow": "Servicehistorie",
+      "heading": "Wartungsprotokoll.",
+      "subheading": "Jeder Werkstattbesuch, jeder Vor-Ort-Einsatz. Verfügbare Dokumente verlinken direkt in den Katalog.",
+      "openDocument": "Dokument",
+      "empty": "Noch keine Serviceeinsätze erfasst — sobald eine Reparatur, Kalibrierung oder Inspektion erfasst wird, erscheint sie hier.",
+      "columns": {
+        "date": "Datum",
+        "kind": "Typ",
+        "title": "Titel",
+        "technician": "Techniker",
+        "document": "Dokument"
+      },
+      "kinds": {
+        "service": "Service",
+        "repair": "Reparatur",
+        "calibration": "Kalibrierung",
+        "inspection": "Inspektion",
+        "warranty": "Garantie"
+      }
+    },
+    "empty": {
+      "heading": "Noch keine Maschinen erfasst.",
+      "body": "Der Maschinenpark füllt sich von selbst, sobald wir Ausrüstung für Ihr Konto liefern oder warten. Bei SWR gekaufte Maschinen werden automatisch erfasst.",
+      "bullets": {
+        "import": "Auf Wunsch importieren wir Ihre Maschinen aus früheren Rechnungen.",
+        "register": "Senden Sie uns eine Seriennummer — wir nehmen die Maschine auf.",
+        "track": "Nach der Erfassung landen alle Serviceeinsätze automatisch hier."
+      },
+      "ctaContact": "Mit uns sprechen",
+      "ctaOrders": "Frühere Bestellungen ansehen"
+    }
+  },
+  "service": {
+    "metaTitle": "Retouren & Service",
+    "metaDescription": "Retouren, Reparaturvorgänge und Kalibrieranfragen — ein Portal, ein Statusüberblick für Bestellungen und Maschinenpark.",
+    "heading": "Retouren & Service",
+    "subheading": "Jeder Retouren-, Reparatur- und Kalibriervorgang auf Ihrem Konto — von der ersten Meldung bis zum Abschluss, mit demselben Statusverlauf wie in unserer Werkstatt.",
+    "backToAccount": "Zurück zum Konto",
+    "backToHub": "Zurück zum Service",
+    "viewCase": "Vorgang öffnen",
+    "orderLabel": "Bestellung",
+    "machineLabel": "Maschine",
+    "updated": "Aktualisiert",
+    "kind": {
+      "return": "Retoure",
+      "repair": "Reparatur",
+      "inspection": "Inspektion"
+    },
+    "status": {
+      "submitted": "Eingereicht",
+      "received": "Eingegangen",
+      "in_progress": "In Bearbeitung",
+      "awaiting_customer": "Ihre Rückmeldung nötig",
+      "completed": "Abgeschlossen",
+      "rejected": "Abgelehnt"
+    },
+    "reason": {
+      "damaged_in_transit": "Transportschaden",
+      "defective": "Defekt bei Lieferung",
+      "wrong_item": "Falscher Artikel geliefert",
+      "not_needed": "Nicht mehr benötigt",
+      "warranty": "Garantiefall",
+      "breakdown": "Maschinenausfall",
+      "calibration": "Kalibrierung / Inspektion",
+      "other": "Sonstiges"
+    },
+    "actions": {
+      "return": {
+        "eyebrow": "Retoure",
+        "title": "Etwas zurücksenden",
+        "body": "Retoure zu einer Bestellung öffnen, solange die Artikel noch im Retourenfenster sind.",
+        "cta": "Retoure starten"
+      },
+      "repair": {
+        "eyebrow": "Reparatur",
+        "title": "Reparatur eröffnen",
+        "body": "Melden Sie einen Ausfall oder Defekt für jede Maschine im Bestand — wir leiten es an die richtige Werkstatt weiter.",
+        "cta": "Reparatur eröffnen"
+      },
+      "inspection": {
+        "eyebrow": "Kalibrierung & Inspektion",
+        "title": "Kalibrierung planen",
+        "body": "Jahreskalibrierung, Sicherheitsprüfung oder Servicebesuch anfordern.",
+        "cta": "Inspektion anfordern"
+      }
+    },
+    "counters": {
+      "total": "Vorgänge gesamt",
+      "open": "Offen",
+      "awaiting": "Wartet auf Sie",
+      "closed": "Geschlossen"
+    },
+    "sections": {
+      "open": "Offene Vorgänge",
+      "closed": "Abgeschlossene Vorgänge"
+    },
+    "empty": {
+      "heading": "Noch keine Servicevorgänge.",
+      "body": "Sobald Sie eine Retoure starten, eine Reparatur eröffnen oder eine Kalibrierung anfordern, erscheint der Vorgang hier — mit Live-Status aus unserer Werkstatt.",
+      "ctaReturn": "Retoure starten",
+      "ctaRepair": "Reparatur eröffnen"
+    },
+    "detail": {
+      "opened": "Eröffnet",
+      "updated": "Letzte Aktualisierung",
+      "reason": "Grund",
+      "order": "Zugehörige Bestellung",
+      "machine": "Zugehörige Maschine",
+      "serial": "Seriennummer",
+      "contact": "Kontakt",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "items": "Artikel",
+      "resolution": "Abschluss"
+    },
+    "attachments": {
+      "eyebrow": "Nachweise",
+      "heading": "Anhänge."
+    },
+    "timeline": {
+      "eyebrow": "Aktivität",
+      "heading": "Statusverlauf.",
+      "subheading": "Derselbe Status, den unsere Werkstatt in Ihrem Vorgang mitschreibt. Neueste zuerst.",
+      "customer": "Sie",
+      "swr": "SWR"
+    },
+    "awaitingCustomer": {
+      "heading": "Wir brauchen eine Entscheidung von Ihnen.",
+      "body": "Der Vorgang pausiert, bis wir von Ihnen hören. Die letzte Nachricht der Werkstatt steht oben im Statusverlauf.",
+      "cta": "An Werkstatt antworten"
+    },
+    "new": {
+      "metaTitle": "Neue Serviceanfrage",
+      "metaDescription": "Retoure, Reparatur oder Inspektion zu Ihrem Konto eröffnen.",
+      "return": {
+        "heading": "Retoure starten",
+        "subheading": "Artikel wählen, Grund angeben und Fotos des Problems anhängen. Wir übernehmen den Vorgang innerhalb eines Werktags.",
+        "submit": "Retoure einreichen"
+      },
+      "repair": {
+        "heading": "Reparatur eröffnen",
+        "subheading": "Beschreiben Sie den Fehler und hängen Sie Diagnoseunterlagen an. Abholung oder Anlieferung bestätigen wir innerhalb eines Werktags.",
+        "submit": "Reparatur einreichen"
+      },
+      "inspection": {
+        "heading": "Inspektion oder Kalibrierung anfordern",
+        "subheading": "Jahreskalibrierung, Sicherheitsprüfung oder vorbeugenden Service für eine Maschine anmelden.",
+        "submit": "Inspektion anfordern"
+      },
+      "contextOrder": "Bestellung",
+      "contextMachine": "Maschine",
+      "fieldsHeading": "Details zum Vorgang",
+      "description": "Problem beschreiben",
+      "descriptionHint": "Fehlersymptome, Startzeitpunkt und bereits unternommene Schritte angeben. Je mehr Kontext, desto schneller der Abschluss.",
+      "reason": "Grund",
+      "reasonChoose": "Grund wählen…",
+      "itemsHeading": "Artikel",
+      "itemsHint": "Nur Artikel mit Menge über null werden in die Retoure übernommen.",
+      "itemQty": "Retourenmenge",
+      "contactHeading": "Kontakt",
+      "contactName": "Ihr Name",
+      "contactEmail": "E-Mail",
+      "contactPhone": "Telefon",
+      "attachmentsHeading": "Fotos & Dokumente",
+      "attachmentsHint": "Fotos des Schadens, Diagnoseberichte oder Screenshots beschleunigen den Vorgang. Bilder und PDFs bis je 10 MB.",
+      "attachmentsAdd": "Fotos oder Dokumente hinzufügen",
+      "attachmentsSelectedOne": "1 Datei ausgewählt — weitere hinzufügen oder absenden",
+      "attachmentsSelectedMany": "{count} Dateien ausgewählt",
+      "attachmentsNote": "Anhänge werden am Vorgang dokumentiert. In dieser Preview-Version werden Dateien nicht vollständig übertragen — die Namen werden für Rückfragen gespeichert.",
+      "submitting": "Wird gesendet…",
+      "errorMissing": "Bitte Beschreibung und Namen ausfüllen, bevor Sie absenden.",
+      "picker": {
+        "heading": "Maschine aus dem Bestand wählen",
+        "subheading": "Wählen Sie eine Maschine, die bereits bei uns registriert ist. Garantiestatus, Seriennummer und letzter Service sind direkt sichtbar, damit Sie in Sekunden entscheiden können.",
+        "selectCta": "Auswählen",
+        "warranty": {
+          "active": "Garantie aktiv",
+          "expiring": "Läuft bald ab",
+          "expired": "Garantie abgelaufen"
+        },
+        "warrantyUntil": "Garantie bis",
+        "serial": "Seriennummer",
+        "lastService": "Letzter Service",
+        "noService": "Noch kein Service",
+        "empty": {
+          "heading": "Noch keine Maschinen registriert.",
+          "body": "Ihr Maschinenpark ist leer, daher gibt es nichts zur Auswahl. Sie können die Maschine unten manuell angeben oder uns bitten, sie aus einer früheren Rechnung zu übernehmen.",
+          "cta": "Kontakt aufnehmen"
+        }
+      },
+      "notInFleet": {
+        "heading": "Nicht in Ihrem Bestand?",
+        "toggle": "Maschinendetails manuell eingeben",
+        "hint": "Für Maschinen, die noch nicht auf Ihrem Konto registriert sind. Hersteller und Modell genügen — mit Seriennummer geht es schneller.",
+        "brand": "Hersteller",
+        "model": "Modell",
+        "serial": "Seriennummer"
+      },
+      "contextBanner": {
+        "changeMachine": "Ändern"
+      }
+    },
+    "orderSection": {
+      "heading": "Retouren & Service",
+      "startReturn": "Retoure starten",
+      "empty": "Noch keine Servicevorgänge zu dieser Bestellung."
+    },
+    "machineSection": {
+      "eyebrow": "Laufende Vorgänge",
+      "heading": "Offene Servicevorgänge.",
+      "subheading": "Alle aktuellen Tickets zu dieser Maschine — mit demselben Statusverlauf wie in der Werkstatt."
+    }
   },
   "cart": {
     "heading": "Ihr Beschaffungswarenkorb",
@@ -404,10 +994,22 @@
     "decreaseQuantity": "Menge verringern",
     "increaseQuantity": "Menge erhöhen",
     "exportCsv": "Als CSV exportieren",
+    "csvImport": {
+      "button": "CSV importieren",
+      "importing": "Importiere…",
+      "hint": "Zwei Spalten: SKU, Menge. Die erste Zeile darf eine Kopfzeile sein.",
+      "summary": "{added} Artikel hinzugefügt. {problems} Probleme.",
+      "row": "Zeile {n}",
+      "errMissingSku": "Fehlende SKU",
+      "errInvalidQty": "Ungültige Menge",
+      "errEmpty": "Keine Zeilen in der Datei gefunden"
+    },
     "saveForLater": "Für später speichern",
     "removedNotice": "wurde aus dem Warenkorb entfernt.",
     "undo": "Rückgängig",
     "undoing": "Wird wiederhergestellt…",
+    "loading": "Warenkorb wird geladen…",
+    "fetchError": "Der Warenkorb konnte nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.",
     "updateError": "Der Warenkorb konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
     "orderSummary": "Bestellübersicht",
     "subtotal": "Zwischensumme ({count} Artikel)",
@@ -418,5 +1020,592 @@
     "trustIsoDesc": "Alle Komponenten durchlaufen strenge Materialprüfungen und Strukturvalidierungen.",
     "trustSupport": "Technischer Support aktiv",
     "trustSupportDesc": "Dedizierte Applikationsingenieure stehen für technische Anfragen zur Verfügung."
+  },
+  "services": {
+    "bookConsultation": "Beratung vereinbaren",
+    "requestService": "Service anfragen",
+    "hub": {
+      "eyebrow": "360° Service",
+      "heading": "Mehr als ein Produkt.",
+      "subheading": "Beratung, Reparatur, Lieferung und Zollabwicklung — vier Säulen, die Ihren Betrieb am Laufen halten. Ein Partner, ein Ansprechpartner.",
+      "learnMore": "Mehr erfahren",
+      "bookConsultation": "Beratung vereinbaren"
+    },
+    "consulting": {
+      "eyebrow": "Beratung",
+      "title": "Fachkundige Beratung",
+      "shortBody": "Werkzeugauswahl, Prozessoptimierung und technische Anwendungsberatung von Spezialisten, die unseren Katalog in- und auswendig kennen.",
+      "subtitle": "Unsere Ingenieure und Anwendungsspezialisten kommen vor Ort, analysieren Ihre Anforderungen und empfehlen genau das, was der Auftrag erfordert.",
+      "body1": "Die richtige Ausrüstung zu wählen ist selten einfach. Schweißparameter, Werkzeuggeometrie, Sicherheitsvorschriften und die Gesamtbetriebskosten spielen eine Rolle — und eine falsche Entscheidung kann Wochen an Produktion kosten.",
+      "body2": "Unser Team von Anwendungsspezialisten verfügt über jahrzehntelange Erfahrung in Schweißtechnik, Zerspanung und Werkstattausrüstung. Wir besuchen Sie, verstehen Ihren Prozess und empfehlen genau die Ausrüstung, die passt — ohne Up-Selling.",
+      "body3": "Beratung ist für bestehende und potenzielle Kunden immer kostenlos. Wenn Sie unsicher sind, ob ein Produkt für Ihre Anwendung geeignet ist, fragen Sie uns zuerst.",
+      "ctaHeading": "Bereit für ein Gespräch?",
+      "ctaBody": "Vereinbaren Sie eine 30-minütige Beratung und wir kommen zu Ihnen."
+    },
+    "repair": {
+      "eyebrow": "Reparatur",
+      "title": "Service- und Reparaturportal",
+      "shortBody": "Werkzeuge und Maschinen sind entscheidend für Ihre Produktion. Unser Service-Team übernimmt Reparaturen und Wartung — schnell, zuverlässig, vor Ort.",
+      "subtitle": "In Lörrach abgeben, einsenden oder von uns abholen lassen. Diagnose innerhalb von 24 Stunden, die meisten Reparaturen in 48 wieder einsatzbereit.",
+      "body1": "Stillstand ist teuer. Wenn ein Schweißgerät oder Elektrowerkzeug ausfällt, zählt jede Stunde — deshalb ist unsere Reparaturwerkstatt ganzjährig besetzt und die meisten Reparaturen sind innerhalb von 48 Stunden erledigt.",
+      "body2": "Wir warten alle großen Marken: Schweißgeräte, Elektrowerkzeuge, Druckluftwerkzeuge und Werkstattmaschinen. Leihgeräte für längere Reparaturen sind verfügbar, damit Ihre Produktion weiterläuft.",
+      "body3": "Wartungsverträge für vorbeugende Instandhaltung sind für Vielnutzer verfügbar. Regelmäßige Inspektion verlängert die Lebensdauer und verhindert ungeplante Ausfälle.",
+      "ctaHeading": "Dringende Reparatur?",
+      "ctaBody": "Rufen Sie uns für eilige Service-Anfragen und Leihgeräte an.",
+      "categories": {
+        "eyebrow": "Was wir reparieren",
+        "heading": "Sechs Kategorien. Eine Werkstatt.",
+        "subheading": "Werkzeuge, Maschinen oder Werkstattgeräte aus den Marken in unserem Sortiment? Wahrscheinlich servicieren wir es. Klicken Sie auf eine Kategorie, um eine Reparaturanfrage zu starten.",
+        "requestQuote": "Anfrage starten",
+        "items": {
+          "welding": {
+            "eyebrow": "Schweißgeräte",
+            "title": "MIG, WIG, MMA, Plasma",
+            "body": "Stromquellen, Drahtvorschübe, Brenner und Zubehör von Fronius, EWM, Lorch, Esab und mehr. Kalibrierung auf Anfrage."
+          },
+          "powerTools": {
+            "eyebrow": "Elektrowerkzeuge",
+            "title": "Akku und kabelgebunden",
+            "body": "Bohrmaschinen, Schleifer, Schlagschrauber, Kreissägen — Bosch, Makita, Metabo, Fein. Akku-Diagnose inklusive."
+          },
+          "pneumatic": {
+            "eyebrow": "Druckluftwerkzeuge",
+            "title": "Kompressoren und Druckluftgeräte",
+            "body": "Aircraft, Schneider und Atlas Copco Kompressoren, Schlagschrauber, Schleifer. Schlauch- und Verschraubungsservice ebenfalls."
+          },
+          "machines": {
+            "eyebrow": "Werkstattmaschinen",
+            "title": "Stationäre Geräte",
+            "body": "Standbohrmaschinen, Bandsägen, Doppelschleifer, Absauganlagen. Wir kommen zu Ihnen, wenn die Maschine nicht reisefähig ist."
+          },
+          "measuring": {
+            "eyebrow": "Messmittel",
+            "title": "Kalibrierung & Service",
+            "body": "Messschieber, Mikrometer, Multimeter und Lasermessgeräte. Kalibrierscheine auf Anfrage."
+          },
+          "safety": {
+            "eyebrow": "Sicherheitsausrüstung",
+            "title": "Helme, Gurte, Masken",
+            "body": "Wiederkehrende Prüfung von PSAgA, Schweißerschutzhelmen und Atemschutzgeräten gemäß gesetzlichem Intervall."
+          }
+        }
+      },
+      "timeline": {
+        "eyebrow": "Wie es abläuft",
+        "heading": "Vom Eingang bis zur Abholung.",
+        "calloutValue": "Ø 48 Std.",
+        "calloutLabel": "Durchschnittliche Durchlaufzeit",
+        "steps": {
+          "dropoff": {
+            "title": "Abgabe",
+            "body": "Bringen Sie Ihr Werkzeug zu unseren Öffnungszeiten nach Lörrach oder vereinbaren Sie eine Abholung mit unserem Fuhrpark."
+          },
+          "diagnosis": {
+            "title": "Diagnose",
+            "body": "Wir prüfen Fehler und Ersatzteilverfügbarkeit innerhalb von 24 Stunden und lassen die Reparatur vor Beginn freigeben."
+          },
+          "repair": {
+            "title": "Reparatur",
+            "body": "Freigegebene Reparaturen kommen direkt auf die Werkbank. Die meisten am gleichen Tag fertig — Leihgeräte für längere."
+          },
+          "pickup": {
+            "title": "Abholung",
+            "body": "In Lörrach abholen oder mit der nächsten Tour ausliefern lassen. Geprüft, gereinigt, mit Garantie."
+          }
+        }
+      },
+      "form": {
+        "recipientEmail": "service@swr-loerrach.de",
+        "heading": "Reparatur anfragen",
+        "subheading": "Füllen Sie aus, was Sie wissen — wir antworten innerhalb eines Arbeitstags mit Diagnoseschritten und einer Transportoption.",
+        "machineMake": "Marke",
+        "machineModel": "Modell",
+        "serial": "Seriennummer",
+        "fault": "Fehler beschreiben",
+        "contactName": "Ihr Name",
+        "company": "Firma (optional)",
+        "phone": "Telefon",
+        "email": "E-Mail",
+        "submit": "Anfrage senden",
+        "note": "Beim Absenden öffnet sich Ihr E-Mail-Programm mit der vorausgefüllten Anfrage. Der Mailto-Transport kann später durch ein Backend ersetzt werden."
+      }
+    },
+    "delivery": {
+      "eyebrow": "Lieferung",
+      "title": "Schnelle Lieferung, eigener Fuhrpark",
+      "shortBody": "Wir liefern mit unserem eigenen Fuhrpark in der Region Lörrach und versenden bundesweit. Same-Day-Versand für Lagerware, bestellt vor 12 Uhr.",
+      "subtitle": "Unser eigener Fuhrpark macht Ihren Zeitplan kalkulierbar. Same-Day-Versand, transparentes Tracking, keine Überraschungen durch Drittanbieter.",
+      "body1": "Wir betreiben einen Fuhrpark mit eigenen Fahrern — die gleichen Menschen, die bei Ihnen abladen, kennen unsere Produkte und können vor Ort Fragen beantworten.",
+      "body2": "Lagerware, bestellt vor 12 Uhr, wird am gleichen Tag versandt. Regionale Lieferungen (Lörrach, Basel, Mülhausen und Umgebung) treffen in der Regel innerhalb von 24 Stunden ein.",
+      "body3": "Bundesweite Sendungen gehen über etablierte Spediteure mit vollständigem Tracking. Für dringende Projekte bieten wir Express-Optionen — sprechen Sie uns an.",
+      "ctaHeading": "Große Bestellung?",
+      "ctaBody": "Fragen Sie nach festen Lieferfenstern und Sammelversand."
+    },
+    "customs": {
+      "eyebrow": "Zoll",
+      "title": "Schweiz-Lieferzentrum",
+      "shortBody": "Komplette Zollabwicklung für Schweizer Kunden. Wir erstellen die Papiere, zahlen Abgaben und liefern einsatzbereit über die Grenze.",
+      "subtitle": "Lörrach liegt 10 Minuten von der Schweizer Grenze. Aus dieser Lage machen wir einen echten grenzüberschreitenden Service: AEO-zertifiziert, mehrwertsteuersicher, Lieferung in CHF oder EUR.",
+      "body1": "Grenzüberschreitender Handel umfasst Zolltarifnummern, Präferenznachweise, Vorsteuererstattung und Spedition — jeder Fehler führt zu Verzögerungen oder unerwarteten Kosten.",
+      "body2": "Für Schweizer Kunden erstellen wir alle Zollanmeldungen selbst, zahlen die Abgaben vor und rechnen die Gesamtkosten in CHF oder EUR ab. Ihre Sendung kommt an wie eine Inlandsbestellung.",
+      "body3": "Wir sind AEO (Zugelassener Wirtschaftsbeteiligter) beim deutschen Zoll, was schnellere Abfertigung und weniger Grenzkontrollen bedeutet.",
+      "ctaHeading": "Versand in die Schweiz?",
+      "ctaBody": "Wir erledigen die Papiere. Sie bekommen die Ware.",
+      "facts": {
+        "aeo": { "value": "AEO-F", "label": "Zugelassener Wirtschaftsbeteiligter" },
+        "delivery": { "value": "1–3 Tage", "label": "Laufzeit, Grenze bis Tür" },
+        "currency": { "value": "CHF / EUR", "label": "Rechnungswährung auf Wunsch" },
+        "team": { "value": "1 Ansprechpartner", "label": "Eine Person, jede Sendung" }
+      },
+      "zones": {
+        "eyebrow": "Versandzonen",
+        "heading": "Von Lörrach in die ganze Schweiz.",
+        "subheading": "Unsere eigenen Fahrzeuge bedienen den Raum Basel. Den Rest der Schweiz übernehmen unsere langjährigen Speditionspartner — mit fertig erstellten Zollpapieren.",
+        "columns": {
+          "zone": "Zone",
+          "regions": "Kantone / Regionen",
+          "transit": "Laufzeit",
+          "freight": "Ab"
+        },
+        "rows": {
+          "basel": {
+            "zone": "Zone 1",
+            "regions": "BS, BL, AG (Fricktal)",
+            "transit": "Gleicher oder nächster Tag",
+            "freight": "CHF 28"
+          },
+          "north": {
+            "zone": "Zone 2",
+            "regions": "ZH, SH, TG, SG (Nord)",
+            "transit": "1 Werktag",
+            "freight": "CHF 42"
+          },
+          "central": {
+            "zone": "Zone 3",
+            "regions": "BE, SO, LU, ZG, NW, OW",
+            "transit": "1–2 Werktage",
+            "freight": "CHF 48"
+          },
+          "east": {
+            "zone": "Zone 4",
+            "regions": "GR, GL, UR, SZ",
+            "transit": "2 Werktage",
+            "freight": "CHF 58"
+          },
+          "south": {
+            "zone": "Zone 5",
+            "regions": "TI, VS, GE, VD, NE, JU, FR",
+            "transit": "2–3 Werktage",
+            "freight": "CHF 62"
+          }
+        },
+        "disclaimer": "Richtwerte für Pakete bis 30 kg. Palettenversand, Übermaß und Express auf Anfrage."
+      },
+      "duties": {
+        "eyebrow": "Abgabensätze",
+        "heading": "Was Kunden an der Grenze tatsächlich zahlen.",
+        "subheading": "Ungefähre Schweizer Zoll- + MWST-Last (8,1 %) für typische Werkstattkategorien. Endbetrag hängt von Tarif und Ursprung ab — beides erstellen wir.",
+        "columns": {
+          "type": "Kategorie",
+          "rate": "Zoll + MWST",
+          "note": "Hinweise"
+        },
+        "rows": {
+          "tools": {
+            "type": "Handwerkzeuge",
+            "rate": "≈ 8,1 % MWST",
+            "note": "Die meisten Handwerkzeuge gelangen unter dem EU-CH-Abkommen zollfrei in die Schweiz; nur Einfuhr-MWST fällt an."
+          },
+          "machines": {
+            "type": "Elektrowerkzeuge & Maschinen",
+            "rate": "≈ 8,1 % MWST",
+            "note": "Zollfrei mit EUR.1 / Lieferantenerklärung zur Präferenzursprung — beides stellen wir aus."
+          },
+          "consumables": {
+            "type": "Schweißzusätze",
+            "rate": "≈ 0,5–8,6 % + MWST",
+            "note": "Zusatzdraht und Elektroden tragen je nach Legierung kleine spezifische Zölle."
+          },
+          "ppe": {
+            "type": "PSA & Sicherheit",
+            "rate": "≈ 8,1 % MWST",
+            "note": "Helme, Handschuhe, Gurte — typischerweise zollfrei mit Ursprungsnachweis."
+          },
+          "spareParts": {
+            "type": "Ersatzteile",
+            "rate": "≈ 8,1 % MWST",
+            "note": "Original-Ersatzteile qualifizieren sich häufig für das vereinfachte Verfahren mit taggleicher Abfertigung."
+          }
+        },
+        "disclaimer": "Richtwerte — Schweizer Zoll wird nach Gewicht/Wert kalkuliert. Wir liefern in jedem Angebot verbindliche Gesamtkosten."
+      },
+      "filed": {
+        "eyebrow": "Was wir für Sie einreichen",
+        "heading": "Sechs Dokumente, null Aufwand.",
+        "subheading": "Jede Schweiz-Sendung verlässt unser Lager mit vollständiger Zollakte. Sie bestätigen die Bestellung, wir machen den Rest.",
+        "items": {
+          "tariff": {
+            "title": "Tarifierung",
+            "body": "Korrekte Tarifnummer (Schweizer Tares) für jede Position — keine Über­deklaration, keine Überraschung."
+          },
+          "origin": {
+            "title": "EUR.1 / Ursprungserklärung",
+            "body": "Präferenznachweis, damit zollbefreite Ware tatsächlich zollfrei bleibt."
+          },
+          "vat": {
+            "title": "Schweizer Einfuhr-MWST",
+            "body": "Über unsere Spedition vorgestreckt; Vorsteuer-Erstattung für deutsche Kunden separat."
+          },
+          "exportDecl": {
+            "title": "Ausfuhranmeldung",
+            "body": "Atlas-Anmeldung auf deutscher Seite, inkl. vereinfachter Verfahren wo zulässig."
+          },
+          "duties": {
+            "title": "Verzollte Lieferung (DDP)",
+            "body": "DDP ist Standard — Gesamtkosten auf der Rechnung, kein Anruf vom Zollamt."
+          },
+          "deliveryNote": {
+            "title": "Zweisprachiger Lieferschein",
+            "body": "Liefer- und Packliste in Deutsch und Französisch — der Empfänger findet, was bestellt wurde."
+          }
+        }
+      },
+      "compliance": {
+        "eyebrow": "Compliance-Dokumente",
+        "heading": "Erklärungen aus dem Katalog ziehen, nicht aus der E-Mail.",
+        "subheading": "Konformitätserklärungen, Datenblätter, Sicherheitsdatenblätter und Leistungserklärungen liegen im Katalog und sind je Hersteller versioniert.",
+        "openCatalog": "Katalog öffnen",
+        "docs": {
+          "certificate": {
+            "eyebrow": "KE",
+            "title": "Konformitätserklärungen",
+            "body": "CE / UKCA-Erklärungen jedes Herstellers — für Zoll und Auditakte erforderlich."
+          },
+          "datasheet": {
+            "eyebrow": "Datenblatt",
+            "title": "Technische Datenblätter",
+            "body": "Leistung, Gewicht, Maße, Normen — für Spediteur und QS gleichermaßen."
+          },
+          "sds": {
+            "eyebrow": "SDB",
+            "title": "Sicherheitsdatenblätter",
+            "body": "Für jeden Chemiekunde-relevanten Artikel an der Grenze — Schweißpulver, Schmierstoffe, Sprays."
+          },
+          "performance": {
+            "eyebrow": "LE",
+            "title": "Leistungserklärungen",
+            "body": "Bauprodukte­verordnung (CPR) — für montierte Bauteile."
+          }
+        }
+      },
+      "crossLink": {
+        "eyebrow": "Innerhalb Deutschlands",
+        "heading": "Gleicher Fuhrpark, gleiche Präzision — innerdeutsch.",
+        "body": "Lieferadresse in Deutschland? Dann brauchen wir keinen Zoll. Eigenfuhrpark im Raum Lörrach am gleichen Tag, der Rest Deutschlands über Paket- und Palettennetze.",
+        "cta": "Inlandslieferung ansehen"
+      }
+    }
+  },
+  "industries": {
+    "browseCatalog": "Zum Katalog",
+    "featuredHeading": "Ausgewählte Produkte",
+    "viewAll": "Alle anzeigen",
+    "rangeComingSoon": "Das vollständige Sortiment für diese Branche wird gerade in den Katalog aufgenommen — sprechen Sie uns zur Verfügbarkeit an.",
+    "hub": {
+      "eyebrow": "Branchen",
+      "heading": "Ausrüstung für jedes Gewerk.",
+      "subheading": "Von der Schweißerei bis zur Instandhaltung — durchsuchen Sie unser Sortiment nach Branche und finden Sie schnell die passende Ausrüstung.",
+      "exploreIndustry": "Entdecken"
+    },
+    "weldingHub": {
+      "eyebrow": "Schweißtechnik",
+      "title": "Schweißtechnik-Hub: Maschinen, Gas, Verbrauchsmaterial.",
+      "subtitle": "Sechs Schweißverfahren, hunderte Verbrauchsmaterialien und eine Servicewerkstatt, die jede Maschine auf dieser Seite kennt. Spezifiziert für die Werkbank, nicht für den Prospekt.",
+      "body1": "Schweißen ist die serviceintensivste Kategorie in unserem Sortiment. Wir führen Schweißanlagen von Fronius, EWM, Lorch und Esab — und kalibrieren und reparieren sie in der eigenen Werkstatt.",
+      "body2": "Wenn Verfahren oder Zusatz nicht klar sind, sprechen Sie vor dem Kauf mit uns — Anwendungsberatung ist kostenlos, und uns ist lieber, Sie bekommen die richtige Maschine beim ersten Mal.",
+      "subCategories": {
+        "eyebrow": "Nach Verfahren",
+        "heading": "Verfahren wählen. Maschine finden.",
+        "subheading": "Jedes Verfahren führt zu den passenden Maschinen, Brennern und Verbrauchsmaterialien im Katalog.",
+        "cta": "Sortiment ansehen",
+        "items": {
+          "mig": {
+            "eyebrow": "MIG / MAG",
+            "title": "Drahtgespeist für Produktion",
+            "body": "Höchste Abschmelzleistung. Richtig für serielle Strukturarbeit in Stahl, Edelstahl und Aluminium."
+          },
+          "tig": {
+            "eyebrow": "WIG / TIG",
+            "title": "Präzision und Optik",
+            "body": "Saubere, kontrollierte Nähte für Dünnblech, Edelstahl, Aluminium und Sonderlegierungen. Sichtnähte und Rohrleitungsbau."
+          },
+          "mma": {
+            "eyebrow": "E-Hand",
+            "title": "Stabelektrode",
+            "body": "Robust und mobil. Außenarbeit, Reparaturschweißen und Baustelle, wo Schutzgas nicht praktikabel ist."
+          },
+          "plasma": {
+            "eyebrow": "Plasmaschneiden",
+            "title": "Sauber und schnell",
+            "body": "Plasmaschneider von 30 A bis 200 A für Blech, Profile und Edelstahl. Luft- oder wassergekühlt."
+          },
+          "spot": {
+            "eyebrow": "Punktschweißen",
+            "title": "Blech verbinden",
+            "body": "Widerstandsschweißen und Bolzenschweißen für Karosseriebau und Blechfertigung."
+          },
+          "consumables": {
+            "eyebrow": "Verbrauchsmaterial",
+            "title": "Draht, Stab, Gas, Spitzen",
+            "body": "Zusatzdrähte, Elektroden, Stromdüsen, Gasdüsen, Gas und PSA. Auf Lager in Lörrach für die Abholung am nächsten Tag."
+          }
+        }
+      },
+      "products": {
+        "heading": "Ausgewählte Schweißausrüstung",
+        "subheading": "Ein kleiner Ausschnitt — der vollständige Katalog enthält hunderte Anlagen, Brenner und Zubehör."
+      },
+      "gasTable": {
+        "eyebrow": "Gasauswahl",
+        "heading": "Richtiges Gas, richtige Stromstärke.",
+        "subheading": "Schnellreferenz für die häufigsten Schutzgase. Im Katalog finden Sie vollständige Sicherheitsdatenblätter und passende Druckminderer.",
+        "columns": {
+          "mix": "Gas / Mischung",
+          "use": "Verfahren & Werkstoff",
+          "current": "Typischer Strom",
+          "notes": "Hinweise"
+        },
+        "rows": {
+          "argon": {
+            "mix": "Ar 100 %",
+            "use": "WIG — Edelstahl, Aluminium, Kupfer",
+            "current": "DC 20–250 A",
+            "notes": "Inert. Reines Argon für nahezu alle WIG-Arbeiten."
+          },
+          "argonCo2": {
+            "mix": "Ar 82 % / CO₂ 18 %",
+            "use": "MIG / MAG — Baustahl",
+            "current": "DC 60–300 A",
+            "notes": "Standardmischung für Sprüh- und Kurzlichtbogen auf Baustahl."
+          },
+          "co2": {
+            "mix": "CO₂ 100 %",
+            "use": "MIG / MAG — Schwerstahl",
+            "current": "DC 80–400 A",
+            "notes": "Mehr Einbrand, mehr Spritzer. Günstige Wahl für dicke Strukturarbeit."
+          },
+          "argonH2": {
+            "mix": "Ar 95 % / H₂ 5 %",
+            "use": "WIG — austenitischer Edelstahl",
+            "current": "DC 50–200 A",
+            "notes": "Höhere Schweißgeschwindigkeit und hellerer Lichtbogen auf Edelstahl."
+          },
+          "argonHe": {
+            "mix": "Ar 70 % / He 30 %",
+            "use": "MIG — Aluminium > 8 mm",
+            "current": "DC 150–350 A",
+            "notes": "Besserer Einbrand bei dicken Aluminium-Querschnitten."
+          },
+          "oxygen": {
+            "mix": "O₂ + Acetylen",
+            "use": "Hartlöten, Brennschneiden",
+            "current": "n/a",
+            "notes": "Flaschenlagerung und Druckminderer-Service verfügbar."
+          }
+        },
+        "safetyHeading": "Gassicherheit, inklusive.",
+        "safetyBody": "Flaschentransport, Lecktest und Druckminderer-Service gehören zu jeder Gaslieferung. Einen defekten Druckminderer lassen wir nicht im Betrieb — vor Ort tauschen ist zu einfach."
+      },
+      "guides": {
+        "eyebrow": "Technische Unterlagen",
+        "heading": "Anleitungen, Datenblätter und SDB — alle im Katalog.",
+        "subheading": "Im Dokumentenkatalog nach Typ gefiltert. Schluss mit der PDF-Suche im Postfach.",
+        "openCatalog": "Im Katalog öffnen",
+        "items": {
+          "gasSelection": {
+            "eyebrow": "Anwendungshinweise",
+            "title": "Gasauswahl-Leitfäden",
+            "body": "Hersteller-Leitfäden zu Schutzgas-Mischungen je Verfahren und Werkstoff.",
+            "docType": "technical-info"
+          },
+          "wirePrep": {
+            "eyebrow": "Anleitung",
+            "title": "Draht- und Stabhandling",
+            "body": "Lagerung, Trocknung und Handhabung von Zusatzdraht und Stabelektroden — Feuchtigkeit zählt.",
+            "docType": "instructions"
+          },
+          "ppe": {
+            "eyebrow": "Sicherheit",
+            "title": "PSA-Datenblätter",
+            "body": "Helm-Schutzstufen, Handschuh-Klassifizierungen und Hinweise zur Rauchabsaugung.",
+            "docType": "datasheet"
+          },
+          "currentSettings": {
+            "eyebrow": "Referenz",
+            "title": "Hersteller-Handbücher",
+            "body": "Bedienungsanleitungen unserer meistverkauften Schweißanlagen von Fronius, EWM und Lorch.",
+            "docType": "manual"
+          }
+        }
+      },
+      "catalogRail": {
+        "heading": "Schweißtechnik-Dokumente",
+        "subheading": "Echte Kataloge, Datenblätter und Handbücher — von den Herstellern, die wir vertreten.",
+        "viewAll": "Alle Schweißtechnik-Dokumente"
+      },
+      "installer": {
+        "eyebrow": "Service & Installation",
+        "heading": "Wir verkaufen es. Wir warten es.",
+        "body": "Schweißanlagen werden nicht einfach geliefert — sie brauchen Kalibrierung, passende Verbrauchsmaterialien und gelegentlich Reparatur. Unsere zertifizierte Werkstatt in Lörrach übernimmt all das.",
+        "ctaRepair": "Reparatur-Portal",
+        "ctaConsult": "Mit Techniker sprechen",
+        "items": {
+          "calibration": {
+            "title": "Kalibrierung",
+            "body": "Strom- und Spannungskalibrierung mit Zertifikat — vor Ort oder in der Werkstatt."
+          },
+          "loaner": {
+            "title": "Leihgeräte",
+            "body": "Leihanlage, solange Ihre im Service ist — Produktion läuft weiter."
+          },
+          "onsite": {
+            "title": "Vor-Ort-Einsätze",
+            "body": "Servicefahrzeug im Raum Lörrach / Basel — Reparatur ohne Maschinenversand."
+          },
+          "training": {
+            "title": "Bediener-Schulung",
+            "body": "Kurze Bediener-Übergabe bei neuen Maschinen. Verfahrens-Workshops auf Anfrage."
+          }
+        }
+      }
+    },
+    "slugs": {
+      "welding": {
+        "eyebrow": "Schweißtechnik",
+        "title": "Schweißtechnik",
+        "shortBody": "MIG, WIG, E-Hand und Plasma-Ausrüstung, Schweißzusätze, Schutzausrüstung und Rauchabsaugung — alles für die Schweißerei.",
+        "subtitle": "Schweißgeräte, Schweißzusätze, Schutzausrüstung und Rauchabsaugung von führenden Marken.",
+        "body1": "Vom MIG-Gerät für den Hobbybereich bis zur industriellen WIG-Station: Wir führen Schweißausrüstung für jede Anwendung — inklusive Anwendungsberatung zur passenden Maschinen- und Verbrauchsmaterialauswahl.",
+        "body2": "Gase, Drähte, Elektroden, Schutzkleidung und Rauchabsaugsysteme runden das Sortiment ab. Ein Partner für den gesamten Schweißarbeitsplatz."
+      },
+      "tools": {
+        "eyebrow": "Handwerkzeuge",
+        "title": "Werkzeuge",
+        "shortBody": "Profi-Handwerkzeuge für Mechaniker, Monteure und Fabrikanten — Schlüssel, Schraubendreher, Messinstrumente und mehr.",
+        "subtitle": "Premium-Handwerkzeuge renommierter Hersteller: Schlüssel, Schraubendreher, Zangen, Messwerkzeuge.",
+        "body1": "Handwerkzeuge sind das Fundament jeder Werkstatt. Wir führen Profi-Marken, die dem täglichen Einsatz standhalten — mit Garantie und Service der Hersteller.",
+        "body2": "Vom Einzelwerkzeug bis zum kompletten Werkstattset: Wir helfen Ihnen, Ihre Werkbank exakt auf Ihren Arbeitsablauf auszurüsten."
+      },
+      "power-tools": {
+        "eyebrow": "Elektrowerkzeuge",
+        "title": "Elektrowerkzeuge",
+        "shortBody": "Kabelgebundene und Akku-Elektrowerkzeuge für Bau, Metallbearbeitung und Montage — Bohrmaschinen, Schleifer, Sägen, Schlagschrauber.",
+        "subtitle": "Kabelgebundene und Akku-Elektrowerkzeuge führender Marken — mit eigener Reparaturwerkstatt und Zubehör ab Lager.",
+        "body1": "Bohrmaschinen, Schlagschrauber, Schleifer, Kreissägen und mehr — wir führen die Profi-Serien der großen Marken, unterstützt durch unsere eigene Reparaturwerkstatt.",
+        "body2": "Akkuplattformen und Zubehör sind ab Lager verfügbar, sodass Sie Ihr Akkusystem ohne Kompatibilitätssorgen ausbauen können."
+      },
+      "machines": {
+        "eyebrow": "Maschinen",
+        "title": "Werkstattmaschinen",
+        "shortBody": "Standbohrmaschinen, Bandsägen, Schleifmaschinen und größere Fertigungsmaschinen — geliefert, installiert und gewartet.",
+        "subtitle": "Stationäre Werkstattmaschinen: Bohrmaschinen, Bandsägen, Schleifmaschinen und Fertigungsanlagen — geliefert und installiert.",
+        "body1": "Werkstattmaschinen sind eine langfristige Investition. Wir helfen bei der Auswahl, übernehmen Lieferung und Aufstellung und bieten laufenden Service über unsere Reparaturwerkstatt.",
+        "body2": "Finanzierungs- und Leasingoptionen sind auf Anfrage für größere Investitionen verfügbar."
+      },
+      "facility-equipment": {
+        "eyebrow": "Betriebseinrichtung",
+        "title": "Betriebseinrichtungen",
+        "shortBody": "Werkbänke, Lagersysteme, Transporttechnik und Werkstattausrüstung — für eine effiziente Arbeitsumgebung.",
+        "subtitle": "Werkbänke, Regale, Transporttechnik — verwandeln Sie Ihre Werkstatt in eine effiziente Arbeitsumgebung.",
+        "body1": "Eine produktive Werkstatt beginnt mit der richtigen Infrastruktur. Wir planen und liefern Werkbanksysteme, Lager- und Transportausrüstung, zugeschnitten auf Ihre Fläche.",
+        "body2": "Vor-Ort-Beratung ist verfügbar, um ergonomische, effiziente Arbeitsplätze neu zu gestalten oder bestehende Layouts zu optimieren."
+      },
+      "workshop-supplies": {
+        "eyebrow": "Werkstattbedarf",
+        "title": "Werkstattbedarf",
+        "shortBody": "Verbrauchsmaterial, Reinigung, Schmierstoffe, Klebstoffe, Befestigung — alles, was in der Werkstatt wöchentlich verbraucht wird.",
+        "subtitle": "Verbrauchsmaterialien, Reinigungsmittel, Schmierstoffe und Verbindungselemente — füllen Sie Ihr Lager mit einer Bestellung.",
+        "body1": "Die Artikel, die eine Werkstatt Woche für Woche verbraucht — Verbrauchsmaterial, Reinigungs- und Wartungsbedarf, Schmierstoffe, Klebstoffe und Verbindungselemente — alles von einem Lieferanten.",
+        "body2": "Bestandsauffüllprogramme sind für Großverbraucher verfügbar: Wir überwachen den Verbrauch und liefern, bevor Engpässe entstehen."
+      },
+      "occupational-safety": {
+        "eyebrow": "Arbeitsschutz",
+        "title": "Arbeitsschutz",
+        "shortBody": "PSA, Sicherheitskennzeichnung, Erste Hilfe und Ergonomie — erfüllen Sie Ihre Fürsorgepflicht mit Profi-Ausrüstung.",
+        "subtitle": "Persönliche Schutzausrüstung, Kennzeichnung, Erste Hilfe und Ergonomie — halten Sie Ihr Team sicher und compliant.",
+        "body1": "Arbeitsschutz ist reguliert — und die falsche Ausrüstung birgt Haftungsrisiken. Wir führen ausschließlich zertifizierte PSA nach aktuellen EU-Normen.",
+        "body2": "Beratung zur Gefährdungsbeurteilung und PSA-Auswahl steht Neukunden zur Verfügung, die ihr Arbeitsschutzprogramm neu aufbauen oder erneuern."
+      }
+    }
+  },
+  "partners": {
+    "eyebrow": "Partner",
+    "heading": "Marken, denen wir vertrauen. Partner, die uns vertrauen.",
+    "subheading": "Wir arbeiten mit den führenden Herstellern in Schweißtechnik, Werkzeug, Arbeitsschutz und Betriebseinrichtung — und werden auf Händler-Niveau unterstützt.",
+    "logoStripHeading": "Ausgewählte Markenpartner",
+    "intro": "Jedes Produkt, das wir verkaufen, wird von Service begleitet. Durch Partnerschaften mit den Marktführern bieten wir autorisierte Händlerpreise, Garantieabwicklung und technischen Support direkt vom Hersteller.",
+    "criteriaHeading": "Wie wir Partner auswählen",
+    "criteriaBody": "Wir nehmen eine Marke erst ins Sortiment auf, wenn wir von Qualität, Liefersicherheit und After-Sales-Support überzeugt sind. Unser Einkauf testet Produkte in unserer eigenen Werkstatt, bevor sie in den Katalog aufgenommen werden.",
+    "coverageHeading": "Was Ihnen unsere Partnerschaften bringen",
+    "coverageBody": "Kurze Lieferzeiten, interne Garantieabwicklung, technische Hotlines zum Hersteller und Zugriff auf Bestände, die wir nicht öffentlich listen. Was eine Marke herstellt, können wir fast immer beschaffen — fragen Sie uns einfach."
+  },
+  "careers": {
+    "eyebrow": "Karriere",
+    "heading": "Arbeiten bei SWR.",
+    "subheading": "Familienunternehmen in dritter Generation — mit stabilen Arbeitsplätzen, Ausbildungsplätzen und einem Team, das sich wirklich kennt.",
+    "applyCta": "Jetzt bewerben",
+    "applicationEmail": "jobs@swr-loerrach.de",
+    "intro": "Wir bieten lange Karrieren. Viele im Team sind seit einem Jahrzehnt oder länger bei uns — weil wir in Menschen investieren, nicht nur in die Lohnabrechnung. Wenn Sie im Raum Lörrach eine stabile, qualifizierte Tätigkeit suchen, freuen wir uns über Ihre Nachricht.",
+    "whyUsHeading": "Warum bei uns arbeiten",
+    "whyUsBody": "Geregelte Arbeitszeiten, faire Bezahlung und echte Verantwortung vom ersten Tag. Kleines Unternehmen, flache Hierarchien, keine Politik — wer die Arbeit kann, bekommt den Raum, sie zu tun.",
+    "apprenticeshipHeading": "Ausbildung",
+    "apprenticeshipBody": "Wir bilden jedes Jahr in kaufmännischen und logistischen Berufen aus. Unsere Auszubildenden lernen jeden Bereich kennen — von Produkt über Kunde bis ERP — und die meisten bleiben nach der Prüfung bei uns.",
+    "openRolesHeading": "Offene Stellen",
+    "openRolesBody": "Auch ohne konkrete Ausschreibung sind wir immer an qualifizierten Lager-, Vertriebs- und Thekenmitarbeitenden interessiert. Senden Sie uns Ihren Lebenslauf — Sie bekommen eine Antwort.",
+    "applicationHeading": "Bewerbung",
+    "applicationBody": "Schicken Sie uns einen kurzen Lebenslauf und ein paar Zeilen zu sich selbst. Wir antworten auf jede Bewerbung.",
+    "applicationHint": "Ein perfekt formuliertes Anschreiben ist nicht nötig — uns interessiert, wer Sie sind und woran Sie gearbeitet haben."
+  },
+  "certificates": {
+    "eyebrow": "Zertifikate",
+    "heading": "Zertifizierungen und Compliance.",
+    "subheading": "Qualität, Umwelt, Zoll und Schweißtechnik — unsere Zertifikate auf Anfrage für Ihre eigenen Lieferanten-Audits.",
+    "requestCopy": "Zertifikat anfordern",
+    "download": "PDF herunterladen",
+    "intro": "Als B2B-Lieferant pflegen wir die Zertifikate, die unsere Kunden für ihre eigenen Qualitäts- und Compliance-Prozesse benötigen. Alle aktuellen Zertifikate erhalten Sie auf Anfrage — direkt an Ihre Einkaufs- oder QS-Stelle.",
+    "requestNote": "Zertifikats-PDFs verschicken wir auf Anfrage, damit Sie immer die aktuelle, unterzeichnete Version erhalten. Kontaktieren Sie uns — wir senden das gewünschte Dokument innerhalb eines Arbeitstags per E-Mail.",
+    "items": {
+      "iso9001": {
+        "title": "ISO 9001 — Qualitätsmanagement",
+        "issuer": "Ausgestellt durch TÜV",
+        "validUntil": "Jährlich erneuert"
+      },
+      "iso14001": {
+        "title": "ISO 14001 — Umweltmanagement",
+        "issuer": "Ausgestellt durch TÜV",
+        "validUntil": "Jährlich erneuert"
+      },
+      "aeo": {
+        "title": "AEO — Zugelassener Wirtschaftsbeteiligter",
+        "issuer": "Hauptzollamt",
+        "validUntil": "Unbefristet, mit Audits"
+      },
+      "welding": {
+        "title": "DIN EN ISO 3834 — Schweißtechnische Qualität",
+        "issuer": "Akkreditierte Stelle",
+        "validUntil": "Bedarfsgerecht erneuert"
+      }
+    }
+  },
+  "offers": {
+    "eyebrow": "Angebote",
+    "heading": "Aktuelle Angebote und Aktionen.",
+    "subheading": "Saisonale Aktionen, Auslaufware und Abverkauf — für Bestandskunden und Neukunden.",
+    "shopAll": "Alle Produkte ansehen",
+    "featuredHeading": "Gerade empfohlen",
+    "intro": "Wir setzen auf gezielte Aktionen statt auf ständige Rabatte. Wenn ein Artikel hier gelistet ist, gibt es einen Grund — eine Herstelleraktion, eine auslaufende Größenreihe oder ein von uns verhandeltes Mengengeschäft.",
+    "howHeading": "So funktionieren Angebote",
+    "howBody": "Die meisten Angebote werden bei bestehenden B2B-Kunden automatisch im Checkout berücksichtigt. Für größere Mengen oder individuelle Bundles wenden Sie sich an Ihren Ansprechpartner oder den Vertrieb — ab einer bestimmten Menge können wir den gelisteten Preis meist unterbieten.",
+    "emptyState": "Aktuell keine laufenden Aktionen — schauen Sie in Kürze wieder vorbei oder kontaktieren Sie uns für individuelle Preise bei größeren Bestellungen."
   }
 }

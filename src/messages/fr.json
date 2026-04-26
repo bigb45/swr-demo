@@ -2,6 +2,17 @@
   "nav": {
     "allProducts": "Tous les produits",
     "products": "Produits",
+    "shop": "Boutique",
+    "catalog": "Catalogue",
+    "services": "Services",
+    "industries": "Secteurs",
+    "about": "À propos",
+    "contact": "Contact",
+    "partners": "Partenaires",
+    "careers": "Carrières",
+    "certificates": "Certificats",
+    "offers": "Offres",
+    "fleet": "Mon parc",
     "orderHistory": "Historique des commandes",
     "account": "Compte",
     "cart": "Panier",
@@ -9,7 +20,16 @@
     "searchPlaceholder": "Entrez un numéro de pièce, un mot-clé ou une spécification...",
     "settings": "Paramètres",
     "help": "Aide",
-    "technicalSupport": "Support technique"
+    "technicalSupport": "Support technique",
+    "bookConsultation": "Prendre rendez-vous",
+    "home": "SWR Lörrach — Accueil",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "mobileNavLabel": "Navigation mobile",
+    "primaryNavLabel": "Navigation principale",
+    "selectCurrency": "Sélectionner la devise",
+    "selectLanguage": "Sélectionner la langue",
+    "preferences": "Préférences"
   },
   "hero": {
     "title": "Soudage, Outillage & Réparation.",
@@ -18,25 +38,112 @@
     "requestQuote": "Demander un conseil"
   },
   "home": {
-    "featuredProducts": "Produits en vedette",
-    "featuredSubtitle": "Une sélection de notre gamme",
-    "viewAll": "Voir tout →",
-    "topCategories": "Catégories de produits",
-    "viewAllCategories": "Voir toutes les {count} catégories",
-    "newArrivals": "Produits actuels & Spécifications",
-    "updatedRecently": "Mis à jour il y a 2 min",
-    "colPartNumber": "Réf.",
-    "colDescription": "Description",
-    "colMaterial": "Matériau",
-    "colStock": "État du stock",
-    "colPrice": "Prix unitaire",
-    "customMillingTitle": "Service & Réparation",
-    "customMillingDesc": "Les outils et machines sont essentiels à votre processus de production. Notre équipe de service prend en charge les réparations et la maintenance — rapidement, de manière fiable et sur site.",
-    "uploadCadFile": "Soumettre une demande de réparation",
-    "viewCapabilities": "En savoir plus sur notre service",
-    "complianceCenterTitle": "Douane & Livraison",
-    "complianceCenterDesc": "Nous livrons avec notre propre flotte et gérons toutes les formalités douanières pour les clients en Suisse. Rapide, sécurisé et sans tracas.",
-    "accessDocuments": "En savoir plus"
+    "hero": {
+      "eyebrow": "Lörrach. Depuis 1987.",
+      "title": "Qui appelez-vous quand le poste à souder lâche un vendredi après-midi ?",
+      "subtitle": "Nous sommes un fournisseur industriel familial à Lörrach. Onze personnes qui décrochent le téléphone, font tourner l'atelier, conduisent les livraisons et connaissent le catalogue par cœur.",
+      "openShop": "Aller à la boutique",
+      "openCatalog": "Ouvrir le catalogue"
+    },
+    "reality": {
+      "heading": "Comment l'atelier tourne, vraiment",
+      "years": {
+        "value": "1987",
+        "label": "Familial depuis",
+        "sublabel": "Deuxième génération, même adresse."
+      },
+      "skus": {
+        "value": "12 000+",
+        "label": "Références actives",
+        "sublabel": "En stock, préparées et expédiées depuis Lörrach."
+      },
+      "repair": {
+        "value": "48 h",
+        "label": "Délai de réparation moyen",
+        "sublabel": "La plupart des outils reviennent à l'atelier en deux jours."
+      },
+      "brands": {
+        "value": "60+",
+        "label": "Marques partenaires",
+        "sublabel": "Distributeur agréé pour les fabricants que nous référençons."
+      }
+    },
+    "intents": {
+      "eyebrow": "Commencez ici",
+      "heading": "Dites-nous pourquoi vous êtes vraiment ici.",
+      "part": {
+        "question": "Il me faut une pièce maintenant.",
+        "answer": "Parcourez la boutique en direct, avec stocks et prix. Expédition le jour même pour les articles en stock commandés avant midi.",
+        "cta": "Aller à la boutique"
+      },
+      "repair": {
+        "question": "Mon outil est en panne.",
+        "answer": "Déposez-le à Lörrach ou envoyez-le. Diagnostic sous 24 h, réparation sous 48 h dans la majorité des cas. Outils de prêt disponibles.",
+        "cta": "Portail de réparation"
+      },
+      "swiss": {
+        "question": "Je livre en Suisse.",
+        "answer": "Nous prenons en charge les déclarations douanières, avançons les droits et facturons le coût rendu. Statut AEO.",
+        "cta": "Centre Suisse"
+      },
+      "catalog": {
+        "question": "Je veux lire un catalogue de marque.",
+        "answer": "Bibliothèque cherchable de brochures, manuels, fiches techniques et certificats des fabricants. À lire en ligne.",
+        "cta": "Ouvrir le catalogue"
+      }
+    },
+    "catalogPreview": {
+      "heading": "Lire avant d'acheter.",
+      "subheading": "Catalogues des fabricants que nous référençons — cherchables, filtrables, téléchargeables.",
+      "cta": "Ouvrir la bibliothèque"
+    },
+    "services": {
+      "eyebrow": "Au-delà du produit",
+      "heading": "Quatre engagements.",
+      "subheading": "Des promesses concrètes — pas du discours marketing. Si nous les manquons, dites-le-nous, nous corrigeons.",
+      "cta": "Tous les services",
+      "consulting": "Conseil sur site dans la zone des trois pays. Réponse sous 4 heures ouvrées, déplacement à votre convenance.",
+      "repair": "Atelier intégré avec outils de prêt. La plupart des réparations sont rendues sous 48 h après dépôt.",
+      "delivery": "Flotte de livraison en propre, tournées quotidiennes Lörrach, Bâle et Mulhouse. Articles en stock expédiés le jour même avant midi.",
+      "customs": "Statut douanier AEO. Nous gérons les formalités, avançons les droits, et facturons le coût rendu en CHF ou EUR."
+    },
+    "industries": {
+      "eyebrow": "Métiers que nous connaissons",
+      "heading": "Quel atelier dirigez-vous ?",
+      "questions": {
+        "welding": "Atelier de soudage ?",
+        "tools": "Négoce d'outillage ?",
+        "power-tools": "Métier électroportatif ?",
+        "machines": "Machines stationnaires ?",
+        "facility-equipment": "Équipement d'atelier ?",
+        "workshop-supplies": "Consommables ?",
+        "occupational-safety": "Sécurité au travail ?"
+      }
+    },
+    "featured": {
+      "heading": "Récemment en boutique",
+      "subheading": "Un échantillon en direct du catalogue — en stock, expédié et entretenu en interne.",
+      "cta": "Parcourir toute la boutique"
+    },
+    "people": {
+      "eyebrow": "Vrais noms. Vrais bureaux.",
+      "heading": "Quand vous appelez, une personne décroche.",
+      "body": "Nous sommes onze dans l'équipe. La personne avec qui vous parlez d'un devis reconnaîtra votre voix lorsque vous appellerez pour la réparation. Découvrez-nous sur la page À propos.",
+      "cta": "Voir l'équipe",
+      "featured": {
+        "name": "Équipe SWR Lörrach",
+        "role": "Vente & Service",
+        "quote": "Si vous ne trouvez pas dans la boutique ou le catalogue, appelez-nous. C'est probablement sur l'étagère du fond."
+      }
+    },
+    "workshop": {
+      "eyebrow": "Parlons-nous",
+      "heading": "Pas d'auto-réponse. Chaque e-mail est lu par un humain.",
+      "body": "Envoyez un brief, appelez l'atelier ou prenez rendez-vous. Réponse sous un jour ouvré — avec une réponse ferme ou la prochaine question à clarifier.",
+      "phoneLabel": "Téléphone",
+      "emailLabel": "E-mail",
+      "hoursLabel": "Horaires"
+    }
   },
   "products": {
     "title": "Tous les produits",
@@ -46,11 +153,25 @@
     "searchEmpty": "Aucun résultat pour \"{query}\".",
     "searchEmptyHint": "Essayez un autre numéro de référence, mot-clé ou spécification.",
     "searchEmptyClear": "Effacer la recherche",
+    "noFilterResults": "Aucun produit ne correspond à ces filtres.",
+    "filter": {
+      "heading": "Filtres",
+      "clearAll": "Tout effacer",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "price": "Prix",
+      "priceMin": "Min",
+      "priceMax": "Max",
+      "apply": "Appliquer"
+    },
     "empty": "Aucun produit trouvé.",
     "view": "Voir",
     "priceOnRequest": "Prix sur demande",
     "exclVat": "HT",
     "inStock": "EN STOCK",
+    "lowStock": "STOCK LIMITÉ",
+    "outOfStock": "ÉPUISÉ",
+    "lowStockRemaining": "Plus que {qty} en stock — dans la limite des stocks disponibles.",
     "unavailable": "Indisponible",
     "addToCart": "Ajouter au panier",
     "requestQuote": "Demander un devis",
@@ -105,11 +226,17 @@
   "footer": {
     "rights": "Tous droits réservés.",
     "copyright": "© {year} SWR Handelsgesellschaft mbH. Tous droits réservés.",
+    "imprint": "Mentions légales",
     "termsOfSale": "Conditions de vente",
     "privacyPolicy": "Politique de confidentialité",
     "compliance": "Conformité",
     "isoCertification": "Certification ISO",
     "sdsSheets": "Fiches SDS",
+    "shopHeading": "Boutique",
+    "servicesHeading": "Service 360°",
+    "companyHeading": "Entreprise",
+    "legalHeading": "Mentions légales",
+    "contactHeading": "Contact",
     "metaTitle": "SWR Lörrach — Soudage, Outillage & Réparation",
     "metaTitleTemplate": "%s | SWR Lörrach",
     "metaDescription": "SWR Handelsgesellschaft mbH — Votre partenaire B2B pour la technologie de soudage, l'outillage électrique, les machines et la sécurité au travail. Qualität verbindet."
@@ -177,6 +304,75 @@
     "section2Body": "Les fiches de données de sécurité contiennent des informations importantes sur la manipulation, le stockage et l'élimination sûrs des produits. Veuillez les lire attentivement avant utilisation.",
     "contact": "Demandes FDS : sds@swr-loerrach.de"
   },
+  "imprint": {
+    "heading": "Mentions légales",
+    "intro": "Informations légales conformément à l'article 5 TMG.",
+    "companyHeading": "Entreprise",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach",
+    "country": "Allemagne",
+    "contactHeading": "Contact",
+    "phoneLabel": "Téléphone",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "E-mail",
+    "email": "info@swr-loerrach.de",
+    "representativeHeading": "Représentant habilité",
+    "representativeBody": "Direction de SWR Handelsgesellschaft mbH.",
+    "registrationHeading": "Registre du commerce",
+    "registrationBody": "Inscrit au tribunal cantonal (Amtsgericht) de Freiburg i. Br. sous le numéro HRB 703221.",
+    "vatHeading": "Numéro de TVA",
+    "vatBody": "Numéro d'identification TVA selon l'article 27 a de la loi allemande sur la TVA : sur demande.",
+    "disputeHeading": "Règlement des litiges en ligne",
+    "disputeBody": "La Commission européenne met à disposition une plateforme de règlement extrajudiciaire des litiges (RLL) à l'adresse https://ec.europa.eu/consumers/odr. Nous ne sommes pas tenus ni disposés à participer à une procédure de règlement des litiges devant un organisme de conciliation des consommateurs.",
+    "contact": "Pour toute question juridique, veuillez contacter info@swr-loerrach.de."
+  },
+  "about": {
+    "eyebrow": "Depuis 1986",
+    "heading": "La qualité qui rassemble.",
+    "subheading": "SWR Handelsgesellschaft mbH est votre partenaire service 360° à Lörrach pour le soudage, l'outillage, les machines et la sécurité au travail — avec un conseil expert, une livraison rapide et un service de réparation en Allemagne, en Suisse et en France.",
+    "bookConsultation": "Prendre rendez-vous",
+    "explore360": "Découvrir le service 360°",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH fournit depuis près de quatre décennies l'industrie et l'artisanat du triangle frontalier autour de Lörrach en outillage, soudage, machines et équipements de sécurité de qualité professionnelle.",
+    "missionHeading": "Notre mission",
+    "missionBody": "Nous équipons les ateliers, les fabricants et les artisans avec des produits professionnels — et nous y associons les services de conseil, de réparation et de dédouanement qui assurent la continuité de l'exploitation.",
+    "approachHeading": "Notre approche",
+    "approachBody": "Nos ingénieurs et spécialistes d'application connaissent notre gamme sur le bout des doigts. Nous écoutons d'abord, puis nous recommandons exactement ce dont le chantier a besoin — sans vente additionnelle inutile.",
+    "valuesHeading": "Nos valeurs",
+    "values": {
+      "qualityTitle": "Qualité de marque",
+      "qualityBody": "Nous ne stockons que des produits professionnels éprouvés issus de fabricants de référence. Chaque article est conforme aux normes européennes.",
+      "service360Title": "Service 360°",
+      "service360Body": "Du conseil à la livraison, de la réparation sur site au dédouanement — un seul partenaire pour tout le cycle de vie.",
+      "partnershipTitle": "Partenariat durable",
+      "partnershipBody": "Nous construisons des relations qui durent. Nos clients restent parce que nous tenons nos promesses, année après année."
+    },
+    "ctaHeading": "Parlons de votre prochain projet.",
+    "ctaBody": "Devis ponctuel ou contrat d'approvisionnement à long terme : nos spécialistes sont à votre écoute."
+  },
+  "contact": {
+    "eyebrow": "Nous sommes à votre disposition",
+    "heading": "Nous contacter",
+    "subheading": "Parlez à notre équipe à Lörrach — pour des devis, du conseil technique, des demandes de réparation ou le dédouanement.",
+    "reachOutHeading": "Nous joindre",
+    "reachOutBody": "Le téléphone et l'e-mail sont les moyens les plus rapides pour joindre notre équipe pendant les heures d'ouverture. Pour les demandes de réparation urgentes, merci de nous appeler directement.",
+    "consultationHeading": "Conseil sur site",
+    "consultationBody": "Nos spécialistes rendent visite aux clients dans tout le triangle frontalier. Prenez rendez-vous et nous nous déplaçons chez vous.",
+    "cardTitle": "SWR Handelsgesellschaft mbH",
+    "company": "SWR Handelsgesellschaft mbH",
+    "street": "Industriestraße 1",
+    "city": "79539 Lörrach, Allemagne",
+    "phoneLabel": "Téléphone",
+    "phone": "+49 7621 160 370",
+    "faxLabel": "Fax",
+    "fax": "+49 7621 160 370 9",
+    "emailLabel": "E-mail",
+    "email": "info@swr-loerrach.de",
+    "hoursLabel": "Horaires",
+    "hours": "Lun-Ven 07h30-17h00"
+  },
   "auth": {
     "loginHeading": "Se connecter",
     "email": "Adresse e-mail",
@@ -197,7 +393,20 @@
     "registerPending": "Votre compte a été créé et est en attente d'approbation par notre équipe. Vous recevrez un e-mail dès que votre compte sera activé.",
     "passwordMismatch": "Les mots de passe ne correspondent pas.",
     "registerError": "L'inscription a échoué. Veuillez réessayer.",
-    "backToLogin": "← Retour à la connexion"
+    "backToLogin": "← Retour à la connexion",
+    "forgotLink": "Mot de passe oublié ?",
+    "forgotHeading": "Réinitialiser le mot de passe",
+    "forgotDescription": "Saisissez l'adresse e-mail de votre compte ; nous vous enverrons un lien pour définir un nouveau mot de passe.",
+    "forgotSent": "Si cette adresse figure dans nos dossiers, un e-mail de réinitialisation vient d'être envoyé. Consultez votre boîte de réception.",
+    "forgotError": "Impossible d'envoyer l'e-mail de réinitialisation.",
+    "sendResetLink": "Envoyer le lien",
+    "sending": "Envoi…",
+    "resetHeading": "Définir un nouveau mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "setNewPassword": "Enregistrer le mot de passe",
+    "saving": "Enregistrement…",
+    "resetError": "Impossible de réinitialiser le mot de passe.",
+    "resetTokenMissing": "Le lien est incomplet. Demandez-en un nouveau."
   },
   "account": {
     "heading": "Mon compte",
@@ -205,7 +414,26 @@
     "orderHistory": "Historique des commandes",
     "quotations": "Devis",
     "addresses": "Adresses",
-    "logout": "Se déconnecter"
+    "profile": "Profil & Mot de passe",
+    "profileHeading": "Profil",
+    "fleet": "Mon parc",
+    "service": "Retours et SAV",
+    "logout": "Se déconnecter",
+    "firstname": "Prénom",
+    "lastname": "Nom de famille",
+    "email": "Adresse e-mail",
+    "changePassword": "Modifier le mot de passe",
+    "changePasswordHint": "Laissez vide pour conserver votre mot de passe actuel.",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "currentPasswordRequired": "Saisissez votre mot de passe actuel pour modifier l'e-mail ou le mot de passe.",
+    "profileSaved": "Profil mis à jour.",
+    "profileSaveError": "Impossible de mettre à jour le profil.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "cancel": "Annuler"
   },
   "addresses": {
     "heading": "Adresses enregistrées",
@@ -230,7 +458,8 @@
     "street2": "Complément d'adresse (optionnel)",
     "city": "Ville",
     "postcode": "Code postal",
-    "region": "Région / État (optionnel)",
+    "region": "Région / État",
+    "regionOptional": "optionnel",
     "country": "Pays",
     "countryHint": "Code pays ISO à 2 lettres (par ex. DE, CH, FR)",
     "telephone": "Téléphone",
@@ -257,6 +486,9 @@
     "continueToShipping": "Continuer vers la livraison",
     "chooseShippingMethod": "Choisir un mode de livraison",
     "noShippingMethods": "Aucun mode de livraison n'est disponible pour cette adresse. Veuillez en choisir une autre.",
+    "shippingLoadError": "Impossible de récupérer les options de livraison.",
+    "shippingLoadErrorHint": "Le service de livraison est temporairement indisponible. Veuillez essayer une autre adresse ou contacter le support.",
+    "contactSupport": "Contacter le support",
     "noMethodSelected": "Veuillez choisir un mode de livraison.",
     "shippingTo": "Livraison à",
     "continueToReview": "Continuer vers le récapitulatif",
@@ -270,6 +502,8 @@
     "shippingMethod": "Mode de livraison",
     "methodNotSet": "Non sélectionné",
     "change": "Modifier",
+    "paymentMethod": "Mode de paiement",
+    "paymentMethodFallback": "Facturation par défaut.",
     "poNumber": "Référence commande",
     "optional": "Facultatif",
     "poNumberPlaceholder": "ex. PO-2026-001",
@@ -293,6 +527,11 @@
     "viewOrder": "Détails →",
     "orderNumber": "Commande n°{id}",
     "backToOrders": "← Retour à l'historique",
+    "reorder": "Recommander",
+    "reordering": "Ajout au panier…",
+    "reorderSummary": "{added} ajouté(s), {problems} à revoir.",
+    "reorderNeedsOptions": "À rajouter depuis la fiche produit",
+    "reorderGoToCart": "Accéder au panier →",
     "colProduct": "Produit",
     "colSku": "Réf.",
     "colQty": "Qté",
@@ -331,6 +570,7 @@
     "trackingNumber": "Suivi",
     "noTracking": "Aucune information de suivi fournie.",
     "noDocuments": "Aucun document émis pour le moment.",
+    "comments": "Commentaires de SWR",
     "status": {
       "pending": "En attente",
       "processing": "En cours",
@@ -379,12 +619,362 @@
       "rejected": "Refusé",
       "expired": "Expiré",
       "converted": "Converti"
+    },
+    "acceptToCart": "Accepter et ajouter au panier",
+    "accepting": "Acceptation…",
+    "acceptError": {
+      "not_found": "Devis introuvable.",
+      "already_converted": "Ce devis a déjà été accepté.",
+      "expired": "Ce devis a expiré.",
+      "out_of_stock": "Certains articles de ce devis sont indisponibles :",
+      "unknown": "Impossible d'accepter le devis. Veuillez réessayer."
     }
   },
   "breadcrumb": {
     "home": "Accueil",
     "products": "Produits",
     "catalog": "Catalogue"
+  },
+  "catalog": {
+    "metaTitle": "Catalogue de documents — manuels, fiches techniques, brochures",
+    "metaDescription": "Catalogues fabricants, manuels, fiches techniques, certificats et fiches de sécurité pour toutes nos marques. Lecture en ligne, téléchargement, impression.",
+    "eyebrow": "Bibliothèque documentaire",
+    "heading": "Le catalogue. Cherchable.",
+    "subheading": "Catalogues de marques, listes de prix, manuels, fiches techniques, certificats et fiches de sécurité — pour chaque marque que nous distribuons. À lire en ligne, à télécharger ou à imprimer.",
+    "searchPlaceholder": "Rechercher par marque, produit ou mot-clé…",
+    "resultsCount": "{count} documents",
+    "emptyState": "Aucun document ne correspond à ces filtres.",
+    "pageCount": "{count} p.",
+    "breadcrumbCatalog": "Catalogue",
+    "filters": {
+      "category": "Catégorie",
+      "type": "Type de document",
+      "brand": "Marque",
+      "language": "Langue",
+      "clearAll": "Réinitialiser les filtres",
+      "title": "Système de filtres",
+      "subtitle": "Affinement technique",
+      "activeFilters": "Filtres actifs :",
+      "manufacturerSearch": "Rechercher un fabricant...",
+      "resultsShowing": "{count, plural, =0 {aucun résultat} =1 {1 résultat} other {# résultats}}"
+    },
+    "types": {
+      "catalog": "Catalogue",
+      "price-list": "Liste de prix",
+      "datasheet": "Fiche technique",
+      "manual": "Manuel",
+      "certificate": "Certificat",
+      "sds": "Fiche de sécurité",
+      "instructions": "Instructions",
+      "technical-info": "Information technique",
+      "performance": "Déclaration de performance",
+      "presentation": "Brochure",
+      "video": "Vidéo",
+      "misc": "Autre"
+    },
+    "categories": {
+      "welding": "Soudage",
+      "tools": "Outillage",
+      "power-tools": "Électroportatif",
+      "machines": "Machines",
+      "facility-equipment": "Équipement d'atelier",
+      "workshop-supplies": "Consommables",
+      "occupational-safety": "Sécurité au travail",
+      "compressed-air": "Air comprimé"
+    },
+    "languages": {
+      "de": "Allemand",
+      "en": "Anglais",
+      "fr": "Français",
+      "it": "Italien",
+      "es": "Espagnol",
+      "nl": "Néerlandais",
+      "pl": "Polonais",
+      "pt": "Portugais"
+    },
+    "viewer": {
+      "download": "Télécharger",
+      "print": "Imprimer",
+      "openInNewTab": "Ouvrir",
+      "backToList": "Retour",
+      "notice": "Le PDF est affiché par votre navigateur. Utilisez le bouton Télécharger pour conserver une copie locale.",
+      "externalNotice": "Ce document est hébergé par le fabricant et ne peut pas être intégré ici. Ouvrez-le sur le site du fabricant ou téléchargez une copie.",
+      "externalCta": "Ouvrir sur le site du fabricant",
+      "watchOnYoutube": "Voir sur YouTube",
+      "videoNotice": "La vidéo est diffusée par l'éditeur. Utilisez le plein écran pour une meilleure lecture.",
+      "unsupportedVideo": "Cette vidéo est hébergée sur une plateforme que nous ne pouvons pas intégrer directement. Ouvrez-la sur le site de l'éditeur pour la visionner.",
+      "unsupportedVideoCta": "Ouvrir la vidéo"
+    },
+    "meta": {
+      "heading": "Détails du document",
+      "brand": "Marque",
+      "type": "Type",
+      "language": "Langue",
+      "pages": "Pages",
+      "fileSize": "Taille du fichier",
+      "published": "Publié",
+      "categories": "Catégories"
+    }
+  },
+  "fleet": {
+    "metaTitle": "Mon parc machines",
+    "metaDescription": "Suivez les machines de votre compte — garantie, historique de service et demande de réparation en un clic.",
+    "heading": "Mon parc machines",
+    "subheading": "Toutes les machines enregistrées sur votre compte, avec leur statut de garantie et l'historique de service complet.",
+    "backToAccount": "Retour au compte",
+    "backToFleet": "Retour au parc",
+    "counters": {
+      "machines": "Machines",
+      "underWarranty": "Sous garantie",
+      "serviceEvents": "Interventions",
+      "brands": "Marques"
+    },
+    "categoryLabels": {
+      "welding": "Soudage",
+      "power-tools": "Outils électriques",
+      "pneumatic": "Pneumatique",
+      "machines": "Machines",
+      "measuring": "Mesure",
+      "safety": "Équipement de sécurité"
+    },
+    "card": {
+      "serial": "Série",
+      "purchased": "Acheté le",
+      "warrantyUntil": "Garantie jusqu'au",
+      "statusActive": "Sous garantie",
+      "statusExpiring": "Expire bientôt",
+      "statusExpired": "Hors garantie",
+      "viewDetails": "Voir",
+      "lastService": "Dernier service",
+      "noService": "Aucun service"
+    },
+    "detail": {
+      "serial": "Numéro de série",
+      "category": "Catégorie",
+      "purchased": "Date d'achat",
+      "warrantyUntil": "Fin de garantie",
+      "maintenanceCount": "Interventions",
+      "product": "Produit"
+    },
+    "actions": {
+      "eyebrow": "Actions rapides",
+      "heading": "Besoin de quelque chose pour cette machine ?",
+      "body": "Réparation, calibration, consommables — démarrez ici, on transmet à la bonne personne à Lörrach.",
+      "contact": "Contacter votre interlocuteur"
+    },
+    "log": {
+      "eyebrow": "Historique de service",
+      "heading": "Journal de maintenance.",
+      "subheading": "Chaque passage à l'atelier, chaque intervention sur site. Les documents (quand disponibles) renvoient directement au catalogue.",
+      "openDocument": "Document",
+      "empty": "Aucune intervention enregistrée — dès qu'une réparation, calibration ou inspection est consignée, elle apparaîtra ici.",
+      "columns": {
+        "date": "Date",
+        "kind": "Type",
+        "title": "Titre",
+        "technician": "Technicien",
+        "document": "Document"
+      },
+      "kinds": {
+        "service": "Service",
+        "repair": "Réparation",
+        "calibration": "Calibration",
+        "inspection": "Inspection",
+        "warranty": "Garantie"
+      }
+    },
+    "empty": {
+      "heading": "Aucune machine enregistrée pour le moment.",
+      "body": "Le parc se construit au fil des livraisons et services pour votre compte. Les machines achetées chez SWR sont enregistrées automatiquement.",
+      "bullets": {
+        "import": "Sur demande, nous importons vos machines depuis vos anciennes factures.",
+        "register": "Envoyez-nous un numéro de série — nous l'ajoutons.",
+        "track": "Une fois enregistrée, chaque intervention apparaît automatiquement ici."
+      },
+      "ctaContact": "Nous contacter",
+      "ctaOrders": "Voir les commandes"
+    }
+  },
+  "service": {
+    "metaTitle": "Retours et SAV",
+    "metaDescription": "Retours, réparations et demandes de calibration — un portail unique, un suivi commun à vos commandes et à votre parc.",
+    "heading": "Retours et SAV",
+    "subheading": "Chaque retour, réparation et calibration ouvert sur votre compte — de la première demande à la résolution finale, avec le même suivi que notre atelier.",
+    "backToAccount": "Retour au compte",
+    "backToHub": "Retour au SAV",
+    "viewCase": "Ouvrir le dossier",
+    "orderLabel": "Commande",
+    "machineLabel": "Machine",
+    "updated": "Mis à jour",
+    "kind": {
+      "return": "Retour",
+      "repair": "Réparation",
+      "inspection": "Inspection"
+    },
+    "status": {
+      "submitted": "Envoyé",
+      "received": "Reçu",
+      "in_progress": "En cours",
+      "awaiting_customer": "Votre retour est attendu",
+      "completed": "Terminé",
+      "rejected": "Refusé"
+    },
+    "reason": {
+      "damaged_in_transit": "Endommagé au transport",
+      "defective": "Défectueux à la réception",
+      "wrong_item": "Article incorrect",
+      "not_needed": "Plus nécessaire",
+      "warranty": "Sous garantie",
+      "breakdown": "Panne machine",
+      "calibration": "Calibration / inspection",
+      "other": "Autre"
+    },
+    "actions": {
+      "return": {
+        "eyebrow": "Retour",
+        "title": "Renvoyer un article",
+        "body": "Ouvrez un retour pour toute commande dont les articles sont encore dans la fenêtre de retour.",
+        "cta": "Ouvrir un retour"
+      },
+      "repair": {
+        "eyebrow": "Réparation",
+        "title": "Ouvrir une réparation",
+        "body": "Signalez une panne ou un défaut pour toute machine de votre parc — nous routons vers le bon atelier.",
+        "cta": "Ouvrir un dossier"
+      },
+      "inspection": {
+        "eyebrow": "Calibration et inspection",
+        "title": "Planifier une calibration",
+        "body": "Demandez une calibration annuelle, une inspection de sécurité ou une visite d'entretien.",
+        "cta": "Demander une inspection"
+      }
+    },
+    "counters": {
+      "total": "Dossiers",
+      "open": "Ouverts",
+      "awaiting": "En attente de vous",
+      "closed": "Clôturés"
+    },
+    "sections": {
+      "open": "Dossiers ouverts",
+      "closed": "Dossiers clôturés"
+    },
+    "empty": {
+      "heading": "Aucune activité SAV pour l'instant.",
+      "body": "Dès que vous ouvrez un retour, une réparation ou une calibration, le dossier apparaît ici avec le statut en direct de notre atelier.",
+      "ctaReturn": "Ouvrir un retour",
+      "ctaRepair": "Ouvrir une réparation"
+    },
+    "detail": {
+      "opened": "Ouvert le",
+      "updated": "Dernière mise à jour",
+      "reason": "Motif",
+      "order": "Commande associée",
+      "machine": "Machine associée",
+      "serial": "Série",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Téléphone",
+      "items": "Articles",
+      "resolution": "Résolution"
+    },
+    "attachments": {
+      "eyebrow": "Pièces justificatives",
+      "heading": "Pièces jointes."
+    },
+    "timeline": {
+      "eyebrow": "Activité",
+      "heading": "Suivi du statut.",
+      "subheading": "Le même statut que notre atelier enregistre. Du plus récent au plus ancien.",
+      "customer": "Vous",
+      "swr": "SWR"
+    },
+    "awaitingCustomer": {
+      "heading": "Nous attendons votre décision.",
+      "body": "Le dossier est en pause tant que nous n'avons pas votre retour. Le dernier message de l'atelier est dans le suivi ci-dessus.",
+      "cta": "Répondre à l'atelier"
+    },
+    "new": {
+      "metaTitle": "Nouvelle demande SAV",
+      "metaDescription": "Ouvrir un retour, une réparation ou une inspection pour votre compte.",
+      "return": {
+        "heading": "Ouvrir un retour",
+        "subheading": "Choisissez les articles, indiquez le motif et joignez des photos du problème. Nous prenons le dossier sous un jour ouvré.",
+        "submit": "Envoyer le retour"
+      },
+      "repair": {
+        "heading": "Ouvrir une réparation",
+        "subheading": "Décrivez la panne et joignez les éléments de diagnostic. Nous confirmons l'enlèvement ou le dépôt sous un jour ouvré.",
+        "submit": "Envoyer la réparation"
+      },
+      "inspection": {
+        "heading": "Demander inspection ou calibration",
+        "subheading": "Planifiez une calibration annuelle, un contrôle de sécurité ou un entretien préventif pour une machine du parc.",
+        "submit": "Demander une inspection"
+      },
+      "contextOrder": "Commande",
+      "contextMachine": "Machine",
+      "fieldsHeading": "Détails du dossier",
+      "description": "Décrivez le problème",
+      "descriptionHint": "Symptômes de la panne, début d'apparition et étapes déjà tentées. Plus de contexte = clôture plus rapide.",
+      "reason": "Motif",
+      "reasonChoose": "Choisir un motif…",
+      "itemsHeading": "Articles",
+      "itemsHint": "Seuls les articles avec une quantité supérieure à zéro sont inclus dans le retour.",
+      "itemQty": "Qté retournée",
+      "contactHeading": "Contact",
+      "contactName": "Votre nom",
+      "contactEmail": "Email",
+      "contactPhone": "Téléphone",
+      "attachmentsHeading": "Photos et documents",
+      "attachmentsHint": "Photos des dommages, rapports de diagnostic ou captures d'écran — tout accélère le dossier. Images et PDF jusqu'à 10 Mo.",
+      "attachmentsAdd": "Ajouter des photos ou documents",
+      "attachmentsSelectedOne": "1 fichier sélectionné — ajoutez-en ou envoyez",
+      "attachmentsSelectedMany": "{count} fichiers sélectionnés",
+      "attachmentsNote": "Les pièces sont attachées au dossier. Dans cette préversion, les fichiers ne sont pas transférés intégralement — les noms sont conservés pour relance.",
+      "submitting": "Envoi en cours…",
+      "errorMissing": "Merci de renseigner la description et votre nom avant d'envoyer.",
+      "picker": {
+        "heading": "Choisir une machine de votre parc",
+        "subheading": "Sélectionnez l'une des machines déjà enregistrées chez nous. Statut de garantie, numéro de série et dernière intervention sont visibles pour décider en quelques secondes.",
+        "selectCta": "Choisir",
+        "warranty": {
+          "active": "Sous garantie",
+          "expiring": "Bientôt expirée",
+          "expired": "Hors garantie"
+        },
+        "warrantyUntil": "Garantie jusqu'au",
+        "serial": "Numéro de série",
+        "lastService": "Dernier entretien",
+        "noService": "Aucun entretien",
+        "empty": {
+          "heading": "Aucune machine enregistrée.",
+          "body": "Votre parc est vide, il n'y a donc rien à sélectionner. Vous pouvez décrire la machine manuellement ci-dessous, ou nous demander de l'importer depuis une facture précédente.",
+          "cta": "Nous contacter"
+        }
+      },
+      "notInFleet": {
+        "heading": "Pas dans votre parc ?",
+        "toggle": "Saisir les détails de la machine manuellement",
+        "hint": "Pour les machines non encore enregistrées sur votre compte. La marque et le modèle suffisent — le numéro de série accélère le traitement si vous l'avez.",
+        "brand": "Marque",
+        "model": "Modèle",
+        "serial": "Numéro de série"
+      },
+      "contextBanner": {
+        "changeMachine": "Changer"
+      }
+    },
+    "orderSection": {
+      "heading": "Retours et SAV",
+      "startReturn": "Ouvrir un retour",
+      "empty": "Aucun dossier SAV pour cette commande."
+    },
+    "machineSection": {
+      "eyebrow": "Dossiers en cours",
+      "heading": "Dossiers SAV ouverts.",
+      "subheading": "Tous les tickets ouverts pour cette machine, avec le même suivi que notre atelier."
+    }
   },
   "cart": {
     "heading": "Votre panier d'approvisionnement",
@@ -404,10 +994,22 @@
     "decreaseQuantity": "Réduire la quantité",
     "increaseQuantity": "Augmenter la quantité",
     "exportCsv": "Exporter en CSV",
+    "csvImport": {
+      "button": "Importer CSV",
+      "importing": "Import en cours…",
+      "hint": "Deux colonnes : SKU, quantité. La première ligne peut être un en-tête.",
+      "summary": "{added} articles ajoutés. {problems} problèmes.",
+      "row": "Ligne {n}",
+      "errMissingSku": "SKU manquant",
+      "errInvalidQty": "Quantité invalide",
+      "errEmpty": "Aucune ligne trouvée dans le fichier"
+    },
     "saveForLater": "Sauvegarder pour plus tard",
     "removedNotice": "a été retiré du panier.",
     "undo": "Annuler",
     "undoing": "Annulation…",
+    "loading": "Chargement du panier…",
+    "fetchError": "Impossible de charger votre panier. Vérifiez votre connexion et réessayez.",
     "updateError": "Impossible de mettre à jour le panier. Veuillez réessayer.",
     "orderSummary": "Récapitulatif de commande",
     "subtotal": "Sous-total ({count} articles)",
@@ -418,5 +1020,592 @@
     "trustIsoDesc": "Tous les composants subissent des tests de matériaux rigoureux et une validation structurelle.",
     "trustSupport": "Support technique actif",
     "trustSupportDesc": "Des ingénieurs d'application dédiés sont disponibles pour les demandes techniques."
+  },
+  "services": {
+    "bookConsultation": "Prendre rendez-vous",
+    "requestService": "Demander un service",
+    "hub": {
+      "eyebrow": "Service 360°",
+      "heading": "Au-delà du produit.",
+      "subheading": "Conseil, réparation, livraison et dédouanement — quatre piliers pour faire tourner votre activité. Un partenaire, un interlocuteur.",
+      "learnMore": "En savoir plus",
+      "bookConsultation": "Prendre rendez-vous"
+    },
+    "consulting": {
+      "eyebrow": "Conseil",
+      "title": "Conseil d'expert",
+      "shortBody": "Choix d'outils, optimisation du flux et conseils techniques par des spécialistes qui connaissent notre catalogue à fond.",
+      "subtitle": "Nos ingénieurs et spécialistes d'application se déplacent chez vous, analysent vos besoins et recommandent exactement ce qu'il faut.",
+      "body1": "Choisir le bon équipement est rarement simple. Paramètres de soudage, géométrie de l'outil, réglementation de sécurité et coût total de possession — une mauvaise décision peut coûter des semaines de production.",
+      "body2": "Notre équipe de spécialistes d'application cumule des décennies d'expérience en soudage, usinage et équipement d'atelier. Nous venons sur place, comprenons votre processus et recommandons la configuration qui convient — sans vente additionnelle.",
+      "body3": "Le conseil est toujours gratuit pour les clients actuels et prospects. Si vous n'êtes pas sûr qu'un produit convienne à votre application, demandez-nous d'abord.",
+      "ctaHeading": "Prêt à discuter ?",
+      "ctaBody": "Réservez 30 minutes de conseil et nous venons chez vous."
+    },
+    "repair": {
+      "eyebrow": "Réparation",
+      "title": "Portail Service & Réparation",
+      "shortBody": "Les outils et machines sont essentiels à votre production. Notre équipe de service gère les réparations et la maintenance — rapide, fiable, sur site.",
+      "subtitle": "Déposez à Lörrach, envoyez ou faites enlever par notre flotte. Diagnostic sous 24 heures, la plupart des réparations remises en service en 48.",
+      "body1": "L'arrêt de production coûte cher. Quand un poste à souder ou un outil électroportatif tombe en panne, chaque heure compte — c'est pourquoi notre atelier de réparation est en activité toute l'année et la plupart des réparations sont terminées sous 48 heures.",
+      "body2": "Nous entretenons toutes les grandes marques : postes à souder, outils électriques, outils pneumatiques et machines d'atelier. Du matériel de prêt est disponible pour les réparations plus longues afin de maintenir votre production.",
+      "body3": "Des contrats de maintenance préventive sont disponibles pour les clients à forte utilisation. Une inspection régulière prolonge la durée de vie et évite les arrêts non planifiés.",
+      "ctaHeading": "Besoin d'une réparation urgente ?",
+      "ctaBody": "Appelez-nous pour les demandes urgentes et le matériel de prêt.",
+      "categories": {
+        "eyebrow": "Ce que nous réparons",
+        "heading": "Six catégories. Un atelier.",
+        "subheading": "Outils, machines ou équipements d'atelier des marques que nous distribuons ? Nous les entretenons probablement. Cliquez sur une catégorie pour démarrer une demande de réparation.",
+        "requestQuote": "Démarrer une demande",
+        "items": {
+          "welding": {
+            "eyebrow": "Postes à souder",
+            "title": "MIG, TIG, MMA, plasma",
+            "body": "Sources, dévidoirs, torches et accessoires de Fronius, EWM, Lorch, Esab et plus. Calibration sur demande."
+          },
+          "powerTools": {
+            "eyebrow": "Outils électriques",
+            "title": "Sans fil et filaires",
+            "body": "Perceuses, meuleuses, visseuses à choc, scies circulaires — Bosch, Makita, Metabo, Fein. Diagnostic batterie inclus."
+          },
+          "pneumatic": {
+            "eyebrow": "Outils pneumatiques",
+            "title": "Compresseurs et air comprimé",
+            "body": "Compresseurs Aircraft, Schneider et Atlas Copco, visseuses à choc, meuleuses. Service de tuyaux et raccords également."
+          },
+          "machines": {
+            "eyebrow": "Machines d'atelier",
+            "title": "Équipements stationnaires",
+            "body": "Perceuses à colonne, scies à ruban, touret à meuler, systèmes d'aspiration. Nous nous déplaçons si la machine ne peut pas voyager."
+          },
+          "measuring": {
+            "eyebrow": "Instruments de mesure",
+            "title": "Calibration & service",
+            "body": "Pieds à coulisse, micromètres, multimètres et lasers. Certificats de calibration sur demande."
+          },
+          "safety": {
+            "eyebrow": "Équipement de sécurité",
+            "title": "Casques, harnais, masques",
+            "body": "Inspection périodique des EPI antichute, casques de soudure et appareils respiratoires selon l'intervalle légal."
+          }
+        }
+      },
+      "timeline": {
+        "eyebrow": "Comment ça se passe",
+        "heading": "De la réception à la reprise.",
+        "calloutValue": "≈ 48 h",
+        "calloutLabel": "Délai moyen d'exécution",
+        "steps": {
+          "dropoff": {
+            "title": "Dépôt",
+            "body": "Apportez votre outil à Lörrach pendant nos heures d'ouverture, ou planifiez un enlèvement par notre flotte."
+          },
+          "diagnosis": {
+            "title": "Diagnostic",
+            "body": "Nous identifions le défaut et la disponibilité des pièces sous 24 heures, et faisons valider la réparation avant de commencer."
+          },
+          "repair": {
+            "title": "Réparation",
+            "body": "Les réparations validées passent directement à l'établi. La plupart terminées le jour même — outils de prêt pour les plus longues."
+          },
+          "pickup": {
+            "title": "Reprise",
+            "body": "Reprise à Lörrach ou livraison sur la prochaine tournée. Testé, nettoyé, sous garantie."
+          }
+        }
+      },
+      "form": {
+        "recipientEmail": "service@swr-loerrach.de",
+        "heading": "Demander une réparation",
+        "subheading": "Indiquez ce que vous savez — nous répondons sous un jour ouvré avec une étape de diagnostic et une option de transport.",
+        "machineMake": "Marque",
+        "machineModel": "Modèle",
+        "serial": "Numéro de série",
+        "fault": "Décrivez le défaut",
+        "contactName": "Votre nom",
+        "company": "Société (facultatif)",
+        "phone": "Téléphone",
+        "email": "E-mail",
+        "submit": "Envoyer la demande",
+        "note": "L'envoi ouvre votre client de messagerie avec la demande pré-remplie. Le transport mailto pourra être remplacé par un backend plus tard."
+      }
+    },
+    "delivery": {
+      "eyebrow": "Livraison",
+      "title": "Livraison rapide, flotte propre",
+      "shortBody": "Nous livrons avec notre propre flotte dans la région de Lörrach et expédions dans toute l'Allemagne. Expédition le jour même pour le stock commandé avant midi.",
+      "subtitle": "Notre flotte de livraison propre rend votre planning prévisible. Expédition le jour même, suivi transparent et aucune mauvaise surprise.",
+      "body1": "Nous exploitons une flotte de véhicules de livraison avec nos propres chauffeurs — les mêmes personnes qui déchargent chez vous connaissent nos produits et peuvent répondre à vos questions sur place.",
+      "body2": "Les articles en stock commandés avant midi sont expédiés le jour même. Les livraisons régionales (Lörrach, Bâle, Mulhouse et alentours) arrivent généralement sous 24 heures.",
+      "body3": "Les expéditions nationales passent par des transporteurs établis avec suivi complet. Pour les projets urgents, nous proposons des options express — contactez-nous pour coordonner.",
+      "ctaHeading": "Grosse commande ?",
+      "ctaBody": "Renseignez-vous sur les créneaux de livraison planifiés et les envois groupés."
+    },
+    "customs": {
+      "eyebrow": "Douane",
+      "title": "Centre de livraison Suisse",
+      "shortBody": "Dédouanement complet pour les clients suisses. Nous préparons les documents, payons les droits et livrons prêts à l'emploi de l'autre côté de la frontière.",
+      "subtitle": "Lörrach est à 10 minutes de la frontière suisse. Nous transformons cette géographie en un véritable service transfrontalier : OEA, TVA correcte, livraison en CHF ou EUR.",
+      "body1": "Le commerce transfrontalier implique nomenclatures tarifaires, justificatifs d'origine préférentielle, récupération de TVA et transport — chaque erreur entraîne des retards ou des coûts imprévus.",
+      "body2": "Pour les clients suisses, nous établissons toutes les déclarations douanières nous-mêmes, avançons les droits et facturons le coût rendu en CHF ou EUR. Votre envoi arrive comme une commande nationale.",
+      "body3": "Nous détenons le statut AEO (opérateur économique agréé) auprès des douanes allemandes, ce qui signifie un traitement plus rapide et moins de contrôles à la frontière.",
+      "ctaHeading": "Expédition vers la Suisse ?",
+      "ctaBody": "Nous nous occupons des papiers. Vous recevez la marchandise.",
+      "facts": {
+        "aeo": { "value": "AEO-F", "label": "Opérateur économique agréé" },
+        "delivery": { "value": "1–3 jours", "label": "Frontière à porte" },
+        "currency": { "value": "CHF / EUR", "label": "Devise de facturation au choix" },
+        "team": { "value": "1 contact", "label": "Une personne, chaque envoi" }
+      },
+      "zones": {
+        "eyebrow": "Zones d'expédition",
+        "heading": "De Lörrach à toute la Suisse.",
+        "subheading": "Notre flotte couvre la région bâloise. Le reste de la Suisse passe par nos transitaires partenaires de longue date — papiers déjà établis.",
+        "columns": {
+          "zone": "Zone",
+          "regions": "Cantons / régions",
+          "transit": "Délai",
+          "freight": "À partir de"
+        },
+        "rows": {
+          "basel": {
+            "zone": "Zone 1",
+            "regions": "BS, BL, AG (Fricktal)",
+            "transit": "Jour même ou lendemain",
+            "freight": "CHF 28"
+          },
+          "north": {
+            "zone": "Zone 2",
+            "regions": "ZH, SH, TG, SG (nord)",
+            "transit": "1 jour ouvré",
+            "freight": "CHF 42"
+          },
+          "central": {
+            "zone": "Zone 3",
+            "regions": "BE, SO, LU, ZG, NW, OW",
+            "transit": "1–2 jours ouvrés",
+            "freight": "CHF 48"
+          },
+          "east": {
+            "zone": "Zone 4",
+            "regions": "GR, GL, UR, SZ",
+            "transit": "2 jours ouvrés",
+            "freight": "CHF 58"
+          },
+          "south": {
+            "zone": "Zone 5",
+            "regions": "TI, VS, GE, VD, NE, JU, FR",
+            "transit": "2–3 jours ouvrés",
+            "freight": "CHF 62"
+          }
+        },
+        "disclaimer": "Tarifs indicatifs pour colis jusqu'à 30 kg. Palettes, hors gabarit et express sur demande."
+      },
+      "duties": {
+        "eyebrow": "Droits et taxes",
+        "heading": "Ce que les clients paient réellement à la frontière.",
+        "subheading": "Droits suisses + TVA à l'importation (8,1 %) approximatifs pour les catégories d'atelier courantes. Le montant final dépend de la classification et de l'origine — nous établissons les deux.",
+        "columns": {
+          "type": "Catégorie",
+          "rate": "Droits + TVA",
+          "note": "Notes"
+        },
+        "rows": {
+          "tools": {
+            "type": "Outillage à main",
+            "rate": "≈ 8,1 % TVA",
+            "note": "La plupart des outils à main entrent en Suisse en franchise au titre de l'accord UE-CH ; seule la TVA s'applique."
+          },
+          "machines": {
+            "type": "Outils électriques & machines",
+            "rate": "≈ 8,1 % TVA",
+            "note": "Franchise avec EUR.1 / déclaration d'origine préférentielle — que nous émettons."
+          },
+          "consumables": {
+            "type": "Consommables soudage",
+            "rate": "≈ 0,5–8,6 % + TVA",
+            "note": "Fils d'apport et électrodes supportent de petits droits spécifiques selon l'alliage."
+          },
+          "ppe": {
+            "type": "EPI & sécurité",
+            "rate": "≈ 8,1 % TVA",
+            "note": "Casques, gants, harnais — généralement en franchise avec justificatif d'origine."
+          },
+          "spareParts": {
+            "type": "Pièces détachées",
+            "rate": "≈ 8,1 % TVA",
+            "note": "Les pièces d'origine bénéficient souvent de la procédure simplifiée avec dédouanement le jour même."
+          }
+        },
+        "disclaimer": "Valeurs indicatives — les droits suisses se calculent en poids/valeur. Nous fournissons le coût rendu ferme dans chaque devis."
+      },
+      "filed": {
+        "eyebrow": "Ce que nous déclarons pour vous",
+        "heading": "Six documents, zéro travail.",
+        "subheading": "Chaque envoi vers la Suisse quitte notre entrepôt avec un dossier douanier complet. Vous validez la commande, nous gérons le reste.",
+        "items": {
+          "tariff": {
+            "title": "Classement tarifaire",
+            "body": "Code SH correct (Tares suisse) pour chaque ligne — pas de surdéclaration, pas de surprise."
+          },
+          "origin": {
+            "title": "EUR.1 / déclaration d'origine",
+            "body": "Justificatif d'origine pour que les marchandises éligibles restent vraiment exonérées."
+          },
+          "vat": {
+            "title": "TVA d'importation suisse",
+            "body": "Avancée par notre transitaire ; récupération de TVA pour les clients allemands traitée séparément."
+          },
+          "exportDecl": {
+            "title": "Déclaration d'exportation",
+            "body": "Atlas côté allemand, y compris procédures simplifiées lorsqu'autorisées."
+          },
+          "duties": {
+            "title": "Livraison droits acquittés (DDP)",
+            "body": "DDP par défaut — coût rendu sur la facture, aucun appel de la douane pour le destinataire."
+          },
+          "deliveryNote": {
+            "title": "Bon de livraison bilingue",
+            "body": "Bon de livraison et liste de colisage en allemand et français — l'équipe de réception trouve ce qui a été commandé."
+          }
+        }
+      },
+      "compliance": {
+        "eyebrow": "Documents de conformité",
+        "heading": "Tirez les déclarations du catalogue, pas des e-mails.",
+        "subheading": "Les déclarations de conformité, fiches techniques, fiches de données de sécurité et déclarations des performances vivent dans le catalogue, versionnées par fabricant.",
+        "openCatalog": "Ouvrir le catalogue",
+        "docs": {
+          "certificate": {
+            "eyebrow": "DC",
+            "title": "Déclarations de conformité",
+            "body": "Déclarations CE / UKCA de chaque fabricant — exigées en douane et en audit."
+          },
+          "datasheet": {
+            "eyebrow": "Fiche technique",
+            "title": "Fiches techniques",
+            "body": "Puissance, poids, dimensions, normes — pour le transitaire comme pour la qualité."
+          },
+          "sds": {
+            "eyebrow": "FDS",
+            "title": "Fiches de données de sécurité",
+            "body": "Requises pour tout produit chimique passant la frontière — flux, lubrifiants, sprays."
+          },
+          "performance": {
+            "eyebrow": "DoP",
+            "title": "Déclarations des performances",
+            "body": "Règlement Produits de Construction (RPC) pour les produits installés."
+          }
+        }
+      },
+      "crossLink": {
+        "eyebrow": "En Allemagne",
+        "heading": "Même flotte, même précision — côté national.",
+        "body": "Adresse de livraison en Allemagne ? Aucun dédouanement requis. Notre flotte couvre la région de Lörrach le jour même, le reste via réseaux colis et palettes.",
+        "cta": "Voir la livraison nationale"
+      }
+    }
+  },
+  "industries": {
+    "browseCatalog": "Voir le catalogue",
+    "featuredHeading": "Produits en vedette",
+    "viewAll": "Tout voir",
+    "rangeComingSoon": "Notre gamme complète pour ce secteur est en cours d'intégration au catalogue — contactez-nous pour la disponibilité.",
+    "hub": {
+      "eyebrow": "Secteurs",
+      "heading": "Des équipements pour chaque métier.",
+      "subheading": "De l'atelier de soudage à la maintenance industrielle — explorez notre gamme par secteur et trouvez rapidement l'équipement adapté.",
+      "exploreIndustry": "Découvrir"
+    },
+    "weldingHub": {
+      "eyebrow": "Soudage",
+      "title": "Hub Soudage : machines, gaz, consommables.",
+      "subtitle": "Six procédés, des centaines de consommables et un atelier de service qui connaît chaque machine de cette page. Spécifié pour l'établi, pas pour la brochure.",
+      "body1": "Le soudage est la catégorie la plus exigeante en service que nous vendons. Nous distribuons les postes Fronius, EWM, Lorch et Esab, avec un atelier qui calibre et répare sur place.",
+      "body2": "Si le procédé ou le métal d'apport n'est pas évident, parlez-en avant d'acheter — le conseil d'application est gratuit, et nous préférons vous vendre la bonne machine du premier coup.",
+      "subCategories": {
+        "eyebrow": "Par procédé",
+        "heading": "Choisir le procédé. Trouver la machine.",
+        "subheading": "Chaque procédé pointe vers les machines, torches et consommables adéquats au catalogue.",
+        "cta": "Voir la gamme",
+        "items": {
+          "mig": {
+            "eyebrow": "MIG / MAG",
+            "title": "Fil pour la production",
+            "body": "Taux de dépôt le plus élevé. Idéal pour le travail structurel répétitif en acier, inox et aluminium."
+          },
+          "tig": {
+            "eyebrow": "TIG / WIG",
+            "title": "Précision et finition",
+            "body": "Soudures propres et contrôlées sur tôle fine, inox, aluminium et alliages spéciaux. Soudures visibles et tuyauterie."
+          },
+          "mma": {
+            "eyebrow": "MMA / Électrode",
+            "title": "Électrode enrobée",
+            "body": "Robuste et portable. Travail extérieur, soudure de réparation et chantier sans gaz de protection."
+          },
+          "plasma": {
+            "eyebrow": "Découpe plasma",
+            "title": "Couper net, couper vite",
+            "body": "Découpeurs plasma de 30 A à 200 A pour tôle, profilés et inox. Refroidissement air ou eau."
+          },
+          "spot": {
+            "eyebrow": "Soudure par points",
+            "title": "Assemblage de tôles",
+            "body": "Soudure par résistance et soudure de goujons pour carrosserie et chaudronnerie fine."
+          },
+          "consumables": {
+            "eyebrow": "Consommables",
+            "title": "Fil, baguette, gaz, embouts",
+            "body": "Fils d'apport, électrodes, tubes contact, buses, gaz et EPI. En stock à Lörrach pour enlèvement le lendemain."
+          }
+        }
+      },
+      "products": {
+        "heading": "Équipement de soudage en vedette",
+        "subheading": "Un échantillon de la gamme — voir le catalogue complet pour des centaines de postes, torches et accessoires."
+      },
+      "gasTable": {
+        "eyebrow": "Choix de gaz",
+        "heading": "Bon gaz, bonne intensité.",
+        "subheading": "Référence rapide pour les gaz de protection les plus courants. Le catalogue contient les FDS complètes et les détendeurs associés.",
+        "columns": {
+          "mix": "Gaz / mélange",
+          "use": "Procédé & matériau",
+          "current": "Intensité typique",
+          "notes": "Notes"
+        },
+        "rows": {
+          "argon": {
+            "mix": "Ar 100 %",
+            "use": "TIG — inox, aluminium, cuivre",
+            "current": "DC 20–250 A",
+            "notes": "Inerte. Argon pur pour la quasi-totalité du TIG."
+          },
+          "argonCo2": {
+            "mix": "Ar 82 % / CO₂ 18 %",
+            "use": "MIG / MAG — acier au carbone",
+            "current": "DC 60–300 A",
+            "notes": "Mélange standard pour pulvérisation et court-circuit sur acier doux."
+          },
+          "co2": {
+            "mix": "CO₂ 100 %",
+            "use": "MIG / MAG — acier épais",
+            "current": "DC 80–400 A",
+            "notes": "Plus de pénétration, plus de projections. Option économique pour le structurel épais."
+          },
+          "argonH2": {
+            "mix": "Ar 95 % / H₂ 5 %",
+            "use": "TIG — inox austénitique",
+            "current": "DC 50–200 A",
+            "notes": "Vitesse plus élevée et arc plus brillant sur inox."
+          },
+          "argonHe": {
+            "mix": "Ar 70 % / He 30 %",
+            "use": "MIG — aluminium > 8 mm",
+            "current": "DC 150–350 A",
+            "notes": "Meilleure pénétration sur aluminium épais."
+          },
+          "oxygen": {
+            "mix": "O₂ + acétylène",
+            "use": "Brasage, oxycoupage",
+            "current": "n/a",
+            "notes": "Stockage de bouteilles et service de détendeurs disponibles."
+          }
+        },
+        "safetyHeading": "Sécurité gaz, comprise.",
+        "safetyBody": "Transport de bouteilles, test de fuite et service détendeur sont inclus dans chaque livraison. Pas question de laisser un détendeur défectueux sur site — il est trop simple à corriger sur place."
+      },
+      "guides": {
+        "eyebrow": "Guides techniques",
+        "heading": "Guides, fiches techniques et FDS — tout au catalogue.",
+        "subheading": "Filtrés dans le catalogue de documents par type. Plus besoin de chercher des PDF dans les e-mails.",
+        "openCatalog": "Ouvrir au catalogue",
+        "items": {
+          "gasSelection": {
+            "eyebrow": "Notes d'application",
+            "title": "Guides de choix de gaz",
+            "body": "Guides constructeurs sur les mélanges de gaz par procédé et matériau.",
+            "docType": "technical-info"
+          },
+          "wirePrep": {
+            "eyebrow": "Comment faire",
+            "title": "Manipulation fil et baguettes",
+            "body": "Stockage, séchage et manipulation des fils d'apport et électrodes — l'humidité compte.",
+            "docType": "instructions"
+          },
+          "ppe": {
+            "eyebrow": "Sécurité",
+            "title": "Fiches techniques EPI",
+            "body": "Tables de teinte de casque, indices de gants et conseils d'aspiration des fumées.",
+            "docType": "datasheet"
+          },
+          "currentSettings": {
+            "eyebrow": "Référence",
+            "title": "Manuels constructeurs",
+            "body": "Notices d'utilisation de nos postes les plus distribués Fronius, EWM et Lorch.",
+            "docType": "manual"
+          }
+        }
+      },
+      "catalogRail": {
+        "heading": "Documents soudage",
+        "subheading": "Vrais catalogues, fiches techniques et manuels — issus des fabricants que nous représentons.",
+        "viewAll": "Tous les documents soudage"
+      },
+      "installer": {
+        "eyebrow": "Service & installation",
+        "heading": "Nous le vendons. Nous le maintenons.",
+        "body": "Les postes à souder ne s'expédient pas pour être oubliés — ils ont besoin de calibration, de consommables adaptés et de réparations occasionnelles. Notre atelier certifié de Lörrach s'en charge.",
+        "ctaRepair": "Portail réparation",
+        "ctaConsult": "Parler à un technicien",
+        "items": {
+          "calibration": {
+            "title": "Calibration",
+            "body": "Calibration courant et tension avec certificat — sur site ou en atelier."
+          },
+          "loaner": {
+            "title": "Postes de prêt",
+            "body": "Poste de prêt pendant que le vôtre est en service — la production continue."
+          },
+          "onsite": {
+            "title": "Interventions sur site",
+            "body": "Camionnette de service dans la région Lörrach / Bâle — réparation sans expédier la machine."
+          },
+          "training": {
+            "title": "Formation opérateur",
+            "body": "Brève remise en main propre pour chaque nouvelle machine. Ateliers de procédé sur demande."
+          }
+        }
+      }
+    },
+    "slugs": {
+      "welding": {
+        "eyebrow": "Soudage",
+        "title": "Technologie de soudage",
+        "shortBody": "Postes MIG, TIG, MMA et plasma, consommables, EPI et aspiration des fumées — tout pour l'atelier de soudage.",
+        "subtitle": "Postes à souder, consommables, équipements de protection et aspiration des fumées auprès de marques de référence.",
+        "body1": "Du poste MIG amateur à la station TIG industrielle lourde, nous stockons l'équipement de soudage pour toutes les applications — avec conseil d'application pour adapter la machine et les consommables au travail.",
+        "body2": "Gaz, fils, électrodes, vêtements de protection et systèmes d'aspiration complètent la gamme. Un partenaire pour tout le poste de soudage."
+      },
+      "tools": {
+        "eyebrow": "Outillage à main",
+        "title": "Outillage à main",
+        "shortBody": "Outils à main professionnels pour mécaniciens, monteurs et fabricants — clés, tournevis, instruments de mesure et plus.",
+        "subtitle": "Outils à main haut de gamme de fabricants de confiance : clés, tournevis, pinces, instruments de mesure.",
+        "body1": "Les outils à main sont la base de tout atelier. Nous proposons des marques professionnelles testées pour résister à un usage quotidien — avec garantie et service des fabricants.",
+        "body2": "De l'outil individuel au kit d'atelier complet, nous vous aidons à équiper votre établi en fonction de votre flux de travail."
+      },
+      "power-tools": {
+        "eyebrow": "Électroportatif",
+        "title": "Outillage électroportatif",
+        "shortBody": "Outils électriques filaires et sans fil pour le bâtiment, la métallurgie et l'assemblage — perceuses, meuleuses, scies, visseuses à choc.",
+        "subtitle": "Outils électroportatifs filaires et sans fil des grandes marques — avec service de réparation et consommables en stock.",
+        "body1": "Perceuses, visseuses à choc, meuleuses, scies circulaires et plus — nous stockons les gammes professionnelles des grandes marques, soutenues par notre propre atelier de réparation.",
+        "body2": "Plateformes de batteries et accessoires disponibles en stock pour étendre votre système sans-fil sans souci de compatibilité."
+      },
+      "machines": {
+        "eyebrow": "Machines",
+        "title": "Machines d'atelier",
+        "shortBody": "Touret à meuler, perceuses à colonne, scies à ruban et machines de fabrication plus grandes — livrées, installées et entretenues.",
+        "subtitle": "Machines stationnaires d'atelier : perceuses à colonne, scies à ruban, meuleuses et équipements de fabrication — livrées et installées.",
+        "body1": "Les machines d'atelier représentent un investissement à long terme. Nous aidons au choix, assurons la livraison et l'installation, et offrons un service continu via notre atelier de réparation.",
+        "body2": "Des options de financement et de leasing sont disponibles sur demande pour les investissements plus importants."
+      },
+      "facility-equipment": {
+        "eyebrow": "Équipement",
+        "title": "Équipement d'installation",
+        "shortBody": "Établis, systèmes de stockage, manutention et équipement d'atelier — créez un environnement de travail efficace.",
+        "subtitle": "Établis, étagères, manutention — transformez votre atelier en environnement de travail efficace.",
+        "body1": "Un atelier productif commence avec une bonne infrastructure. Nous planifions et fournissons des systèmes d'établis, de stockage et de manutention adaptés à vos locaux.",
+        "body2": "Un conseil sur site est disponible pour concevoir des postes de travail ergonomiques et efficaces ou optimiser les aménagements existants."
+      },
+      "workshop-supplies": {
+        "eyebrow": "Fournitures",
+        "title": "Fournitures d'atelier",
+        "shortBody": "Consommables, nettoyage, lubrifiants, adhésifs, fixations — tout ce que l'atelier consomme chaque semaine.",
+        "subtitle": "Consommables, produits de nettoyage, lubrifiants et fixations — maintenez votre stock avec une seule commande.",
+        "body1": "Les articles qu'un atelier consomme chaque semaine — consommables, produits d'entretien, lubrifiants, adhésifs et fixations — chez un seul fournisseur.",
+        "body2": "Des programmes de réapprovisionnement sont disponibles pour les gros consommateurs : nous surveillons l'usage et livrons avant la rupture."
+      },
+      "occupational-safety": {
+        "eyebrow": "EPI & Sécurité",
+        "title": "Sécurité au travail",
+        "shortBody": "EPI, signalisation de sécurité, premiers secours et ergonomie — répondez à votre devoir de protection avec du matériel professionnel.",
+        "subtitle": "Équipement de protection individuelle, signalisation, premiers secours et ergonomie — gardez votre équipe en sécurité et conforme.",
+        "body1": "La sécurité au travail est réglementée — et un mauvais équipement expose votre entreprise. Nous ne proposons que des EPI certifiés conformes aux normes UE en vigueur.",
+        "body2": "Un conseil sur l'évaluation des risques et le choix des EPI est disponible pour les nouveaux clients qui construisent ou renouvellent leur programme de sécurité."
+      }
+    }
+  },
+  "partners": {
+    "eyebrow": "Partenaires",
+    "heading": "Des marques de confiance. Des partenaires qui nous font confiance.",
+    "subheading": "Nous travaillons avec les fabricants leaders en soudage, outillage, sécurité et équipement d'atelier — avec un support distributeur agréé.",
+    "logoStripHeading": "Partenaires sélectionnés",
+    "intro": "Chaque produit que nous vendons est accompagné d'un service. En nous associant aux leaders de leur catégorie, nous offrons des prix distributeur agréé, la gestion de la garantie et un support technique direct du fabricant.",
+    "criteriaHeading": "Comment nous choisissons nos partenaires",
+    "criteriaBody": "Nous n'ajoutons une marque au catalogue qu'après avoir vérifié la qualité, la fiabilité d'approvisionnement et le service après-vente. Nos acheteurs testent les produits dans notre propre atelier avant référencement.",
+    "coverageHeading": "Ce que vous apportent nos partenariats",
+    "coverageBody": "Des délais courts, la gestion de la garantie en interne, des lignes techniques directes vers les fabricants et l'accès à des stocks non listés publiquement. Si vous avez besoin de quelque chose qu'une marque produit, demandez-nous — nous pouvons presque toujours la sourcer."
+  },
+  "careers": {
+    "eyebrow": "Carrières",
+    "heading": "Travailler chez SWR.",
+    "subheading": "Entreprise familiale de troisième génération — emplois stables, apprentissages et une équipe qui se connaît réellement.",
+    "applyCta": "Postuler",
+    "applicationEmail": "jobs@swr-loerrach.de",
+    "intro": "Nous construisons des carrières longues. Beaucoup dans l'équipe sont chez nous depuis plus d'une décennie — parce que nous investissons dans les personnes. Si vous cherchez un emploi stable et qualifié dans la région de Lörrach, nous serions ravis de vous rencontrer.",
+    "whyUsHeading": "Pourquoi travailler chez nous",
+    "whyUsBody": "Horaires prévisibles, salaire compétitif, vraie responsabilité dès le premier jour. Petite entreprise, hiérarchie plate, pas de politique — si vous savez faire le travail, vous avez la place pour le faire.",
+    "apprenticeshipHeading": "Apprentissage",
+    "apprenticeshipBody": "Nous formons chaque année des apprentis dans les métiers commerciaux et logistiques. Nos apprentis découvrent chaque partie de l'entreprise — produit, client, ERP — et la plupart restent avec nous après leur qualification.",
+    "openRolesHeading": "Postes ouverts",
+    "openRolesBody": "Même sans annonce précise, nous sommes toujours intéressés par des collaborateurs qualifiés en entrepôt, vente et comptoir. Envoyez-nous votre CV — vous recevrez une réponse.",
+    "applicationHeading": "Candidature",
+    "applicationBody": "Envoyez-nous un CV court et quelques lignes sur vous. Nous répondons à chaque candidature.",
+    "applicationHint": "Pas besoin d'une lettre de motivation parfaite — ce qui nous intéresse, c'est qui vous êtes et sur quoi vous avez travaillé."
+  },
+  "certificates": {
+    "eyebrow": "Certificats",
+    "heading": "Certifications et conformité.",
+    "subheading": "Qualité, environnement, douane et soudage — nos certificats disponibles sur demande pour vos propres audits fournisseurs.",
+    "requestCopy": "Demander un certificat",
+    "download": "Télécharger le PDF",
+    "intro": "En tant que fournisseur B2B, nous maintenons les certifications dont nos clients ont besoin pour leurs propres processus qualité et conformité. Tous les certificats actuels sont disponibles sur demande — envoyés directement à votre acheteur ou votre contact QA.",
+    "requestNote": "Les PDF de certificats sont envoyés sur demande pour garantir une version à jour et signée. Contactez-nous et nous vous enverrons le document souhaité par e-mail sous un jour ouvré.",
+    "items": {
+      "iso9001": {
+        "title": "ISO 9001 — Management de la qualité",
+        "issuer": "Émis par TÜV",
+        "validUntil": "Renouvelé annuellement"
+      },
+      "iso14001": {
+        "title": "ISO 14001 — Management environnemental",
+        "issuer": "Émis par TÜV",
+        "validUntil": "Renouvelé annuellement"
+      },
+      "aeo": {
+        "title": "AEO — Opérateur économique agréé",
+        "issuer": "Douanes allemandes",
+        "validUntil": "Permanent, sous audits"
+      },
+      "welding": {
+        "title": "DIN EN ISO 3834 — Qualité en soudage",
+        "issuer": "Organisme accrédité",
+        "validUntil": "Renouvelé si requis"
+      }
+    }
+  },
+  "offers": {
+    "eyebrow": "Offres",
+    "heading": "Offres et promotions en cours.",
+    "subheading": "Promotions saisonnières, fins de série et liquidations — pour les clients existants comme pour les nouveaux acheteurs.",
+    "shopAll": "Voir tous les produits",
+    "featuredHeading": "En vedette actuellement",
+    "intro": "Nous lançons des promotions ciblées plutôt que des soldes permanents. Si un article est listé ici, il y a une raison concrète — campagne fabricant, fin de gamme ou accord volume que nous avons négocié pour vous.",
+    "howHeading": "Comment fonctionnent les offres",
+    "howBody": "La plupart des offres s'appliquent automatiquement au checkout pour les clients B2B existants. Pour les volumes plus importants ou les bundles sur mesure, contactez votre chargé de clientèle ou le service commercial — à partir d'une certaine quantité, nous pouvons généralement faire mieux que le prix affiché.",
+    "emptyState": "Pas de promotion active en ce moment — revenez bientôt ou contactez-nous pour des tarifs personnalisés sur les commandes plus importantes."
   }
 }
