@@ -7,6 +7,7 @@ import CurrencySwitcher from "./CurrencySwitcher";
 import SearchBar from "./ui/SearchBar";
 import CartBadge from "./CartBadge";
 import MobileNav from "./MobileNav";
+import LogoutButton from "./LogoutButton";
 
 interface HeaderProps {
   locale: string;
@@ -19,22 +20,74 @@ export default async function Header({ locale }: HeaderProps) {
   const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
 
-  const mobileLinks = isAuthenticated
-    ? [
-        { href: "/products", label: t("products") },
-        { href: "/orders", label: t("orderHistory") },
-        { href: "/account", label: t("account") },
-      ]
-    : [
-        { href: "/products", label: t("products") },
-        { href: "/account/login", label: tAuth("login") },
-      ];
+  const primaryLinks = [
+    { href: "/products", label: t("shop") },
+    { href: "/catalog", label: t("catalog") },
+    { href: "/services", label: t("services") },
+    { href: "/industries", label: t("industries") },
+    { href: "/about", label: t("about") },
+    { href: "/contact", label: t("contact") },
+  ];
+
+  const mobileLinks = [
+    ...primaryLinks,
+    ...(isAuthenticated
+      ? [
+          { href: "/orders", label: t("orderHistory") },
+          { href: "/account", label: t("account") },
+        ]
+      : [
+          { href: "/account/login", label: tAuth("login") },
+          { href: "/account/register", label: tAuth("register") },
+        ]),
+  ];
 
   return (
     <header className="sticky top-0 z-50" style={{ boxShadow: "0 10px 30px rgba(26,28,28,0.06)" }}>
       {/* Tier 1 — Utility bar (hidden on mobile to save space) */}
       <div style={{ backgroundColor: "#003a63", color: "#ffffff" }}>
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-[33px] hidden sm:flex items-center justify-end gap-6">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 h-[33px] hidden sm:flex items-center justify-end gap-6 text-xs">
+          <a
+            href="tel:+49762116037"
+            className="hidden lg:inline text-white/80 hover:text-white transition-colors"
+          >
+            +49 7621 160 370
+          </a>
+          {isAuthenticated ? (
+            <>
+              <Link
+                href="/orders"
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                {t("orderHistory")}
+              </Link>
+              <Link
+                href="/account"
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                {t("account")}
+              </Link>
+              <LogoutButton
+                label={tAuth("logout")}
+                className="text-white/80 hover:text-white transition-colors disabled:opacity-50"
+              />
+            </>
+          ) : (
+            <>
+              <Link
+                href="/account/login"
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                {tAuth("login")}
+              </Link>
+              <Link
+                href="/account/register"
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                {tAuth("register")}
+              </Link>
+            </>
+          )}
           <CurrencySwitcher />
           <LocaleSwitcher />
         </div>
@@ -47,12 +100,12 @@ export default async function Header({ locale }: HeaderProps) {
           <MobileNav
             links={mobileLinks}
             cartLabel={t("cart")}
-            settingsLabel={t("settings")}
-            helpLabel={t("help")}
+            bookConsultationLabel={t("bookConsultation")}
+            logoutLabel={isAuthenticated ? tAuth("logout") : undefined}
           />
 
           {/* Logo */}
-          <Link href="/" className="shrink-0" aria-label="SWR Lörrach — Home">
+          <Link href="/" className="shrink-0" aria-label={t("home")}>
             <Image
               src="/logo.svg"
               alt="SWR Lörrach"
@@ -68,66 +121,16 @@ export default async function Header({ locale }: HeaderProps) {
             <SearchBar locale={locale} />
           </div>
 
-          {/* Right nav — hidden on mobile, shown on md+ */}
-          <nav className="hidden md:flex items-center gap-6 ml-auto shrink-0">
+          {/* Right — Book consultation + Cart, shown on md+ */}
+          <div className="hidden md:flex items-center gap-3 ml-auto shrink-0">
             <Link
-              href="/products"
-              className="text-sm font-medium transition-colors whitespace-nowrap"
-              style={{ color: "#3d4448" }}
+              href="/contact"
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold transition-colors"
+              style={{ backgroundColor: "#006e21", borderRadius: "var(--radius-btn)" }}
             >
-              {t("products")}
+              {t("bookConsultation")}
             </Link>
-            {isAuthenticated ? (
-              <>
-                <Link
-                  href="/orders"
-                  className="text-sm font-medium transition-colors whitespace-nowrap"
-                  style={{ color: "#3d4448" }}
-                >
-                  {t("orderHistory")}
-                </Link>
-                <Link
-                  href="/account"
-                  className="text-sm font-medium transition-colors whitespace-nowrap"
-                  style={{ color: "#3d4448" }}
-                >
-                  {t("account")}
-                </Link>
-              </>
-            ) : (
-              <Link
-                href="/account/login"
-                className="text-sm font-medium transition-colors whitespace-nowrap"
-                style={{ color: "#3d4448" }}
-              >
-                {tAuth("login")}
-              </Link>
-            )}
 
-            {/* Icon buttons */}
-            <button
-              aria-label={t("settings")}
-              className="p-2 transition-colors"
-              style={{ color: "#3d4448" }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-            </button>
-            <button
-              aria-label={t("help")}
-              className="p-2 transition-colors"
-              style={{ color: "#3d4448" }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-            </button>
-
-            {/* Cart */}
             <Link
               href="/cart"
               className="relative flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold transition-colors"
@@ -141,7 +144,7 @@ export default async function Header({ locale }: HeaderProps) {
               {t("cart")}
               <CartBadge />
             </Link>
-          </nav>
+          </div>
 
           {/* Cart icon — mobile only (always visible) */}
           <Link
@@ -159,6 +162,24 @@ export default async function Header({ locale }: HeaderProps) {
           </Link>
         </div>
       </div>
+
+      {/* Tier 3 — Primary navigation (desktop/tablet) */}
+      <nav
+        className="hidden md:block border-t border-outline-variant/20 bg-white"
+        aria-label={t("primaryNavLabel")}
+      >
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 flex items-center gap-6 h-11">
+          {primaryLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-semibold uppercase tracking-[0.04em] text-on-surface hover:text-primary transition-colors whitespace-nowrap"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
     </header>
   );
 }

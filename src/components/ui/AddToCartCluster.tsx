@@ -133,7 +133,7 @@ export default function AddToCartCluster({
         </div>
       )}
 
-      <div className="flex items-stretch gap-2 h-[60px]">
+      <div className="flex items-stretch gap-2 min-h-[60px]">
         {/* QTY stepper */}
         <div
           className="flex items-center bg-surface-container-lowest border border-[rgba(193,199,209,0.3)] shrink-0"
@@ -178,7 +178,7 @@ export default function AddToCartCluster({
         <button
           onClick={handleAddToCart}
           disabled={isLoading}
-          className={`flex-1 flex items-center justify-center gap-3 text-white font-bold text-base transition-all disabled:cursor-not-allowed ${
+          className={`flex-1 min-h-[60px] px-3 py-2 flex items-center justify-center gap-2 text-center text-white font-bold text-sm sm:text-base leading-tight transition-all disabled:cursor-not-allowed ${
             isSuccess
               ? "bg-green-600"
               : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
@@ -200,7 +200,9 @@ export default function AddToCartCluster({
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
           )}
-          {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
+          <span className="line-clamp-2 text-pretty">
+            {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
+          </span>
         </button>
       </div>
 

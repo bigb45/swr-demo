@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { getProductImageUrl } from "@/lib/magento";
+import { getStockStatus, type StockLevel } from "@/lib/stock";
 import type { MagentoProduct, MagentoCartTotals } from "@/types/magento";
 
 export interface CartItem {
@@ -18,8 +19,7 @@ export interface CartItem {
   imageUrl: string | null;
   unitPrice: number;
   qty: number;
-  stockStatus: "in_stock" | "lead_time" | "unavailable";
-  stockLabel: string;
+  stockLevel: StockLevel;
 }
 
 interface MagentoCartItem {
@@ -38,7 +38,20 @@ interface CartContextValue {
   totals: MagentoCartTotals | null;
   cartId: string | null;
   loading: boolean;
+  /**
+   * Set when the latest cart fetch against /api/cart failed for a reason other
+   * than "cart does not exist" (network error, 5xx, parse failure). Lets the
+   * UI distinguish a genuine empty cart from an unavailable backend so mobile
+   * users don't see a misleading empty state.
+   */
+  fetchError: boolean;
   addItem: (product: MagentoProduct, qty: number) => Promise<void>;
+  /**
+   * Add a line to the cart by SKU alone. Used for reorder + CSV import where
+   * we only have `{sku, qty}` in hand and no full MagentoProduct. Throws on
+   * Magento errors so callers can collect per-line outcomes.
+   */
+  addBySku: (sku: string, qty: number) => Promise<void>;
   updateQty: (itemId: number, sku: string, qty: number) => Promise<void>;
   removeItem: (itemId: number) => Promise<void>;
   restoreItem: (item: CartItem) => Promise<void>;
@@ -100,15 +113,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // This prevents hydration mismatches caused by the server always seeing an
   // empty cart while the client may already have items in localStorage.
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   const fetchCart = useCallback(async (id: string) => {
-    const r = await fetch(`/api/cart?cartId=${id}`);
-    if (!r.ok) return;
-    const data = await r.json();
-    if (data?.items) {
-      setItems((prev) => magentoItemsToCartItems(data.items, prev));
+    let r: Response;
+    try {
+      r = await fetch(`/api/cart?cartId=${id}`);
+    } catch {
+      // Network failure (offline, DNS, etc.) — keep whatever items we already
+      // have in state so the user doesn't see a misleading empty cart.
+      setFetchError(true);
+      return;
     }
-    if (data?.totals) setTotals(data.totals as MagentoCartTotals);
+
+    if (r.status === 404) {
+      // The stored cart id no longer exists in Magento (backend restart, quote
+      // converted to an order, etc.). Drop it so the next add creates a fresh
+      // one instead of repeatedly hitting a dead id.
+      clearPersistedCartId();
+      setCartId(null);
+      setItems([]);
+      setTotals(null);
+      setFetchError(false);
+      return;
+    }
+    if (!r.ok) {
+      setFetchError(true);
+      return;
+    }
+
+    try {
+      const data = await r.json();
+      if (data?.items) {
+        setItems((prev) => magentoItemsToCartItems(data.items, prev));
+      }
+      if (data?.totals) setTotals(data.totals as MagentoCartTotals);
+      setFetchError(false);
+    } catch {
+      setFetchError(true);
+    }
   }, []);
 
   // Load cart from Magento on mount
@@ -121,24 +164,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setCartId(stored);
     persistCartId(stored);
-    fetchCart(stored).catch(() => {}).finally(() => setLoading(false));
+    fetchCart(stored).finally(() => setLoading(false));
   }, [fetchCart]);
 
   const refreshTotals = useCallback(async () => {
     const id = cartId ?? localStorage.getItem(CART_ID_KEY);
     if (!id) return;
-    await fetchCart(id).catch(() => {});
+    await fetchCart(id);
   }, [cartId, fetchCart]);
 
   const addItem = useCallback(async (product: MagentoProduct, qty: number) => {
-    const id = await ensureCart();
+    let id = await ensureCart();
     setCartId(id);
 
-    const res = await fetch("/api/cart/items", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartId: id, sku: product.sku, qty }),
-    });
+    let res = await postCartItem(id, product.sku, qty);
+
+    if (!res.ok && (await isStaleCartResponse(res))) {
+      // Stored cart id no longer exists in Magento — wipe it and retry once
+      // with a fresh cart so the click still succeeds.
+      clearPersistedCartId();
+      id = await ensureCart();
+      setCartId(id);
+      res = await postCartItem(id, product.sku, qty);
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -163,12 +211,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
           imageUrl: getProductImageUrl(product),
           unitPrice: added.price,
           qty: added.qty,
-          stockStatus: product.status === 1 ? "in_stock" : "unavailable",
-          stockLabel: product.status === 1 ? "In Stock" : "Unavailable",
+          stockLevel: getStockStatus(product).level,
         },
       ];
     });
   }, []);
+
+  const addBySku = useCallback(async (sku: string, qty: number) => {
+    let id = await ensureCart();
+    setCartId(id);
+
+    let res = await postCartItem(id, sku, qty);
+
+    if (!res.ok && (await isStaleCartResponse(res))) {
+      clearPersistedCartId();
+      id = await ensureCart();
+      setCartId(id);
+      res = await postCartItem(id, sku, qty);
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error ?? "Failed to add item");
+    }
+
+    await fetchCart(id);
+  }, [fetchCart]);
 
   const updateQty = useCallback(async (itemId: number, sku: string, qty: number) => {
     const id = cartId ?? localStorage.getItem(CART_ID_KEY);
@@ -203,14 +271,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cartId, refreshTotals]);
 
   const restoreItem = useCallback(async (item: CartItem) => {
-    const id = await ensureCart();
+    let id = await ensureCart();
     setCartId(id);
 
-    const res = await fetch("/api/cart/items", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartId: id, sku: item.sku, qty: item.qty }),
-    });
+    let res = await postCartItem(id, item.sku, item.qty);
+
+    if (!res.ok && (await isStaleCartResponse(res))) {
+      clearPersistedCartId();
+      id = await ensureCart();
+      setCartId(id);
+      res = await postCartItem(id, item.sku, item.qty);
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -262,7 +333,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, totals, cartId, loading, addItem, updateQty, removeItem, restoreItem, clearCart, resetCartId, refreshTotals, itemCount }}
+      value={{ items, totals, cartId, loading, fetchError, addItem, addBySku, updateQty, removeItem, restoreItem, clearCart, resetCartId, refreshTotals, itemCount }}
     >
       {children}
     </CartContext.Provider>
@@ -278,24 +349,40 @@ export function useCart(): CartContextValue {
 // ── helpers ────────────────────────────────────────────────────────────────
 
 function magentoItemsToCartItems(items: MagentoCartItem[], previous: CartItem[]): CartItem[] {
-  return items.map((item) => ({
-    ...(previous.find((prev) => prev.itemId === item.item_id || prev.sku === item.sku) ?? {}),
-    itemId: item.item_id,
-    sku: item.sku,
-    name: item.name,
-    imageUrl:
-      item.imageUrl ??
-      previous.find((prev) => prev.itemId === item.item_id || prev.sku === item.sku)?.imageUrl ??
-      null,
-    unitPrice: item.price,
-    qty: item.qty,
-    stockStatus:
-      previous.find((prev) => prev.itemId === item.item_id || prev.sku === item.sku)?.stockStatus ??
-      "in_stock",
-    stockLabel:
-      previous.find((prev) => prev.itemId === item.item_id || prev.sku === item.sku)?.stockLabel ??
-      "In Stock",
-  }));
+  return items.map((item) => {
+    const match = previous.find(
+      (prev) => prev.itemId === item.item_id || prev.sku === item.sku,
+    );
+    return {
+      itemId: item.item_id,
+      sku: item.sku,
+      name: item.name,
+      imageUrl: item.imageUrl ?? match?.imageUrl ?? null,
+      unitPrice: item.price,
+      qty: item.qty,
+      stockLevel: match?.stockLevel ?? "unknown",
+    };
+  });
+}
+
+function postCartItem(cartId: string, sku: string, qty: number): Promise<Response> {
+  return fetch("/api/cart/items", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartId, sku, qty }),
+  });
+}
+
+/**
+ * Magento returns 404 (cart missing) or 400 with a "No such entity with cartId
+ * = ..." message when a guest cart no longer exists. Either signal means the
+ * id we have is dead and the caller should request a brand new cart.
+ */
+async function isStaleCartResponse(res: Response): Promise<boolean> {
+  if (res.status === 404) return true;
+  if (res.status !== 400) return false;
+  const body = await res.clone().json().catch(() => null);
+  return typeof body?.error === "string" && /no such entity.*cartid/i.test(body.error);
 }
 
 async function removeItemById(

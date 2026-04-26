@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import type { StockLevel } from "@/lib/stock";
+import StockBadge from "./StockBadge";
 
 interface GalleryImage {
   src: string;
@@ -11,7 +13,12 @@ interface GalleryImage {
 interface ProductGalleryProps {
   images: GalleryImage[];
   productName: string;
-  inStockLabel?: string;
+  /**
+   * When set, renders a coloured stock chip as an overlay in the top-left of
+   * the main image. Omit (or pass "unknown") to hide the chip entirely.
+   */
+  stockLevel?: StockLevel;
+  stockLabel?: string;
 }
 
 /**
@@ -22,7 +29,8 @@ interface ProductGalleryProps {
 export default function ProductGallery({
   images,
   productName,
-  inStockLabel,
+  stockLevel,
+  stockLabel,
 }: ProductGalleryProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const active = images[activeIdx] ?? images[0];
@@ -82,14 +90,15 @@ export default function ProductGallery({
           </div>
         )}
 
-        {/* In-stock badge */}
-        {inStockLabel && (
-          <span
-            className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold bg-secondary text-white"
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
-            {inStockLabel}
-          </span>
+        {/* Stock chip */}
+        {stockLevel && stockLevel !== "unknown" && stockLabel && (
+          <StockBadge
+            level={stockLevel}
+            label={stockLabel}
+            variant="chip"
+            size="md"
+            className="absolute top-4 left-4"
+          />
         )}
 
         {/* Chevron navigation — only when multiple images */}
@@ -140,9 +149,9 @@ export default function ProductGallery({
             <button
               key={idx}
               onClick={() => setActiveIdx(idx)}
-              className={`relative w-20 h-20 shrink-0 bg-surface-container-lowest overflow-hidden transition-all ${
+              className={`relative box-content w-20 h-20 shrink-0 bg-surface-container-lowest overflow-hidden transition-all ${
                 idx === activeIdx
-                  ? "opacity-100 ring-2 ring-primary ring-offset-1"
+                  ? "opacity-100 bg-surface-container-highest"
                   : "opacity-60 hover:opacity-100"
               }`}
               style={{ borderRadius: "var(--radius-table)" }}
@@ -153,7 +162,7 @@ export default function ProductGallery({
                 alt={img.alt || `${productName} ${idx + 1}`}
                 fill
                 sizes="80px"
-                className="object-contain p-2"
+                className="box-content object-contain p-2 border-0"
               />
             </button>
           ))}

@@ -46,10 +46,26 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
       </div>
       <button
         type="submit"
-        className={`px-5 bg-secondary text-white text-sm font-bold tracking-wide hover:brightness-110 transition-all shrink-0 ${compact ? "py-1.5" : "py-2"}`}
+        aria-label={t("search")}
+        className={`bg-secondary text-white text-sm font-bold tracking-wide hover:brightness-110 transition-all shrink-0 inline-flex items-center justify-center ${compact ? "px-3 py-1.5 min-w-10" : "px-3 sm:px-5 py-2 min-w-10 sm:min-w-[92px]"}`}
         style={{ borderRadius: "0 var(--radius-btn) var(--radius-btn) 0" }}
       >
-        {t("search")}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="sm:hidden"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <span className="hidden sm:inline">{t("search")}</span>
       </button>
     </form>
   );
