@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -8,7 +9,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
 import { CartProvider } from "@/components/CartProvider";
-import { getCurrencyRates, DEFAULT_CURRENCY_BY_LOCALE } from "@/lib/currency";
+import { DEFAULT_CURRENCY_BY_LOCALE } from "@/lib/currency";
+import { getCurrencyRates } from "@/lib/currency-rates";
 import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import { getSiteBaseUrl, localeAlternates } from "@/lib/seo";
@@ -94,7 +96,19 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider rates={rates} defaultCurrency={defaultCurrency}>
             <CartProvider>
-              <Header locale={locale} />
+              <Suspense
+                fallback={
+                  <div
+                    className="sticky top-0 z-50 min-h-[4rem] sm:min-h-[calc(33px+4rem)] md:min-h-[calc(33px+4rem+2.75rem)] bg-white"
+                    style={{
+                      boxShadow: "0 10px 30px rgba(26,28,28,0.06)",
+                    }}
+                    aria-hidden
+                  />
+                }
+              >
+                <Header locale={locale} />
+              </Suspense>
               <main className="flex-1">{children}</main>
               <Footer locale={locale} />
             </CartProvider>

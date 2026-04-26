@@ -13,11 +13,8 @@ import {
   INDUSTRY_SLUGS,
   isIndustrySlug,
 } from "@/lib/industries";
-import {
-  findCategoryByName,
-  getCategoryTree,
-  getProductsByCategory,
-} from "@/lib/magento";
+import { getCategoryTree, getProductsByCategory } from "@/lib/magento";
+import { findCategoryByName } from "@/lib/magento-shared";
 import type { MagentoProduct } from "@/types/magento";
 
 interface PageProps {

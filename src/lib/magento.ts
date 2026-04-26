@@ -1,3 +1,4 @@
+import { revalidateTag, unstable_cache } from "next/cache";
 import type {
   MagentoCategory,
   MagentoCategoryTree,
@@ -5,32 +6,16 @@ import type {
   MagentoProductList,
 } from "@/types/magento";
 
-const BASE = process.env.MAGENTO_URL ?? "http://localhost:8000";
+/** Busts `unstable_cache` for the admin token after a 401 from Magento. */
+const ADMIN_TOKEN_CACHE_TAG = "magento-admin-token";
 
-// MAGENTO_MEDIA_BASE_URL controls the base for catalog product images.
-// - Local dev (PHP built-in server with `-t pub/`): set to "http://localhost:8000"
-//   so images resolve to /media/catalog/product/...
-// - Production (Apache serving from project root): set to "http://46.224.237.247/pub"
-//   so images resolve to /pub/media/catalog/product/...
-// Defaults to BASE + "/pub" to match the production Apache layout.
-// NEXT_PUBLIC_ prefix makes this available in client components too,
-// preventing a server/client mismatch during hydration.
-export const MEDIA_BASE =
-  process.env.NEXT_PUBLIC_MAGENTO_MEDIA_BASE_URL ??
-  process.env.MAGENTO_MEDIA_BASE_URL ??
-  BASE + "/pub";
+const BASE = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
 // Module-level token cache (persists across requests in the same Node.js process)
 let cachedToken: string | null = null;
 let tokenExpiresAt = 0;
 
-async function getAdminToken(forceRefresh = false): Promise<string> {
-  const now = Date.now();
-  // Refresh 5 minutes before expiry (tokens last 1 hour by default)
-  if (!forceRefresh && cachedToken && now < tokenExpiresAt - 5 * 60 * 1000) {
-    return cachedToken;
-  }
-
+async function fetchAdminTokenFromMagento(): Promise<string> {
   const user = process.env.MAGENTO_ADMIN_USER;
   const pass = process.env.MAGENTO_ADMIN_PASSWORD;
 
@@ -44,14 +29,34 @@ async function getAdminToken(forceRefresh = false): Promise<string> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: user, password: pass }),
-    cache: "no-store",
   });
 
   if (!res.ok) {
     throw new Error(`Failed to get Magento admin token: ${res.status}`);
   }
 
-  const token: string = await res.json();
+  return res.json() as Promise<string>;
+}
+
+/** Cached token fetch so layouts do not use `cache: "no-store"` (breaks SSG/ISR). */
+const getAdminTokenFromDataCache = unstable_cache(
+  fetchAdminTokenFromMagento,
+  ["magento-admin-token"],
+  { revalidate: 3300, tags: [ADMIN_TOKEN_CACHE_TAG] },
+);
+
+async function getAdminToken(forceRefresh = false): Promise<string> {
+  const now = Date.now();
+  // Refresh 5 minutes before expiry (tokens last 1 hour by default)
+  if (!forceRefresh && cachedToken && now < tokenExpiresAt - 5 * 60 * 1000) {
+    return cachedToken;
+  }
+
+  if (forceRefresh) {
+    revalidateTag(ADMIN_TOKEN_CACHE_TAG, "max");
+  }
+
+  const token = await getAdminTokenFromDataCache();
   cachedToken = token;
   tokenExpiresAt = now + 60 * 60 * 1000; // 1 hour
   return token;
@@ -105,34 +110,6 @@ export async function magentoGet<T>(
   return res.json() as Promise<T>;
 }
 
-// Map next-intl locales -> Magento store codes. Keep in sync with the store
-// views configured in Magento admin; content falls back to the default store
-// when no mapping is provided.
-export const LOCALE_STORE_CODES: Record<string, string> = {
-  de: "de",
-  en: "en",
-  fr: "fr",
-};
-
-export function getProductImageUrl(product: MagentoProduct): string | null {
-  const entry = product.media_gallery_entries?.find((e) =>
-    e.types.includes("image")
-  );
-  if (!entry) return null;
-  return `${MEDIA_BASE}/media/catalog/product${entry.file}`;
-}
-
-export function getCustomAttribute(
-  product: MagentoProduct,
-  code: string
-): string | null {
-  const attr = product.custom_attributes?.find(
-    (a) => a.attribute_code === code
-  );
-  if (!attr) return null;
-  return Array.isArray(attr.value) ? attr.value.join(", ") : attr.value;
-}
-
 export async function getProducts(pageSize = 8): Promise<MagentoProductList> {
   return magentoGet<MagentoProductList>(
     `/products?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=1`
@@ -162,27 +139,6 @@ export async function getCategoryTree(): Promise<MagentoCategoryTree> {
 export async function getTopLevelCategories(): Promise<MagentoCategory[]> {
   const tree = await getCategoryTree();
   return tree.children_data.filter((c) => c.is_active);
-}
-
-// Recursively search the category tree for a node whose name matches any of
-// the provided candidates (case-insensitive). Used by industry hubs to map a
-// stable slug (e.g. "welding") to the current Magento category ID.
-export function findCategoryByName(
-  root: MagentoCategory,
-  candidates: string[]
-): MagentoCategory | null {
-  const normalized = candidates.map((c) => c.toLowerCase().trim());
-  const queue: MagentoCategory[] = [root];
-  while (queue.length > 0) {
-    const node = queue.shift()!;
-    if (normalized.includes((node.name ?? "").toLowerCase().trim())) {
-      return node;
-    }
-    if (Array.isArray(node.children_data)) {
-      queue.push(...node.children_data);
-    }
-  }
-  return null;
 }
 
 export async function getProductsByCategory(

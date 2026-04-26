@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
-import { getProductImageUrl, getCustomAttribute } from "@/lib/magento";
+import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";

@@ -1,4 +1,5 @@
-import { LOCALE_STORE_CODES, magentoGet } from "./magento";
+import { magentoGet } from "./magento";
+import { LOCALE_STORE_CODES } from "./magento-shared";
 
 export interface MagentoCmsPage {
   id: number;

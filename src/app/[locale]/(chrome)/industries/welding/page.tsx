@@ -11,11 +11,8 @@ import {
 } from "@/components/marketing";
 import SpecTable from "@/components/ui/SpecTable";
 import { INDUSTRY_CONFIG } from "@/lib/industries";
-import {
-  findCategoryByName,
-  getCategoryTree,
-  getProductsByCategory,
-} from "@/lib/magento";
+import { getCategoryTree, getProductsByCategory } from "@/lib/magento";
+import { findCategoryByName } from "@/lib/magento-shared";
 import type { MagentoProduct } from "@/types/magento";
 import { listDocuments } from "@/lib/catalog";
 import { localeAlternates } from "@/lib/seo";

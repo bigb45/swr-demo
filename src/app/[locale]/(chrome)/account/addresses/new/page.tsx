@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import AddressForm from "../AddressForm";
 import { getCountries } from "@/lib/directory";
-import { LOCALE_STORE_CODES } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 
 interface NewAddressPageProps {
   params: Promise<{ locale: string }>;

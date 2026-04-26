@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchCustomerMe, readCheckoutState } from "@/lib/checkout";
 import { getCountries } from "@/lib/directory";
-import { LOCALE_STORE_CODES } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import AddressStep from "./AddressStep";
 
 interface AddressPageProps {

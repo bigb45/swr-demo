@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { fetchCustomerMe } from "@/lib/checkout";
 import { customerAddressToInput } from "@/lib/address";
 import { getCountries } from "@/lib/directory";
-import { LOCALE_STORE_CODES } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import AddressForm from "../../AddressForm";
 
 interface EditAddressPageProps {

@@ -8,7 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { getProductImageUrl } from "@/lib/magento";
+import { getProductImageUrl } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import type { MagentoProduct, MagentoCartTotals } from "@/types/magento";
 

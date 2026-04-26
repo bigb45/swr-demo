@@ -4,7 +4,8 @@
  */
 
 import { NextRequest } from "next/server";
-import { getProductBySku, getProductImageUrl } from "@/lib/magento";
+import { getProductBySku } from "@/lib/magento";
+import { getProductImageUrl } from "@/lib/magento-shared";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 

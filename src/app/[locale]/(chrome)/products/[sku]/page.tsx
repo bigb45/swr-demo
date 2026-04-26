@@ -4,11 +4,13 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
   getProductBySku,
-  getProductImageUrl,
-  getCustomAttribute,
   getTopLevelCategories,
-  MEDIA_BASE,
 } from "@/lib/magento";
+import {
+  getCustomAttribute,
+  getProductImageUrl,
+  MEDIA_BASE,
+} from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import ProductPrice from "@/components/ProductPrice";
 import SideNav from "@/components/ui/SideNav";
