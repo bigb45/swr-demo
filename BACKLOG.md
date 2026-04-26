@@ -1,10 +1,80 @@
 # SWR Frontend Backlog — April 2026
 
 Derived from the shopCloud360 / Intershop Features Requirements Document (FRD).
-Cross-referenced against the current Next.js 16 frontend state documented in `AGENTS.md`.
+Cross-referenced against the current Next.js 16 frontend state documented in `STATUS.md` and verified against the codebase.
 
-**Status legend:** ✅ Done · 🔄 Partial · ❌ Not started  
+**Status legend:** ✅ Done · 🔄 Partial · ⛔ Blocked on backend · ❌ Not started
 **Priority legend:** 🔴 High (FRD green) · 🟡 Medium (FRD yellow) · ⚪ Low (FRD grey)
+
+---
+
+## Phase 1 deliverables (April 2026)
+
+This file is the single trusted backlog. `FEATURES.md` is the doc-derived requirement list (read-only). `STATUS.md` is the implementation log (what has shipped). This file reconciles the two and names the next moves.
+
+### Stale-doc cleanup list
+
+`AGENTS.md` still contains several claims that contradict the current state. Agents should treat those sections as outdated until someone rewrites them:
+
+- **`## Project Structure`** (the tree) — shows only the pre-rewrite layout. Does not mention `(auth)` / `(chrome)` route groups, `account/*`, `checkout/*`, `catalog/*`, `services/*`, `industries/*`, `orders/*`, `legal/*`, marketing components, fleet, CMS, catalog repository, or the SEO files. Needs a full rewrite off the real tree.
+- **`## Key Magento REST API Endpoints`** — the two "NOT YET WIRED" annotations are both wrong:
+  - `POST /rest/V1/guest-carts/:id/order` → order placement is live via the signed-in `/checkout/review` flow (`PUT /V1/carts/:id/order`).
+  - `POST /rest/V1/integration/customer/token` → customer login is live.
+  Should also add the endpoints that are actually used now (customer orders, invoices/shipments/credit memos, `/V1/customers/me`, `directory/countries`, `estimate-shipping-methods`, `shipping-information`, CMS `cmsPage`/`cmsBlock`).
+- **`## Pages — Current Status`** — all three sub-tables are stale:
+  - _Fully working_ is missing checkout, login, register, account hub, addresses, orders list & detail, quotations, catalog, services, industries, legal, marketing hubs, and fleet.
+  - _Stubbed / incomplete_ still lists Cart totals (now live), PDP tier pricing (now live), Checkout (now live), Authentication (now live).
+  - _Missing entirely (links exist, 404)_ lists `/orders`, `/account`, `/terms`, `/privacy`, `/compliance`, `/iso`, `/sds` — they all exist (and `/iso` deliberately 301-redirects to `/certificates`).
+- **`## Remaining Work — Priority Order`** — all five items (cart totals, PDP tier pricing, checkout, auth, legal pages) are shipped. Replace with the "Phase 2 — Next execution queue" below.
+- **`## Common Pitfalls` — admin-token bullet** — claims the Next.js process must restart when the Magento token expires. `magentoGet`/`magentoPost` are now self-healing on `401` (see `src/lib/magento.ts`), so this is no longer a pitfall.
+- **`## Cart Architecture`** — still accurate (cart page still uses `ssr: false`; CartProvider still boots from `localStorage`). Leave as-is.
+
+---
+
+## Phase 2 — Next execution queue
+
+Ranked for pick-up order. Each group is ordered high → low value.
+
+### Frontend-ready now (no backend blocker)
+
+1. **🔴 PDP stock availability badge** — render `extension_attributes.stock_item.qty` as in-stock / low-stock / out-of-stock on the PDP and on `ProductCard` (listing, search, category).
+2. **🔴 Search results stock badge** — same data, same component, wired into `ProductCard` once the PDP badge lands.
+3. **🟡 Checkout — ISO country + region picker in `AddressForm`** — swap today's free-text country/region inputs for an ISO country dropdown backed by Magento `directory/countries` and a region `<select>` driven by the chosen country. Replace both in `AddressForm` (new / edit address book + checkout address step).
+4. **🟡 Checkout — payment method selection** — `setShippingInformation` already returns `payment_methods`. Expose them as a radio group in `/checkout/review` and pass the chosen method (instead of hard-coded `checkmo`) into `placeCustomerOrder`.
+5. **🟡 Account — edit profile** — simple form on `/account` that `PUT`s `/V1/customers/me` for name / email / phone.
+6. **🟡 Password reset flow** — two pages (`/account/forgot-password`, `/account/reset-password`) wired to Magento's `PUT /V1/customers/password` reset + email token.
+7. **🟡 Order reorder action** — "Reorder" button on order detail that iterates the order's items and calls `POST /api/cart/items`.
+8. **🟡 Faceted search on products listing** — Magento search responses already include `aggregations`; reuse the `FilterSidebar` pattern from `/catalog` on `/products`.
+9. **🟡 Cart — CSV import** — file input → client-side CSV parse → bulk `POST /api/cart/items` with per-row error feedback.
+
+### Blocked on backend (Magento / ERP / PIM work required first)
+
+Listed with the exact backend contract each item needs.
+
+10. **🔴 Accept quotation → cart** — needs the ERP quotation accept endpoint. `/account/quotations` scaffold and `src/lib/quotations.ts` are ready; wire `listCustomerQuotations` + an `acceptQuotation` call.
+11. **🔴 Registration approval dashboard / sub-users / roles** — needs Magento B2B company module (or custom extension) to model company → admin → sub-user and permissions. No frontend work possible until the data model exists.
+12. **🔴 Multidimensional variant display on PDP** — needs configurable products in Magento (`configurable_options`). Frontend then renders variant selectors that update SKU/price/stock.
+13. **🟡 Partial delivery indicator / replacement-product notice** — need custom product attributes from the ERP/PIM (e.g. `partial_delivery_allowed`, `replacement_sku`). Frontend renders badge/banner when present.
+14. **🟡 Customer-specific assortments** — needs Magento customer-group / shared-catalog config. Frontend just sends the customer token.
+15. **🟡 Customer product lists & order templates** — wishlist or custom endpoint (`POST /V1/wishlists` or equivalent).
+16. **🟡 Returns / RMA** — registration form, photo upload, status list — all need the Magento RMA / custom return endpoint.
+17. **🟡 Swiss VAT / multi-store** — needs a CH store view (and optional CH legal entity) in Magento. Frontend already takes tax amounts from Magento totals, so switching store view is the actual lever.
+18. **🟡 Newsletter sign-up widget** — needs chosen ESP / Magento newsletter endpoint.
+19. **🟡 Offers / promotions on products** — needs a Magento `promotion` / `offer` product attribute so the `/offers` page can surface a real product rail instead of CMS copy only.
+
+### Later / optional (FRD grey or ⚪ low)
+
+- Two-factor authentication UI (needs Magento 2FA module).
+- Cost-centre assignment per line item, budget management, approval workflows (needs Magento B2B Requisition / custom workflow engine).
+- Minimum order value enforcement (frontend button gate is trivial once backend rule exists).
+- OCI / SAP Ariba / Coupa punchout, IDS-Connect / PinnCalc deep links.
+- Scandit barcode scanning (needs license + backend barcode catalogue).
+- AI copilot, image recognition, cross-sell, spare-parts finder (needs AI backend + purchase-history index).
+- Error-tolerant / fuzzy search, synonym database, SPARQUE search (backend search infra).
+- Search query / cart-abandonment / product-view analytics instrumentation.
+- Maintenance mode banner (env flag + middleware gate).
+- Multi-tenant (DE / CH) legal-entity switcher.
+- Live job postings board on `/careers` (today a static CMS page).
 
 ---
 
@@ -12,14 +82,14 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Customer login (username + password) | ❌ | 🔴 | Wire `POST /rest/V1/integration/customer/token`; store token in httpOnly cookie via Route Handler. Page stub exists at `/account/login`. |
-| Customer logout | ❌ | 🔴 | Clear httpOnly cookie via `POST /api/auth/logout` Route Handler (file already scaffolded). |
-| Session-aware header / nav (show name, account link) | ❌ | 🔴 | Read cookie server-side in `Header.tsx`; show "My Account" vs "Login" conditionally. |
-| Protected routes (`/account`, `/orders`) | ❌ | 🔴 | Middleware redirect to `/login` when no valid customer token cookie. |
-| New user registration form | ❌ | 🔴 | `POST /rest/V1/customers` — Magento creates customer in pending state; admin must approve. |
-| "Pending approval" state shown to new registrants | ❌ | 🔴 | Show informational page after registration submission. |
-| Password reset flow (request + confirm) | ❌ | 🟡 | `PUT /rest/V1/customers/password` + reset token email flow via Magento. |
-| Two-factor authentication UI | ❌ | ⚪ | Requires Magento 2FA module; frontend shows TOTP/code entry step after login. |
+| Customer login (username + password) | ✅ | 🔴 | Live at `/account/login`; token cookie is httpOnly. |
+| Customer logout | ✅ | 🔴 | `LogoutButton` + `/api/auth/logout` clears the cookie. |
+| Session-aware header / nav (show name, account link) | ✅ | 🔴 | `Header.tsx` and `MobileNav.tsx` read the customer session server-side. |
+| Protected routes (`/account`, `/orders`, `/checkout`) | ✅ | 🔴 | Server-side cookie gate on all protected routes. |
+| New user registration form | ✅ | 🔴 | `/account/register` + `/api/auth/register` → `POST /V1/customers`. |
+| "Pending approval" state shown to new registrants | ✅ | 🔴 | Success state informs the user that SWR will approve the account. |
+| Password reset flow (request + confirm) | ❌ | 🟡 | `PUT /V1/customers/password` + reset-token pages still to build. Frontend-ready now. |
+| Two-factor authentication UI | ❌ | ⚪ | Requires Magento 2FA module. |
 
 ---
 
@@ -27,12 +97,13 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Account overview page (`/account`) | ✅ | — | Live `/account` dashboard linking to orders, quotations, addresses, logout. |
-| Edit profile (name, email, phone) | ❌ | 🟡 | `PUT /rest/V1/customers/me`. |
-| Address book (list, add, edit, delete) | ✅ | — | `/account/addresses` with `AddressForm` (new + edit) and delete button. List/POST via `PUT /V1/customers/me`; delete via admin-token `DELETE /V1/addresses/:id`. Region selector + ISO country picker still TODO (today the country/region is a free-text 2-letter / text input). |
-| Sub-user management (create sub-users under same customer number) | ❌ | ⚪ | Requires Magento B2B Company module or custom extension; frontend shows a user list + invite form. |
-| Role / permission display for sub-users | ❌ | ⚪ | Depends on backend role model; frontend renders role badge and edit controls. |
-| Configurable email notification preferences | ❌ | ⚪ | Settings toggle saved to customer custom attributes. |
+| Account overview page (`/account`) | ✅ | — | Dashboard with tiles for orders, quotations, addresses, fleet, logout. |
+| Edit profile (name, email, phone) | ❌ | 🟡 | `PUT /V1/customers/me`. Frontend-ready now. |
+| Address book (list, add, edit, delete) | ✅ | — | `/account/addresses` + `AddressForm`. Country / region pickers still TODO (see checkout queue). |
+| Sub-user management (create sub-users under same customer number) | ⛔ | ⚪ | Requires Magento B2B company module. |
+| Role / permission display for sub-users | ⛔ | ⚪ | Depends on backend role model. |
+| Configurable email-notification preferences | ❌ | ⚪ | Settings toggle → customer custom attributes. |
+| My Fleet (`/account/fleet`) | ✅ | — | Pluggable `FleetRepository`. `NEXT_PUBLIC_FLEET_DEMO=1` enables a 5-machine demo seed; production stays empty until real data lands. |
 
 ---
 
@@ -40,15 +111,16 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Order history list (`/orders`) | ❌ | 🔴 | Page stub exists; call `GET /rest/V1/orders?searchCriteria[filter_groups][0][filters][0][field]=customer_id&...` with customer token. |
-| Order detail view | ❌ | 🔴 | `GET /rest/V1/orders/:orderId` — line items, totals, status. |
-| Order status display (processing, shipped, etc.) | ❌ | 🔴 | Map Magento order statuses to translated labels. |
-| Per-order customer reference field | ❌ | 🔴 | Add a "Your reference / PO number" text input to checkout; pass as `extension_attributes.po_number` or order comment. |
-| Reorder (add previous order items to cart) | ❌ | 🟡 | Iterate order items and call `POST /api/cart/items` for each. |
-| Downloadable order documents (invoice / shipment / credit memo PDFs) | ✅ | — | SWR-branded react-pdf documents streamed from `/api/orders/[id]/{invoices,shipments,creditmemos}/:docId/pdf`; ownership-gated like the confirmation PDF. Components share `src/components/orders/pdfStyles.ts` and `PdfAddress.tsx`. |
-| ERP-specific order status labels | ✅ | — | `resolveOrderStatus` reads `extension_attributes.erp_status_code` / `erp_status_label` and falls back to Magento state mapping; used by order list, detail, and confirmation PDF. Add new ERP codes to `orders.erpStatus.*` in the three message files. |
-| Quotation list / detail (`/account/quotations`) | 🔄 | 🟡 | Pages + `src/lib/quotations.ts` scaffold ship today with empty state; wire `listCustomerQuotations` / `getQuotationForCustomer` when the ERP-backed Magento endpoint lands. |
-| Accept quotation → cart | ❌ | 🟡 | Convert a quotation's lines into cart items on a user action; depends on backend accept endpoint. |
+| Order history list (`/orders`) | ✅ | — | Protected list with localized status labels. |
+| Order detail view | ✅ | — | Items + totals + billing + shipping + payment. |
+| Order status display (processing, shipped, etc.) | ✅ | — | Mapped through `resolveOrderStatus` in `src/lib/orderStatus.ts`. |
+| Per-order customer reference field | ✅ | — | PO number captured on cart + `/checkout/review`, forwarded as `paymentMethod.po_number`. |
+| Reorder (add previous order items to cart) | ❌ | 🟡 | Frontend-ready now — iterate order items → `POST /api/cart/items`. |
+| Downloadable order documents (invoice / shipment / credit memo PDFs) | ✅ | — | Streamed via `/api/orders/[id]/{invoices,shipments,creditmemos}/:docId/pdf`; ownership-gated. |
+| Downloadable order confirmation PDF | ✅ | — | `/api/orders/[id]/confirmation` (react-pdf). |
+| ERP-specific order status labels | ✅ | — | `resolveOrderStatus` reads `extension_attributes.erp_status_code` / `erp_status_label`. DE/EN/FR strings seeded. |
+| Quotation list / detail (`/account/quotations`) | 🔄 | 🟡 | Scaffold + `src/lib/quotations.ts` returns empty today; wire when ERP endpoint lands. |
+| Accept quotation → cart | ⛔ | 🟡 | Blocked — needs ERP accept endpoint. |
 
 ---
 
@@ -57,22 +129,22 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
 | Product listing page (paginated) | ✅ | — | Live from Magento REST API. |
-| Product detail page (PDP) | ✅ | — | Gallery, specs, price, add-to-cart all working. |
+| Product detail page (PDP) | ✅ | — | Gallery, specs, price, add-to-cart, live quantity-based price preview. |
 | Category listing | ✅ | — | Filtered by category, paginated. |
-| Tiered / bulk pricing table on PDP | 🔄 | 🔴 | UI table exists but shows hardcoded demo rows. Map `product.tier_prices` from Magento API; hide section when array is empty. |
-| Multidimensional variant display (size, colour, etc.) | ❌ | 🔴 | Magento configurable products return `configurable_options`; frontend needs a variant selector that updates price/SKU/stock. |
-| Stock availability indicator | ❌ | 🔴 | `product.extension_attributes.stock_item.qty` is available in the API response; render in-stock / low-stock / out-of-stock badge. |
-| Partial delivery capability indicator | ❌ | 🟡 | Custom product attribute from ERP; render as badge/note on PDP when attribute is set. |
-| Replacement / successor product notice | ❌ | 🟡 | Requires a custom Magento attribute (e.g. `replacement_sku`); frontend renders a banner linking to the replacement PDP. |
-| Customer-specific assortments (hide products not in assortment) | ❌ | 🟡 | Requires backend filtering by customer group; frontend passes customer token so Magento returns only permitted products. |
-| Customer product lists (saved lists / favourites) | ❌ | 🟡 | `POST /rest/V1/wishlists` or custom endpoint; frontend shows a "Save to list" button and a `/account/lists` page. |
-| Order templates (saved carts) | ❌ | 🟡 | Custom Magento endpoint or wishlist variant; frontend shows a "Save as template" button and a template list page. |
-| CSV import into cart | ❌ | ⚪ | File upload UI → parse CSV client-side → iterate rows calling `POST /api/cart/items`. |
-| Barcode scanning (Scandit) | ❌ | ⚪ | Integrate Scandit Web SDK; on scan result, look up SKU and add to cart or navigate to PDP. |
-| AI Copilot / chat-based product consultation | ❌ | ⚪ | Floating chat widget; requires AI backend (e.g. OpenAI + product index); out of scope until AI backend is ready. |
-| Image-based product recognition | ❌ | ⚪ | Upload image → AI identifies product → shows matching PDP. Requires AI backend. |
-| AI cross-selling recommendations | ❌ | ⚪ | Render a "Customers also bought" rail on PDP/cart; data sourced from ERP purchase history via custom Magento endpoint. |
-| AI spare parts identification | ❌ | ⚪ | Dedicated spare-parts finder UI; requires AI + machine/serial-number data. |
+| Tiered / bulk pricing table on PDP | ✅ | — | Maps real `product.tier_prices`; hidden when empty. |
+| Stock availability indicator | ❌ | 🔴 | Frontend-ready now — render `extension_attributes.stock_item.qty` as badge on PDP + `ProductCard`. |
+| Multidimensional variant display (size, colour, etc.) | ⛔ | 🔴 | Needs configurable products in Magento. |
+| Partial delivery capability indicator | ⛔ | 🟡 | Needs custom product attribute from ERP. |
+| Replacement / successor product notice | ⛔ | 🟡 | Needs a `replacement_sku` custom attribute. |
+| Customer-specific assortments | ⛔ | 🟡 | Needs backend filtering by customer group / shared catalogs. |
+| Customer product lists (saved lists / favourites) | ⛔ | 🟡 | Needs wishlist or custom endpoint; frontend shows a "Save to list" button and `/account/lists`. |
+| Order templates (saved carts) | ⛔ | 🟡 | Needs custom Magento endpoint or wishlist variant. |
+| CSV import into cart | ❌ | ⚪ | Frontend-ready now — file upload + client-side CSV parse → bulk `POST /api/cart/items`. |
+| Barcode scanning (Scandit) | ❌ | ⚪ | Needs SDK license + backend barcode catalogue. |
+| AI Copilot / chat-based product consultation | ⛔ | ⚪ | Needs AI backend. |
+| Image-based product recognition | ⛔ | ⚪ | Needs AI backend. |
+| AI cross-selling recommendations | ⛔ | ⚪ | Needs ERP purchase-history index. |
+| AI spare parts identification | ⛔ | ⚪ | Needs AI + machine/serial-number data. |
 
 ---
 
@@ -80,13 +152,13 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Basic keyword search | ✅ | — | `SearchBar` pushes `?q=` to `/products`; wired to `searchProducts()` in `magento.ts`. |
-| Price display in search results | ✅ | — | `ProductCard` shows price. |
-| Add-to-cart from search results | ✅ | — | `ProductCard` has add-to-cart button. |
-| Stock availability in search results | ❌ | 🔴 | Same as PDP stock badge — read `stock_item` from search result and render badge on `ProductCard`. |
-| Error-tolerant / fuzzy search | ❌ | 🟡 | Magento's native search has limited fuzzy support; full solution requires SPARQUE or Elasticsearch tuning on the backend. Frontend just passes the query string. |
-| Synonym / replacement product logic in search | ❌ | 🟡 | Backend concern (search engine config); frontend may show a "Did you mean…" suggestion if the API returns one. |
-| Advanced filters (faceted search) | ❌ | 🟡 | Magento returns `aggregations` in search response; frontend needs a filter sidebar that builds `searchCriteria` filter groups. |
+| Basic keyword search | ✅ | — | `SearchBar` pushes `?q=` to `/products`. |
+| Price display in search results | ✅ | — | `ProductCard`. |
+| Add-to-cart from search results | ✅ | — | Inline button on every card. |
+| Stock availability in search results | ❌ | 🔴 | Same data as PDP badge; frontend-ready now. |
+| Advanced filters (faceted search) on products | ❌ | 🟡 | Frontend-ready now — Magento returns `aggregations`; reuse the `/catalog` accordion sidebar pattern on `/products`. |
+| Error-tolerant / fuzzy search | ⛔ | 🟡 | Needs backend search engine tuning (Elasticsearch / SPARQUE). |
+| Synonym / replacement product logic in search | ⛔ | 🟡 | Backend search config. |
 
 ---
 
@@ -94,20 +166,21 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Cart page (line items, qty update, remove) | ✅ | — | Fully working. |
-| Cart totals from Magento (subtotal, tax, grand total) | ✅ | — | `CartProvider` exposes `totals` straight from Magento `/totals`; cart sidebar shows the live `subtotal_with_discount` / `tax_amount` / `grand_total`. |
-| Place order (checkout) | ✅ | — | Signed-in 3-step flow at `/checkout/{address,shipping,review}`; `placeOrderAction` in `checkout/review/actions.ts` resolves numeric cart, runs `PUT /V1/carts/:id` (assign customer) + `PUT /V1/carts/:id/order`, redirects to `/orders/:id`. |
-| Billing address collection at checkout | ✅ | — | Step 1 (`/checkout/address`) lists saved customer addresses + inline new-address form. Single chosen address is used as both billing and shipping for now. |
-| Order confirmation page | ✅ | — | Existing `/orders/:id` is reused as the post-checkout landing page; downloadable confirmation PDF wired via `/api/orders/[id]/confirmation`. |
-| Customer order reference / PO number field | ✅ | — | Optional PO input on `/checkout/review`; forwarded to Magento as `paymentMethod.po_number`. |
-| Shipping method selection | ✅ | — | Step 2 (`/checkout/shipping`) calls `POST /api/checkout/shipping-methods` (proxy to `estimate-shipping-methods`), persists choice via `POST /api/checkout/shipping-information`. |
-| Multi-payment selection at checkout | ❌ | 🟡 | Currently hard-coded to `checkmo` in `placeCustomerOrder`; expose Magento payment methods returned from `setShippingInformation` and let the customer choose. |
-| Address validation / region picker on checkout | ❌ | 🟡 | Country and region today are free-text in `AddressForm`; should become an ISO country dropdown with Magento `directory/regions` driving region selection. |
-| Cost centre assignment per line item | ❌ | ⚪ | Requires Magento B2B or custom extension; frontend adds a cost-centre input per cart row. |
-| Budget management / spend limits | ❌ | ⚪ | Requires backend budget module; frontend shows remaining budget and blocks order if exceeded. |
-| Order approval workflow (supervisor review) | ❌ | ⚪ | Requires Magento B2B Requisition Lists or custom workflow; frontend shows "Submit for approval" instead of "Place order" for restricted users. |
-| Payment method selection | ❌ | ⚪ | Magento returns available payment methods; frontend renders a selector. Currently B2B "invoice" only is assumed. |
-| Minimum order value enforcement | ❌ | ⚪ | Backend-enforced; frontend reads `totals.grand_total` and disables checkout button with a message if below threshold. |
+| Cart page (line items, qty update, remove, undo) | ✅ | — | `CartContent.tsx`. |
+| Cart totals from Magento (subtotal, tax, grand total) | ✅ | — | `CartProvider` exposes `totals`; cart sidebar reads Magento numbers directly. |
+| Inline add-to-cart on product cards | ✅ | — | Home, listing, category, search. |
+| Cart item images persist across refresh | ✅ | — | Cart API enriches items with product image URLs. |
+| Place order (checkout) | ✅ | — | Signed-in 3-step flow `/checkout/{address,shipping,review}` → `PUT /V1/carts/:id/order`. |
+| Billing / shipping address collection | ✅ | — | Step 1 lists saved addresses + inline new-address form. |
+| Order confirmation page | ✅ | — | `/orders/:id` is reused as post-checkout landing page + confirmation PDF. |
+| Customer order reference / PO number field | ✅ | — | Optional PO input on `/checkout/review`. |
+| Shipping method selection | ✅ | — | Real Magento methods via `estimate-shipping-methods` + `shipping-information`. |
+| Multi-payment selection at checkout | ❌ | 🟡 | Hard-coded to `checkmo` today. Frontend-ready now — `setShippingInformation` already returns `payment_methods`. |
+| Address validation / region picker on checkout | ❌ | 🟡 | Country + region are free-text today. Frontend-ready now — ISO country dropdown + Magento `directory/regions`. |
+| Cost-centre assignment per line item | ⛔ | ⚪ | Needs Magento B2B / custom extension. |
+| Budget management / spend limits | ⛔ | ⚪ | Needs backend budget module. |
+| Order approval workflow (supervisor review) | ⛔ | ⚪ | Needs Magento B2B Requisition Lists or custom workflow. |
+| Minimum order value enforcement | ❌ | ⚪ | Read `totals.grand_total`, disable CTA below threshold. Needs threshold definition (config or custom attr). |
 
 ---
 
@@ -115,10 +188,10 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Return registration form (`/account/returns/new`) | ❌ | 🟡 | Select order/line items, reason, optional repair request; submit to Magento RMA or custom endpoint. |
-| Photo upload for returns | ❌ | 🟡 | File input → upload to Magento media API or S3; attach URL to return request. |
-| Return status display (`/account/returns`) | ❌ | 🟡 | List of returns with status badges (received, under review, approved, credit note sent). |
-| Repair request option | ❌ | ⚪ | Checkbox/radio on return form; passed as return attribute. |
+| Return registration form (`/account/returns/new`) | ⛔ | 🟡 | Needs Magento RMA or custom return endpoint. |
+| Photo upload for returns | ⛔ | 🟡 | Needs upload endpoint. |
+| Return status display (`/account/returns`) | ⛔ | 🟡 | Needs return list endpoint. |
+| Repair request option | ⛔ | ⚪ | Depends on returns model. Partial today: `/services/repair` collects repair requests via `mailto:` without a backend. |
 
 ---
 
@@ -126,13 +199,13 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Three locales (de, en, fr) | ✅ | — | next-intl configured; all three message files present. |
-| Locale switcher in header | ✅ | — | `LocaleSwitcher` component. |
-| EUR / CHF currency switcher | ✅ | — | `CurrencyProvider` + `CurrencySwitcher`; cookie-persisted. |
-| Currency conversion (EUR → CHF) | ✅ | — | `currency.ts` handles conversion + Intl formatting. |
+| Three locales (de, en, fr) | ✅ | — | next-intl, all three message files present. |
+| Locale switcher in header | ✅ | — | `LocaleSwitcher`. |
+| EUR / CHF currency switcher | ✅ | — | `CurrencyProvider` + `CurrencySwitcher`, cookie-persisted. |
+| Currency conversion (EUR → CHF) | ✅ | — | `src/lib/currency.ts`. |
 | Locale-aware links (no hardcoded `next/link`) | ✅ | — | All links use `@/i18n/navigation`. |
-| Swiss VAT logic (different from DE/EU) | ❌ | 🔴 | Cart totals must use Magento-returned tax amounts (not hardcoded 19%); Magento handles VAT logic per store view. Blocked by "Cart totals from Magento" item above. |
-| Multiple legal entities (DE / CH) per customer | ❌ | ⚪ | Requires Magento multi-store or B2B company setup; frontend switches store view based on customer entity. |
+| Swiss VAT logic (different from DE/EU) | ⛔ | 🔴 | Frontend already takes Magento tax numbers; lever is a CH store view in Magento. |
+| Multiple legal entities (DE / CH) per customer | ⛔ | ⚪ | Needs Magento multi-store / B2B company setup. |
 
 ---
 
@@ -140,33 +213,56 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Terms & Conditions (`/terms`) | ❌ | 🔴 | Page stub exists (404). Static translated content in all three locales. |
-| Privacy Policy (`/privacy`) | ❌ | 🔴 | Page stub exists (404). Static translated content. |
-| Compliance page (`/compliance`) | ❌ | 🟡 | Page stub exists (404). Static content. |
-| ISO certifications page (`/iso`) | ❌ | 🟡 | Page stub exists (404). Static content + downloadable PDF links. |
-| Safety Data Sheets (`/sds`) | ❌ | 🟡 | Page stub exists (404). Product-linked SDS PDFs; may need a search/filter UI. |
-| Maintenance mode banner / page | ❌ | ⚪ | Check a feature flag (env var or Magento config); render a full-screen maintenance page and block all other routes via middleware. |
+| Imprint (`/legal/imprint`) | ✅ | — | CMS-backed with i18n fallback; `/impressum` 301-redirects. |
+| Terms & Conditions (`/legal/terms`) | ✅ | — | CMS-backed; `/terms`, `/agb` 301-redirect. |
+| Privacy Policy (`/legal/privacy`) | ✅ | — | CMS-backed; `/privacy`, `/datenschutzerklaerung` 301-redirect. |
+| Compliance page (`/legal/compliance`) | ✅ | — | CMS-backed; `/compliance` 301-redirects. |
+| Safety Data Sheets (`/legal/sds`) | ✅ | — | CMS-backed; product-linked SDS lookup still TODO. `/sds` 301-redirects. |
+| Certificates (`/certificates`) | ✅ | — | CMS-backed with ISO 9001 / 14001 / AEO / DIN 3834 cards. Real certificate PDFs pending. `/iso`, `/zertifikate` 301-redirect. |
+| Maintenance mode banner / page | ❌ | ⚪ | Env flag + middleware gate. |
 
 ---
 
-## 10. Analytics & Reporting (Frontend Instrumentation)
+## 10. Marketing Surface (WordPress replacement)
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Search query tracking | ❌ | 🟡 | Fire analytics event on every `?q=` search; can use a lightweight analytics library or a custom Route Handler. |
-| Cart abandonment tracking | ❌ | 🟡 | Track when a cart is created but no order is placed within a session. |
-| Page view / product view events | ❌ | ⚪ | Standard analytics instrumentation on PDP and listing pages. |
-| Newsletter sign-up widget | ❌ | ⚪ | Email input → `POST` to Magento newsletter subscription endpoint or third-party ESP. |
+| Home page rebuild | ✅ | — | Question-led hero, reality numbers, intent tiles, catalog rail, services, industries, people block, workshop block. |
+| Document catalog (`/catalog`, `/catalog/[id]`) | ✅ | — | Accordion sidebar facets (category / type / brand / language) + active-filter chips + free-text search + iframe PDF viewer + YouTube / HTML5 video viewer. JSON repository (~60 real PDFs); swappable for a Magento DocumentEntity module / EDE feed later. `/katalog` 301-redirects. |
+| Industrial Service & Repair Portal (`/services/repair`) | ✅ | — | Categories grid, `RepairTimeline` (Ø 48 h), `RepairRequestForm` (mailto). |
+| Swiss Delivery Center (`/services/customs`) | ✅ | — | Zones, duty/VAT tables, "what we file for you" checklist, document deep-links. |
+| Welding Technology Hub (`/industries/welding`) | ✅ | — | Static override with sub-process tiles, gas `SpecTable`, guide deep-links, welding PDFs rail. |
+| My Fleet (`/account/fleet`, `/account/fleet/[id]`) | ✅ | — | Protected machine-fleet view with warranty + maintenance log. |
+| `/about`, `/contact`, `/partners`, `/careers`, `/offers` | ✅ | — | CMS-backed with i18n fallback; legacy German paths 301-redirect. |
+| `/services` hub + 4 pillars | ✅ | — | `ServicePillarPage` + `ServiceCard`. |
+| `/industries` hub + 7 slug pages | ✅ | — | Dynamic slugs resolve Magento categories via `findCategoryByName`. |
+| Marketing primitive library (`src/components/marketing/*`) | ✅ | — | 16 primitives covering hero, CTA, rails, cards, tables. |
+| Legacy WordPress URL redirects | ✅ | — | 30+ 301-redirects in `src/proxy.ts`. |
+| Sitemap + robots | ✅ | — | `src/app/sitemap.ts` + `src/app/robots.ts` with hreflang. |
+| Per-page `generateMetadata` from CMS meta fields | ✅ | — | Falls back to i18n keys. |
+| `hreflang` alternates + canonical + Open Graph defaults | ✅ | — | Root layout uses `src/lib/seo.ts` `localeAlternates`. |
+| Magento CMS content authoring | 🔄 | 🔴 | Frontend is ready. Authors still need to create the CMS pages in Magento admin (`about`, `contact`, `imprint`, `services-*`, `industries-*`, `partners`, `careers`, `certificates`, `offers`) per locale. i18n fallback copy renders until then. |
 
 ---
 
-## 11. eProcurement Interfaces (Frontend Touch Points)
+## 11. Analytics & Reporting (Frontend Instrumentation)
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| OCI punchout (basket transfer to customer ERP) | ❌ | ⚪ | Requires a dedicated OCI session start URL and a "Transfer basket" button that POSTs cart data in OCI format. |
-| SAP Ariba / Coupa punchout | ❌ | ⚪ | Similar to OCI; different XML/cXML payload format. |
-| IDS-Connect / PinnCalc deep links | ❌ | ⚪ | Inbound links that pre-populate search or cart; parse URL parameters on landing. |
+| Search query tracking | ❌ | 🟡 | Fire analytics event on every `?q=`. |
+| Cart abandonment tracking | ❌ | 🟡 | Session-scoped cart-without-order tracking. |
+| Page view / product view events | ❌ | ⚪ | Standard analytics instrumentation. |
+| Newsletter sign-up widget | ⛔ | ⚪ | Needs ESP choice / endpoint. |
+
+---
+
+## 12. eProcurement Interfaces (Frontend Touch Points)
+
+| Feature | Status | Priority | Notes |
+|---|---|---|---|
+| OCI punchout (basket transfer to customer ERP) | ⛔ | ⚪ | Needs OCI session start URL + payload format. |
+| SAP Ariba / Coupa punchout | ⛔ | ⚪ | Similar to OCI; different cXML. |
+| IDS-Connect / PinnCalc deep links | ⛔ | ⚪ | Parse URL params on landing. |
 
 ---
 
@@ -174,20 +270,20 @@ Cross-referenced against the current Next.js 16 frontend state documented in `AG
 
 These items from the FRD require ERP, PIM, hosting, or backend infrastructure work and have no direct frontend implementation:
 
-- **Integration Hub / middleware** — ERP ↔ Magento synchronisation of stock, prices, orders, documents
-- **PIM integration** (nextPIM, EDE product ranges) — data ingestion pipeline, not a UI concern
-- **Automated order transfer to ERP** — backend/middleware process
-- **Real-time external warehouse stock** (elc logistics) — Magento extension or middleware; frontend just reads the stock value Magento exposes
-- **Customer-specific pricing from ERP** — Magento customer group / tier price configuration; frontend reads whatever Magento returns
-- **ISO 27001 hosting & GDPR-compliant infrastructure** — hosting/ops concern
-- **Multi-tenancy architecture** — Magento multi-store setup; frontend adapts via store view switching
-- **Data enrichment / PIM quality tools** — automated category assignment, product text generation, attribute mapping — all backend/PIM
-- **Serial number management & machine history** — ERP/backend data model; frontend may eventually render a machine history page if an API is provided
-- **Scandit SDK licensing and backend barcode catalogue** — SDK integration is frontend work (listed above), but the product catalogue and scan infrastructure are backend
-- **AI model training / ERP purchase history index** — backend AI pipeline; frontend consumes the resulting recommendation API
-- **SPARQUE search engine** — backend search infrastructure; frontend just sends the query string
-- **Budget management backend logic** — approval workflow engine, spend tracking — backend/ERP
-- **Configurable return policies per customer** — Magento RMA configuration, not frontend
-- **Newsletter platform / ESP** — third-party service; frontend only adds a sign-up widget
-- **Power BI API access** — direct data warehouse / BI tooling, no frontend component
-- **Exportable analytics reports** — backend reporting engine; frontend may add a download button if an endpoint is provided
+- **Integration Hub / middleware** — ERP ↔ Magento synchronisation of stock, prices, orders, documents.
+- **PIM integration** (nextPIM, EDE product ranges) — data ingestion pipeline.
+- **Automated order transfer to ERP** — backend/middleware process.
+- **Real-time external warehouse stock** (elc logistics) — Magento extension or middleware; frontend just reads whatever stock value Magento exposes.
+- **Customer-specific pricing from ERP** — Magento customer-group / tier-price configuration; frontend reads whatever Magento returns.
+- **ISO 27001 hosting & GDPR-compliant infrastructure** — hosting/ops concern.
+- **Multi-tenancy architecture** — Magento multi-store setup; frontend adapts via store-view switching.
+- **Data enrichment / PIM quality tools** — automated category assignment, text generation, attribute mapping.
+- **Serial number management & machine history** — ERP/backend data model (frontend surface exists via `/account/fleet`, but real data feed is backend).
+- **Scandit SDK licensing and backend barcode catalogue** — SDK integration is frontend work; the catalogue is backend.
+- **AI model training / ERP purchase history index** — backend AI pipeline.
+- **SPARQUE search engine** — backend search infrastructure.
+- **Budget management backend logic** — approval workflow engine, spend tracking.
+- **Configurable return policies per customer** — Magento RMA configuration.
+- **Newsletter platform / ESP** — third-party service; frontend only adds a sign-up widget.
+- **Power BI API access** — direct data warehouse / BI tooling.
+- **Exportable analytics reports** — backend reporting engine.
