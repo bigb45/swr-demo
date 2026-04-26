@@ -64,15 +64,20 @@ function invalidateAdminToken() {
 
 export async function magentoGet<T>(
   path: string,
-  revalidate: number | false = 60
+  revalidate: number | false = 60,
+  storeCode?: string
 ): Promise<T> {
   const nextOptions =
     revalidate === false
       ? { cache: "no-store" as const }
       : { next: { revalidate } };
 
+  // Magento REST supports per-store-view scoping via /rest/<storeCode>/V1/...
+  // Calls without a storeCode target the default admin scope.
+  const prefix = storeCode ? `/rest/${storeCode}/V1` : `/rest/V1`;
+
   const doFetch = async (token: string) =>
-    fetch(`${BASE}/rest/V1${path}`, {
+    fetch(`${BASE}${prefix}${path}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -99,6 +104,15 @@ export async function magentoGet<T>(
 
   return res.json() as Promise<T>;
 }
+
+// Map next-intl locales -> Magento store codes. Keep in sync with the store
+// views configured in Magento admin; content falls back to the default store
+// when no mapping is provided.
+export const LOCALE_STORE_CODES: Record<string, string> = {
+  de: "de",
+  en: "en",
+  fr: "fr",
+};
 
 export function getProductImageUrl(product: MagentoProduct): string | null {
   const entry = product.media_gallery_entries?.find((e) =>
@@ -150,6 +164,27 @@ export async function getTopLevelCategories(): Promise<MagentoCategory[]> {
   return tree.children_data.filter((c) => c.is_active);
 }
 
+// Recursively search the category tree for a node whose name matches any of
+// the provided candidates (case-insensitive). Used by industry hubs to map a
+// stable slug (e.g. "welding") to the current Magento category ID.
+export function findCategoryByName(
+  root: MagentoCategory,
+  candidates: string[]
+): MagentoCategory | null {
+  const normalized = candidates.map((c) => c.toLowerCase().trim());
+  const queue: MagentoCategory[] = [root];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (normalized.includes((node.name ?? "").toLowerCase().trim())) {
+      return node;
+    }
+    if (Array.isArray(node.children_data)) {
+      queue.push(...node.children_data);
+    }
+  }
+  return null;
+}
+
 export async function getProductsByCategory(
   categoryId: string | number,
   page = 1,
@@ -178,4 +213,58 @@ export async function searchProducts(
     "searchCriteria[pageSize]": String(pageSize),
   });
   return magentoGet<MagentoProductList>(`/products?${params.toString()}`, false);
+}
+
+/**
+ * Criteria for the filtered `/products` listing. Every field is optional; the
+ * helper composes Magento `searchCriteria` filter_groups only for what's set.
+ *
+ * `q`, `categoryId`, `priceMin`, `priceMax` each become a separate
+ * filter_group — Magento AND-combines groups while OR-combining filters
+ * inside one group, so one filter per group gives us strict AND semantics.
+ */
+export interface ProductSearchFilters {
+  q?: string;
+  categoryId?: string | number;
+  priceMin?: number;
+  priceMax?: number;
+}
+
+export async function getFilteredProducts(
+  page = 1,
+  pageSize = 20,
+  filters: ProductSearchFilters = {},
+): Promise<MagentoProductList> {
+  const params = new URLSearchParams();
+  let group = 0;
+
+  const addFilter = (field: string, value: string, conditionType: string) => {
+    const prefix = `searchCriteria[filter_groups][${group}][filters][0]`;
+    params.set(`${prefix}[field]`, field);
+    params.set(`${prefix}[value]`, value);
+    params.set(`${prefix}[condition_type]`, conditionType);
+    group += 1;
+  };
+
+  if (filters.q && filters.q.trim().length > 0) {
+    addFilter("name", `%${filters.q.trim()}%`, "like");
+  }
+  if (filters.categoryId !== undefined && filters.categoryId !== "") {
+    addFilter("category_id", String(filters.categoryId), "eq");
+  }
+  if (typeof filters.priceMin === "number" && Number.isFinite(filters.priceMin)) {
+    addFilter("price", String(filters.priceMin), "gteq");
+  }
+  if (typeof filters.priceMax === "number" && Number.isFinite(filters.priceMax)) {
+    addFilter("price", String(filters.priceMax), "lteq");
+  }
+
+  params.set("searchCriteria[currentPage]", String(page));
+  params.set("searchCriteria[pageSize]", String(pageSize));
+
+  const cacheSeconds = filters.q ? false : 60;
+  return magentoGet<MagentoProductList>(
+    `/products?${params.toString()}`,
+    cacheSeconds,
+  );
 }

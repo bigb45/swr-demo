@@ -18,6 +18,7 @@ import { cookies } from "next/headers";
 import type {
   MagentoCheckoutAddress,
   MagentoCustomerMe,
+  MagentoPaymentMethod,
   MagentoShippingMethod,
   MagentoShippingInformationResult,
 } from "@/types/magento";
@@ -35,6 +36,12 @@ export interface CheckoutState {
   address: MagentoCheckoutAddress;
   /** Source address book id, when the user picked a saved address. */
   addressId?: number;
+  /**
+   * Payment methods returned by Magento from `shipping-information`. Captured
+   * at the end of step 2 so step 3 can render the selection without another
+   * round-trip.
+   */
+  paymentMethods?: MagentoPaymentMethod[];
 }
 
 export async function readCheckoutState(): Promise<CheckoutState | null> {
@@ -137,15 +144,49 @@ export async function getAdminToken(): Promise<string> {
   return token;
 }
 
+/**
+ * Magento REST errors come back as
+ *   { message: "\"%fieldName\" is required.", parameters: { fieldName: "sku" } }
+ * or with positional placeholders
+ *   { message: "Invalid value \"%1\" for %2.", parameters: ["foo", "name"] }
+ * Forwarding `message` raw leaks the literal `%fieldName` / `%1` to the UI, so
+ * we substitute the placeholders before surfacing the string.
+ */
 export function extractMagentoMessage(
   data: unknown,
   fallback: string,
 ): string {
-  if (data && typeof data === "object" && "message" in data) {
-    const msg = (data as { message?: unknown }).message;
-    if (typeof msg === "string" && msg.length > 0) return msg;
+  if (!data || typeof data !== "object") return fallback;
+
+  const obj = data as { message?: unknown; parameters?: unknown };
+  const message = obj.message;
+  if (typeof message !== "string" || message.length === 0) return fallback;
+
+  return interpolateMagentoMessage(message, obj.parameters);
+}
+
+function interpolateMagentoMessage(
+  message: string,
+  parameters: unknown,
+): string {
+  if (!parameters) return message;
+
+  if (Array.isArray(parameters)) {
+    return message.replace(/%(\d+)/g, (match, idx) => {
+      const value = parameters[Number(idx) - 1];
+      return value === undefined || value === null ? match : String(value);
+    });
   }
-  return fallback;
+
+  if (typeof parameters === "object") {
+    const params = parameters as Record<string, unknown>;
+    return message.replace(/%([A-Za-z_][A-Za-z0-9_]*)/g, (match, key) => {
+      const value = params[key];
+      return value === undefined || value === null ? match : String(value);
+    });
+  }
+
+  return message;
 }
 
 export async function fetchCustomerMe(

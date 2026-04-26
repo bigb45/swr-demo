@@ -22,6 +22,40 @@ export interface MagentoTierPrice {
   };
 }
 
+/**
+ * Core Magento stock item (pre-MSI). Returned on product list/detail payloads
+ * under `extension_attributes.stock_item`. `qty` is the physical stock level
+ * on the default source; `is_in_stock` is the admin-controlled availability
+ * flag; `manage_stock` controls whether qty is tracked at all. When
+ * `manage_stock` is false we treat the product as always available.
+ */
+export interface MagentoStockItem {
+  item_id?: number;
+  product_id?: number;
+  stock_id?: number;
+  qty?: number;
+  is_in_stock?: boolean;
+  manage_stock?: boolean;
+  min_qty?: number;
+  use_config_manage_stock?: boolean;
+  backorders?: number;
+  min_sale_qty?: number;
+  max_sale_qty?: number;
+}
+
+/**
+ * Magento product extension attributes surface inventory alongside any other
+ * server-side extensions. We only type the fields the frontend reads.
+ * `website_ids` is commonly present and kept here to avoid breaking callers.
+ * `stock_item` is the pre-MSI shape; if MSI is enabled, Magento also returns
+ * a numeric `salable_quantity` (typed as unknown for forward compatibility).
+ */
+export interface MagentoProductExtensionAttributes {
+  website_ids?: number[];
+  stock_item?: MagentoStockItem;
+  salable_quantity?: unknown;
+}
+
 export interface MagentoProduct {
   id: number;
   sku: string;
@@ -34,6 +68,7 @@ export interface MagentoProduct {
   tier_prices?: MagentoTierPrice[];
   media_gallery_entries?: MagentoMediaEntry[];
   custom_attributes?: MagentoCustomAttribute[];
+  extension_attributes?: MagentoProductExtensionAttributes;
 }
 
 export interface MagentoProductList {
@@ -95,6 +130,10 @@ export interface MagentoOrderItem {
   qty_ordered: number;
   price: number;
   row_total: number;
+  /** Magento product type: "simple", "configurable", "bundle", etc. */
+  product_type?: string;
+  /** Set on children of configurable / bundle parents; skipped when reordering. */
+  parent_item_id?: number;
 }
 
 export interface MagentoOrderPayment {
@@ -140,6 +179,22 @@ export interface MagentoOrderSummary {
   extension_attributes?: MagentoOrderSummaryExtensionAttributes;
 }
 
+/**
+ * Magento order comment / status change. The order detail endpoint returns a
+ * mixed audit trail of internal notes and customer-facing messages — only
+ * entries with `is_visible_on_front === 1` and a non-empty `comment` should
+ * be rendered to the customer.
+ */
+export interface MagentoOrderStatusHistory {
+  entity_id?: number;
+  parent_id?: number;
+  comment?: string | null;
+  created_at?: string;
+  is_customer_notified?: 0 | 1 | null;
+  is_visible_on_front?: 0 | 1;
+  status?: string;
+}
+
 export interface MagentoOrderDetail extends MagentoOrderSummary {
   subtotal: number;
   tax_amount: number;
@@ -151,6 +206,7 @@ export interface MagentoOrderDetail extends MagentoOrderSummary {
   items: MagentoOrderItem[];
   billing_address?: MagentoOrderAddress;
   payment?: MagentoOrderPayment;
+  status_histories?: MagentoOrderStatusHistory[];
   extension_attributes?: MagentoOrderDetailExtensionAttributes;
 }
 
