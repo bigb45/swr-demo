@@ -726,6 +726,9 @@
     "counters": {
       "machines": "Maschinen",
       "underWarranty": "In Garantie",
+      "warrantyActive": "Garantie aktiv",
+      "warrantyExpiring": "Läuft bald (≤90 T.)",
+      "warrantyExpired": "Abgelaufen",
       "serviceEvents": "Serviceeinsätze",
       "brands": "Marken"
     },
@@ -754,7 +757,10 @@
       "purchased": "Kaufdatum",
       "warrantyUntil": "Garantieende",
       "maintenanceCount": "Serviceeinsätze",
-      "product": "Produkt"
+      "product": "Produkt",
+      "specsTitle": "Technische Daten",
+      "specsColSpec": "Kennwert",
+      "specsColValue": "Wert"
     },
     "actions": {
       "eyebrow": "Schnellaktionen",
@@ -802,6 +808,32 @@
     "subheading": "Jeder Retouren-, Reparatur- und Kalibriervorgang auf Ihrem Konto — von der ersten Meldung bis zum Abschluss, mit demselben Statusverlauf wie in unserer Werkstatt.",
     "backToAccount": "Zurück zum Konto",
     "backToHub": "Zurück zum Service",
+    "pick": {
+      "metaTitle": "Gerät wählen",
+      "metaDescription": "Maschine aus Ihrem Park, eine frühere Bestellung, oder ohne gespeichertes Produkt fortfahren — bevor Sie den Vorgang beschreiben.",
+      "stepLabel": "Schritt 1 — Was muss betreut werden",
+      "repair": {
+        "heading": "Was soll repariert werden?",
+        "subheading": "Wählen Sie eine erfasste Maschine oder einen anderen Einstieg. Auf der nächsten Seite beschreiben Sie die Störung — Hersteller, Modell und Seriennummer übernehmen wir aus der Auswahl."
+      },
+      "inspection": {
+        "heading": "Was braucht Inspektion oder Kalibrierung?",
+        "subheading": "Wählen Sie eine Maschine aus dem Park oder starten Sie über eine vergangene Bestellung, dann erfassen Sie die Details."
+      },
+      "altOrder": {
+        "eyebrow": "Bei uns gekauft",
+        "title": "Über eine frühere Bestellung",
+        "body": "Positionen wählen und das Problem sinnvoll, wenn der Artikel nicht im Maschinenpark steht.",
+        "cta": "Zu meinen Bestellungen"
+      },
+      "altManual": {
+        "eyebrow": "Nicht in der Liste",
+        "title": "Ohne gespeichertes Gerät fortfahren",
+        "body": "Sie tragen Marke, Modell und ggf. Seriennummer ein, danach den restlichen Vorgang.",
+        "cta": "Vorgangsformular öffnen"
+      },
+      "fleetLink": "Vollständige Übersicht im Maschinenpark (Details, Historie, weitere Aktionen)"
+    },
     "viewCase": "Vorgang öffnen",
     "orderLabel": "Bestellung",
     "machineLabel": "Maschine",
@@ -919,9 +951,16 @@
       "descriptionHint": "Fehlersymptome, Startzeitpunkt und bereits unternommene Schritte angeben. Je mehr Kontext, desto schneller der Abschluss.",
       "reason": "Grund",
       "reasonChoose": "Grund wählen…",
+      "formIntroRepair": "Wählen Sie zuerst Artikel aus der Bestellung und/oder eine Maschine aus Ihrem Park — dann beschreiben Sie den Fehler. Hersteller, Modell und Seriennummer übernehmen wir aus Ihrer Auswahl.",
       "itemsHeading": "Artikel",
       "itemsHint": "Nur Artikel mit Menge über null werden in die Retoure übernommen.",
+      "itemsHeadingRepair": "Produkte aus dieser Bestellung",
+      "itemsHintRepair": "Menge pro Position für diesen Reparaturfall. Null überspringt — oder Maschine aus dem Park verknüpfen, wenn es um Anlagen geht.",
+      "itemsHeadingInspection": "Produkte aus dieser Bestellung",
+      "itemsHintInspection": "Menge pro Zeile, die in Inspektion oder Kalibrierung einbezogen werden soll.",
       "itemQty": "Retourenmenge",
+      "itemQtyRepair": "Menge",
+      "itemQtyInspection": "Menge",
       "contactHeading": "Kontakt",
       "contactName": "Ihr Name",
       "contactEmail": "E-Mail",
@@ -930,10 +969,11 @@
       "attachmentsHint": "Fotos des Schadens, Diagnoseberichte oder Screenshots beschleunigen den Vorgang. Bilder und PDFs bis je 10 MB.",
       "attachmentsAdd": "Fotos oder Dokumente hinzufügen",
       "attachmentsSelectedOne": "1 Datei ausgewählt — weitere hinzufügen oder absenden",
-      "attachmentsSelectedMany": "{count} Dateien ausgewählt",
+      "attachmentsSelectedMany": "COUNT Dateien ausgewählt",
       "attachmentsNote": "Anhänge werden am Vorgang dokumentiert. In dieser Preview-Version werden Dateien nicht vollständig übertragen — die Namen werden für Rückfragen gespeichert.",
       "submitting": "Wird gesendet…",
       "errorMissing": "Bitte Beschreibung und Namen ausfüllen, bevor Sie absenden.",
+      "errorNoItems": "Diese Bestellung enthält positionierbare Zeilen — bitte mindestens eine Menge wählen oder eine Maschine aus dem Park verknüpfen.",
       "picker": {
         "heading": "Maschine aus dem Bestand wählen",
         "subheading": "Wählen Sie eine Maschine, die bereits bei uns registriert ist. Garantiestatus, Seriennummer und letzter Service sind direkt sichtbar, damit Sie in Sekunden entscheiden können.",
@@ -968,6 +1008,7 @@
     "orderSection": {
       "heading": "Retouren & Service",
       "startReturn": "Retoure starten",
+      "startRepair": "Reparatur (Bestellzeilen) anfragen",
       "empty": "Noch keine Servicevorgänge zu dieser Bestellung."
     },
     "machineSection": {
@@ -1113,6 +1154,15 @@
             "body": "In Lörrach abholen oder mit der nächsten Tour ausliefern lassen. Geprüft, gereinigt, mit Garantie."
           }
         }
+      },
+      "intake": {
+        "title": "Für angemeldete Firmenkunden",
+        "body": "Als Nächstes wählen Sie, was betreut werden soll: Maschinenpark, frühere Bestellung, oder Vorgang ohne gespeichertes Gerät. Hersteller und Seriennummer werden bei Auswahl übernommen.",
+        "ctaFleet": "Mein Maschinenpark",
+        "ctaRepair": "Gerät wählen & fortfahren",
+        "ctaServiceHub": "Service-Übersicht",
+        "guestHint": "Lieber E-Mail? Das Formular unten öffnet wie gewohnt Ihr Mailprogramm.",
+        "guestTitle": "Gastanfrage (E-Mail)"
       },
       "form": {
         "recipientEmail": "service@swr-loerrach.de",

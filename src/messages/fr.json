@@ -726,6 +726,9 @@
     "counters": {
       "machines": "Machines",
       "underWarranty": "Sous garantie",
+      "warrantyActive": "Garantie active",
+      "warrantyExpiring": "Expire bientôt (≤90 j.)",
+      "warrantyExpired": "Hors garantie",
       "serviceEvents": "Interventions",
       "brands": "Marques"
     },
@@ -754,7 +757,10 @@
       "purchased": "Date d'achat",
       "warrantyUntil": "Fin de garantie",
       "maintenanceCount": "Interventions",
-      "product": "Produit"
+      "product": "Produit",
+      "specsTitle": "Caractéristiques techniques",
+      "specsColSpec": "Indicateur",
+      "specsColValue": "Valeur"
     },
     "actions": {
       "eyebrow": "Actions rapides",
@@ -802,6 +808,32 @@
     "subheading": "Chaque retour, réparation et calibration ouvert sur votre compte — de la première demande à la résolution finale, avec le même suivi que notre atelier.",
     "backToAccount": "Retour au compte",
     "backToHub": "Retour au SAV",
+    "pick": {
+      "metaTitle": "Choisir l’équipement",
+      "metaDescription": "Sélectionnez une machine de votre parc, une commande passée, ou continuez sans produit enregistré avant de décrire le dossier.",
+      "stepLabel": "Étape 1 — Prise en charge",
+      "repair": {
+        "heading": "Quelle réparation ?",
+        "subheading": "Choisissez une machine déjà en fiche, ou un autre chemin. Ensuite vous décrivez la panne et joignez des photos — nous préremplissons la fiche d’identité si vous sélectionnez une machine."
+      },
+      "inspection": {
+        "heading": "Quelle inspection ou calibration ?",
+        "subheading": "Choisissez une machine du parc ou partez d’une commande, puis complétez le dossier."
+      },
+      "altOrder": {
+        "eyebrow": "Chez nous",
+        "title": "Depuis une commande",
+        "body": "Sélectionnez des lignes sur la commande, puis le problème — idéal si l’équipement n’est pas dans le parc machines.",
+        "cta": "Mes commandes"
+      },
+      "altManual": {
+        "eyebrow": "Non répertorié",
+        "title": "Continuer sans produit enregistré",
+        "body": "Vous saisirez marque, modèle et numéro de série, puis le reste du formulaire.",
+        "cta": "Ouvrir le formulaire"
+      },
+      "fleetLink": "Liste complète dans Mon parc machines (détails, historique, actions)"
+    },
     "viewCase": "Ouvrir le dossier",
     "orderLabel": "Commande",
     "machineLabel": "Machine",
@@ -919,9 +951,16 @@
       "descriptionHint": "Symptômes de la panne, début d'apparition et étapes déjà tentées. Plus de contexte = clôture plus rapide.",
       "reason": "Motif",
       "reasonChoose": "Choisir un motif…",
+      "formIntroRepair": "Sélectionnez d’abord des articles de la commande et/ou une machine de votre parc, puis décrivez le problème. Nous préremplissons marque, modèle et n° de série à partir de votre choix.",
       "itemsHeading": "Articles",
       "itemsHint": "Seuls les articles avec une quantité supérieure à zéro sont inclus dans le retour.",
+      "itemsHeadingRepair": "Produits de cette commande",
+      "itemsHintRepair": "Indiquez la quantité par ligne concernée. Zéro ignore la ligne, ou liez une machine du parc pour un dossier matériel.",
+      "itemsHeadingInspection": "Produits de cette commande",
+      "itemsHintInspection": "Indiquez la quantité par ligne à inclure pour inspection ou calibrage.",
       "itemQty": "Qté retournée",
+      "itemQtyRepair": "Qté",
+      "itemQtyInspection": "Qté",
       "contactHeading": "Contact",
       "contactName": "Votre nom",
       "contactEmail": "Email",
@@ -930,10 +969,11 @@
       "attachmentsHint": "Photos des dommages, rapports de diagnostic ou captures d'écran — tout accélère le dossier. Images et PDF jusqu'à 10 Mo.",
       "attachmentsAdd": "Ajouter des photos ou documents",
       "attachmentsSelectedOne": "1 fichier sélectionné — ajoutez-en ou envoyez",
-      "attachmentsSelectedMany": "{count} fichiers sélectionnés",
+      "attachmentsSelectedMany": "COUNT fichiers sélectionnés",
       "attachmentsNote": "Les pièces sont attachées au dossier. Dans cette préversion, les fichiers ne sont pas transférés intégralement — les noms sont conservés pour relance.",
       "submitting": "Envoi en cours…",
       "errorMissing": "Merci de renseigner la description et votre nom avant d'envoyer.",
+      "errorNoItems": "Cette commande a des lignes expédiables : indiquez une quantité sur au moins une ligne, ou liez une machine de votre parc.",
       "picker": {
         "heading": "Choisir une machine de votre parc",
         "subheading": "Sélectionnez l'une des machines déjà enregistrées chez nous. Statut de garantie, numéro de série et dernière intervention sont visibles pour décider en quelques secondes.",
@@ -968,6 +1008,7 @@
     "orderSection": {
       "heading": "Retours et SAV",
       "startReturn": "Ouvrir un retour",
+      "startRepair": "Demande de réparation (lignes)",
       "empty": "Aucun dossier SAV pour cette commande."
     },
     "machineSection": {
@@ -1113,6 +1154,15 @@
             "body": "Reprise à Lörrach ou livraison sur la prochaine tournée. Testé, nettoyé, sous garantie."
           }
         }
+      },
+      "intake": {
+        "title": "Comptes professionnels (connecté)",
+        "body": "L’étape suivante : choisir le matériel (parc, commande passée, ou saisie libre). Nous préremplissons la fiche si vous sélectionnez une machine enregistrée.",
+        "ctaFleet": "Mon parc machines",
+        "ctaRepair": "Choisir l’équipement",
+        "ctaServiceHub": "Espace SAV",
+        "guestHint": "Vous préférez l’e-mail ? Le formulaire ci-dessous ouvre toujours votre messagerie.",
+        "guestTitle": "Invité (e-mail)"
       },
       "form": {
         "recipientEmail": "service@swr-loerrach.de",

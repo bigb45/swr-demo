@@ -244,13 +244,22 @@ export default async function OrderDetailPage({
           <h2 className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
             {tService("orderSection.heading")}
           </h2>
-          <Link
-            href={`/account/service/new?kind=return&orderId=${order.entity_id}`}
-            className="text-xs font-bold uppercase tracking-[0.12em] bg-primary text-white px-4 py-3 hover:bg-primary-container transition-colors"
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
-            {tService("orderSection.startReturn")}
-          </Link>
+          <div className="flex flex-wrap gap-2 justify-end">
+            <Link
+              href={`/account/service/new?kind=return&orderId=${order.entity_id}`}
+              className="text-xs font-bold uppercase tracking-[0.12em] bg-primary text-white px-4 py-3 hover:bg-primary-container transition-colors"
+              style={{ borderRadius: "var(--radius-btn)" }}
+            >
+              {tService("orderSection.startReturn")}
+            </Link>
+            <Link
+              href={`/account/service/new?kind=repair&orderId=${order.entity_id}`}
+              className="text-xs font-bold uppercase tracking-[0.12em] border border-primary text-primary bg-surface-container-lowest px-4 py-3 hover:bg-primary-fixed transition-colors"
+              style={{ borderRadius: "var(--radius-btn)" }}
+            >
+              {tService("orderSection.startRepair")}
+            </Link>
+          </div>
         </div>
         {serviceCases.length > 0 ? (
           <ul className="flex flex-col gap-2">

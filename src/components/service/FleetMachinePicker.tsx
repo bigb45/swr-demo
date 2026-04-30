@@ -16,6 +16,8 @@ interface FleetMachinePickerProps {
   kind: ServiceCaseKind;
   machines: PickableMachine[];
   locale: string;
+  /** When set (e.g. repair from an order), preserve on machine selection. */
+  orderId?: string;
   labels: {
     heading: string;
     subheading: string;
@@ -45,10 +47,23 @@ function formatDate(iso: string, locale: string): string {
   }
 }
 
+function newCaseHref(
+  kind: ServiceCaseKind,
+  machineId: string,
+  orderId: string | undefined,
+): string {
+  const p = new URLSearchParams();
+  p.set("kind", kind);
+  p.set("machineId", machineId);
+  if (orderId) p.set("orderId", orderId);
+  return `/account/service/new?${p.toString()}`;
+}
+
 export default function FleetMachinePicker({
   kind,
   machines,
   locale,
+  orderId,
   labels,
 }: FleetMachinePickerProps) {
   if (machines.length === 0) {
@@ -102,7 +117,7 @@ export default function FleetMachinePicker({
           return (
             <li key={m.id}>
               <Link
-                href={`/account/service/new?kind=${kind}&machineId=${m.id}`}
+                href={newCaseHref(kind, m.id, orderId)}
                 replace
                 className="group flex flex-col gap-3 p-5 bg-surface-container-lowest hover:bg-primary-fixed transition-colors"
                 style={{

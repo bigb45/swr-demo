@@ -24,6 +24,8 @@ interface NewCaseFormProps {
   locale: string;
   reasons: ServiceCaseReason[];
   context: NewCaseContext;
+  /** Read-only block when machine is pre-selected (e.g. warranty, serial) — from server. */
+  assetSummarySlot?: ReactNode;
   pickerSlot?: ReactNode;
   showManualMachineFields?: boolean;
   labels: {
@@ -55,6 +57,8 @@ interface NewCaseFormProps {
     submit: string;
     submitting: string;
     errorMissing: string;
+    errorNoItems?: string;
+    formIntro?: string;
   };
 }
 
@@ -67,6 +71,7 @@ export default function NewCaseForm({
   locale,
   reasons,
   context,
+  assetSummarySlot,
   pickerSlot,
   showManualMachineFields = false,
   labels,
@@ -84,6 +89,127 @@ export default function NewCaseForm({
   const inputCls =
     "w-full px-4 py-3 text-sm bg-surface-container-lowest border border-outline-variant/40 focus:outline-none focus:border-primary";
   const inputStyle = { borderRadius: "var(--radius-btn)" } as const;
+
+  const hasOrderLines = Boolean(
+    context.orderItems && context.orderItems.length > 0,
+  );
+  const showOrderBlock =
+    hasOrderLines &&
+    (kind === "return" || kind === "repair" || kind === "inspection");
+
+  const orderItemsFieldset = showOrderBlock ? (
+    <fieldset
+      className="flex flex-col gap-3 p-6 sm:p-8 bg-surface-container-low"
+      style={{
+        borderRadius: "var(--radius-card)",
+        boxShadow: "var(--shadow-ambient)",
+      }}
+    >
+      <legend className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+        {labels.itemsHeading}
+      </legend>
+      <p className="text-sm text-on-surface-variant leading-relaxed">
+        {labels.itemsHint}
+      </p>
+      <ul className="flex flex-col gap-2">
+        {context.orderItems!.map((it, i) => {
+          const key = itemKey(it.sku, i);
+          const qty = selectedQty[key] ?? 0;
+          return (
+            <li
+              key={key}
+              className="flex flex-wrap items-center gap-3 p-4 bg-surface-container-lowest"
+              style={{ borderRadius: "var(--radius-btn)" }}
+            >
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="text-sm font-semibold text-on-surface truncate">
+                  {it.name}
+                </span>
+                <span className="text-xs font-mono text-on-surface-variant">
+                  {it.sku} · max {it.maxQty}
+                </span>
+              </div>
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                {labels.itemQty}
+                <input
+                  type="number"
+                  min={0}
+                  max={it.maxQty}
+                  value={qty}
+                  onChange={(e) =>
+                    setSelectedQty((prev) => ({
+                      ...prev,
+                      [key]: Math.max(
+                        0,
+                        Math.min(it.maxQty, Number(e.target.value) || 0),
+                      ),
+                    }))
+                  }
+                  className="w-20 px-3 py-2 text-center bg-surface-container-lowest border border-outline-variant/40 focus:outline-none focus:border-primary"
+                  style={{ borderRadius: "var(--radius-btn)" }}
+                />
+              </label>
+              {qty > 0 ? (
+                <>
+                  <input type="hidden" name="item_sku" value={it.sku} />
+                  <input type="hidden" name="item_name" value={it.name} />
+                  <input type="hidden" name="item_qty" value={qty} />
+                </>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </fieldset>
+  ) : null;
+
+  const reasonFieldset = (
+    <fieldset
+      className="flex flex-col gap-4 p-6 sm:p-8 bg-surface-container-low"
+      style={{
+        borderRadius: "var(--radius-card)",
+        boxShadow: "var(--shadow-ambient)",
+      }}
+    >
+      <legend className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+        {labels.fieldsHeading}
+      </legend>
+
+      <label className="flex flex-col gap-1.5 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+        {labels.reason}
+        <select
+          name="reason"
+          required
+          defaultValue=""
+          className={inputCls}
+          style={inputStyle}
+        >
+          <option value="" disabled>
+            {labels.reasonChoose}
+          </option>
+          {reasons.map((r) => (
+            <option key={r} value={r}>
+              {labels.reasonLabels[r]}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="flex flex-col gap-1.5 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+        {labels.description}
+        <textarea
+          name="description"
+          required
+          rows={5}
+          className={inputCls}
+          style={inputStyle}
+        />
+        <span className="text-[11px] font-normal normal-case tracking-normal text-on-surface-variant">
+          {labels.descriptionHint}
+        </span>
+      </label>
+    </fieldset>
+  );
 
   return (
     <form
@@ -103,121 +229,21 @@ export default function NewCaseForm({
         <input type="hidden" name="serial" value={context.serial} />
       ) : null}
 
-      {pickerSlot}
-
-      {/* Reason & description */}
-      <fieldset
-        className="flex flex-col gap-4 p-6 sm:p-8 bg-surface-container-low"
-        style={{
-          borderRadius: "var(--radius-card)",
-          boxShadow: "var(--shadow-ambient)",
-        }}
-      >
-        <legend className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-          {labels.fieldsHeading}
-        </legend>
-
-        <label className="flex flex-col gap-1.5 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-          {labels.reason}
-          <select
-            name="reason"
-            required
-            defaultValue=""
-            className={inputCls}
-            style={inputStyle}
-          >
-            <option value="" disabled>
-              {labels.reasonChoose}
-            </option>
-            {reasons.map((r) => (
-              <option key={r} value={r}>
-                {labels.reasonLabels[r]}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="flex flex-col gap-1.5 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-          {labels.description}
-          <textarea
-            name="description"
-            required
-            rows={5}
-            className={inputCls}
-            style={inputStyle}
-          />
-          <span className="text-[11px] font-normal normal-case tracking-normal text-on-surface-variant">
-            {labels.descriptionHint}
-          </span>
-        </label>
-      </fieldset>
-
-      {/* Items (returns only, when we have an order context) */}
-      {kind === "return" && context.orderItems && context.orderItems.length > 0 ? (
-        <fieldset
-          className="flex flex-col gap-3 p-6 sm:p-8 bg-surface-container-low"
-          style={{
-            borderRadius: "var(--radius-card)",
-            boxShadow: "var(--shadow-ambient)",
-          }}
-        >
-          <legend className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-            {labels.itemsHeading}
-          </legend>
-          <p className="text-sm text-on-surface-variant leading-relaxed">
-            {labels.itemsHint}
-          </p>
-          <ul className="flex flex-col gap-2">
-            {context.orderItems.map((it, i) => {
-              const key = itemKey(it.sku, i);
-              const qty = selectedQty[key] ?? 0;
-              return (
-                <li
-                  key={key}
-                  className="flex flex-wrap items-center gap-3 p-4 bg-surface-container-lowest"
-                  style={{ borderRadius: "var(--radius-btn)" }}
-                >
-                  <div className="flex flex-col min-w-0 flex-1">
-                    <span className="text-sm font-semibold text-on-surface truncate">
-                      {it.name}
-                    </span>
-                    <span className="text-xs font-mono text-on-surface-variant">
-                      {it.sku} · max {it.maxQty}
-                    </span>
-                  </div>
-                  <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                    {labels.itemQty}
-                    <input
-                      type="number"
-                      min={0}
-                      max={it.maxQty}
-                      value={qty}
-                      onChange={(e) =>
-                        setSelectedQty((prev) => ({
-                          ...prev,
-                          [key]: Math.max(
-                            0,
-                            Math.min(it.maxQty, Number(e.target.value) || 0),
-                          ),
-                        }))
-                      }
-                      className="w-20 px-3 py-2 text-center bg-surface-container-lowest border border-outline-variant/40 focus:outline-none focus:border-primary"
-                      style={{ borderRadius: "var(--radius-btn)" }}
-                    />
-                  </label>
-                  {qty > 0 ? (
-                    <>
-                      <input type="hidden" name="item_sku" value={it.sku} />
-                      <input type="hidden" name="item_name" value={it.name} />
-                      <input type="hidden" name="item_qty" value={qty} />
-                    </>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
-        </fieldset>
+      {labels.formIntro ? (
+        <p className="text-sm text-on-surface-variant leading-relaxed max-w-2xl">
+          {labels.formIntro}
+        </p>
       ) : null}
+
+      {/* Repair / inspection: order lines first, then fleet / manual, then case details */}
+      {kind === "repair" || kind === "inspection" ? orderItemsFieldset : null}
+
+      {assetSummarySlot}
+
+      {kind === "repair" || kind === "inspection" ? pickerSlot : null}
+
+      {kind === "return" ? reasonFieldset : null}
+      {kind === "return" ? orderItemsFieldset : null}
 
       {/* Manual machine fallback — only when the fleet picker is offered
           (repair / inspection without a preselected machine). */}
@@ -290,6 +316,8 @@ export default function NewCaseForm({
         </details>
       ) : null}
 
+      {kind === "repair" || kind === "inspection" ? reasonFieldset : null}
+
       {/* Attachments */}
       <fieldset
         className="flex flex-col gap-3 p-6 sm:p-8 bg-surface-container-low"
@@ -326,7 +354,7 @@ export default function NewCaseForm({
             ? labels.attachmentsAdd
             : fileCount === 1
               ? labels.attachmentsSelectedOne
-              : labels.attachmentsSelectedMany.replace("{count}", String(fileCount))}
+              : labels.attachmentsSelectedMany.replace("COUNT", String(fileCount))}
           <input
             type="file"
             name="attachments"
@@ -390,7 +418,9 @@ export default function NewCaseForm({
           className="text-sm text-error bg-error/10 px-4 py-3"
           style={{ borderRadius: "var(--radius-btn)" }}
         >
-          {labels.errorMissing}
+          {state.error === "no_order_lines" && labels.errorNoItems
+            ? labels.errorNoItems
+            : labels.errorMissing}
         </p>
       ) : null}
 

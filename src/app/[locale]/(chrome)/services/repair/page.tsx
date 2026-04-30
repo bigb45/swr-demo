@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { getCmsPage } from "@/lib/cms";
 import CmsContent from "@/components/CmsContent";
 import { IndustryHero, Cta, ServiceCard } from "@/components/marketing";
+import RepairIntakePanel from "@/components/services/RepairIntakePanel";
 import RepairTimeline from "@/components/services/RepairTimeline";
-import RepairRequestForm from "@/components/services/RepairRequestForm";
 import { localeAlternates } from "@/lib/seo";
 
 interface PageProps {
@@ -125,23 +125,7 @@ export default async function Page({ params }: PageProps) {
               </div>
             )}
           </div>
-          <RepairRequestForm
-            recipientEmail={t("form.recipientEmail")}
-            labels={{
-              heading: t("form.heading"),
-              subheading: t("form.subheading"),
-              machineMake: t("form.machineMake"),
-              machineModel: t("form.machineModel"),
-              serial: t("form.serial"),
-              fault: t("form.fault"),
-              contactName: t("form.contactName"),
-              company: t("form.company"),
-              phone: t("form.phone"),
-              email: t("form.email"),
-              submit: t("form.submit"),
-              note: t("form.note"),
-            }}
-          />
+          <RepairIntakePanel locale={locale} />
         </section>
 
         {/* Closing CTA */}

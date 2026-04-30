@@ -82,7 +82,11 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
         {KINDS.map((kind) => (
           <Link
             key={kind}
-            href={`/account/service/new?kind=${kind}`}
+            href={
+              kind === "return"
+                ? "/account/service/new?kind=return"
+                : `/account/service/pick?kind=${kind}`
+            }
             className="flex flex-col gap-2 p-5 bg-primary text-white hover:brightness-110 transition-all"
             style={{ borderRadius: "var(--radius-card)" }}
           >
@@ -153,7 +157,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
               {t("empty.ctaReturn")}
             </Link>
             <Link
-              href="/account/service/new?kind=repair"
+              href="/account/service/pick?kind=repair"
               className="text-xs font-bold uppercase tracking-[0.12em] text-primary px-4 py-3 hover:bg-surface-container-lowest transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >

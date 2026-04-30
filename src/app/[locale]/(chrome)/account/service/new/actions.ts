@@ -44,7 +44,10 @@ function parseReason(
 export async function submitServiceCase(
   _prevState: unknown,
   formData: FormData,
-): Promise<{ error?: string; locale?: string }> {
+): Promise<{
+  error?: "missing_required" | "no_order_lines";
+  locale?: string;
+}> {
   const cookieStore = await cookies();
   const token = cookieStore.get("swr_customer_token")?.value;
   const locale = String(formData.get("locale") ?? "de");
@@ -101,11 +104,29 @@ export async function submitServiceCase(
   // Enrich with server-verified order / machine context so a tampered
   // client cannot attach a case to an order that isn't theirs.
   let orderIncrementId: string | undefined;
+  let verifiedOrder: Awaited<ReturnType<typeof getOrderForCustomer>> = null;
   if (orderId) {
     const email = await getCustomerEmail(token);
-    const order = email ? await getOrderForCustomer(orderId, token) : null;
-    if (order) {
-      orderIncrementId = order.increment_id;
+    verifiedOrder = email ? await getOrderForCustomer(orderId, token) : null;
+    if (verifiedOrder) {
+      orderIncrementId = verifiedOrder.increment_id;
+    }
+  }
+
+  if (verifiedOrder) {
+    const selectable = verifiedOrder.items.filter(
+      (i) => (Number(i.qty_ordered) || 0) > 0 && i.sku,
+    );
+    if (selectable.length > 0 && items.length === 0) {
+      if (kind === "return") {
+        return { error: "no_order_lines", locale };
+      }
+      if (
+        (kind === "repair" || kind === "inspection") &&
+        !machineId
+      ) {
+        return { error: "no_order_lines", locale };
+      }
     }
   }
 

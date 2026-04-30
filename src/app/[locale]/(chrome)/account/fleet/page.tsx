@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { listCustomerMachines } from "@/lib/fleet";
+import { listCustomerMachines, warrantyStatus } from "@/lib/fleet";
 import FleetMachineCard from "@/components/fleet/FleetMachineCard";
 
 interface FleetPageProps {
@@ -48,14 +48,27 @@ export default async function FleetPage({ params }: FleetPageProps) {
         </p>
       </div>
 
-      {/* Counters */}
+      {/* Counters — warranty split (active / expiring ≤90d / expired) + activity */}
       {machines.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-outline-variant/40 overflow-hidden" style={{ borderRadius: "var(--radius-card)" }}>
+        <div
+          className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-outline-variant/40 overflow-hidden"
+          style={{ borderRadius: "var(--radius-card)" }}
+        >
           {[
             { value: machines.length, label: t("counters.machines") },
             {
-              value: machines.filter((m) => new Date(m.warrantyUntil) > new Date()).length,
-              label: t("counters.underWarranty"),
+              value: machines.filter((m) => warrantyStatus(m) === "active").length,
+              label: t("counters.warrantyActive"),
+            },
+            {
+              value: machines.filter((m) => warrantyStatus(m) === "expiring")
+                .length,
+              label: t("counters.warrantyExpiring"),
+            },
+            {
+              value: machines.filter((m) => warrantyStatus(m) === "expired")
+                .length,
+              label: t("counters.warrantyExpired"),
             },
             {
               value: machines.reduce((acc, m) => acc + m.maintenance.length, 0),

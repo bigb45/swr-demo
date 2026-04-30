@@ -726,6 +726,9 @@
     "counters": {
       "machines": "Machines",
       "underWarranty": "Under warranty",
+      "warrantyActive": "In warranty",
+      "warrantyExpiring": "Expiring (≤90 d)",
+      "warrantyExpired": "Out of warranty",
       "serviceEvents": "Service events",
       "brands": "Brands"
     },
@@ -754,7 +757,10 @@
       "purchased": "Purchase date",
       "warrantyUntil": "Warranty end",
       "maintenanceCount": "Service events",
-      "product": "Product"
+      "product": "Product",
+      "specsTitle": "Technical specifications",
+      "specsColSpec": "Specification",
+      "specsColValue": "Value"
     },
     "actions": {
       "eyebrow": "Quick actions",
@@ -802,6 +808,32 @@
     "subheading": "Every return, repair and calibration case on your account — from first request to final resolution, with the same status timeline our workshop uses.",
     "backToAccount": "Back to account",
     "backToHub": "Back to service",
+    "pick": {
+      "metaTitle": "Choose equipment",
+      "metaDescription": "Select a machine from your fleet, a past order, or continue without a registered asset before describing the case.",
+      "stepLabel": "Step 1 — What needs service",
+      "repair": {
+        "heading": "What needs repair?",
+        "subheading": "Select a machine we already have on file, or pick another path. On the next screen you will describe the fault and attach photos — we pre-fill make, model, and serial when you choose a machine."
+      },
+      "inspection": {
+        "heading": "What needs inspection or calibration?",
+        "subheading": "Select a machine from your fleet, or start from a past order, then add scheduling details on the next screen."
+      },
+      "altOrder": {
+        "eyebrow": "Bought from us",
+        "title": "From a past order",
+        "body": "Choose line items on the order, then add the problem description. Best when the equipment is not in your machine fleet yet.",
+        "cta": "Go to my orders"
+      },
+      "altManual": {
+        "eyebrow": "Not listed",
+        "title": "Continue without a saved product",
+        "body": "You will type brand, model, and optional serial, then the rest of the case form.",
+        "cta": "Open case form"
+      },
+      "fleetLink": "Browse the full list in My machine fleet (details, full history, more actions)"
+    },
     "viewCase": "Open case",
     "orderLabel": "Order",
     "machineLabel": "Machine",
@@ -919,9 +951,16 @@
       "descriptionHint": "Include fault symptoms, when it started, and any steps you have already taken. The more context, the faster we close the case.",
       "reason": "Reason",
       "reasonChoose": "Select a reason…",
+      "formIntroRepair": "Select products from the order and/or a machine from your fleet, then describe the issue. We pre-fill make, model, and serial from your selection so you do not re-type them.",
       "itemsHeading": "Items",
       "itemsHint": "Only items with a quantity above zero are included in the return.",
+      "itemsHeadingRepair": "Products from this order",
+      "itemsHintRepair": "Set a quantity for each line to include in this repair. Use zero to skip a line, or link a machine from your fleet if the fault is equipment-level.",
+      "itemsHeadingInspection": "Products from this order",
+      "itemsHintInspection": "Set a quantity for each line to include in this inspection or calibration request.",
       "itemQty": "Return qty",
+      "itemQtyRepair": "Qty",
+      "itemQtyInspection": "Qty",
       "contactHeading": "Contact",
       "contactName": "Your name",
       "contactEmail": "Email",
@@ -930,10 +969,11 @@
       "attachmentsHint": "Photos of the damage, diagnostic reports, or screenshots all speed up the case. Images and PDFs up to 10 MB each.",
       "attachmentsAdd": "Add photos or documents",
       "attachmentsSelectedOne": "1 file selected — add more or submit",
-      "attachmentsSelectedMany": "{count} files selected",
+      "attachmentsSelectedMany": "COUNT files selected",
       "attachmentsNote": "Uploads are attached to the case record. Bytes are not transferred in this preview build — filenames are captured so our team can follow up for full files.",
       "submitting": "Submitting…",
       "errorMissing": "Please fill in the description and your name before submitting.",
+      "errorNoItems": "This order has shippable lines — set a quantity for at least one line, or link a machine from your fleet for equipment-level service.",
       "picker": {
         "heading": "Pick a machine from your fleet",
         "subheading": "Tap one of the machines we already have on file. Warranty status, serial, and last service are shown so you can decide in seconds.",
@@ -968,6 +1008,7 @@
     "orderSection": {
       "heading": "Returns & service",
       "startReturn": "Start a return",
+      "startRepair": "Request repair (order lines)",
       "empty": "No service cases against this order yet."
     },
     "machineSection": {
@@ -1113,6 +1154,15 @@
             "body": "Collect in Lörrach or have it delivered on our next route. Tested, cleaned, and warrantied."
           }
         }
+      },
+      "intake": {
+        "title": "For business customers (signed in)",
+        "body": "The next step is to choose what needs service: your machine fleet, a past order, or a free-form request. We pre-fill data when you pick a saved machine.",
+        "ctaFleet": "My machine fleet",
+        "ctaRepair": "Choose what to repair",
+        "ctaServiceHub": "Service hub",
+        "guestHint": "Prefer email? The form below still opens your mail app — same as a guest.",
+        "guestTitle": "Guest request (email)"
       },
       "form": {
         "recipientEmail": "service@swr-loerrach.de",

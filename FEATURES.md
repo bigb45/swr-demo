@@ -1,5 +1,7 @@
 # SWR Frontend — Feature Requirements
 
+_Last reviewed: 26 Apr 2026 — service cases, returns/repair, My Fleet / serials rows aligned with `STATUS.md` / `BACKLOG.md`._
+
 Source: `Features_SWR_shopCloud360_intershop_english.docx`
 
 Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **LOW** = not required
@@ -42,7 +44,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 3.3 | Order templates (configurable by customer) | HIGH | Not started |
 | 3.4 | CSV import into shopping cart | MEDIUM | Not started |
 | 3.5 | Individual order reference per order | HIGH | Done (captured on cart, sent to Magento as `paymentMethod.po_number`, shown on order detail) |
-| 3.6 | View order/repair status in account | HIGH | Partial (order list/detail exist with ERP-aware status; repair flows still missing) |
+| 3.6 | View order/repair status in account | HIGH | Partial (orders: list/detail with ERP-aware labels; service cases: hub + `submitServiceCase` + case detail in demo; full repair/RMA status from ERP not wired) |
 | 3.7 | ERP status mapping (e.g. "delivery note printed") | MEDIUM | Done (`resolveOrderStatus` in `src/lib/orderStatus.ts` reads `extension_attributes.erp_status_code`/`erp_status_label`; `orders.erpStatus.*` translations seeded for DE/EN/FR with common codes incl. `delivery_note_printed`, `partially_invoiced`, `awaiting_supplier`, `ready_for_pickup`, `partially_shipped`, `backorder`) |
 
 ---
@@ -123,11 +125,11 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 
 | # | Feature | Priority | Status |
 |---|---------|----------|--------|
-| 9.1 | Return registration via self-service in account | HIGH | Not started |
+| 9.1 | Return registration via self-service in account | HIGH | Partial (unified case form at `/account/service`; in-process / demo; no Magento RMA) |
 | 9.2 | Continuous return number from ERP | HIGH | Not started |
 | 9.3 | Photo upload with return request | MEDIUM | Not started |
 | 9.4 | Return status display (received, under review, approved, credit note) | HIGH | Not started |
-| 9.5 | Repair request selectable | MEDIUM | Not started |
+| 9.5 | Repair request selectable | MEDIUM | Partial (pick equipment → `/account/service/pick`, fleet + order lines + `manual=1`, marketing `RepairIntakePanel`; backend case/RMA open) |
 | 9.6 | Configurable return policies per customer | MEDIUM | Not started |
 
 ---
@@ -136,9 +138,9 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 
 | # | Feature | Priority | Status |
 |---|---------|----------|--------|
-| 10.1 | Serial number management | MEDIUM | Not started |
-| 10.2 | Linking with warranty and maintenance data | MEDIUM | Not started |
-| 10.3 | Digitized maintenance workflows | MEDIUM | Not started |
+| 10.1 | Serial number management | MEDIUM | Partial (serials on demo `FleetRepository` machines; no central ERP register) |
+| 10.2 | Linking with warranty and maintenance data | MEDIUM | Partial (warranty state + maintenance log in My Fleet when demo/seeded; not ERP-sourced) |
+| 10.3 | Digitized maintenance workflows | MEDIUM | Partial (maintenance table + service CTAs on fleet; no shop-floor/ERP workflow) |
 
 ---
 

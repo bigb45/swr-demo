@@ -15,6 +15,7 @@ import {
   getCustomerMachine,
   listCustomerMachines,
   warrantyStatus,
+  type Machine,
   type WarrantyStatus,
 } from "@/lib/fleet";
 import {
@@ -30,6 +31,8 @@ interface PageProps {
     kind?: string;
     orderId?: string;
     machineId?: string;
+    /** Skip equipment picker: user chose &quot;not listed&quot; on /account/service/pick */
+    manual?: string;
   }>;
 }
 
@@ -63,8 +66,20 @@ export default async function NewServiceCasePage({
   const kind = normalizeKind(sp.kind);
   const t = await getTranslations({ locale, namespace: "service" });
 
+  if (
+    (kind === "repair" || kind === "inspection") &&
+    !sp.machineId &&
+    !sp.orderId &&
+    sp.manual !== "1"
+  ) {
+    redirect(
+      `/${locale}/account/service/pick?kind=${encodeURIComponent(kind)}`,
+    );
+  }
+
   // Build context
   const context: NewCaseContext = {};
+  let selectedMachine: Machine | null = null;
 
   if (sp.orderId) {
     const order = await getOrderForCustomer(sp.orderId, token);
@@ -85,6 +100,7 @@ export default async function NewServiceCasePage({
   if (sp.machineId) {
     const machine = await getCustomerMachine(sp.machineId);
     if (machine) {
+      selectedMachine = machine;
       context.machineId = machine.id;
       context.machineLabel = `${machine.brand} ${machine.model}`;
       context.serial = machine.serial;
@@ -132,6 +148,40 @@ export default async function NewServiceCasePage({
     (acc, r) => ({ ...acc, [r]: t(`reason.${r}`) }),
     {} as Record<ServiceCaseReason, string>,
   );
+
+  const dateShort = (iso: string) =>
+    new Intl.DateTimeFormat(
+      locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB",
+      { year: "numeric", month: "short", day: "numeric" },
+    ).format(new Date(iso));
+
+  const itemsHeading =
+    kind === "return"
+      ? t("new.itemsHeading")
+      : kind === "repair"
+        ? t("new.itemsHeadingRepair")
+        : t("new.itemsHeadingInspection");
+  const itemsHint =
+    kind === "return"
+      ? t("new.itemsHint")
+      : kind === "repair"
+        ? t("new.itemsHintRepair")
+        : t("new.itemsHintInspection");
+  const itemQty =
+    kind === "return"
+      ? t("new.itemQty")
+      : kind === "repair"
+        ? t("new.itemQtyRepair")
+        : t("new.itemQtyInspection");
+
+  const newCaseQuery = (k: string) => {
+    const p = new URLSearchParams();
+    p.set("kind", k);
+    if (sp.orderId) p.set("orderId", sp.orderId);
+    return p.toString();
+  };
+
+  const mW = selectedMachine ? warrantyStatus(selectedMachine) : null;
 
   return (
     <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10 flex flex-col gap-8">
@@ -188,7 +238,11 @@ export default async function NewServiceCasePage({
                 </Link>
                 {kind !== "return" ? (
                   <Link
-                    href={`/account/service/new?kind=${kind}`}
+                    href={
+                      sp.orderId
+                        ? `/account/service/new?${newCaseQuery(kind)}`
+                        : `/account/service/pick?kind=${encodeURIComponent(kind)}`
+                    }
                     replace
                     className="text-[10px] font-bold uppercase tracking-widest underline opacity-80 hover:opacity-100"
                   >
@@ -196,6 +250,14 @@ export default async function NewServiceCasePage({
                   </Link>
                 ) : null}
               </div>
+              {mW && selectedMachine ? (
+                <p className="text-xs opacity-90 mt-1">
+                  <span className="font-bold">{t(`new.picker.warranty.${mW}`)}</span>
+                  <span className="mx-1.5">·</span>
+                  {t("new.picker.warrantyUntil")}{" "}
+                  {dateShort(selectedMachine.warrantyUntil)}
+                </p>
+              ) : null}
             </div>
           ) : null}
         </div>
@@ -213,6 +275,7 @@ export default async function NewServiceCasePage({
               kind={kind}
               machines={pickableMachines}
               locale={locale}
+              orderId={context.orderId}
               labels={{
                 heading: t("new.picker.heading"),
                 subheading: t("new.picker.subheading"),
@@ -236,15 +299,19 @@ export default async function NewServiceCasePage({
           ) : null
         }
         labels={{
+          formIntro:
+            kind === "repair" || kind === "inspection"
+              ? t("new.formIntroRepair")
+              : undefined,
           fieldsHeading: t("new.fieldsHeading"),
           description: t("new.description"),
           descriptionHint: t("new.descriptionHint"),
           reason: t("new.reason"),
           reasonChoose: t("new.reasonChoose"),
           reasonLabels,
-          itemsHeading: t("new.itemsHeading"),
-          itemsHint: t("new.itemsHint"),
-          itemQty: t("new.itemQty"),
+          itemsHeading,
+          itemsHint,
+          itemQty,
           contactHeading: t("new.contactHeading"),
           contactName: t("new.contactName"),
           contactEmail: t("new.contactEmail"),
@@ -264,6 +331,7 @@ export default async function NewServiceCasePage({
           submit: t(`new.${kind}.submit`),
           submitting: t("new.submitting"),
           errorMissing: t("new.errorMissing"),
+          errorNoItems: t("new.errorNoItems"),
         }}
       />
     </div>

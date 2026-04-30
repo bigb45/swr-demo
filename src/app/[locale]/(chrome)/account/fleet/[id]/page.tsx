@@ -7,6 +7,7 @@ import { getCustomerMachine, warrantyStatus } from "@/lib/fleet";
 import MaintenanceLogTable from "@/components/fleet/MaintenanceLogTable";
 import type { MaintenanceKind } from "@/lib/fleet";
 import { listCasesForMachine } from "@/lib/service";
+import SpecTable from "@/components/ui/SpecTable";
 
 interface PageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -100,49 +101,68 @@ export default async function MachinePage({ params }: PageProps) {
 
       {/* Spec block */}
       <section className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6">
-        <dl
-          className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-outline-variant/40 overflow-hidden"
-          style={{ borderRadius: "var(--radius-card)" }}
-        >
-          {[
-            { dt: t("detail.serial"), dd: machine.serial, mono: true },
-            { dt: t("detail.category"), dd: t(`categoryLabels.${machine.category}`) },
-            { dt: t("detail.purchased"), dd: formatDate(machine.purchasedAt, locale) },
-            { dt: t("detail.warrantyUntil"), dd: formatDate(machine.warrantyUntil, locale) },
-            {
-              dt: t("detail.maintenanceCount"),
-              dd: String(machine.maintenance.length),
-            },
-            machine.productSku
-              ? {
-                  dt: t("detail.product"),
-                  dd: machine.productSku,
-                  link: `/products/${machine.productSku}`,
-                }
-              : null,
-          ]
-            .filter((x): x is NonNullable<typeof x> => x !== null)
-            .map((field, i) => (
-              <div key={i} className="bg-surface-container-lowest p-4 flex flex-col gap-1">
-                <dt className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                  {field.dt}
-                </dt>
-                <dd
-                  className={`text-sm font-semibold text-on-surface ${
-                    "mono" in field && field.mono ? "font-mono" : ""
-                  }`}
-                >
-                  {"link" in field && field.link ? (
-                    <Link href={field.link} className="text-primary hover:underline">
-                      {field.dd}
-                    </Link>
-                  ) : (
-                    field.dd
-                  )}
-                </dd>
-              </div>
-            ))}
-        </dl>
+        <div className="flex flex-col gap-6 min-w-0">
+          <dl
+            className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-outline-variant/40 overflow-hidden"
+            style={{ borderRadius: "var(--radius-card)" }}
+          >
+            {[
+              { dt: t("detail.serial"), dd: machine.serial, mono: true },
+              { dt: t("detail.category"), dd: t(`categoryLabels.${machine.category}`) },
+              { dt: t("detail.purchased"), dd: formatDate(machine.purchasedAt, locale) },
+              { dt: t("detail.warrantyUntil"), dd: formatDate(machine.warrantyUntil, locale) },
+              {
+                dt: t("detail.maintenanceCount"),
+                dd: String(machine.maintenance.length),
+              },
+              machine.productSku
+                ? {
+                    dt: t("detail.product"),
+                    dd: machine.productSku,
+                    link: `/products/${machine.productSku}`,
+                  }
+                : null,
+            ]
+              .filter((x): x is NonNullable<typeof x> => x !== null)
+              .map((field, i) => (
+                <div key={i} className="bg-surface-container-lowest p-4 flex flex-col gap-1">
+                  <dt className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                    {field.dt}
+                  </dt>
+                  <dd
+                    className={`text-sm font-semibold text-on-surface ${
+                      "mono" in field && field.mono ? "font-mono" : ""
+                    }`}
+                  >
+                    {"link" in field && field.link ? (
+                      <Link href={field.link} className="text-primary hover:underline">
+                        {field.dd}
+                      </Link>
+                    ) : (
+                      field.dd
+                    )}
+                  </dd>
+                </div>
+              ))}
+          </dl>
+          {machine.specs && machine.specs.length > 0 ? (
+            <SpecTable
+              header={
+                <span className="text-xs font-bold uppercase tracking-[0.12em]">
+                  {t("detail.specsTitle")}
+                </span>
+              }
+              columns={[
+                { key: "spec", label: t("detail.specsColSpec") },
+                { key: "value", label: t("detail.specsColValue") },
+              ]}
+              rows={machine.specs.map((s) => ({
+                spec: s.key,
+                value: s.value,
+              }))}
+            />
+          ) : null}
+        </div>
 
         {/* Quick actions */}
         <div

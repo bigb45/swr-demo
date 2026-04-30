@@ -1,5 +1,7 @@
 # SWR Frontend Backlog — April 2026
 
+_Last updated: 26 Apr 2026 — account service/repair pick flow, 13-machine fleet demo + SpecTable, RepairIntakePanel._
+
 Derived from the shopCloud360 / Intershop Features Requirements Document (FRD).
 Cross-referenced against the current Next.js 16 frontend state documented in `STATUS.md` and verified against the codebase.
 
@@ -57,7 +59,7 @@ Listed with the exact backend contract each item needs.
 13. **🟡 Partial delivery indicator / replacement-product notice** — need custom product attributes from the ERP/PIM (e.g. `partial_delivery_allowed`, `replacement_sku`). Frontend renders badge/banner when present.
 14. **🟡 Customer-specific assortments** — needs Magento customer-group / shared-catalog config. Frontend just sends the customer token.
 15. **🟡 Customer product lists & order templates** — wishlist or custom endpoint (`POST /V1/wishlists` or equivalent).
-16. **🟡 Returns / RMA** — registration form, photo upload, status list — all need the Magento RMA / custom return endpoint.
+16. **🟡 Returns / RMA** — **in-repo:** return/repair/inspection case UI + hub + pick + demo `submitServiceCase`. **Still need:** Magento RMA / custom endpoint, photo upload, production status list.
 17. **🟡 Swiss VAT / multi-store** — needs a CH store view (and optional CH legal entity) in Magento. Frontend already takes tax amounts from Magento totals, so switching store view is the actual lever.
 18. **🟡 Newsletter sign-up widget** — needs chosen ESP / Magento newsletter endpoint.
 19. **🟡 Offers / promotions on products** — needs a Magento `promotion` / `offer` product attribute so the `/offers` page can surface a real product rail instead of CMS copy only.
@@ -103,7 +105,7 @@ Listed with the exact backend contract each item needs.
 | Sub-user management (create sub-users under same customer number) | ⛔ | ⚪ | Requires Magento B2B company module. |
 | Role / permission display for sub-users | ⛔ | ⚪ | Depends on backend role model. |
 | Configurable email-notification preferences | ❌ | ⚪ | Settings toggle → customer custom attributes. |
-| My Fleet (`/account/fleet`) | ✅ | — | Pluggable `FleetRepository`. `NEXT_PUBLIC_FLEET_DEMO=1` enables a 5-machine demo seed; production stays empty until real data lands. |
+| My Fleet (`/account/fleet`) | ✅ | — | Pluggable `FleetRepository`. `NEXT_PUBLIC_FLEET_DEMO=1` enables a **13-machine** demo seed with `specs[]`, warranty counters, and maintenance log; production stays empty until real data lands. |
 
 ---
 
@@ -188,10 +190,11 @@ Listed with the exact backend contract each item needs.
 
 | Feature | Status | Priority | Notes |
 |---|---|---|---|
-| Return registration form (`/account/returns/new`) | ⛔ | 🟡 | Needs Magento RMA or custom return endpoint. |
+| Return / service case (unified) | 🔄 | 🟡 | **UI:** `/account/service/new?kind=return` (and hub), `NewCaseForm`, in-memory or demo `submitServiceCase`, `/account/service/[id]`. **Not production:** no Magento RMA, labels, or credit flow. |
 | Photo upload for returns | ⛔ | 🟡 | Needs upload endpoint. |
-| Return status display (`/account/returns`) | ⛔ | 🟡 | Needs return list endpoint. |
-| Repair request option | ⛔ | ⚪ | Depends on returns model. Partial today: `/services/repair` collects repair requests via `mailto:` without a backend. |
+| Return status (RMA list) | ⛔ | 🟡 | Case detail exists for in-process cases; end-to-end RMA list still needs backend. |
+| Repair request (selection-first) | 🔄 | ⚪ | **`/account/service/pick?kind=repair|inspection`** (fleet grid, past orders, not-listed → `manual=1`); bare `.../new?kind=repair` redirects to pick. `NewCaseForm` with order lines + `machineId` / `orderId`. Marketing: `RepairIntakePanel` on `/services/repair`. Server `submitServiceCase` is demo. ERP/RMA when backend exists. |
+| Selection-first repair (FRD / plan AC) | 🔄 | — | Core UX shipped; see [Phase 6 plan](.cursor/plans/phase_6_plan_returns,_repair,_and_machine_workflows_2a9c3629.plan.md). Remainder: RMA, durable uploads, ERP. |
 
 ---
 
@@ -229,10 +232,10 @@ Listed with the exact backend contract each item needs.
 |---|---|---|---|
 | Home page rebuild | ✅ | — | Question-led hero, reality numbers, intent tiles, catalog rail, services, industries, people block, workshop block. |
 | Document catalog (`/catalog`, `/catalog/[id]`) | ✅ | — | Accordion sidebar facets (category / type / brand / language) + active-filter chips + free-text search + iframe PDF viewer + YouTube / HTML5 video viewer. JSON repository (~60 real PDFs); swappable for a Magento DocumentEntity module / EDE feed later. `/katalog` 301-redirects. |
-| Industrial Service & Repair Portal (`/services/repair`) | ✅ | — | Categories grid, `RepairTimeline` (Ø 48 h), `RepairRequestForm` (mailto). |
+| Industrial Service & Repair Portal (`/services/repair`) | 🔄 | — | Categories grid, `RepairTimeline` (Ø 48 h), `RepairIntakePanel` (signed-in: fleet + **`/account/service/pick?kind=repair`** + service hub; guest: `RepairRequestForm` mailto). |
 | Swiss Delivery Center (`/services/customs`) | ✅ | — | Zones, duty/VAT tables, "what we file for you" checklist, document deep-links. |
 | Welding Technology Hub (`/industries/welding`) | ✅ | — | Static override with sub-process tiles, gas `SpecTable`, guide deep-links, welding PDFs rail. |
-| My Fleet (`/account/fleet`, `/account/fleet/[id]`) | ✅ | — | Protected machine-fleet view with warranty + maintenance log. |
+| My Fleet (`/account/fleet`, `/account/fleet/[id]`) | ✅ | — | Warranty counters, **13-machine** demo when `NEXT_PUBLIC_FLEET_DEMO=1`, **SpecTable** for technical specs, maintenance log, repair/inspection quick actions. |
 | `/about`, `/contact`, `/partners`, `/careers`, `/offers` | ✅ | — | CMS-backed with i18n fallback; legacy German paths 301-redirect. |
 | `/services` hub + 4 pillars | ✅ | — | `ServicePillarPage` + `ServiceCard`. |
 | `/industries` hub + 7 slug pages | ✅ | — | Dynamic slugs resolve Magento categories via `findCategoryByName`. |
