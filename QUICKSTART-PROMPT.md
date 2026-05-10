@@ -1,77 +1,40 @@
 # New Agent Quickstart Prompt
 
-Copy everything below this line and paste it as your first message in the new project.
+Copy everything below this line and paste as your first message when onboarding an agent on this repo.
 
 ---
 
-You are continuing development on the **SWR Handelsgesellschaft mbH** Next.js 16 frontend — a B2B industrial components storefront (Schweißtechnik, Werkzeuge, Reparatur) that talks to a Magento 2.4.8-p4 backend via REST API.
+You are continuing development on the **SWR Handelsgesellschaft mbH** Next.js 16 storefront — B2B industrial components (Schweißtechnik, Werkzeuge, Reparatur) backed by **Magento 2.4.8-p4 REST**.
 
-Read `AGENTS.md` in the project root before doing anything else. It contains the full architecture, data flow, i18n rules, design system rules, and a complete list of what is done and what still needs to be built.
+## Read first (in order)
 
-## What was just completed (do not redo)
+1. [`AGENTS.md`](./AGENTS.md) — environments, i18n rules, cart SSR pattern, design tokens, architecture sketch.
+2. [`STATUS.md`](./STATUS.md) — **what is actually shipped** (pages, checkout, PDFs, service cases, catalog).
+3. [`BACKLOG.md`](./BACKLOG.md) — **what to build next** (Phase 2 queue; FRD reconciliation tables).
 
-- **Search is now wired.** `src/app/[locale]/products/page.tsx` reads `?q=` from `searchParams` and calls `searchProducts(q, page, PAGE_SIZE)` from `src/lib/magento.ts` when a query is present. Pagination preserves the `q` param. Three new i18n keys were added to all three message files: `products.searchTitle`, `products.searchTotal`, `products.searchEmpty`.
+Optional FRD traceability: [`FEATURES.md`](./FEATURES.md).
 
-- **Cart hydration is fixed.** The cart page (`src/app/[locale]/cart/page.tsx`) is a `"use client"` wrapper that loads `CartContent.tsx` with `next/dynamic` and `ssr: false`. This is intentional — the cart is 100% client-side (localStorage) and the server has no cart state, so skipping SSR is the correct pattern. Do not change this.
+## Do not redo (already landed)
 
-- **Sidebar is sticky.** `src/components/ui/SideNav.tsx` uses `sticky top-[97px] h-[calc(100vh-97px)]` so the bottom actions (Bulk Order CSV, Contact, Locations) are always visible. The category list scrolls independently.
+- **Magento totals in cart**, **real `tier_prices` on PDP**, **signed-in 3-step checkout** (`/checkout/*`), **customer auth** (httpOnly cookie), **orders + react-pdf documents**, **quotations UI scaffold** (empty until ERP wires `src/lib/quotations.ts`), **catalog document hub**, **service case flows** (demo persistence unless ERP/RMA connected), **CSV cart import** (`CsvImportButton`), **stock badges** on PDP + product cards, **reorder** from order detail.
 
-## What to work on next (in priority order)
+## Terminology trap
 
-### 1. Use Magento totals in cart (highest priority)
+Magento **`tier_prices`** = **quantity-break / bulk** pricing (implemented). Stakeholder “tiered = net price per customer + hide until login” is **not** the same thing — needs Magento catalog permissions / shared catalogs + storefront guards.
 
-The cart currently calculates totals client-side with hardcoded 19% VAT. This is wrong.
+## Critical rules
 
-**What already exists:**
-- `GET /api/cart?cartId=xxx` (in `src/app/api/cart/route.ts`) already fetches both `/items` AND `/totals` from Magento and returns `{ items, totals }`
-- `CartProvider.tsx` already calls this endpoint on mount and stores the response
-
-**What needs to change:**
-- `CartProvider.tsx` currently only reads `data.items` from the response and discards `data.totals`
-- Add `totals` to the `CartContextValue` interface and store it in state
-- `CartContent.tsx` currently computes `subtotal`, `vat`, `total` manually — replace with `totals.subtotal_with_discount`, `totals.tax_amount`, `totals.grand_total` from the Magento response
-- The Magento `/totals` response shape is already typed in `src/types/magento.ts` (look for `MagentoCartTotals` or similar — if it doesn't exist, add it)
-
-### 2. Real tier pricing on PDP
-
-`src/app/[locale]/products/[sku]/page.tsx` renders 3 hardcoded demo rows for bulk pricing. `product.tier_prices` is available in the API response. Map it to the table; hide the section entirely if the array is empty or undefined.
-
-### 3. Checkout flow
-
-The "Place Authorization Order" button in `CartContent.tsx` is disabled when the cart is empty but does nothing when clicked. Wire it to:
-```
-POST /rest/V1/guest-carts/:cartId/order
-Body: { paymentMethod: { method: "free" }, billingAddress: { ... } }
-```
-This is a B2B authorization flow — a minimal billing address is acceptable. The endpoint returns an order ID on success. Show a success state or redirect to a confirmation page.
-
-### 4. Authentication
-
-No login/register exists yet. Endpoint: `POST /rest/V1/integration/customer/token` with `{ username, password }`. Store the token server-side in an httpOnly cookie via a Route Handler. Unlocks `/orders` and `/account`.
-
-### 5. Legal/info pages
-
-Static content pages needed: `/terms`, `/privacy`, `/compliance`, `/iso`, `/sds`. Links to these exist in the footer. No Magento data needed — just translated copy in all three locales.
-
-## Critical rules — read before writing any code
-
-1. **i18n is mandatory.** Every user-visible string must be a translation key in `src/messages/de.json`, `src/messages/en.json`, AND `src/messages/fr.json`. Never hardcode text. German (`de`) is the default locale.
-
-2. **Links must use `@/i18n/navigation`.** Import `Link` from `@/i18n/navigation`, never from `next/link`. Same for `useRouter`.
-
-3. **Prices must use `useCurrency()`.** Call `formatAmount(eurPrice)` from the `useCurrency()` hook. Never use `Intl.NumberFormat` directly or hardcode a currency symbol.
-
-4. **No 1px solid borders for layout sectioning.** Use tonal background color shifts instead (see `DESIGN.md`).
-
-5. **`ssr: false` only works in `"use client"` files.** If you need to dynamically import something with `ssr: false`, the file doing the importing must have `"use client"` at the top.
-
-6. **Cart page is intentionally SSR-disabled.** Do not add `"use client"` removal or try to server-render `CartContent.tsx`.
+1. **i18n:** every user-visible string in `de.json`, `en.json`, `fr.json`.
+2. **Links:** `Link` from `@/i18n/navigation`, never `next/link`.
+3. **Prices:** `useCurrency()` / `ProductPrice` — never hardcode symbols.
+4. **Cart page:** keep `dynamic(..., { ssr: false })` for `CartContent` — guest cart is client-only by design.
+5. **`ssr: false` imports** only inside `"use client"` files.
 
 ## Running locally
 
 ```bash
 npm install
-npm run dev        # starts on localhost:3000
+npm run dev
 ```
 
-Requires a running Magento instance at `MAGENTO_URL` (default `http://localhost:8000`). Copy `.env.local` from the previous environment or create it fresh — see `AGENTS.md` for the required variables.
+Requires Magento at `MAGENTO_URL`. See `AGENTS.md` for `.env.local`.

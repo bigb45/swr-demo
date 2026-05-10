@@ -41,8 +41,12 @@ export async function GET(req: NextRequest) {
   }
 
   const [itemsRes, totalsRes] = await Promise.all([
-    fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items`, { cache: "no-store" }),
-    fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/totals`, { cache: "no-store" }),
+    fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items`, {
+      cache: "no-store",
+    }),
+    fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/totals`, {
+      cache: "no-store",
+    }),
   ]);
 
   if (!itemsRes.ok || !totalsRes.ok) {
@@ -67,8 +71,8 @@ export async function GET(req: NextRequest) {
         } catch {
           return [sku, null] as const;
         }
-      })
-    )
+      }),
+    ),
   );
 
   const itemsWithImages = items.map((item) => ({

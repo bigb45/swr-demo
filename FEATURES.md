@@ -1,6 +1,6 @@
 # SWR Frontend — Feature Requirements
 
-_Last reviewed: 26 Apr 2026 — service cases, returns/repair, My Fleet / serials rows aligned with `STATUS.md` / `BACKLOG.md`._
+_Last reviewed: 7 May 2026 — reconciled with FRD workshop notes + codebase (`STATUS.md` / `BACKLOG.md`)._
 
 Source: `Features_SWR_shopCloud360_intershop_english.docx`
 
@@ -42,7 +42,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 3.1 | Customer-specific assortments (from PIM, per user/group) | HIGH | Not started |
 | 3.2 | Customers can create their own product lists | HIGH | Not started |
 | 3.3 | Order templates (configurable by customer) | HIGH | Not started |
-| 3.4 | CSV import into shopping cart | MEDIUM | Not started |
+| 3.4 | CSV import into shopping cart | MEDIUM | Done (`CsvImportButton` on `/cart`, `sku,qty` rows → `/api/cart/items`) |
 | 3.5 | Individual order reference per order | HIGH | Done (captured on cart, sent to Magento as `paymentMethod.po_number`, shown on order detail) |
 | 3.6 | View order/repair status in account | HIGH | Partial (orders: list/detail with ERP-aware labels; service cases: hub + `submitServiceCase` + case detail in demo; full repair/RMA status from ERP not wired) |
 | 3.7 | ERP status mapping (e.g. "delivery note printed") | MEDIUM | Done (`resolveOrderStatus` in `src/lib/orderStatus.ts` reads `extension_attributes.erp_status_code`/`erp_status_label`; `orders.erpStatus.*` translations seeded for DE/EN/FR with common codes incl. `delivery_note_printed`, `partially_invoiced`, `awaiting_supplier`, `ready_for_pickup`, `partially_shipped`, `backorder`) |
@@ -70,12 +70,13 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 5.1 | Product listing with search, pagination | HIGH | Done |
 | 5.2 | Category navigation and filtering | HIGH | Done |
 | 5.3 | Product detail page (gallery, specs, price) | HIGH | Done |
-| 5.4 | Tiered pricing display | HIGH | Done |
-| 5.5 | Content hub (brand content, landing pages) | MEDIUM | Not started |
-| 5.6 | Seamless supplier content integration | MEDIUM | Not started |
-| 5.7 | Static content linked with dynamic product data | MEDIUM | Not started |
-| 5.8 | Multidimensional variant display with filter options | HIGH | Not started |
-| 5.9 | Partial delivery capability display | MEDIUM | Not started |
+| 5.4 | Quantity-tier / bulk pricing (`tier_prices` from Magento) | HIGH | Done (PDP table + qty-driven preview) |
+| 5.4b | Customer-specific net pricing; hide prices until authenticated | HIGH | Not started (Magento catalog permissions / shared catalogs + storefront price gates) |
+| 5.5 | Content hub (brand content, landing pages, document catalog) | MEDIUM | Partial (CMS hubs + `/catalog` JSON repository; deep ERP/PIM wiring varies) |
+| 5.6 | Seamless supplier content integration | MEDIUM | Partial (document catalog + Magento PDP coexist; full supplier automation is backend) |
+| 5.7 | Static content linked with dynamic product data | MEDIUM | Partial (industry hubs hook Magento categories; rich CMS↔SKU deep links still expandable) |
+| 5.8 | Multidimensional variant display with filter options | HIGH | Not started (needs configurable/matrix PDP UX + ERP-normalised facets) |
+| 5.9 | Partial delivery capability display | MEDIUM | Not started (needs agreed SKU/order attributes from ERP) |
 | 5.10 | Replacement product logic for discontinued items | MEDIUM | Not started |
 
 ---
@@ -86,9 +87,10 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 |---|---------|----------|--------|
 | 6.1 | Basic search (name/SKU) | HIGH | Done |
 | 6.2 | Price, stock, and add-to-cart within search results | HIGH | Done (inline add-to-cart button on every product card, with loading / success / error feedback) |
-| 6.3 | Synonym database (e.g. "Flex" = angle grinder) | MEDIUM | Not started |
-| 6.4 | Error tolerance / fuzzy search | MEDIUM | Not started |
-| 6.5 | Intelligent on-site search (SPARQUE) | MEDIUM | Not started |
+| 6.3 | Synonym database (e.g. "Flex" = angle grinder) | MEDIUM | Out of scope near term (would need dedicated synonym infra) |
+| 6.4 | Error tolerance / fuzzy search | MEDIUM | Not started (Magento baseline; ES/third-party TBD) |
+| 6.5 | Intelligent on-site search (SPARQUE) | MEDIUM | Not integrated — storefront uses Magento REST search/filter only today |
+| 6.6 | Faceted filters beyond text (category, price band on `/products`) | MEDIUM | Partial (`ProductsFilterBar` URL filters; full `aggregations` UX optional) |
 
 ---
 
@@ -99,7 +101,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 7.1 | Guest cart (add, update qty, remove) | HIGH | Done |
 | 7.2 | Cart totals from Magento (tax, discounts) | HIGH | Done |
 | 7.3 | Place order (authorization) | HIGH | Done (signed-in 3-step `/checkout` flow: address → shipping → review; uses real Magento `estimate-shipping-methods` + `shipping-information` + `PUT /V1/carts/:id/order`; cart auto-assigned to customer; payment hard-coded to `checkmo` for now) |
-| 7.4 | CSV import into cart | MEDIUM | Not started |
+| 7.4 | CSV import into cart | MEDIUM | Done |
 | 7.5 | Individual order reference field | HIGH | Done (PO number input on cart summary, forwarded to Magento on order placement) |
 | 7.6 | Cost center assignment per item | HIGH | Not started |
 | 7.7 | Approval workflow before order placement | HIGH | Not started |
@@ -117,7 +119,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 8.1 | Order history list | HIGH | Done |
 | 8.2 | Order detail page (items, totals, address) | HIGH | Done (items, totals, billing + shipping address blocks, payment method) |
 | 8.3 | Quotation lookup from ERP → accept in shop | MEDIUM | Partial (`/account/quotations` list + detail pages scaffolded with pluggable `src/lib/quotations.ts`; renders empty state today, wires to ERP endpoint later; accept-to-cart still to come) |
-| 8.4 | Documents as downloadable PDFs | MEDIUM | Done (order confirmation via `/api/orders/[id]/confirmation`; per-document PDFs for invoice / shipment / credit memo via `/api/orders/[id]/{invoices,shipments,creditmemos}/:docId/pdf`, all SWR-branded react-pdf documents sharing `src/components/orders/pdfStyles.ts`) |
+| 8.4 | Documents as downloadable PDFs | MEDIUM | Partial — **Done** for Magento-backed **order** docs (confirmation + invoice/shipment/credit memo react-pdf streams). **Open:** quotation-specific ERP PDFs once quotations API exists |
 
 ---
 
@@ -125,9 +127,9 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 
 | # | Feature | Priority | Status |
 |---|---------|----------|--------|
-| 9.1 | Return registration via self-service in account | HIGH | Partial (unified case form at `/account/service`; in-process / demo; no Magento RMA) |
+| 9.1 | Return registration via self-service in account | HIGH | Partial (`/account/service` unified cases incl. `kind=return`; dedicated marketing slug `/account/returns` optional) |
 | 9.2 | Continuous return number from ERP | HIGH | Not started |
-| 9.3 | Photo upload with return request | MEDIUM | Not started |
+| 9.3 | Photo upload with return request | MEDIUM | Partial (file input + metadata on case; bytes not stored until upload endpoint) |
 | 9.4 | Return status display (received, under review, approved, credit note) | HIGH | Not started |
 | 9.5 | Repair request selectable | MEDIUM | Partial (pick equipment → `/account/service/pick`, fleet + order lines + `manual=1`, marketing `RepairIntakePanel`; backend case/RMA open) |
 | 9.6 | Configurable return policies per customer | MEDIUM | Not started |
@@ -148,8 +150,8 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 
 | # | Feature | Priority | Status |
 |---|---------|----------|--------|
-| 11.1 | AI Copilot — product consultation in chat | MEDIUM | Not started |
-| 11.2 | Add to cart directly within chat | MEDIUM | Not started |
+| 11.1 | AI Copilot — product consultation in chat | MEDIUM | Not started (upstream APIs may exist — Next.js UI & wiring pending) |
+| 11.2 | Add to cart directly within chat | MEDIUM | Not started (depends on Copilot shell) |
 | 11.3 | Image-based product recognition | MEDIUM | Not started |
 | 11.4 | AI-based cross-selling from ERP purchase history | MEDIUM | Not started |
 | 11.5 | AI-assisted spare parts identification | MEDIUM | Not started |
@@ -185,8 +187,9 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 13.4 | OCI interface | MEDIUM | Not started |
 | 13.5 | SAP Ariba Network | MEDIUM | Not started |
 | 13.6 | Coupa | MEDIUM | Not started |
-| 13.7 | Integrated barcode scanning (Scandit) | MEDIUM | Not started |
+| 13.7 | Integrated barcode scanning (Scandit) | MEDIUM | Deferred / costly — alternatives TBD |
 | 13.8 | PIM integration (nextPIM) | MEDIUM | Not started |
+| 13.9 | OSD procurement interface | MEDIUM | Not started |
 
 ---
 
@@ -205,13 +208,13 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 
 | # | Feature | Priority | Status |
 |---|---------|----------|--------|
-| 15.1 | Newsletter integration | MEDIUM | Not started |
-| 15.2 | Top revenues report | MEDIUM | Not started |
-| 15.3 | Top products report | MEDIUM | Not started |
-| 15.4 | Search statistics | MEDIUM | Not started |
-| 15.5 | Cart abandonment rate | MEDIUM | Not started |
-| 15.6 | Customer activity (active vs inactive) | MEDIUM | Not started |
-| 15.7 | Power BI API access | LOW | Not started |
+| 15.1 | Newsletter integration | MEDIUM | Not started (ESP e.g. Resend + consent mechanics TBD) |
+| 15.2 | Top revenues report | MEDIUM | Out of scope near term unless analytics initiative launches |
+| 15.3 | Top products report | MEDIUM | Out of scope near term |
+| 15.4 | Search statistics | MEDIUM | Out of scope near term |
+| 15.5 | Cart abandonment rate | MEDIUM | Out of scope near term |
+| 15.6 | Customer activity (active vs inactive) | MEDIUM | Out of scope near term |
+| 15.7 | Power BI API access | LOW | Out of scope near term |
 | 15.8 | ERP query logbook | LOW | Not started |
 
 ---

@@ -10,6 +10,7 @@ interface ProfileFormProps {
     firstname: string;
     lastname: string;
     email: string;
+    phone: string;
   };
   redirectTo: string;
 }
@@ -21,6 +22,7 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
   const [firstname, setFirstname] = useState(initial.firstname);
   const [lastname, setLastname] = useState(initial.lastname);
   const [email, setEmail] = useState(initial.email);
+  const [phone, setPhone] = useState(initial.phone);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -53,6 +55,7 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
           firstname,
           lastname,
           email,
+          phone,
           currentPassword: currentPassword || undefined,
           newPassword: newPassword || undefined,
         }),
@@ -119,6 +122,21 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           className={inputClass}
         />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label className={labelClass} htmlFor="phone">
+          {t("phone")}
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          autoComplete="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className={inputClass}
+        />
+        <p className="text-xs text-on-surface-variant">{t("phoneHint")}</p>
       </div>
 
       <div className="pt-4 border-t border-outline-variant/30 flex flex-col gap-4">

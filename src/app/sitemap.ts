@@ -24,7 +24,6 @@ const STATIC_PATHS: string[] = [
   "/services/consulting",
   "/services/repair",
   "/services/delivery",
-  "/services/customs",
   "/about",
   "/contact",
   "/partners",

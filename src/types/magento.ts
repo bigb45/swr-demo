@@ -340,6 +340,7 @@ export interface MagentoCustomerMe {
   website_id?: number;
   group_id?: number;
   addresses?: MagentoCustomerAddress[];
+  custom_attributes?: MagentoCustomAttribute[];
 }
 
 /* ------------------------------ Checkout ------------------------------ */

@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchCustomerMe } from "@/lib/checkout";
+import { readCustomerPhone } from "@/lib/customer-phone";
 import ProfileForm from "./ProfileForm";
 
 interface ProfilePageProps {
@@ -25,7 +26,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const t = await getTranslations({ locale, namespace: "account" });
 
   return (
-    <div className="max-w-[700px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[700px]">
       <h1 className="text-2xl font-black text-primary mb-8">
         {t("profileHeading")}
       </h1>
@@ -39,9 +41,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             firstname: me.firstname ?? "",
             lastname: me.lastname ?? "",
             email: me.email,
+            phone: readCustomerPhone(me),
           }}
           redirectTo="/account"
         />
+      </div>
       </div>
     </div>
   );

@@ -86,7 +86,7 @@ export default function CartContent() {
   }
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
+    <div className="swr-page-shell py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
       {/* ── Left: Cart Items ──────────────────────────────────────── */}
       <section className="w-full flex-1 min-w-0">
         {/* Back link */}

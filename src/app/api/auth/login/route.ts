@@ -15,7 +15,10 @@ export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
   if (!email || !password) {
-    return Response.json({ error: "email and password required" }, { status: 400 });
+    return Response.json(
+      { error: "email and password required" },
+      { status: 400 },
+    );
   }
 
   const res = await fetch(`${MAGENTO}/rest/V1/integration/customer/token`, {

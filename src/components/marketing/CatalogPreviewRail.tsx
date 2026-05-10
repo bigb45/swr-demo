@@ -21,7 +21,7 @@ export default function CatalogPreviewRail({
 }: CatalogPreviewRailProps) {
   return (
     <section className="py-12 sm:py-16">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12">
+      <div className="swr-page-shell">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
           <div className="flex flex-col gap-2 max-w-2xl">
             <h2 className="text-2xl sm:text-3xl font-black uppercase text-primary tracking-[-0.02em]">

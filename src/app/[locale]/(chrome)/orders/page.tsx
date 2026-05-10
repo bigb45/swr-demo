@@ -37,7 +37,8 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
   );
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <h1 className="text-3xl font-black text-primary mb-8">{t("heading")}</h1>
 
       {orders.length > 0 ? (
@@ -109,6 +110,7 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
           <p className="text-sm font-medium">{t("empty")}</p>
         </div>
       )}
+      </div>
     </div>
   );
 }

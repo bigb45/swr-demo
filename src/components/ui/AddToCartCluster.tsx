@@ -3,8 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { useState } from "react";
+import { Link } from "@/i18n/navigation";
 import { useCart } from "@/components/CartProvider";
 import { useCurrency } from "@/components/CurrencyProvider";
+import { useCustomerSession } from "@/components/CustomerSessionProvider";
 import type { MagentoProduct } from "@/types/magento";
 
 interface AddToCartClusterProps {
@@ -18,12 +20,18 @@ export default function AddToCartCluster({
 }: AddToCartClusterProps) {
   const { addItem } = useCart();
   const { formatPrice } = useCurrency();
+  const { isAuthenticated } = useCustomerSession();
   const locale = useLocale();
   const t = useTranslations("products");
   const [qty, setQty] = useState(1);
   const [inputVal, setInputVal] = useState("1");
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const sortedTiers = [...(product.tier_prices ?? [])].sort(
+    (a, b) => a.qty - b.qty,
+  );
+  const hideCatalogPrices = !isAuthenticated && product.price > 0;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputVal(e.target.value);
@@ -44,6 +52,7 @@ export default function AddToCartCluster({
   }
 
   async function handleAddToCart() {
+    if (hideCatalogPrices) return;
     setStatus("loading");
     setErrorMsg("");
     try {
@@ -59,7 +68,6 @@ export default function AddToCartCluster({
 
   const isLoading = status === "loading";
   const isSuccess = status === "success";
-  const sortedTiers = [...(product.tier_prices ?? [])].sort((a, b) => a.qty - b.qty);
   const activeTier = sortedTiers.reduce<typeof sortedTiers[number] | undefined>(
     (best, tier) => (qty >= tier.qty ? tier : best),
     undefined
@@ -83,7 +91,18 @@ export default function AddToCartCluster({
 
   return (
     <div className="flex flex-col gap-2">
-      {sortedTiers.length > 0 && (
+      {hideCatalogPrices && sortedTiers.length > 0 ? (
+        <div className="rounded-(--radius-input) border border-outline-variant/40 bg-surface-container-low p-3 text-sm text-on-surface-variant">
+          <p>{t("pricesLoginRequired")}</p>
+          <Link
+            href="/account/login"
+            className="mt-2 inline-block text-sm font-bold text-secondary underline"
+          >
+            {t("signInForPrices")}
+          </Link>
+        </div>
+      ) : null}
+      {sortedTiers.length > 0 && !hideCatalogPrices && (
         <div className="rounded-(--radius-input) border border-outline-variant/40 bg-surface-container-low p-3">
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
             {t("bulkPricing")}
@@ -175,6 +194,15 @@ export default function AddToCartCluster({
         </div>
 
         {/* Add to Cart button */}
+        {hideCatalogPrices ? (
+          <Link
+            href="/account/login"
+            className={`flex-1 min-h-[60px] px-3 py-2 flex items-center justify-center gap-2 text-center text-white font-bold text-sm sm:text-base leading-tight bg-primary hover:brightness-110 transition-all`}
+            style={{ borderRadius: "var(--radius-btn)" }}
+          >
+            {t("signInToAddToCart")}
+          </Link>
+        ) : (
         <button
           onClick={handleAddToCart}
           disabled={isLoading}
@@ -204,6 +232,7 @@ export default function AddToCartCluster({
             {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
           </span>
         </button>
+        )}
       </div>
 
       {status === "error" && (

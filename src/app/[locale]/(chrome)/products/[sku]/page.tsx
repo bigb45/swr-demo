@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
@@ -98,6 +99,9 @@ export default async function ProductDetailPage({
     notFound();
   }
 
+  const cookieStore = await cookies();
+  const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
+
   const categories = await getTopLevelCategories().catch(() => []);
 
   const allImages = product.media_gallery_entries ?? [];
@@ -194,7 +198,7 @@ export default async function ProductDetailPage({
 
       {/* Main content */}
       <div className="flex-1 min-w-0">
-        <div className="px-4 sm:px-8 pt-6 sm:pt-8 pb-16 flex flex-col gap-8 sm:gap-10">
+        <div className="px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-16 flex flex-col gap-8 sm:gap-10">
 
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-on-surface-variant" aria-label="Breadcrumb">
@@ -285,8 +289,8 @@ export default async function ProductDetailPage({
                 {/* Add to cart */}
                 <AddToCartCluster product={product} />
 
-                {/* Bulk pricing — only rendered when Magento has tier prices configured */}
-                {bulkRows.length > 0 && (
+                {/* Bulk pricing — only when signed in and Magento has tier prices */}
+                {bulkRows.length > 0 && isAuthenticated && (
                   <div className="flex flex-col gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant mb-1">

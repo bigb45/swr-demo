@@ -31,6 +31,51 @@
     "selectLanguage": "Sélectionner la langue",
     "preferences": "Préférences"
   },
+  "search": {
+    "suggestionsLabel": "Suggestions de produits",
+    "loading": "Recherche…",
+    "empty": "Aucun produit correspondant pour l’instant.",
+    "error": "La recherche est temporairement indisponible.",
+    "viewAll": "Voir tous les résultats",
+    "openProduct": "Ouvrir la fiche produit : {name}",
+    "visualSearchAria": "Rechercher par image",
+    "visualSearching": "Recherche de produits similaires…",
+    "visualError": "Échec de la recherche par image. Essayez une autre photo ou la recherche texte.",
+    "visualUnsupportedType": "Choisissez une image JPEG, PNG, WebP ou GIF.",
+    "visualFileTooLarge": "L’image doit faire moins de 4 Mo.",
+    "visualEmpty": "Aucune correspondance catalogue pour cette image.",
+    "visualTeiaMessage": "Avez-vous des produits similaires à cette image ?"
+  },
+  "copilot": {
+    "title": "SWR AI Copilot",
+    "shortTitle": "Copilot",
+    "assistantLabel": "Assistant IA",
+    "composerPlaceholder": "Demandez au Copilot ou recherchez par spécification…",
+    "suggestion1": "Afficher les articles associés",
+    "suggestion2": "Vérifier les prix contrat",
+    "suggestion3": "Proposer des consommables pour ce poste à souder",
+    "openFabAria": "Ouvrir l’AI Copilot",
+    "openHeaderAria": "Ouvrir le panneau Copilot IA",
+    "closeAria": "Fermer l’AI Copilot",
+    "sendAria": "Envoyer le message",
+    "panelAria": "Conversation Copilot IA",
+    "errorGeneric": "L’assistant n’a pas pu répondre. Réessayez.",
+    "emptyReply": "L’assistant a renvoyé une réponse vide.",
+    "sessionInitializing": "La session s’initialise. Réessayez dans un instant.",
+    "dismissError": "Fermer",
+    "assistantTyping": "…",
+    "emptyState": "Posez une question sur les produits, les fiches techniques ou votre parcours de commande.",
+    "suggestionsHeading": "Suggestions",
+    "productLoading": "Chargement du produit…",
+    "productNotFound": "Ce produit n’a pas pu être chargé ({sku}).",
+    "widgetAddToCart": "Ajouter au panier",
+    "addingToCart": "Ajout…",
+    "addToCartSuccess": "Ajouté",
+    "addToCartFailed": "Échec",
+    "qtyDecrease": "Diminuer la quantité",
+    "qtyIncrease": "Augmenter la quantité",
+    "cartReconcileFailed": "Votre panier n’a pas pu être mis à jour : {detail}"
+  },
   "hero": {
     "title": "Soudage, Outillage & Réparation.",
     "subtitle": "Votre partenaire de service 360° à Lörrach. Produits de qualité pour l'industrie et l'artisanat — avec conseil personnalisé et livraison rapide.",
@@ -167,6 +212,9 @@
     "empty": "Aucun produit trouvé.",
     "view": "Voir",
     "priceOnRequest": "Prix sur demande",
+    "pricesLoginRequired": "Connectez-vous pour voir les prix.",
+    "signInForPrices": "Se connecter",
+    "signInToAddToCart": "Connectez-vous pour ajouter au panier",
     "exclVat": "HT",
     "inStock": "EN STOCK",
     "lowStock": "STOCK LIMITÉ",
@@ -239,7 +287,7 @@
     "contactHeading": "Contact",
     "metaTitle": "SWR Lörrach — Soudage, Outillage & Réparation",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR Handelsgesellschaft mbH — Votre partenaire B2B pour la technologie de soudage, l'outillage électrique, les machines et la sécurité au travail. Qualität verbindet."
+    "metaDescription": "SWR GmbH — Votre partenaire B2B pour la technologie de soudage, l'outillage électrique, les machines et la sécurité au travail. Qualität verbindet."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -332,10 +380,10 @@
   "about": {
     "eyebrow": "Depuis 1986",
     "heading": "La qualité qui rassemble.",
-    "subheading": "SWR Handelsgesellschaft mbH est votre partenaire service 360° à Lörrach pour le soudage, l'outillage, les machines et la sécurité au travail — avec un conseil expert, une livraison rapide et un service de réparation en Allemagne, en Suisse et en France.",
+    "subheading": "SWR GmbH est votre partenaire service 360° à Lörrach pour le soudage, l'outillage, les machines et la sécurité au travail — avec un conseil expert, une livraison rapide et un service de réparation en Allemagne, en Suisse et en France.",
     "bookConsultation": "Prendre rendez-vous",
     "explore360": "Découvrir le service 360°",
-    "fallbackIntro": "SWR Handelsgesellschaft mbH fournit depuis près de quatre décennies l'industrie et l'artisanat du triangle frontalier autour de Lörrach en outillage, soudage, machines et équipements de sécurité de qualité professionnelle.",
+    "fallbackIntro": "SWR GmbH fournit depuis près de quatre décennies l'industrie et l'artisanat du triangle frontalier autour de Lörrach en outillage, soudage, machines et équipements de sécurité de qualité professionnelle.",
     "missionHeading": "Notre mission",
     "missionBody": "Nous équipons les ateliers, les fabricants et les artisans avec des produits professionnels — et nous y associons les services de conseil, de réparation et de dédouanement qui assurent la continuité de l'exploitation.",
     "approachHeading": "Notre approche",
@@ -422,6 +470,8 @@
     "firstname": "Prénom",
     "lastname": "Nom de famille",
     "email": "Adresse e-mail",
+    "phone": "Téléphone",
+    "phoneHint": "Facultatif. Enregistré si l’attribut client correspondant existe dans Magento.",
     "changePassword": "Modifier le mot de passe",
     "changePasswordHint": "Laissez vide pour conserver votre mot de passe actuel.",
     "currentPassword": "Mot de passe actuel",
@@ -607,6 +657,7 @@
     "colUnitPrice": "Prix unitaire",
     "colRowTotal": "Total",
     "viewQuotation": "Détails →",
+    "downloadPdf": "Télécharger le PDF du devis",
     "quotationNumber": "Devis n°{id}",
     "validUntil": "Valable jusqu'au {date}",
     "subtotal": "Sous-total",
@@ -652,11 +703,14 @@
       "brand": "Marque",
       "language": "Langue",
       "clearAll": "Réinitialiser les filtres",
-      "title": "Système de filtres",
-      "subtitle": "Affinement technique",
+      "title": "Filtres",
+      "subtitle": "Par catégorie, marque, type de document et langue",
       "activeFilters": "Filtres actifs :",
       "manufacturerSearch": "Rechercher un fabricant...",
-      "resultsShowing": "{count, plural, =0 {aucun résultat} =1 {1 résultat} other {# résultats}}"
+      "resultsShowing": "{count, plural, =0 {aucun résultat} =1 {1 résultat} other {# résultats}}",
+      "mobileShow": "Afficher les filtres",
+      "mobileHide": "Masquer les filtres",
+      "panelAria": "Filtres du catalogue"
     },
     "types": {
       "catalog": "Catalogue",
@@ -912,7 +966,8 @@
     },
     "attachments": {
       "eyebrow": "Pièces justificatives",
-      "heading": "Pièces jointes."
+      "heading": "Pièces jointes.",
+      "erpRef": "Référence : {id}"
     },
     "timeline": {
       "eyebrow": "Activité",

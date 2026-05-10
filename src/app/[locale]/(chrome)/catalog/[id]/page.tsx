@@ -83,7 +83,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
   ];
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-10">
+    <div className="swr-page-shell py-6 sm:py-10">
       <nav className="mb-4 text-xs uppercase tracking-[0.08em] text-on-surface-variant flex items-center gap-2">
         <Link href="/catalog" className="hover:text-primary">
           {t("breadcrumbCatalog")}

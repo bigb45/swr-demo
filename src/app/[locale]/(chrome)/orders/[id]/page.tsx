@@ -100,7 +100,8 @@ export default async function OrderDetailPage({
     );
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <Link
         href="/orders"
         className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"
@@ -315,6 +316,7 @@ export default async function OrderDetailPage({
           noDocuments: t("noDocuments"),
         }}
       />
+      </div>
     </div>
   );
 }

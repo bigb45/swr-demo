@@ -38,12 +38,6 @@ const ICON_DELIVERY = (
     <circle cx="18.5" cy="18.5" r="2.5" />
   </svg>
 );
-const ICON_CUSTOMS = (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 2L3 7v5c0 5.5 3.84 10.74 9 12 5.16-1.26 9-6.5 9-12V7l-9-5z" />
-    <polyline points="9 12 11 14 15 10" />
-  </svg>
-);
 
 export default async function Page({ params }: PageProps) {
   const { locale } = await params;
@@ -75,13 +69,6 @@ export default async function Page({ params }: PageProps) {
       title: tShared("delivery.title"),
       description: tShared("delivery.shortBody"),
     },
-    {
-      icon: ICON_CUSTOMS,
-      href: "/services/customs",
-      eyebrow: tShared("customs.eyebrow"),
-      title: tShared("customs.title"),
-      description: tShared("customs.shortBody"),
-    },
   ];
 
   return (
@@ -94,7 +81,7 @@ export default async function Page({ params }: PageProps) {
         <Cta href="/contact" label={t("bookConsultation")} variant="primary" />
       </Hero>
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 flex flex-col gap-12">
+      <div className="swr-page-shell py-12 sm:py-16 flex flex-col gap-12">
         {page ? <CmsContent html={page.content} /> : null}
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">

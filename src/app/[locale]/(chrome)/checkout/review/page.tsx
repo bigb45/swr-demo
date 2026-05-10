@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
-import {
-  fetchGuestCartTotals,
-  readCheckoutState,
-} from "@/lib/checkout";
+import { fetchGuestCartTotals, readCheckoutState } from "@/lib/checkout";
 import ReviewStep from "./ReviewStep";
 
 interface ReviewPageProps {
@@ -25,12 +22,18 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   // Magento returns the chosen carrier+method indirectly: the `shipping`
   // total segment carries the human-readable title. Falling back to the raw
   // amount label avoids a hard error if the segment is missing.
-  const shippingSegment = totals.total_segments?.find((s) => s.code === "shipping");
+  const shippingSegment = totals.total_segments?.find(
+    (s) => s.code === "shipping",
+  );
   const shippingTitle = shippingSegment?.title ?? null;
 
   // If shipping wasn't set yet (segment value is zero AND there's no title),
   // bounce back to step 2 so the user picks one.
-  if (!shippingTitle && (totals.shipping_amount ?? 0) === 0 && !shippingSegment) {
+  if (
+    !shippingTitle &&
+    (totals.shipping_amount ?? 0) === 0 &&
+    !shippingSegment
+  ) {
     redirect(`/${locale}/checkout/shipping`);
   }
 

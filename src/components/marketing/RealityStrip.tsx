@@ -15,7 +15,7 @@ export default function RealityStrip({ heading, items }: RealityStripProps) {
       className="bg-primary text-white py-10 sm:py-14"
       aria-label={heading}
     >
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12">
+      <div className="swr-page-shell">
         {heading ? (
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/60 mb-6">
             {heading}

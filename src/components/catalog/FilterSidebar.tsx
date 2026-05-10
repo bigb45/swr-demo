@@ -264,10 +264,8 @@ export default function FilterSidebar({
   };
 
   return (
-    <aside
-      className={`flex flex-col self-start ${
-        isPending ? "opacity-90" : ""
-      }`}
+    <div
+      className={`flex flex-col ${isPending ? "opacity-90" : ""}`}
     >
       <div className="flex items-start justify-between pb-3 border-b border-outline-variant/60">
         <div className="flex flex-col">
@@ -354,6 +352,6 @@ export default function FilterSidebar({
           resolveLabel={(v) => labels.languageLabels[v] ?? v.toUpperCase()}
         />
       </AccordionSection>
-    </aside>
+    </div>
   );
 }

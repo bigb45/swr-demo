@@ -3,8 +3,9 @@
  *
  * =========================================================================
  * Backend spec (to implement on Magento + ERP before wiring the functions
- * below). The storefront ships the list and detail pages today but both
- * calls return empty results until these endpoints exist.
+ * below). List and detail **call Magento** when `GET /rest/V1/swr-quotations/mine`
+ * responds; otherwise the UI shows an **empty** list. **PDF** and **accept** use
+ * the same `swr-quotations` module.
  * =========================================================================
  *
  * All endpoints require the signed-in customer token (same cookie used
@@ -61,7 +62,20 @@
  *    survive. Duplicate SKUs between cart and quotation are summed.
  *
  * ----------------------------------------------------------------------
- * 4) PRICE LOCK
+ * 4) QUOTATION PDF (ERP / negotiation document)
+ *    GET /rest/V1/swr-quotations/mine/:id/pdf
+ *    Response:
+ *      - Preferred: `application/pdf` body with `Content-Disposition:
+ *        attachment; filename="Angebot-12345.pdf"`.
+ *      - Acceptable: `302` / `303` to a time-limited signed URL (fetch
+ *        follows redirects).
+ *      - Alternative: `200` + JSON `{ "url": "https://..." }` — the
+ *        storefront proxy (`/api/account/quotations/[id]/pdf`) redirects
+ *        the browser to that URL.
+ *    Errors: 404 when id missing, not owned, or no PDF exists yet.
+ *
+ * ----------------------------------------------------------------------
+ * 5) PRICE LOCK
  *    Whatever mechanism the backend picks, the contract the frontend
  *    relies on is: once ACCEPT returns success, calling the standard
  *    Magento `carts/mine/totals` endpoint MUST reflect the quoted prices
@@ -130,26 +144,56 @@ export type AcceptQuotationResult =
   | AcceptQuotationError;
 
 /**
- * List all quotations visible to the signed-in customer. Returns an empty
- * array while the backend endpoint is not yet available — the UI renders
- * its empty state. See contract note (1) above.
+ * List all quotations visible to the signed-in customer.
+ * Calls `GET /rest/V1/swr-quotations/mine` with the customer token.
+ * Returns an empty array on 404 or non-2xx (module not deployed) — see contract (1).
  */
 export async function listCustomerQuotations(
-  _email: string,
+  token: string,
 ): Promise<QuotationSummary[]> {
-  return [];
+  try {
+    const res = await fetch(
+      `${MAGENTO_BASE}/rest/V1/swr-quotations/mine`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      },
+    );
+    if (!res.ok) return [];
+    const raw = await res.text();
+    const body: unknown = raw.length > 0 ? safeJson(raw) : null;
+    return parseQuotationListPayload(body);
+  } catch {
+    return [];
+  }
 }
 
 /**
  * Fetch a single quotation for the signed-in customer. Ownership is
- * enforced server-side (see contract note 2 above). Returns `null` while
- * the backend endpoint is not yet available.
+ * enforced server-side (see contract note 2 above). Returns `null` on
+ * 404 / errors / invalid payload.
  */
 export async function getQuotationForCustomer(
-  _id: string,
-  _email: string,
+  id: string,
+  token: string,
 ): Promise<Quotation | null> {
-  return null;
+  try {
+    const res = await fetch(
+      `${MAGENTO_BASE}/rest/V1/swr-quotations/mine/${encodeURIComponent(id)}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      },
+    );
+    if (!res.ok) return null;
+    const raw = await res.text();
+    const body: unknown = raw.length > 0 ? safeJson(raw) : null;
+    return parseQuotationDetailPayload(body);
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -212,6 +256,102 @@ function safeJson(raw: string): unknown {
   } catch {
     return null;
   }
+}
+
+function asNum(v: unknown, fallback = 0): number {
+  if (typeof v === "number" && !Number.isNaN(v)) return v;
+  if (typeof v === "string" && v.trim() !== "") {
+    const n = Number(v);
+    if (!Number.isNaN(n)) return n;
+  }
+  return fallback;
+}
+
+function asStr(v: unknown, fallback = ""): string {
+  return typeof v === "string" ? v : v != null ? String(v) : fallback;
+}
+
+const QUOTATION_STATUSES: QuotationStatus[] = [
+  "open",
+  "accepted",
+  "rejected",
+  "expired",
+  "converted",
+];
+
+function parseStatus(v: unknown): QuotationStatus {
+  const s = asStr(v, "open");
+  return (QUOTATION_STATUSES as string[]).includes(s)
+    ? (s as QuotationStatus)
+    : "open";
+}
+
+function mapLineItem(raw: unknown): QuotationLineItem | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const sku = asStr(o.sku);
+  if (!sku) return null;
+  return {
+    sku,
+    name: asStr(o.name, sku),
+    qty: Math.max(0, asNum(o.qty, 1)),
+    unit_price: asNum(o.unit_price),
+    row_total: asNum(o.row_total),
+  };
+}
+
+function mapSummaryFromObject(o: Record<string, unknown>): QuotationSummary | null {
+  const id = asStr(o.id);
+  if (!id) return null;
+  return {
+    id,
+    number: asStr(o.number, id),
+    created_at: asStr(o.created_at, new Date().toISOString()),
+    valid_until: o.valid_until != null ? asStr(o.valid_until) : undefined,
+    status: parseStatus(o.status),
+    currency: asStr(o.currency, "EUR"),
+    grand_total: asNum(o.grand_total),
+  };
+}
+
+function parseQuotationListPayload(data: unknown): QuotationSummary[] {
+  if (data == null) return [];
+  let rows: unknown[] = [];
+  if (Array.isArray(data)) rows = data;
+  else if (typeof data === "object" && "items" in data) {
+    const items = (data as { items: unknown }).items;
+    if (Array.isArray(items)) rows = items;
+  }
+  const out: QuotationSummary[] = [];
+  for (const row of rows) {
+    if (!row || typeof row !== "object") continue;
+    const s = mapSummaryFromObject(row as Record<string, unknown>);
+    if (s) out.push(s);
+  }
+  return out;
+}
+
+function parseQuotationDetailPayload(data: unknown): Quotation | null {
+  if (!data || typeof data !== "object") return null;
+  const o = data as Record<string, unknown>;
+  const base = mapSummaryFromObject(o);
+  if (!base) return null;
+  const itemsRaw = o.items;
+  const items: QuotationLineItem[] = [];
+  if (Array.isArray(itemsRaw)) {
+    for (const line of itemsRaw) {
+      const li = mapLineItem(line);
+      if (li) items.push(li);
+    }
+  }
+  return {
+    ...base,
+    items,
+    subtotal: asNum(o.subtotal),
+    tax_amount: asNum(o.tax_amount),
+    customer_email: asStr(o.customer_email),
+    notes: o.notes != null ? asStr(o.notes) : undefined,
+  };
 }
 
 /* ----------------------- UI helpers (shared) ----------------------- */

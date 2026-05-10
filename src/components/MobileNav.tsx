@@ -69,19 +69,19 @@ export default function MobileNav({
         )}
       </button>
 
-      {/* Backdrop — above the sticky header (z-50) so the header isn't interactive through it */}
+      {/* Backdrop — above header search suggestions (z-60); below drawer */}
       {open && (
         <div
-          className="fixed inset-0 z-55 bg-black/40 md:hidden"
+          className="fixed inset-0 z-[61] bg-black/40 md:hidden"
           onClick={close}
           aria-hidden="true"
         />
       )}
 
-      {/* Drawer — sits above the backdrop so it receives pointer events */}
+      {/* Drawer — above backdrop + any header chrome using z-60 (e.g. SearchBar) */}
       <nav
         id="mobile-nav-drawer"
-        className={`fixed top-0 left-0 bottom-0 z-60 w-[min(20rem,85vw)] bg-white flex flex-col shadow-2xl transition-transform duration-300 md:hidden ${
+        className={`fixed top-0 left-0 bottom-0 z-[62] w-[min(20rem,85vw)] bg-white flex flex-col shadow-2xl transition-transform duration-300 md:hidden ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-label={t("mobileNavLabel")}

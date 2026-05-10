@@ -39,7 +39,6 @@ export default async function Footer({ locale }: FooterProps) {
         { href: "/services/consulting", label: tServices("consulting.title") },
         { href: "/services/repair", label: tServices("repair.title") },
         { href: "/services/delivery", label: tServices("delivery.title") },
-        { href: "/services/customs", label: tServices("customs.title") },
       ],
     },
     {
@@ -67,7 +66,7 @@ export default async function Footer({ locale }: FooterProps) {
 
   return (
     <footer className="bg-primary text-white mt-auto">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 grid grid-cols-2 lg:grid-cols-5 gap-7 sm:gap-8 lg:gap-10">
+      <div className="swr-page-shell py-10 sm:py-14 grid grid-cols-2 lg:grid-cols-5 gap-7 sm:gap-8 lg:gap-10">
         <div className="col-span-2 lg:col-span-1 flex flex-col gap-3">
           <span className="text-base font-black tracking-[0.04em] uppercase text-white">
             SWR Handelsgesellschaft mbH
@@ -120,7 +119,7 @@ export default async function Footer({ locale }: FooterProps) {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+        <div className="swr-page-shell py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="text-[11px] text-white/60">
             {t("copyright", { year: new Date().getFullYear() })}
           </p>

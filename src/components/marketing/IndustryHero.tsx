@@ -20,7 +20,7 @@ export default function IndustryHero({
         background: "linear-gradient(160deg, #f9f9f9 0%, #ffffff 100%)",
       }}
     >
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12">
+      <div className="swr-page-shell">
         {eyebrow ? (
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-secondary mb-3">
             {eyebrow}

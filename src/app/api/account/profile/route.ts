@@ -6,6 +6,7 @@
  *     firstname: string,
  *     lastname: string,
  *     email: string,
+ *     phone?: string,            // optional — `custom_attributes` (see MAGENTO_CUSTOMER_PHONE_ATTRIBUTE)
  *     currentPassword?: string, // required when email changes and for password-change flow
  *     newPassword?: string,      // optional password-change
  *   }
@@ -26,6 +27,7 @@ import {
   fetchCustomerMe,
 } from "@/lib/checkout";
 import type { MagentoCustomerMe } from "@/types/magento";
+import { mergeCustomerPhone, readCustomerPhone } from "@/lib/customer-phone";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -49,6 +51,7 @@ export async function PUT(req: NextRequest) {
   const firstname = asString(raw.firstname);
   const lastname = asString(raw.lastname);
   const email = asString(raw.email);
+  const phone = asString(raw.phone);
   const currentPassword = asString(raw.currentPassword) || undefined;
   const newPassword = asString(raw.newPassword) || undefined;
 
@@ -72,12 +75,15 @@ export async function PUT(req: NextRequest) {
     );
   }
 
-  const next: MagentoCustomerMe = {
-    ...existing,
-    firstname,
-    lastname,
-    email,
-  };
+  let next: MagentoCustomerMe = mergeCustomerPhone(
+    {
+      ...existing,
+      firstname,
+      lastname,
+      email,
+    },
+    phone,
+  );
 
   const updateRes = await fetch(
     `${MAGENTO}/rest/V1/customers/me`,

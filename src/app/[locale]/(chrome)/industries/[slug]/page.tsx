@@ -83,7 +83,7 @@ export default async function Page({ params }: PageProps) {
         <Cta href="/contact" label={tCommon("bookConsultation")} variant="ghost" />
       </IndustryHero>
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 flex flex-col gap-12">
+      <div className="swr-page-shell py-12 sm:py-16 flex flex-col gap-12">
         {page ? (
           <CmsContent html={page.content} />
         ) : (

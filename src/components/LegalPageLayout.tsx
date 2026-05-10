@@ -14,7 +14,8 @@ export default function LegalPageLayout({
   contact,
 }: LegalPageLayoutProps) {
   return (
-    <div className="max-w-[800px] mx-auto px-4 sm:px-8 py-12">
+    <div className="swr-page-shell py-12">
+      <div className="mx-auto w-full max-w-[800px]">
       <h1 className="text-3xl font-black text-primary mb-2">{title}</h1>
       {intro ? (
         <p className="text-sm text-on-surface-variant mb-10 leading-relaxed">
@@ -27,6 +28,7 @@ export default function LegalPageLayout({
           {contact}
         </p>
       ) : null}
+      </div>
     </div>
   );
 }

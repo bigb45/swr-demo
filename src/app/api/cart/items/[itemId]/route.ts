@@ -16,12 +16,17 @@ export async function PUT(req: NextRequest, ctx: Ctx) {
   const { itemId } = await ctx.params;
   const { cartId, sku, qty } = await req.json();
 
-  const res = await fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items/${itemId}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cartItem: { item_id: Number(itemId), sku, qty, quote_id: cartId } }),
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${MAGENTO}/rest/V1/guest-carts/${cartId}/items/${itemId}`,
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        cartItem: { item_id: Number(itemId), sku, qty, quote_id: cartId },
+      }),
+      cache: "no-store",
+    },
+  );
 
   const data = await res.json();
   if (!res.ok) {
@@ -37,10 +42,13 @@ export async function DELETE(req: NextRequest, ctx: Ctx) {
   const { itemId } = await ctx.params;
   const { cartId } = await req.json();
 
-  const res = await fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items/${itemId}`, {
-    method: "DELETE",
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${MAGENTO}/rest/V1/guest-carts/${cartId}/items/${itemId}`,
+    {
+      method: "DELETE",
+      cache: "no-store",
+    },
+  );
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

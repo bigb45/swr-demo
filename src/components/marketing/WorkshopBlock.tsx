@@ -19,7 +19,7 @@ export default function WorkshopBlock({
 }: WorkshopBlockProps) {
   return (
     <section className="bg-surface-container-low py-14 sm:py-20">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 items-start">
+      <div className="swr-page-shell grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 items-start">
         <div className="flex flex-col gap-4 max-w-2xl">
           {eyebrow ? (
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">

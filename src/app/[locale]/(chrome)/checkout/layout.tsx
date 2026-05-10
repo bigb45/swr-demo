@@ -48,7 +48,8 @@ export default async function CheckoutLayout({
   }
 
   return (
-    <div className="max-w-[1100px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[1100px]">
       <h1 className="text-3xl font-black text-primary mb-2">{t("heading")}</h1>
       <p className="text-sm text-on-surface-variant mb-8">{t("subheading")}</p>
 
@@ -63,6 +64,7 @@ export default async function CheckoutLayout({
         >
           &larr; {t("backToCart")}
         </Link>
+      </div>
       </div>
     </div>
   );

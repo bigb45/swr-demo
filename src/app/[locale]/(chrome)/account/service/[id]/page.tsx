@@ -64,7 +64,8 @@ export default async function ServiceCasePage({ params }: PageProps) {
   );
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-10 flex flex-col gap-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[1200px] flex flex-col gap-10">
       <div className="flex flex-col gap-2">
         <Link
           href="/account/service"
@@ -244,6 +245,11 @@ export default async function ServiceCasePage({ params }: PageProps) {
                     {formatBytes(att.sizeBytes)} ·{" "}
                     {formatDate(att.uploadedAt, locale)}
                   </span>
+                  {att.erpAttachmentId ? (
+                    <span className="text-xs text-on-surface-variant font-mono mt-0.5">
+                      {t("attachments.erpRef", { id: att.erpAttachmentId })}
+                    </span>
+                  ) : null}
                 </div>
               </li>
             ))}
@@ -311,6 +317,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
           </Link>
         </section>
       ) : null}
+      </div>
     </div>
   );
 }

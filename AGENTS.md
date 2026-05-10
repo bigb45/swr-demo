@@ -8,6 +8,18 @@ The frontend talks to Magento **exclusively via the Magento REST API** over HTTP
 
 ---
 
+## Documentation map
+
+Shipped vs backlog truth lives outside this file — read these before guessing scope:
+
+| File | Role |
+|------|------|
+| [`STATUS.md`](./STATUS.md) | What has landed (pages, flows, recent milestones) |
+| [`BACKLOG.md`](./BACKLOG.md) | Prioritized queue + FRD reconciliation |
+| [`FEATURES.md`](./FEATURES.md) | Stakeholder FRD checklist |
+
+---
+
 ## Tech Stack
 
 - **Framework:** Next.js 16.2.2 (App Router, Turbopack in dev)
@@ -69,55 +81,25 @@ Requires a running Magento instance at `MAGENTO_URL` (default `http://localhost:
 
 ## Project Structure
 
+Routes live under `src/app/[locale]/` using **`(chrome)`** (main shell: header, footer, SideNav) and **`(auth)`** where needed. Marketing, shop, account, checkout, catalog, legal, and API routes are all under this tree — the listing below is indicative, not exhaustive:
+
 ```
-src/
-  app/
-    [locale]/
-      page.tsx                    # Home page
-      products/
-        page.tsx                  # Product listing + search results
-        [sku]/page.tsx            # Product detail page (PDP)
-      categories/[id]/page.tsx    # Category listing
-      cart/
-        page.tsx                  # Cart page shell (ssr:false wrapper)
-        CartContent.tsx           # Full cart UI (client-only, no SSR)
-      layout.tsx                  # Root locale layout — providers, header, footer
-    api/
-      cart/route.ts               # POST create cart, GET fetch items+totals
-      cart/items/route.ts         # POST add item
-      cart/items/[itemId]/route.ts # PUT update qty, DELETE remove item
-    layout.tsx                    # Root layout (returns children only)
-  components/
-    CartProvider.tsx              # Client cart state, localStorage, Magento sync
-    CartBadge.tsx                 # Item count badge in header
-    CurrencyProvider.tsx          # EUR/CHF switcher, cookie-persisted
-    Header.tsx                    # Sticky header (server component)
-    MobileNav.tsx                 # Mobile hamburger nav (client)
-    LocaleSwitcher.tsx            # Locale toggle
-    CurrencySwitcher.tsx          # Currency toggle
-    ProductGrid.tsx               # Product card grid
-    Pagination.tsx                # Page nav (client, uses next-intl Link)
-    ui/
-      SideNav.tsx                 # Sticky sidebar with category nav + bottom actions
-      SearchBar.tsx               # Search input (client, pushes ?q= to URL)
-      Button.tsx
-      CategoryGrid.tsx
-      BentoSection.tsx
-      SpecTable.tsx
-  lib/
-    magento.ts                    # All Magento REST API calls + admin token cache
-    currency.ts                   # Currency conversion + Intl formatting
-  types/
-    magento.ts                    # TypeScript types for all Magento API responses
-  i18n/
-    routing.ts                    # next-intl routing config (locales, defaultLocale)
-    navigation.ts                 # createNavigation — exports Link, useRouter, etc.
-    request.ts                    # getRequestConfig for next-intl
-  messages/
-    de.json                       # German strings (default locale)
-    en.json                       # English strings
-    fr.json                       # French strings
+src/app/[locale]/(chrome)/
+  page.tsx                 # Home
+  products/                # Listing + search + PDP
+  categories/[id]/
+  cart/
+  checkout/{address,shipping,review}/
+  catalog/                 # Document hub (+ [id] viewer)
+  services/, industries/, about, contact, …
+  account/{login,register,addresses,orders → redirects?, quotations, fleet, service, …}
+src/app/api/               # cart, auth, checkout, orders PDFs, account, …
+src/components/            # CartProvider, marketing/, orders/, catalog/, ui/, …
+src/lib/                   # magento.ts, cms.ts, catalog.ts, quotations.ts, service.ts, fleet.ts, …
+src/messages/{de,en,fr}.json
 ```
+
+See [`STATUS.md`](./STATUS.md) for the authoritative page-by-page wiring table.
 
 ---
 
@@ -139,20 +121,30 @@ Admin token is obtained once via `POST /rest/V1/integration/admin/token` and cac
 
 ## Key Magento REST API Endpoints
 
+Guest cart (browse → cart before login):
+
 ```
-POST   /rest/V1/integration/admin/token          # Get admin token
-GET    /rest/V1/products?searchCriteria[...]      # List/search products
-GET    /rest/V1/products/:sku                     # Single product
+POST   /rest/V1/integration/admin/token           # Admin token (server-only cache; self-healing on 401)
+POST   /rest/V1/guest-carts                         # Create guest cart
+GET    /rest/V1/guest-carts/:id/items             # Line items
+POST   /rest/V1/guest-carts/:id/items             # Add line
+PUT    /rest/V1/guest-carts/:id/items/:itemId     # Qty
+DELETE /rest/V1/guest-carts/:id/items/:itemId     # Remove line
+GET    /rest/V1/guest-carts/:id/totals            # Totals
+GET    /rest/V1/products?searchCriteria[...]       # List / filter (also search via storefront helpers)
+GET    /rest/V1/products/:sku                     # PDP
 GET    /rest/V1/categories                        # Category tree
-POST   /rest/V1/guest-carts                       # Create guest cart → returns cartId string
-GET    /rest/V1/guest-carts/:id/items             # Cart line items
-POST   /rest/V1/guest-carts/:id/items             # Add item { cartItem: { sku, qty, quote_id } }
-PUT    /rest/V1/guest-carts/:id/items/:itemId     # Update qty
-DELETE /rest/V1/guest-carts/:id/items/:itemId     # Remove item
-GET    /rest/V1/guest-carts/:id/totals            # Totals: subtotal, tax, shipping, grand_total
-POST   /rest/V1/guest-carts/:id/order             # Place order → returns order ID (NOT YET WIRED)
-POST   /rest/V1/integration/customer/token        # Customer login (NOT YET WIRED)
+POST   /rest/V1/integration/customer/token         # Customer login — wired via Route Handlers + httpOnly cookie
+GET    /rest/V1/customers/me                      # Profile / address book mutations (customer token)
+PUT    /rest/V1/carts/mine/*                      # Checkout assignment, shipping, payment — see checkout actions
+PUT    /rest/V1/carts/:quoteId/order             # Place order (signed-in checkout — wired)
+GET    /rest/V1/orders                            # Order history (customer token + storefront proxies)
+GET    /rest/V1/cmsPage | cmsBlock                # CMS-backed marketing/legal
 ```
+
+Custom / future: **`src/lib/quotations.ts`** documents proposed `swr-quotations/*` endpoints — not live in Magento until ERP wires them.
+
+**Terminology:** Magento **`tier_prices`** in this project are **quantity-break / bulk** tiers on the PDP. Stakeholder “tiered = net price per customer group” requires catalog visibility + customer-group pricing on the Magento side; the storefront **hides catalog list prices in the UI for guests** (`CustomerSessionProvider`), while **cart/checkout line prices** and **admin-token product payloads** can still expose amounts until Magento constrains them.
 
 ---
 
@@ -215,33 +207,24 @@ export default function CartPage() { return <CartContent />; }
 
 ## Pages — Current Status
 
-### Fully working
+**Authoritative table:** [`STATUS.md`](./STATUS.md) → *Pages* and *Partial / still evolving*.
 
-| Page | Route | Notes |
-|---|---|---|
-| Home | `/` | Hero, live category grid, featured products, bento section |
-| Product listing | `/products` | Paginated, live from Magento |
-| Search results | `/products?q=...` | Wired to `searchProducts()` in magento.ts |
-| Category listing | `/categories/[id]` | Filtered by category, paginated |
-| Product detail | `/products/[sku]` | Gallery, specs, price, add-to-cart |
-| Cart | `/cart` | Line items, qty update, remove — Magento guest cart API |
+Summary:
 
-### Stubbed / incomplete
+- **Shop core:** home, Magento listing/search (`/products` + URL filters), category routes, PDP with **`tier_prices`** bulk table + live qty preview, cart with **Magento totals**, signed-in **3-step checkout**, orders history/detail with **PDFs** (confirmation + invoice/shipment/credit memo).
+- **Account:** login/register, address book, quotations UI (**empty until ERP endpoint**), fleet, unified **service cases** (return/repair/inspection — demo/in-process persistence).
+- **Marketing:** CMS-backed hubs, document **`/catalog`**, industries (welding override), services pillars, legal routes under `/legal/*` with legacy 301s.
 
-| Page | What's missing |
-|---|---|
-| **Cart** `/cart` | Totals use client-side math (hardcoded 19% VAT). `GET /api/cart` already returns Magento's `/totals` response — `CartContent.tsx` just needs to read `subtotal_with_discount`, `tax_amount`, and `grand_total` from it instead of calculating manually |
-| **Product detail** `/products/[sku]` | Bulk pricing tiers are static demo rows. `product.tier_prices` from the Magento API should be used instead |
-| **Checkout** | "Place Authorization Order" button exists in `CartContent.tsx` but does nothing. Needs to call `POST /rest/V1/guest-carts/:id/order` with a billing address payload |
-| **Authentication** | No login/register. Customer token endpoint exists. Unlocks `/orders` and `/account` |
-
-### Missing entirely (links exist, 404)
-
-`/orders`, `/account`, `/terms`, `/privacy`, `/compliance`, `/iso`, `/sds`
+Gaps worth remembering: **McMaster-style configurable variant matrix**, **B2B contract / customer-group net pricing** (Magento catalog permissions + scoped REST; storefront catalog UI already hides EUR for guests), **SPARQUE** (not integrated — search/filter is Magento REST), **automatic image fallbacks / manufacturer logos**. **AI Copilot** — dock + API routes land in repo; upstream env still required. **Registration / sub-user governance** and **Magento `swr-quotations`** remain backend-led.
 
 ---
 
 ## Remaining Work — Priority Order
+
+Use **`BACKLOG.md`** (*Phase 2 — Next execution queue*) instead of this section — the numbered list below is **retired** (historical). Highlights: checkout hardening (payment + address pickers), quotations wiring when Magento exposes endpoints, richer faceted listing (`aggregations`), customer governance (B2B company / approvals), eProcurement metadata, durable service-case uploads + Magento RMA.
+
+<details>
+<summary>Historical backlog (superseded May 2026 — do not execute from here)</summary>
 
 1. **Use Magento totals in cart** ← next up
    - `GET /api/cart?cartId=xxx` already returns `{ items, totals }` where `totals` is the full Magento `/totals` response
@@ -270,6 +253,8 @@ export default function CartPage() { return <CartContent />; }
    - `/terms`, `/privacy`, `/compliance`, `/iso`, `/sds`
    - No Magento data needed, just translated copy in all three locales
 
+</details>
+
 ---
 
 ## Common Pitfalls
@@ -280,4 +265,5 @@ export default function CartPage() { return <CartContent />; }
 - **Pagination with search** — `Pagination` builds URLs as `${baseUrl}?page=${n}`. When searching, pass `baseUrl="/products?q=foo"` so pagination produces `/products?q=foo&page=2`.
 - **Never hardcode prices** — always use `formatAmount()` from `useCurrency()`.
 - **Never use `next/link` directly** — always import `Link` from `@/i18n/navigation`.
-- **Admin token is cached server-side** — if Magento restarts and the token expires, the Next.js process needs to restart too (or the cache TTL will expire it naturally).
+- **Admin token** — `magentoGet` / related helpers **invalidate and retry on `401`**, so a revoked Magento token no longer requires restarting Next.js in normal cases.
+- **Guest catalog prices (UI vs data)** — the storefront hides catalog EUR amounts for anonymous users via `CustomerSessionProvider` / `useCustomerSession()` and shared components (`ProductPrice`, `ProductCard`, etc.). Product data is still often fetched with the **admin token**, so **network responses can still include `price`** until Magento applies catalog permissions / shared catalogs (or the app moves to customer-token-scoped product reads). Do not treat the UI gate as ERP-grade confidentiality.

@@ -33,7 +33,8 @@ export default async function EditAddressPage({ params }: EditAddressPageProps) 
   const countries = await getCountries(LOCALE_STORE_CODES[locale]);
 
   return (
-    <div className="max-w-[700px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[700px]">
       <h1 className="text-2xl font-black text-primary mb-8">{t("editHeading")}</h1>
 
       <div
@@ -47,6 +48,7 @@ export default async function EditAddressPage({ params }: EditAddressPageProps) 
           cancelHref="/account/addresses"
           countries={countries}
         />
+      </div>
       </div>
     </div>
   );
