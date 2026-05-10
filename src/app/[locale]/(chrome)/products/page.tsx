@@ -5,6 +5,7 @@ import {
   getTopLevelCategories,
 } from "@/lib/magento";
 import ProductGrid from "@/components/ProductGrid";
+import ProductSearchResultList from "@/components/ProductSearchResultList";
 import Pagination from "@/components/Pagination";
 import ProductsFilterBar from "@/components/products/ProductsFilterBar";
 
@@ -150,7 +151,13 @@ export default async function ProductsPage({
               </p>
             ) : (
               <>
-                <ProductGrid products={productList?.items ?? []} />
+                {query ? (
+                  <ProductSearchResultList
+                    products={productList?.items ?? []}
+                  />
+                ) : (
+                  <ProductGrid products={productList?.items ?? []} />
+                )}
                 {productList && (
                   <Pagination
                     currentPage={currentPage}
