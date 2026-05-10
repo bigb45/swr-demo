@@ -85,7 +85,7 @@ export default async function CategoryPage({
     category.children_data?.filter((c) => c.is_active) ?? [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="swr-page-shell py-10">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8">
         <Link href="/" className="hover:text-gray-900 transition-colors">

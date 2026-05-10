@@ -214,7 +214,7 @@ export default function NewCaseForm({
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-8"
+      className="flex w-full max-w-[900px] flex-col gap-8"
       encType="multipart/form-data"
     >
       <input type="hidden" name="kind" value={kind} />

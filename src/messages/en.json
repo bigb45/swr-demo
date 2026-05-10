@@ -31,6 +31,51 @@
     "selectLanguage": "Select language",
     "preferences": "Preferences"
   },
+  "search": {
+    "suggestionsLabel": "Product suggestions",
+    "loading": "Searching…",
+    "empty": "No matching products yet.",
+    "error": "Search is temporarily unavailable.",
+    "viewAll": "View all results",
+    "openProduct": "Open product details: {name}",
+    "visualSearchAria": "Search by image",
+    "visualSearching": "Finding similar products…",
+    "visualError": "Image search failed. Try another photo or use text search.",
+    "visualUnsupportedType": "Please choose a JPEG, PNG, WebP, or GIF image.",
+    "visualFileTooLarge": "Image must be under 4 MB.",
+    "visualEmpty": "No catalog matches were found for this image.",
+    "visualTeiaMessage": "Do you have similar products to this image?"
+  },
+  "copilot": {
+    "title": "SWR AI Copilot",
+    "shortTitle": "Copilot",
+    "assistantLabel": "AI assistant",
+    "composerPlaceholder": "Ask Copilot or search by spec…",
+    "suggestion1": "Show related items",
+    "suggestion2": "Check contract pricing",
+    "suggestion3": "Suggest consumables for this welder",
+    "openFabAria": "Open AI Copilot",
+    "openHeaderAria": "Open AI Copilot panel",
+    "closeAria": "Close AI Copilot",
+    "sendAria": "Send message",
+    "panelAria": "AI Copilot conversation",
+    "errorGeneric": "The assistant could not respond. Try again.",
+    "emptyReply": "The assistant returned an empty reply.",
+    "sessionInitializing": "Session is initializing. Try again in a moment.",
+    "dismissError": "Dismiss",
+    "assistantTyping": "…",
+    "emptyState": "Ask anything about products, specs, or your order workflow.",
+    "suggestionsHeading": "Suggested prompts",
+    "productLoading": "Loading product…",
+    "productNotFound": "This product could not be loaded ({sku}).",
+    "widgetAddToCart": "Add to cart",
+    "addingToCart": "Adding…",
+    "addToCartSuccess": "Added",
+    "addToCartFailed": "Failed",
+    "qtyDecrease": "Decrease quantity",
+    "qtyIncrease": "Increase quantity",
+    "cartReconcileFailed": "Your cart could not be updated: {detail}"
+  },
   "hero": {
     "title": "Welding, Tools & Repair.",
     "subtitle": "Your 360° service partner in Lörrach. Premium products for industry and trade — with expert advice and fast delivery.",
@@ -167,6 +212,9 @@
     "empty": "No products found.",
     "view": "View",
     "priceOnRequest": "Price on request",
+    "pricesLoginRequired": "Prices are shown after you sign in.",
+    "signInForPrices": "Sign in",
+    "signInToAddToCart": "Sign in to add to cart",
     "exclVat": "excl. VAT",
     "inStock": "IN STOCK",
     "lowStock": "LOW STOCK",
@@ -239,7 +287,7 @@
     "contactHeading": "Contact Us",
     "metaTitle": "SWR Lörrach — Welding, Tools & Repair",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR Handelsgesellschaft mbH — Your B2B partner for welding technology, power tools, machinery and workplace safety. Qualität verbindet."
+    "metaDescription": "SWR GmbH — Your B2B partner for welding technology, power tools, machinery and workplace safety. Qualität verbindet."
   },
   "notFound": {
     "title": "Page not found",
@@ -332,10 +380,10 @@
   "about": {
     "eyebrow": "Since 1986",
     "heading": "Quality Connects.",
-    "subheading": "SWR Handelsgesellschaft mbH is your 360° service partner in Lörrach for welding, tools, machines, and safety equipment — with expert consultation, fast delivery, and repair service across Germany, Switzerland, and France.",
+    "subheading": "SWR GmbH is your 360° service partner in Lörrach for welding, tools, machines, and safety equipment — with expert consultation, fast delivery, and repair service across Germany, Switzerland, and France.",
     "bookConsultation": "Book a Consultation",
     "explore360": "Explore 360° Service",
-    "fallbackIntro": "SWR Handelsgesellschaft mbH has supplied industry and trade in the three-country region around Lörrach with premium tools, welding equipment, machines, and workplace safety gear for nearly four decades.",
+    "fallbackIntro": "SWR GmbH has supplied industry and trade in the three-country region around Lörrach with premium tools, welding equipment, machines, and workplace safety gear for nearly four decades.",
     "missionHeading": "Our Mission",
     "missionBody": "We equip workshops, manufacturers, and tradespeople with professional-grade products — and pair them with the consultation, repair, and customs services that keep operations running.",
     "approachHeading": "Our Approach",
@@ -422,6 +470,8 @@
     "firstname": "First Name",
     "lastname": "Last Name",
     "email": "Email address",
+    "phone": "Phone",
+    "phoneHint": "Optional. Stored when your Magento account includes the matching customer attribute.",
     "changePassword": "Change Password",
     "changePasswordHint": "Leave blank to keep your current password.",
     "currentPassword": "Current Password",
@@ -607,6 +657,7 @@
     "colUnitPrice": "Unit Price",
     "colRowTotal": "Total",
     "viewQuotation": "Details →",
+    "downloadPdf": "Download quotation PDF",
     "quotationNumber": "Quotation #{id}",
     "validUntil": "Valid until {date}",
     "subtotal": "Subtotal",
@@ -652,11 +703,14 @@
       "brand": "Brand",
       "language": "Language",
       "clearAll": "Clear all filters",
-      "title": "Filter System",
-      "subtitle": "Technical Refinement",
+      "title": "Filters",
+      "subtitle": "By category, brand, document type, and language",
       "activeFilters": "Active Filters:",
       "manufacturerSearch": "Find manufacturer...",
-      "resultsShowing": "Showing {count, plural, =0 {no results} =1 {1 result} other {# results}}"
+      "resultsShowing": "Showing {count, plural, =0 {no results} =1 {1 result} other {# results}}",
+      "mobileShow": "Show filters",
+      "mobileHide": "Hide filters",
+      "panelAria": "Catalog filters"
     },
     "types": {
       "catalog": "Catalog",
@@ -912,7 +966,8 @@
     },
     "attachments": {
       "eyebrow": "Evidence",
-      "heading": "Attachments."
+      "heading": "Attachments.",
+      "erpRef": "Reference: {id}"
     },
     "timeline": {
       "eyebrow": "Activity",

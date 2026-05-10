@@ -11,5 +11,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: (await import(`../messages/${locale}.json`)).default,
+    /** Stable formatting across SSR vs browser — avoids relying on server runtime TZ. */
+    timeZone: "Europe/Berlin",
   };
 });

@@ -15,7 +15,7 @@ export default function Hero({
   children,
   variant = "default",
 }: HeroProps) {
-  const padClass = variant === "compact" ? "py-10 sm:py-14" : "py-14 sm:py-20";
+  const padClass = variant === "compact" ? "py-10" : "py-14 sm:py-20";
   return (
     <section
       className={`relative overflow-hidden ${padClass}`}
@@ -23,7 +23,7 @@ export default function Hero({
         background: "linear-gradient(160deg, #003a63 0%, #005288 100%)",
       }}
     >
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
+      <div className="swr-page-shell relative z-10">
         {eyebrow ? (
           <p className="text-xs font-bold uppercase tracking-[0.12em] text-white/70 mb-3">
             {eyebrow}

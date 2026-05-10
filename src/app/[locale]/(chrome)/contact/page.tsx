@@ -73,7 +73,7 @@ export default async function Page({ params }: PageProps) {
         variant="compact"
       />
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10">
+      <div className="swr-page-shell py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10">
         <div className="flex flex-col gap-6">
           {page ? (
             <CmsContent html={page.content} />

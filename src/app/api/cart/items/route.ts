@@ -12,7 +12,10 @@ export async function POST(req: NextRequest) {
   const { cartId, sku, qty } = await req.json();
 
   if (!cartId || !sku || !qty) {
-    return Response.json({ error: "cartId, sku and qty required" }, { status: 400 });
+    return Response.json(
+      { error: "cartId, sku and qty required" },
+      { status: 400 },
+    );
   }
 
   const res = await fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items`, {

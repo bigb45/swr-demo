@@ -1,6 +1,6 @@
 # SWR Frontend — Project Status
 
-_Last updated: April 2026 — account service & repair flow (pick equipment + fleet demo) + catalog + checkout + fleet_
+_Last updated: May 2026 (9 May) — copilot surface documented; `/bulk-order` redirects to cart; quotations REST + PDF proxy wired to `swr-quotations` contract; checkout/account backlog reconciled with code (payment picker, ISO address pickers, profile, password reset already shipped)._
 
 ---
 
@@ -21,6 +21,9 @@ _Last updated: April 2026 — account service & repair flow (pick equipment + fl
 ## Recent Progress
 
 Latest implemented work:
+
+- **Documentation alignment** — `BACKLOG.md`, `FEATURES.md`, `AGENTS.md`, and `STATUS.md` reconciled with codebase facts: Magento **`tier_prices`** = qty-break bulk table (✅); stakeholder **B2B net price / hide-until-login** = **catalog UI hides prices for guests** (✅); **true** payload hiding for anonymous API consumers still needs Magento catalog permissions / shared catalogs; **SPARQUE** not in repo (search/filter via Magento REST); stock badges ✅ on PDP + `ProductCard`; cart **CSV import** ✅; **reorder** ✅; **service-case attachments** — optional `POST /rest/V1/swr-service-case/attachments` forward when implemented (see `src/lib/service-attachment-upload.ts`); otherwise filenames/metadata only; **`/bulk-order`** → locale **`/cart`** redirect page.
+- **Guest catalog prices** — `CustomerSessionProvider` (server reads `swr_customer_token`) feeds `useCustomerSession()`; [`ProductPrice`](src/components/ProductPrice.tsx), [`ProductCard`](src/components/ProductCard.tsx), [`AddToCartCluster`](src/components/ui/AddToCartCluster.tsx), [`SearchSuggestionRow`](src/components/ui/SearchSuggestionRow.tsx), [`CopilotProductWidget`](src/components/copilot/CopilotProductWidget.tsx), and PDP bulk table (server-gated) hide numeric catalog prices until sign-in. Cart/checkout line prices unchanged for guests. Admin-token Magento product payloads still include `price` in network responses until Magento constrains them.
 
 - **Account service & repair (selection-first intake)** — `/account/service/pick?kind=repair|inspection` is the dedicated “choose equipment” step: grid of fleet machines (warranty badges), “from a past order” → `/orders`, or “not listed” → case form with `manual=1`. Bare `/account/service/new?kind=repair|inspection` redirects to pick unless `machineId`, `orderId`, or `manual=1` is present. `NewCaseForm` supports order-line quantities for repair/inspection (mirrors returns), reorders sections (order lines first for repair/inspection), and server validation when an order has lines. Order detail has CTA “Request repair (order lines)”. Marketing `/services/repair` uses `RepairIntakePanel` (signed-in: fleet + pick + service hub; guest: mailto form). **My Fleet** demo seed expanded to **13 machines** (welders, grinders, drills, bench drill, compressor, pneumatic, caliper) with `specs[]` on `Machine` and a technical **SpecTable** on `/account/fleet/[id]`; `NEXT_PUBLIC_FLEET_DEMO=1` enables the seed. **intl:** attachment “many files” label uses a `COUNT` token (not `{count}`) to avoid `FORMATTING_ERROR` with `next-intl`.
 - **Catalog filter redesign** — multi-select facets are now actually usable. `CatalogFilters` moved from scalar fields (`brand`, `type`, `category`, `language`) to arrays (`brands`, `types`, `categories`, `languages`) and the URL uses comma-separated values (`/catalog?brand=Bosch,Makita&type=datasheet,manual`). `FilterSidebar` is now a client accordion (one section open at a time, with a per-section active count badge, and a search-within-filter input on the Manufacturer section), toggles push through a `useTransition`-wrapped `router.push`, and optimistic local selection + a ref protect against rapid-click races. `buildFacets` computes each dimension against a set that ignores that dimension's own filter, so picking "Bosch" no longer erases every other brand from the list. A new `ActiveFilters` strip above the results grid shows one `<Link>`-based chip per applied value (crawlable + removable) plus the total result count. New i18n keys under `catalog.filters`: `title`, `subtitle`, `activeFilters`, `manufacturerSearch`, `resultsShowing` (ICU plural) in DE/EN/FR.
@@ -72,23 +75,26 @@ Latest implemented work:
 | **Addresses** `/account/addresses` (+ `new`, `:id/edit`) | Customer address book backed by `/V1/customers/me`; create / edit / delete with default-billing/shipping flags |
 | **Orders** `/orders`                    | Protected order history list with localized status labels                              |
 | **Order detail** `/orders/[id]`         | Items, totals, billing + shipping addresses, payment method, Magento-backed Documents section with per-document PDF downloads (invoice / delivery note / credit memo), downloadable order confirmation PDF, ERP-aware status label |
-| **Quotations** `/account/quotations` + `/account/quotations/[id]` | List + detail pages scaffolded, empty-state today; backed by pluggable `src/lib/quotations.ts` ready to wire to ERP endpoint |
+| **Quotations** `/account/quotations` + `/account/quotations/[id]` | List + detail call Magento **`GET /rest/V1/swr-quotations/mine`** (+ per-id detail); **download PDF** → `/api/account/quotations/[id]/pdf` → **`GET .../mine/:id/pdf`**; **accept** → `POST .../accept`. Empty state when module not deployed |
+| **Bulk order** `/bulk-order` | Redirects to **`/cart`** (CSV import on cart) |
 | **Legal/info pages**                    | `/legal/{imprint,terms,privacy,compliance,sds}` — Magento CMS-backed with i18n fallback, legacy paths 301-redirected |
 | **Marketing hubs**                      | `/about`, `/contact`, `/services`, `/industries`, `/partners`, `/careers`, `/certificates`, `/offers` — Magento CMS-backed with i18n fallback |
 | **Catalog** `/catalog` + `/catalog/[id]` | Document catalog with multi-select category / type / brand / language facets (accordion sidebar + active-filters chips + manufacturer search), free-text search, `<iframe>` PDF viewer for documents and a YouTube / HTML5 `VideoViewer` for video entries; backed by swappable `CatalogRepository` (JSON impl with ~60 real PDFs + demo video entries today) |
 | **Service pillars** `/services/{consulting,repair,delivery,customs}` | CMS-backed rich content + CTAs + consultation link. `/services/repair` — categories, timeline, `RepairIntakePanel` (account paths to pick + fleet + mailto guest). `/services/customs` — Swiss Delivery Center (zones, duty, checklist, catalog deep links) |
 | **Industry hubs** `/industries/[slug]`  | 7 slugs, CMS-backed, dynamically linked to Magento categories via `findCategoryByName`, `FeaturedProductsRail` from live catalog. `/industries/welding` is a static override with sub-category tiles, gas-safety SpecTable, technical-guide deep links, welding-catalog rail, and a service & installation block |
 | **My Fleet** `/account/fleet` + `/account/fleet/[id]` | Machine fleet with warranty counters, 13-machine demo when `NEXT_PUBLIC_FLEET_DEMO=1`, detail page specs table + maintenance log + repair/inspection CTAs |
-| **Service cases** `/account/service` + `/account/service/new` + `/account/service/pick` + `/account/service/[id]` | Unified returns / repair / inspection: pick page, `NewCaseForm` + `submitServiceCase` (in-memory demo cases when demo flag on), order-linked and fleet-linked context |
+| **Service cases** `/account/service` + `/account/service/new` + `/account/service/pick` + `/account/service/[id]` | Unified returns / repair / inspection: pick page, `NewCaseForm` + `submitServiceCase` (in-memory demo cases when demo flag on), order-linked and fleet-linked context; optional **`POST /api/account/service/attachments`** → Magento **`swr-service-case`** upload contract when configured |
 
 ### Partial / still evolving
 
 | Area / Page                            | What's still missing                                                                                   |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| **Registration / auth**                | Admin-side approval dashboard, sub-users, roles/permissions, 2FA, customer import/delete workflows   |
-| **Quotations**                         | Backend ERP endpoint not yet wired (returns empty today); accept-to-cart conversion flow still open |
-| **Cart / checkout**                    | Payment method is hard-coded to `checkmo`, no Magento payment selection UI, country/region in `AddressForm` is free-text (needs ISO country dropdown + Magento `directory/regions`), no cost-center assignment, no approval workflow (PO reference, real Magento shipping selection, multi-step checkout, address book are done)  |
-| **Product detail** `/products/[sku]`  | Cert badges / trust copy are still static marketing copy                                               |
+| **Registration / auth**                | Admin-side approval dashboard, sub-users, roles/permissions, 2FA, customer import/delete workflows (self-serve **forgot** + **reset password** + **profile / in-account password change** are live).   |
+| **Quotations**                         | `listCustomerQuotations` / `getQuotationForCustomer` call **`GET /rest/V1/swr-quotations/mine`** when deployed; **PDF** via **`GET .../mine/:id/pdf`** proxied at `/api/account/quotations/[id]/pdf`. Empty state persists until Magento exposes the module. **Accept → cart** wired to **`POST .../accept`** (needs backend). |
+| **Cart / checkout**                    | **Payment method** radio group on review + `placeOrderAction` pass-through; **checkout address** uses `CountryRegionFields` + Magento directory. Still open: cost-center assignment, approval workflow (PO reference ✅; multi-step checkout ✅). |
+| **Product discovery**                  | Search/filter uses **Magento REST** (not SPARQUE). URL filters on `/products` for category + price band — richer facets/`aggregations` still optional work |
+| **Product detail** `/products/[sku]`  | Cert badges / trust copy are still static marketing copy; **configurable / McMaster-style variant matrix** not built; **guest catalog price UI** = hidden until login (`CustomerSessionProvider` + `ProductPrice` / `AddToCartCluster`); **Magento REST still returns prices** to the app for guests until catalog permissions / shared catalogs gate payloads. |
+| **Nav / demo hygiene**                 | **`/bulk-order`** redirects to **`/cart`** (CSV import on cart). Sidebar may still label “bulk order” — link target is valid. |
 
 ---
 
@@ -112,8 +118,8 @@ Latest implemented work:
 | Checkout / place order (`/checkout/*`)                      | ✅ Done     |
 | Customer address book (`/account/addresses`)                | ✅ Done     |
 | Shipping method selection → Magento                         | ✅ Done     |
-| Multi-payment selection at checkout                         | ❌ Not done |
-| Address validation / region picker                          | ❌ Not done |
+| Multi-payment selection at checkout                         | ✅ Done (Magento methods from shipping-information) |
+| Address validation / region picker                          | ✅ Done (directory-backed country + region on checkout + address book) |
 | Cost-center assignment per item                             | ❌ Not done |
 | Approval workflow before order placement                    | ❌ Not done |
 
@@ -137,8 +143,8 @@ Latest implemented work:
 | Downloadable credit memo PDF                         | ✅ Done |
 | Localized ERP-style order status labels              | ✅ Done |
 | ERP status override hook (`extension_attributes.erp_status_*`) | ✅ Done |
-| Quotations list + detail (ERP endpoint not yet wired)| 🔄 Scaffolded |
-| Accept quotation → cart                              | ❌ Not done |
+| Quotations list + detail (`GET /rest/V1/swr-quotations/mine`) | 🔄 Wired — empty until Magento module |
+| Accept quotation → cart (`POST .../accept`) | 🔄 Wired — needs live backend |
 | Sub-users / role model / approval workflows          | ❌ Not done |
 
 ---
@@ -153,7 +159,7 @@ Current registration UI exists, but the business workflow from the requirements 
 
 ### 2. ERP-specific order workflows
 
-Frontend scaffolding is now complete: per-document SWR-branded PDFs (invoice / shipment / credit memo) stream from `/api/orders/[id]/{invoices,shipments,creditmemos}/:docId/pdf`, the status badge goes through `resolveOrderStatus` which reads `extension_attributes.erp_status_code` / `erp_status_label` and falls back to Magento, and `/account/quotations` ships as a pluggable scaffold. Remaining work is backend-driven: the Magento/ERP team needs to populate those extension attributes on orders and expose a quotations endpoint so `src/lib/quotations.ts` can be wired. Next frontend increment is accept-quotation-to-cart once the accept endpoint exists.
+Per-document PDFs and ERP status overrides are live. **Quotations:** `src/lib/quotations.ts` implements **list**, **detail**, **accept**, and **PDF proxy** (`/api/account/quotations/[id]/pdf`) against `swr-quotations` — data remains empty until Magento ships the module.
 
 ### 3. Customer-specific account model
 
@@ -161,12 +167,12 @@ Sub-users, company-level admins, permissions, approval chains, and customer-numb
 
 ### 4. Checkout / procurement metadata
 
-The signed-in 3-step checkout (`/checkout/{address,shipping,review}`) is live with a full customer address book, real Magento shipping methods, and PO references. Still open: payment-method selection (Magento returns the available methods from `setShippingInformation` but the UI is hard-coded to `checkmo`), an ISO country / region picker on the address form, cost-center assignment, and approval workflows.
+Checkout uses **Magento payment-method radios** on review and **directory-backed** country/region on the address step. Still open: **cost-center** assignment and **approval** workflows before order placement.
 
 ### 5. Customer-specific B2B features
 
-Product lists, order templates, customer assortments, and CSV import into cart remain key B2B gaps.
+Product lists, order templates, customer assortments remain gaps. **CSV import into cart is shipped** (`CsvImportButton` on `/cart`).
 
 ### 6. Returns / repair workflows
 
-**Done on the frontend (demo / in-process):** unified **Service** hub (`/account/service`), equipment **pick** page, **NewCaseForm** for return / repair / inspection with optional order lines + fleet context, in-memory `submitServiceCase` + case detail when `NEXT_PUBLIC_FLEET_DEMO=1` / demo service store, **My Fleet** with rich demo machines + specs + maintenance log, marketing **RepairIntakePanel**, order-detail CTAs. **Still open:** Magento RMA for real returns, file upload to durable storage, ERP-backed repair/return status, production fleet feed (replace `demoRepository`).
+**Done on the frontend (demo / in-process):** unified **Service** hub, **pick** page, **NewCaseForm**, optional **Magento multipart upload** (`SWR_SERVICE_ATTACHMENT_REST_PATH`) via `uploadServiceCaseAttachments`, in-memory store when demo flag on, **My Fleet**, marketing **RepairIntakePanel**. **Still open:** Magento RMA / ERP return IDs and statuses, production fleet feed (replace `demoRepository`).

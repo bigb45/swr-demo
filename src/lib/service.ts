@@ -42,6 +42,8 @@ export interface ServiceAttachment {
   mimeType: string;
   uploadedAt: string;
   kind: "photo" | "document";
+  /** Set when bytes were accepted by Magento / ERP (`uploadServiceCaseAttachments`). */
+  erpAttachmentId?: string;
 }
 
 export interface ServiceEvent {
@@ -321,7 +323,12 @@ export interface CreateCaseInput {
   machineLabel?: string;
   serial?: string;
   items?: ServiceCaseLineItem[];
-  attachments?: Array<{ fileName: string; sizeBytes: number; mimeType: string }>;
+  attachments?: Array<{
+    fileName: string;
+    sizeBytes: number;
+    mimeType: string;
+    remoteId?: string;
+  }>;
   customerId?: string;
 }
 
@@ -359,6 +366,7 @@ export async function createCase(input: CreateCaseInput): Promise<ServiceCase> {
       mimeType: a.mimeType,
       uploadedAt: now,
       kind: a.mimeType.startsWith("image/") ? "photo" : "document",
+      erpAttachmentId: a.remoteId,
     })),
     events: [
       {

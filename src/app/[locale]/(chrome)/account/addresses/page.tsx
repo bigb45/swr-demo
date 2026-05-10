@@ -24,7 +24,8 @@ export default async function AddressesPage({ params }: AddressesPageProps) {
   const addresses = me?.addresses ?? [];
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-black text-primary">{t("heading")}</h1>
@@ -108,6 +109,7 @@ export default async function AddressesPage({ params }: AddressesPageProps) {
         >
           &larr; {t("backToAccount")}
         </Link>
+      </div>
       </div>
     </div>
   );

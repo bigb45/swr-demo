@@ -34,7 +34,7 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/beratung": "/services/consulting",
   "/service": "/services/repair",
   "/lieferungen": "/services/delivery",
-  "/zollabwicklung": "/services/customs",
+  "/zollabwicklung": "/services/delivery",
 
   // Industry hubs (WordPress German slugs → new English slugs)
   "/schweisstechnik": "/industries/welding",

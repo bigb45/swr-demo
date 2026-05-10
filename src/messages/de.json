@@ -31,6 +31,51 @@
     "selectLanguage": "Sprache auswählen",
     "preferences": "Einstellungen"
   },
+  "search": {
+    "suggestionsLabel": "Produktvorschläge",
+    "loading": "Suche läuft…",
+    "empty": "Noch keine passenden Produkte.",
+    "error": "Die Suche ist vorübergehend nicht verfügbar.",
+    "viewAll": "Alle Treffer anzeigen",
+    "openProduct": "Produktdetails zu {name} öffnen",
+    "visualSearchAria": "Per Bild suchen",
+    "visualSearching": "Ähnliche Produkte werden gesucht…",
+    "visualError": "Bildsuche fehlgeschlagen. Anderes Foto versuchen oder per Text suchen.",
+    "visualUnsupportedType": "Bitte JPEG, PNG, WebP oder GIF wählen.",
+    "visualFileTooLarge": "Bild darf höchstens 4 MB groß sein.",
+    "visualEmpty": "Für dieses Bild wurden keine Katalogtreffer gefunden.",
+    "visualTeiaMessage": "Haben Sie ähnliche Produkte wie auf diesem Bild?"
+  },
+  "copilot": {
+    "title": "SWR AI Copilot",
+    "shortTitle": "Copilot",
+    "assistantLabel": "KI-Assistent",
+    "composerPlaceholder": "Copilot fragen oder per Spezifikation suchen…",
+    "suggestion1": "Verwandte Artikel zeigen",
+    "suggestion2": "Vertragspricing prüfen",
+    "suggestion3": "Verbrauchsmaterial für diesen Schweißer vorschlagen",
+    "openFabAria": "KI-Copilot öffnen",
+    "openHeaderAria": "KI-Copilot-Panel öffnen",
+    "closeAria": "KI-Copilot schließen",
+    "sendAria": "Nachricht senden",
+    "panelAria": "KI-Copilot-Unterhaltung",
+    "errorGeneric": "Der Assistent konnte nicht antworten. Bitte erneut versuchen.",
+    "emptyReply": "Der Assistent hat eine leere Antwort geliefert.",
+    "sessionInitializing": "Die Sitzung wird initialisiert. Bitte kurz warten.",
+    "dismissError": "Ausblenden",
+    "assistantTyping": "…",
+    "emptyState": "Fragen Sie zu Produkten, Spezifikationen oder zu Ihrem Bestellablauf.",
+    "suggestionsHeading": "Vorschläge",
+    "productLoading": "Produkt wird geladen…",
+    "productNotFound": "Dieses Produkt konnte nicht geladen werden ({sku}).",
+    "widgetAddToCart": "In den Warenkorb",
+    "addingToCart": "Wird hinzugefügt…",
+    "addToCartSuccess": "Hinzugefügt",
+    "addToCartFailed": "Fehlgeschlagen",
+    "qtyDecrease": "Menge verringern",
+    "qtyIncrease": "Menge erhöhen",
+    "cartReconcileFailed": "Ihr Warenkorb konnte nicht aktualisiert werden: {detail}"
+  },
   "hero": {
     "title": "Schweißtechnik, Werkzeuge & Reparatur.",
     "subtitle": "Ihr 360°-Servicepartner in Lörrach. Hochwertige Produkte für Industrie und Handwerk – mit persönlicher Beratung und schneller Lieferung.",
@@ -167,6 +212,9 @@
     "empty": "Keine Produkte gefunden.",
     "view": "Ansehen",
     "priceOnRequest": "Preis auf Anfrage",
+    "pricesLoginRequired": "Preise sehen Sie nach der Anmeldung.",
+    "signInForPrices": "Anmelden",
+    "signInToAddToCart": "Zum Warenkorb bitte anmelden",
     "exclVat": "zzgl. MwSt.",
     "inStock": "AUF LAGER",
     "lowStock": "GERINGER BESTAND",
@@ -239,7 +287,7 @@
     "contactHeading": "Kontakt",
     "metaTitle": "SWR Lörrach — Schweißtechnik, Werkzeuge, Reparatur",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR Handelsgesellschaft mbH — Ihr B2B-Partner für Schweißtechnik, Elektrowerkzeuge, Maschinen und Arbeitsschutz. Qualität verbindet."
+    "metaDescription": "SWR GmbH — Ihr B2B-Partner für Schweißtechnik, Elektrowerkzeuge, Maschinen und Arbeitsschutz. Qualität verbindet."
   },
   "notFound": {
     "title": "Seite nicht gefunden",
@@ -332,10 +380,10 @@
   "about": {
     "eyebrow": "Seit 1986",
     "heading": "Qualität verbindet.",
-    "subheading": "SWR Handelsgesellschaft mbH ist Ihr 360°-Servicepartner in Lörrach für Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz — mit kompetenter Beratung, schneller Lieferung und Reparaturservice in Deutschland, der Schweiz und Frankreich.",
+    "subheading": "SWR GmbH ist Ihr 360°-Servicepartner in Lörrach für Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz — mit kompetenter Beratung, schneller Lieferung und Reparaturservice in Deutschland, der Schweiz und Frankreich.",
     "bookConsultation": "Beratung vereinbaren",
     "explore360": "360°-Service entdecken",
-    "fallbackIntro": "SWR Handelsgesellschaft mbH beliefert seit fast vier Jahrzehnten Industrie und Handwerk im Dreiländereck rund um Lörrach mit hochwertigen Werkzeugen, Schweißtechnik, Maschinen und Arbeitsschutz.",
+    "fallbackIntro": "SWR GmbH beliefert seit fast vier Jahrzehnten Industrie und Handwerk im Dreiländereck rund um Lörrach mit hochwertigen Werkzeugen, Schweißtechnik, Maschinen und Arbeitsschutz.",
     "missionHeading": "Unser Auftrag",
     "missionBody": "Wir rüsten Werkstätten, Hersteller und Handwerker mit professionellen Produkten aus — und verbinden sie mit den Beratungs-, Reparatur- und Zolldienstleistungen, die den Betrieb am Laufen halten.",
     "approachHeading": "Unser Ansatz",
@@ -422,6 +470,8 @@
     "firstname": "Vorname",
     "lastname": "Nachname",
     "email": "E-Mail-Adresse",
+    "phone": "Telefon",
+    "phoneHint": "Optional. Wird gespeichert, wenn das passende Kundenattribut in Magento existiert.",
     "changePassword": "Passwort ändern",
     "changePasswordHint": "Leer lassen, um das aktuelle Passwort zu behalten.",
     "currentPassword": "Aktuelles Passwort",
@@ -607,6 +657,7 @@
     "colUnitPrice": "Stückpreis",
     "colRowTotal": "Gesamt",
     "viewQuotation": "Details →",
+    "downloadPdf": "Angebot als PDF",
     "quotationNumber": "Angebot #{id}",
     "validUntil": "Gültig bis {date}",
     "subtotal": "Zwischensumme",
@@ -652,11 +703,14 @@
       "brand": "Marke",
       "language": "Sprache",
       "clearAll": "Alle Filter zurücksetzen",
-      "title": "Filtersystem",
-      "subtitle": "Technische Verfeinerung",
+      "title": "Filter",
+      "subtitle": "Nach Kategorie, Marke, Dokumenttyp und Sprache",
       "activeFilters": "Aktive Filter:",
       "manufacturerSearch": "Hersteller suchen...",
-      "resultsShowing": "{count, plural, =0 {Keine Ergebnisse} =1 {1 Ergebnis} other {# Ergebnisse}}"
+      "resultsShowing": "{count, plural, =0 {Keine Ergebnisse} =1 {1 Ergebnis} other {# Ergebnisse}}",
+      "mobileShow": "Filter anzeigen",
+      "mobileHide": "Filter ausblenden",
+      "panelAria": "Katalogfilter"
     },
     "types": {
       "catalog": "Katalog",
@@ -912,7 +966,8 @@
     },
     "attachments": {
       "eyebrow": "Nachweise",
-      "heading": "Anhänge."
+      "heading": "Anhänge.",
+      "erpRef": "Referenz: {id}"
     },
     "timeline": {
       "eyebrow": "Aktivität",

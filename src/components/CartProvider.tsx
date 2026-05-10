@@ -63,6 +63,12 @@ interface CartContextValue {
    */
   resetCartId: () => void;
   refreshTotals: () => Promise<void>;
+  /**
+   * Returns the persisted guest cart id, creating an empty Magento guest cart
+   * when none exists yet. Used by the copilot proxy so backend add-to-cart
+   * targets the same quote the storefront displays.
+   */
+  getOrCreateCartId: () => Promise<string>;
   itemCount: number;
 }
 
@@ -171,6 +177,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const id = cartId ?? localStorage.getItem(CART_ID_KEY);
     if (!id) return;
     await fetchCart(id);
+  }, [cartId, fetchCart]);
+
+  const getOrCreateCartId = useCallback(async () => {
+    let id = cartId ?? localStorage.getItem(CART_ID_KEY);
+    if (id) {
+      persistCartId(id);
+      setCartId(id);
+      return id;
+    }
+
+    const res = await fetch("/api/cart", { method: "POST" });
+    if (!res.ok) throw new Error("Failed to create cart");
+    const data = (await res.json()) as { cartId?: string };
+    const newId = data.cartId;
+    if (!newId || typeof newId !== "string") {
+      throw new Error("Failed to create cart");
+    }
+    persistCartId(newId);
+    setCartId(newId);
+    await fetchCart(newId);
+    return newId;
   }, [cartId, fetchCart]);
 
   const addItem = useCallback(async (product: MagentoProduct, qty: number) => {
@@ -333,7 +360,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, totals, cartId, loading, fetchError, addItem, addBySku, updateQty, removeItem, restoreItem, clearCart, resetCartId, refreshTotals, itemCount }}
+      value={{ items, totals, cartId, loading, fetchError, addItem, addBySku, updateQty, removeItem, restoreItem, clearCart, resetCartId, refreshTotals, getOrCreateCartId, itemCount }}
     >
       {children}
     </CartContext.Provider>

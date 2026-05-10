@@ -40,12 +40,6 @@ const ICON_DELIVERY = (
     <circle cx="18.5" cy="18.5" r="2.5" />
   </svg>
 );
-const ICON_CUSTOMS = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-  </svg>
-);
-
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const [t, tNav, tServices, tIndustries, tCatalog, tContact] = await Promise.all([
@@ -80,7 +74,7 @@ export default async function HomePage({ params }: HomePageProps) {
     {
       question: t("intents.swiss.question"),
       answer: t("intents.swiss.answer"),
-      href: "/services/customs",
+      href: "/services/delivery",
       ctaLabel: t("intents.swiss.cta"),
     },
     {
@@ -136,13 +130,6 @@ export default async function HomePage({ params }: HomePageProps) {
       description: t("services.delivery"),
       href: "/services/delivery",
     },
-    {
-      icon: ICON_CUSTOMS,
-      eyebrow: tServices("customs.eyebrow"),
-      title: tServices("customs.title"),
-      description: t("services.customs"),
-      href: "/services/customs",
-    },
   ];
 
   return (
@@ -160,7 +147,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Intent tiles */}
       <section className="py-14 sm:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12">
+        <div className="swr-page-shell">
           <div className="flex flex-col gap-3 mb-10 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
               {t("intents.eyebrow")}
@@ -194,7 +181,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Services pillars */}
       <section className="bg-surface-container-low py-14 sm:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col gap-8">
+        <div className="swr-page-shell flex flex-col gap-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div className="max-w-2xl">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
@@ -236,7 +223,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* Industries grid (questions, not labels) */}
       <section className="py-14 sm:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 flex flex-col gap-8">
+        <div className="swr-page-shell flex flex-col gap-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 max-w-3xl">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
@@ -263,19 +250,21 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* Featured products */}
-      <div className="bg-surface-container-low">
-        <FeaturedProductsRail
-          heading={t("featured.heading")}
-          subheading={t("featured.subheading")}
-          products={products}
-          viewAllHref="/products"
-          viewAllLabel={t("featured.cta")}
-        />
+      <div className="bg-surface-container-low py-14 sm:py-20">
+        <div className="swr-page-shell">
+          <FeaturedProductsRail
+            heading={t("featured.heading")}
+            subheading={t("featured.subheading")}
+            products={products}
+            viewAllHref="/products"
+            viewAllLabel={t("featured.cta")}
+          />
+        </div>
       </div>
 
       {/* Real people */}
       <section className="py-14 sm:py-20">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 items-center">
+        <div className="swr-page-shell grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 items-center">
           <div className="flex flex-col gap-3 max-w-md">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
               {t("people.eyebrow")}

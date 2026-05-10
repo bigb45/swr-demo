@@ -152,10 +152,7 @@ export async function getAdminToken(): Promise<string> {
  * Forwarding `message` raw leaks the literal `%fieldName` / `%1` to the UI, so
  * we substitute the placeholders before surfacing the string.
  */
-export function extractMagentoMessage(
-  data: unknown,
-  fallback: string,
-): string {
+export function extractMagentoMessage(data: unknown, fallback: string): string {
   if (!data || typeof data !== "object") return fallback;
 
   const obj = data as { message?: unknown; parameters?: unknown };
@@ -273,10 +270,9 @@ export interface GuestCartTotalsResponse {
 export async function fetchGuestCartTotals(
   cartId: string,
 ): Promise<GuestCartTotalsResponse | null> {
-  const res = await fetch(
-    `${MAGENTO}/rest/V1/guest-carts/${cartId}/totals`,
-    { cache: "no-store" },
-  );
+  const res = await fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/totals`, {
+    cache: "no-store",
+  });
   if (!res.ok) return null;
   return (await res.json()) as GuestCartTotalsResponse;
 }

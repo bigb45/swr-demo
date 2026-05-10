@@ -11,10 +11,11 @@ import {
 import { getCustomerEmail, getOrderForCustomer } from "@/lib/orders";
 import { getCustomerMachine } from "@/lib/fleet";
 
-// The form posts FormData. File uploads are stubbed: we record the file name
-// and size as attachment metadata so the case detail screen has something
-// to render, but no bytes are persisted until a storage transport is wired
-// (see Phase 6 backend dependencies: attachment upload endpoint).
+import { uploadServiceCaseAttachments } from "@/lib/service-attachment-upload";
+
+// The form posts FormData. Filenames and sizes are always recorded. When
+// Magento exposes `SWR_SERVICE_ATTACHMENT_REST_PATH`, bytes are forwarded
+// and returned ids are stored on each attachment (`erpAttachmentId`).
 
 function parseKind(raw: unknown): ServiceCaseKind {
   if (raw === "return" || raw === "repair" || raw === "inspection") return raw;
@@ -85,20 +86,31 @@ export async function submitServiceCase(
     });
   }
 
+  const fileList: File[] = [];
+  const rawFiles = formData.getAll("attachments");
+  for (const f of rawFiles) {
+    if (f instanceof File && f.size > 0) fileList.push(f);
+  }
+
+  const uploaded =
+    fileList.length > 0
+      ? await uploadServiceCaseAttachments(token, fileList)
+      : [];
+
   const attachmentsMeta: Array<{
     fileName: string;
     sizeBytes: number;
     mimeType: string;
+    remoteId?: string;
   }> = [];
-  const files = formData.getAll("attachments");
-  for (const f of files) {
-    if (f instanceof File && f.size > 0) {
-      attachmentsMeta.push({
-        fileName: f.name,
-        sizeBytes: f.size,
-        mimeType: f.type || "application/octet-stream",
-      });
-    }
+  for (let i = 0; i < fileList.length; i++) {
+    const f = fileList[i];
+    attachmentsMeta.push({
+      fileName: f.name,
+      sizeBytes: f.size,
+      mimeType: f.type || "application/octet-stream",
+      remoteId: uploaded[i]?.id,
+    });
   }
 
   // Enrich with server-verified order / machine context so a tampered

@@ -20,7 +20,8 @@ export default async function AccountPage({ params }: AccountPageProps) {
   const t = await getTranslations({ locale, namespace: "account" });
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <h1 className="text-3xl font-black text-primary mb-2">{t("heading")}</h1>
       <p className="text-sm text-on-surface-variant mb-10">{t("welcome")}</p>
 
@@ -100,6 +101,7 @@ export default async function AccountPage({ params }: AccountPageProps) {
         </Link>
 
         <LogoutButton label={t("logout")} />
+      </div>
       </div>
     </div>
   );

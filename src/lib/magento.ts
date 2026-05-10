@@ -32,7 +32,14 @@ async function fetchAdminTokenFromMagento(): Promise<string> {
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to get Magento admin token: ${res.status}`);
+    const detail = await res.text().catch(() => "");
+    const hint =
+      res.status === 401
+        ? " Check MAGENTO_ADMIN_USER / MAGENTO_ADMIN_PASSWORD for this host (they must match a valid Magento admin user on that instance). If the storefront uses Apache from the project root, MAGENTO_URL may need a /pub suffix."
+        : "";
+    throw new Error(
+      `Failed to get Magento admin token: ${res.status}${hint}${detail ? ` — ${detail.slice(0, 200)}` : ""}`,
+    );
   }
 
   return res.json() as Promise<string>;
@@ -132,6 +139,56 @@ export async function getProductBySku(sku: string): Promise<MagentoProduct> {
   );
 }
 
+/**
+ * Resolve a product by exact SKU via searchCriteria (`eq`). Use when path-based
+ * `GET /products/{sku}` unexpectedly 404s (encoding, MSI, or storefront scope).
+ */
+export async function getProductBySkuSearch(
+  sku: string,
+): Promise<MagentoProduct | null> {
+  const trimmed = sku.trim();
+  if (!trimmed) return null;
+  const params = new URLSearchParams();
+  params.set(
+    `searchCriteria[filter_groups][0][filters][0][field]`,
+    "sku",
+  );
+  params.set(
+    `searchCriteria[filter_groups][0][filters][0][value]`,
+    trimmed,
+  );
+  params.set(
+    `searchCriteria[filter_groups][0][filters][0][condition_type]`,
+    "eq",
+  );
+  params.set("searchCriteria[currentPage]", "1");
+  params.set("searchCriteria[pageSize]", "1");
+  const list = await magentoGet<MagentoProductList>(
+    `/products?${params.toString()}`,
+    false,
+  );
+  return list.items[0] ?? null;
+}
+
+/**
+ * Path-based SKU GET first (fast), then SKU search fallback.
+ */
+export async function resolveMagentoProductBySkuFlexible(
+  sku: string,
+): Promise<MagentoProduct | null> {
+  const trimmed = sku.trim().replace(/^[\uFEFF\s]+|[\s\uFEFF]+$/g, "");
+  if (!trimmed) return null;
+  try {
+    return await getProductBySku(trimmed);
+  } catch {
+    try {
+      return await getProductBySkuSearch(trimmed);
+    } catch {
+      return null;
+    }
+  }
+}
+
 export async function getCategoryTree(): Promise<MagentoCategoryTree> {
   return magentoGet<MagentoCategoryTree>("/categories");
 }
@@ -159,16 +216,9 @@ export async function getProductsByCategory(
 export async function searchProducts(
   query: string,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
 ): Promise<MagentoProductList> {
-  const params = new URLSearchParams({
-    "searchCriteria[filter_groups][0][filters][0][field]": "name",
-    "searchCriteria[filter_groups][0][filters][0][value]": `%${query}%`,
-    "searchCriteria[filter_groups][0][filters][0][condition_type]": "like",
-    "searchCriteria[currentPage]": String(page),
-    "searchCriteria[pageSize]": String(pageSize),
-  });
-  return magentoGet<MagentoProductList>(`/products?${params.toString()}`, false);
+  return getFilteredProducts(page, pageSize, { q: query });
 }
 
 /**
@@ -202,8 +252,39 @@ export async function getFilteredProducts(
     group += 1;
   };
 
+  /** Name OR SKU (Magento OR-combines filters within one filter_group). */
+  const addKeywordOrSkuFilters = (q: string) => {
+    const like = `%${q}%`;
+    const g = group;
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][0][field]`,
+      "name",
+    );
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][0][value]`,
+      like,
+    );
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][0][condition_type]`,
+      "like",
+    );
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][1][field]`,
+      "sku",
+    );
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][1][value]`,
+      like,
+    );
+    params.set(
+      `searchCriteria[filter_groups][${g}][filters][1][condition_type]`,
+      "like",
+    );
+    group += 1;
+  };
+
   if (filters.q && filters.q.trim().length > 0) {
-    addFilter("name", `%${filters.q.trim()}%`, "like");
+    addKeywordOrSkuFilters(filters.q.trim());
   }
   if (filters.categoryId !== undefined && filters.categoryId !== "") {
     addFilter("category_id", String(filters.categoryId), "eq");

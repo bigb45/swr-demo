@@ -70,7 +70,8 @@ export default async function MachinePage({ params }: PageProps) {
         : "bg-error/10 text-error";
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-10 flex flex-col gap-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[1200px] flex flex-col gap-10">
       <div className="flex flex-col gap-2">
         <Link
           href="/account/fleet"
@@ -288,6 +289,7 @@ export default async function MachinePage({ params }: PageProps) {
           }}
         />
       </section>
+      </div>
     </div>
   );
 }

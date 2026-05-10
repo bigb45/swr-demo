@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { Link } from "@/i18n/navigation";
-import { getCustomerEmail } from "@/lib/orders";
 import {
   getQuotationForCustomer,
   quotationStatusTone,
@@ -26,8 +25,7 @@ export default async function QuotationDetailPage({
 
   const t = await getTranslations({ locale, namespace: "quotations" });
 
-  const email = await getCustomerEmail(token);
-  const quotation = email ? await getQuotationForCustomer(id, email) : null;
+  const quotation = await getQuotationForCustomer(id, token);
 
   if (!quotation) {
     notFound();
@@ -50,7 +48,8 @@ export default async function QuotationDetailPage({
   const canAccept = quotation.status === "open";
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <Link
         href="/account/quotations"
         className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"
@@ -75,11 +74,21 @@ export default async function QuotationDetailPage({
             ) : null}
           </p>
         </div>
-        <span
-          className={`inline-block self-start px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded ${quotationStatusTone(quotation.status)}`}
-        >
-          {t(`status.${quotation.status}`)}
-        </span>
+        <div className="flex flex-col gap-2 items-start sm:items-end shrink-0">
+          <span
+            className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded ${quotationStatusTone(quotation.status)}`}
+          >
+            {t(`status.${quotation.status}`)}
+          </span>
+          <a
+            href={`/api/account/quotations/${encodeURIComponent(quotation.id)}/pdf`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-bold text-secondary hover:underline"
+          >
+            {t("downloadPdf")}
+          </a>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -153,6 +162,7 @@ export default async function QuotationDetailPage({
           </p>
         </div>
       ) : null}
+      </div>
     </div>
   );
 }

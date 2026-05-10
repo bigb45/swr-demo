@@ -41,7 +41,7 @@ export default async function Page({ params }: PageProps) {
         />
       </Hero>
 
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
+      <div className="swr-page-shell py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
         <div>
           {page ? (
             <CmsContent html={page.content} />

@@ -80,7 +80,8 @@ export async function placeOrderAction(
   }
 
   const method =
-    typeof args.paymentMethod === "string" && args.paymentMethod.trim().length > 0
+    typeof args.paymentMethod === "string" &&
+    args.paymentMethod.trim().length > 0
       ? args.paymentMethod.trim()
       : "checkmo";
 

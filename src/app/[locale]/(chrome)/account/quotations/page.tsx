@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Link } from "@/i18n/navigation";
-import { getCustomerEmail } from "@/lib/orders";
 import {
   listCustomerQuotations,
   quotationStatusTone,
@@ -23,8 +22,7 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
 
   const t = await getTranslations({ locale, namespace: "quotations" });
 
-  const email = await getCustomerEmail(token);
-  const quotations = email ? await listCustomerQuotations(email) : [];
+  const quotations = await listCustomerQuotations(token);
 
   const fmt = new Intl.NumberFormat(
     locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB",
@@ -37,7 +35,8 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
   );
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10">
+    <div className="swr-page-shell py-10">
+      <div className="mx-auto w-full max-w-[900px]">
       <Link
         href="/account"
         className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"
@@ -127,6 +126,7 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
           <p className="text-xs mt-2 max-w-md mx-auto">{t("emptyHint")}</p>
         </div>
       )}
+      </div>
     </div>
   );
 }

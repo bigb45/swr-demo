@@ -9,6 +9,7 @@ import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";
+import { useCustomerSession } from "./CustomerSessionProvider";
 import StockBadge from "./ui/StockBadge";
 
 interface ProductCardProps {
@@ -21,13 +22,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   const imageUrl = getProductImageUrl(product);
   const shortDescription = getCustomAttribute(product, "short_description");
   const { formatPrice } = useCurrency();
+  const { isAuthenticated } = useCustomerSession();
+  const { addItem } = useCart();
   const locale = useLocale();
   const t = useTranslations("products");
-  const { addItem } = useCart();
   const [status, setStatus] = useState<AddStatus>("idle");
 
   const stock = getStockStatus(product);
-  const canAdd = product.price > 0 && stock.level !== "out";
+  const canAdd =
+    isAuthenticated && product.price > 0 && stock.level !== "out";
+  const showGuestPriceGate =
+    !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, t);
 
   async function handleAdd() {
@@ -92,21 +97,35 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary transition-colors">
             {product.name}
           </h3>
-          {shortDescription && (
-            <p
+          {shortDescription ? (
+            <div
               className="text-xs text-gray-500 line-clamp-2"
               dangerouslySetInnerHTML={{ __html: shortDescription }}
             />
-          )}
+          ) : null}
         </div>
       </Link>
 
       <div className="flex items-center justify-between gap-3 p-4 pt-3 mt-auto">
-        <span className="text-lg font-bold text-gray-900">
-          {product.price > 0
-            ? formatPrice(product.price, locale)
-            : t("priceOnRequest")}
-        </span>
+        {showGuestPriceGate ? (
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="text-xs text-gray-600 leading-snug">
+              {t("pricesLoginRequired")}
+            </span>
+            <Link
+              href="/account/login"
+              className="text-xs font-bold text-secondary hover:underline"
+            >
+              {t("signInForPrices")}
+            </Link>
+          </div>
+        ) : (
+          <span className="text-lg font-bold text-gray-900">
+            {product.price > 0
+              ? formatPrice(product.price, locale)
+              : t("priceOnRequest")}
+          </span>
+        )}
         {canAdd && (
           <button
             type="button"

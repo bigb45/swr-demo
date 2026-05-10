@@ -45,7 +45,77 @@
   --radius-table: 0px;
   --radius-input: 3px;
   --radius-nav: 0px;
+
+  /* Global thin scrollbars (Firefox + WebKit; see @layer base) */
+  --scrollbar-size: 6px;
+  --scrollbar-thumb: color-mix(in srgb, var(--color-outline-variant) 92%, var(--color-on-surface));
+  --scrollbar-track: transparent;
 }
+
+/**
+ * Primary content gutters + max-width (matches shop listings: /products, /categories).
+ * Use standalone for full-width pages; wrap a nested max-w-* column for forms and account hubs.
+ */
+.swr-page-shell {
+  @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/**
+ * Sticky header stack height (must match Header.tsx tiers: utility sm+, nav md+).
+ * Used by CopilotDock so the drawer does not sit under z-50 header.
+ */
+:root {
+  --swr-header-offset: 4rem; /* Tier 2 main bar only */
+  /* Footer.tsx slab under `main`; used when 100dvh alone ignores bottom chrome */
+  --swr-footer-chrome-estimate: 20rem;
+  /* catalog/page.tsx sticky search + ActiveFilters block (approx.; chips may wrap) */
+  --catalog-sticky-band-estimate: 11rem;
+  /**
+   * Document catalog hub: max height for sticky filter + scrollable results.
+   * Do not subtract --swr-footer-chrome-estimate here — `main` scrolls as a whole,
+   * and over-reserving footer height was crushing the grid to ~250px tall.
+   */
+  --catalog-pane-max-height: calc(
+    100dvh - var(--swr-header-offset) - var(--catalog-sticky-band-estimate) - 1.5rem
+  );
+}
+@media (min-width: 640px) {
+  :root {
+    --swr-header-offset: calc(33px + 4rem); /* + utility bar */
+    --swr-footer-chrome-estimate: 22rem;
+    --catalog-sticky-band-estimate: 12rem;
+  }
+}
+@media (min-width: 768px) {
+  :root {
+    --swr-header-offset: calc(33px + 4rem + 2.75rem); /* + primary nav h-11 */
+  }
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: var(--radius-btn);
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-outline-variant);
+  }
+}
+
+/**
+ * See --swr-footer-chrome-estimate on :root (Footer below main in locale layout).
+ */
 
 /* ---------------------------------------------------------------------------
  * swr-prose — rich-text styles for Magento CMS content.

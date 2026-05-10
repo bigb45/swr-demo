@@ -184,7 +184,7 @@ export default async function NewServiceCasePage({
   const mW = selectedMachine ? warrantyStatus(selectedMachine) : null;
 
   return (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-10 flex flex-col gap-8">
+    <div className="swr-page-shell py-10 flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <Link
           href="/account/service"

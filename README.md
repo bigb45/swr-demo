@@ -1,4 +1,4 @@
-# SWR Lörrach — Custom Storefront
+# TEIA — SWR Storefront
 
 B2B storefront for [SWR Handelsgesellschaft mbH](https://www.swr-loerrach.de/) — Schweißtechnik, Werkzeuge, Reparatur. Built on **Next.js 16 App Router**, talking to a **Magento 2.4.8** backend exclusively via REST API.
 
@@ -33,6 +33,8 @@ MAGENTO_MEDIA_BASE_URL=http://localhost:8000
 NEXT_PUBLIC_MAGENTO_MEDIA_BASE_URL=http://localhost:8000
 MAGENTO_ADMIN_USER=nextjs_api
 MAGENTO_ADMIN_PASSWORD=<password>
+# Copilot / Teia AI (server-only; do not use `NEXT_PUBLIC_`). Separate from MAGENTO_URL.
+TEIA_AI_BASE_URL=http://46.224.237.247:8000
 ```
 
 > **Note:** `MAGENTO_MEDIA_BASE_URL` and `NEXT_PUBLIC_MAGENTO_MEDIA_BASE_URL` must always be identical. A mismatch causes React hydration errors on every product image.
@@ -67,8 +69,11 @@ npm run dev
 
 | File | Contents |
 |---|---|
-| [`AGENTS.md`](./AGENTS.md) | Full architecture, data flow, API reference, i18n rules, page status, remaining work, common pitfalls — read this before writing any code |
-| [`DESIGN.md`](./DESIGN.md) | Design system: color tokens, typography, component rules, do's and don'ts |
+| [`AGENTS.md`](./AGENTS.md) | Architecture, env vars, i18n rules, cart SSR pattern, pitfalls |
+| [`STATUS.md`](./STATUS.md) | Shipped features and recent milestones (living implementation log) |
+| [`BACKLOG.md`](./BACKLOG.md) | Prioritized backlog + FRD reconciliation |
+| [`FEATURES.md`](./FEATURES.md) | Stakeholder FRD checklist keyed to doc IDs |
+| [`DESIGN.md`](./DESIGN.md) | Design system: color tokens, typography, component rules |
 
 ## Key Conventions
 
