@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useCookieConsent } from "@/components/CookieConsentProvider";
 import type { CurrencyRates, SupportedCurrency } from "@/lib/currency";
 import { formatPrice as _formatPrice } from "@/lib/currency";
 
@@ -48,23 +49,38 @@ export function CurrencyProvider({
   rates,
   defaultCurrency,
 }: CurrencyProviderProps) {
+  const { ready, optionalAllowed } = useCookieConsent();
   const [currency, setCurrencyState] = useState<SupportedCurrency>(() => {
     // On server, use the locale-based default
     return defaultCurrency;
   });
 
-  // On mount, check cookie and override if present
   useEffect(() => {
-    const saved = readCurrencyCookie();
-    if (saved && (saved === "EUR" || saved === "CHF")) {
-      setCurrencyState(saved);
-    }
-  }, []);
+    if (!ready || !optionalAllowed) return;
+    queueMicrotask(() => {
+      const saved = readCurrencyCookie();
+      if (saved && (saved === "EUR" || saved === "CHF")) {
+        setCurrencyState(saved);
+      }
+    });
+  }, [ready, optionalAllowed]);
 
-  const setCurrency = useCallback((c: SupportedCurrency) => {
-    setCurrencyState(c);
-    writeCurrencyCookie(c);
-  }, []);
+  useEffect(() => {
+    if (!ready || optionalAllowed) return;
+    queueMicrotask(() => {
+      setCurrencyState(defaultCurrency);
+    });
+  }, [ready, optionalAllowed, defaultCurrency]);
+
+  const setCurrency = useCallback(
+    (c: SupportedCurrency) => {
+      setCurrencyState(c);
+      if (optionalAllowed) {
+        writeCurrencyCookie(c);
+      }
+    },
+    [optionalAllowed]
+  );
 
   const formatPrice = useCallback(
     (eurPrice: number, locale: string) =>

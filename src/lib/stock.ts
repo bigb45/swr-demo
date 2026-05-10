@@ -55,7 +55,7 @@ function readMsiSalableQty(value: unknown): number | null {
  *  1. If the product is disabled (`status !== 1`), treat as out of stock.
  *  2. MSI `salable_quantity` (numeric or per-source array).
  *  3. Legacy `stock_item.qty` + `is_in_stock` + `manage_stock`.
- *  4. `status === 1` → in stock fallback (qty unknown).
+ *  4. `status === 1` › in stock fallback (qty unknown).
  */
 export function getStockStatus(product: MagentoProduct): StockStatus {
   if (product.status !== 1) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
@@ -9,6 +10,7 @@ import { useCopilot } from "./CopilotProvider";
 export default function CopilotDock() {
   const { open, setOpen } = useCopilot();
   const t = useTranslations("copilot");
+  const { ready, optionalAllowed } = useCookieConsent();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -22,6 +24,8 @@ export default function CopilotDock() {
       document.body.style.overflow = prev;
     };
   }, [open]);
+
+  if (!ready || !optionalAllowed) return null;
 
   return (
     <>

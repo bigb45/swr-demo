@@ -113,6 +113,17 @@
   }
 }
 
+/** Override global thin scrollbars where invisible scrolling is desired (e.g. Copilot thread). */
+.swr-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.swr-hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 /**
  * See --swr-footer-chrome-estimate on :root (Footer below main in locale layout).
  */

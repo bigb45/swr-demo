@@ -92,7 +92,7 @@ src/app/[locale]/(chrome)/
   checkout/{address,shipping,review}/
   catalog/                 # Document hub (+ [id] viewer)
   services/, industries/, about, contact, …
-  account/{login,register,addresses,orders → redirects?, quotations, fleet, service, …}
+  account/{login,register,addresses,orders › redirects?, quotations, fleet, service, …}
 src/app/api/               # cart, auth, checkout, orders PDFs, account, …
 src/components/            # CartProvider, marketing/, orders/, catalog/, ui/, …
 src/lib/                   # magento.ts, cms.ts, catalog.ts, quotations.ts, service.ts, fleet.ts, …
@@ -121,7 +121,7 @@ Admin token is obtained once via `POST /rest/V1/integration/admin/token` and cac
 
 ## Key Magento REST API Endpoints
 
-Guest cart (browse → cart before login):
+Guest cart (browse › cart before login):
 
 ```
 POST   /rest/V1/integration/admin/token           # Admin token (server-only cache; self-healing on 401)
@@ -170,7 +170,7 @@ Full spec is in `DESIGN.md` (keep this file in the repo root). Summary for agent
 
 - **Primary:** `#003a63` (deep blue) — headers, nav, brand moments
 - **Secondary:** `#006e21` (green) — CTAs, success states, "GO" actions
-- **Surface hierarchy:** `surface` #f9f9f9 → `surface-container-low` #f3f3f3 → `surface-container-highest` #e2e2e2 → `surface-container-lowest` #ffffff (cards)
+- **Surface hierarchy:** `surface` #f9f9f9 › `surface-container-low` #f3f3f3 › `surface-container-highest` #e2e2e2 › `surface-container-lowest` #ffffff (cards)
 - **No 1px solid borders for sectioning** — use tonal background shifts instead
 - **Border radius:** 0px structural/tables, 3px interactive elements, 5px cards
 - **Shadows:** only `box-shadow: 0 10px 30px rgba(26,28,28,0.06)` — no generic grey shadows
@@ -207,7 +207,7 @@ export default function CartPage() { return <CartContent />; }
 
 ## Pages — Current Status
 
-**Authoritative table:** [`STATUS.md`](./STATUS.md) → *Pages* and *Partial / still evolving*.
+**Authoritative table:** [`STATUS.md`](./STATUS.md) › *Pages* and *Partial / still evolving*.
 
 Summary:
 

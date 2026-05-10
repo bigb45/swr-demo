@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
   type RefObject,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
@@ -70,6 +71,7 @@ export default function CopilotPanel() {
 
   const rootRef = useRef<HTMLElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   /** Panel only mounts while the dock is open — keep focus contained in the sheet. */
   useCopilotFocusTrap(true, rootRef);
@@ -83,7 +85,11 @@ export default function CopilotPanel() {
     return rev?.streaming ? "" : (rev?.content ?? "");
   }, [messages]);
 
-  const suggestions = [t("suggestion1"), t("suggestion2"), t("suggestion3")] as const;
+  const suggestions = [
+    { id: "s1" as const, label: t("suggestion1") },
+    { id: "s2" as const, label: t("suggestion2") },
+    { id: "s3" as const, label: t("suggestion3") },
+  ] as const;
 
   function formatTime(ms: number) {
     try {
@@ -145,7 +151,7 @@ export default function CopilotPanel() {
         {liveText}
       </div>
 
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-4">
+      <div className="swr-hide-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-4">
         {messages.length === 0 && (
           <p className="text-center text-sm text-on-surface-variant">
             {t("emptyState")}
@@ -212,13 +218,39 @@ export default function CopilotPanel() {
       </div>
 
       <div className="shrink-0 border-t border-outline-variant/30 bg-surface-container-low px-3 py-2">
-        <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">
-          {t("suggestionsHeading")}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {suggestions.map((label) => (
+        <button
+          type="button"
+          aria-expanded={suggestionsOpen}
+          aria-controls="swr-copilot-suggestion-chips"
+          onClick={() => setSuggestionsOpen((o) => !o)}
+          className="flex w-full min-h-11 items-center justify-between gap-2 rounded-[var(--radius-btn)] px-1 py-1 text-left text-on-surface-variant hover:bg-surface-container-highest/60"
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-wider">
+            {t("suggestionsToggle")}
+          </span>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`shrink-0 text-primary transition-transform ${suggestionsOpen ? "rotate-180" : ""}`}
+            aria-hidden
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+        <div
+          id="swr-copilot-suggestion-chips"
+          hidden={!suggestionsOpen}
+          className="flex flex-wrap gap-2 pt-2"
+        >
+          {suggestions.map(({ id, label }) => (
             <button
-              key={label}
+              key={id}
               type="button"
               disabled={pending}
               onClick={() => {

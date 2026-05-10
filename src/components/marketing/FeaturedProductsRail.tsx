@@ -54,7 +54,7 @@ export default function FeaturedProductsRail({
             href={viewAllHref}
             className="text-sm font-semibold text-secondary hover:underline whitespace-nowrap"
           >
-            {viewAllLabel} →
+            {viewAllLabel} ›
           </Link>
         ) : null}
       </div>

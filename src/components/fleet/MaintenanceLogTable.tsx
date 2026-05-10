@@ -83,7 +83,7 @@ export default function MaintenanceLogTable({
         href={`/catalog/${r.documentId}`}
         className="text-xs font-bold uppercase tracking-widest text-primary hover:underline"
       >
-        {labels.openDocument} →
+        {labels.openDocument} ›
       </Link>
     ) : (
       "—"

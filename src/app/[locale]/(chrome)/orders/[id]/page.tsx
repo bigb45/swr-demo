@@ -282,7 +282,7 @@ export default async function OrderDetailPage({
                   </span>
                   <span className="font-mono text-xs text-on-surface-variant">{c.id}</span>
                   <span className="text-sm text-on-surface flex-1 truncate">{c.description}</span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary">{tService("viewCase")} →</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary">{tService("viewCase")} ›</span>
                 </Link>
               </li>
             ))}

@@ -15,6 +15,8 @@
  */
 
 import { cookies } from "next/headers";
+import { getProductBySku } from "@/lib/magento";
+import { getStockStatus } from "@/lib/stock";
 import type {
   MagentoCheckoutAddress,
   MagentoCustomerMe,
@@ -277,6 +279,68 @@ export async function fetchGuestCartTotals(
   return (await res.json()) as GuestCartTotalsResponse;
 }
 
+/** Line payload from `GET /V1/guest-carts/:cartId/items` (unauthenticated). */
+export interface GuestCartLineItem {
+  item_id: number;
+  sku: string;
+  qty: number;
+  product_type?: string;
+  parent_item_id?: number;
+}
+
+export async function fetchGuestCartLineItems(
+  cartId: string,
+): Promise<GuestCartLineItem[] | null> {
+  const res = await fetch(`${MAGENTO}/rest/V1/guest-carts/${cartId}/items`, {
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const data: unknown = await res.json();
+  if (!Array.isArray(data)) return null;
+  return data as GuestCartLineItem[];
+}
+
+/**
+ * Best-effort salable check using the same product payload + rules as PDP/cart.
+ * Skips configurable parent rows (children carry the simple SKU + qty).
+ */
+export async function assertGuestCartLinesSalable(
+  lines: GuestCartLineItem[],
+): Promise<
+  { ok: true; skuEntries: number } | { ok: false; reason: "empty" | "stock"; sku?: string }
+> {
+  if (lines.length === 0) return { ok: false, reason: "empty" };
+
+  const totalsBySku = new Map<string, number>();
+  for (const item of lines) {
+    if (item.product_type === "configurable" && item.parent_item_id == null) {
+      continue;
+    }
+    const q = Number(item.qty);
+    if (!Number.isFinite(q) || q <= 0) continue;
+    totalsBySku.set(item.sku, (totalsBySku.get(item.sku) ?? 0) + q);
+  }
+
+  if (totalsBySku.size === 0) return { ok: false, reason: "empty" };
+
+  for (const [sku, needQty] of totalsBySku) {
+    try {
+      const product = await getProductBySku(sku);
+      const st = getStockStatus(product);
+      if (st.level === "out") {
+        return { ok: false, reason: "stock", sku };
+      }
+      if (typeof st.qty === "number" && needQty > st.qty) {
+        return { ok: false, reason: "stock", sku };
+      }
+    } catch {
+      /* If the catalog read fails, defer to Magento place-order validation. */
+    }
+  }
+
+  return { ok: true, skuEntries: totalsBySku.size };
+}
+
 export async function estimateShippingMethods(
   cartId: string,
   adminToken: string,
@@ -299,14 +363,19 @@ export async function setShippingInformation(
     shippingMethodCode: string;
   },
 ): Promise<MagentoCallResult<MagentoShippingInformationResult>> {
+  // Guest masked quotes do not accept customer_address_id until the customer is
+  // assigned (we assign in placeOrderAction). Send the full inline address only.
+  const { customer_address_id: _guestQuoteOmitAddressId, ...addressBody } =
+    payload.address;
+
   return callMagento<MagentoShippingInformationResult>(
     `${MAGENTO}/rest/V1/guest-carts/${cartId}/shipping-information`,
     "POST",
     adminToken,
     {
       addressInformation: {
-        shipping_address: payload.address,
-        billing_address: payload.address,
+        shipping_address: addressBody,
+        billing_address: addressBody,
         shipping_carrier_code: payload.shippingCarrierCode,
         shipping_method_code: payload.shippingMethodCode,
       },

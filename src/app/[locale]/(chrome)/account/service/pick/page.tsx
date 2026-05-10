@@ -133,7 +133,7 @@ export default async function ServicePickEquipmentPage({
             {t("pick.altOrder.body")}
           </span>
           <span className="text-xs font-bold uppercase tracking-widest text-primary mt-1">
-            {t("pick.altOrder.cta")} →
+            {t("pick.altOrder.cta")} ›
           </span>
         </Link>
 
@@ -155,7 +155,7 @@ export default async function ServicePickEquipmentPage({
             {t("pick.altManual.body")}
           </span>
           <span className="text-xs font-bold uppercase tracking-widest text-primary mt-1">
-            {t("pick.altManual.cta")} →
+            {t("pick.altManual.cta")} ›
           </span>
         </Link>
       </div>

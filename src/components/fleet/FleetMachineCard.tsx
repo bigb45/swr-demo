@@ -105,7 +105,7 @@ export default function FleetMachineCard({
             : labels.noService}
         </span>
         <span className="text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-          {labels.viewDetails} →
+          {labels.viewDetails} ›
         </span>
       </div>
     </Link>

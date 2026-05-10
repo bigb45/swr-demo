@@ -1,9 +1,25 @@
-"use client";
+import { getTranslations } from "next-intl/server";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import CartPageClient from "./CartPageClient";
 
-import dynamic from "next/dynamic";
+interface CartPageProps {
+  params: Promise<{ locale: string }>;
+}
 
-const CartContent = dynamic(() => import("./CartContent"), { ssr: false });
+export default async function CartPage({ params }: CartPageProps) {
+  const { locale } = await params;
+  const tBc = await getTranslations({ locale, namespace: "breadcrumb" });
 
-export default function CartPage() {
-  return <CartContent />;
+  return (
+    <div className="swr-page-shell py-6 sm:py-8 flex flex-col gap-4 sm:gap-6">
+      <Breadcrumbs
+        ariaLabel={tBc("ariaLabel")}
+        items={[
+          { label: tBc("home"), href: "/" },
+          { label: tBc("cart") },
+        ]}
+      />
+      <CartPageClient />
+    </div>
+  );
 }

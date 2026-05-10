@@ -101,7 +101,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
               {t(`actions.${kind}.body`)}
             </span>
             <span className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-white">
-              {t(`actions.${kind}.cta`)} →
+              {t(`actions.${kind}.cta`)} ›
             </span>
           </Link>
         ))}

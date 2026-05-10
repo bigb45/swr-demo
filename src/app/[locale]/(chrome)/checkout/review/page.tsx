@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { fetchGuestCartTotals, readCheckoutState } from "@/lib/checkout";
 import ReviewStep from "./ReviewStep";
 
@@ -8,6 +9,7 @@ interface ReviewPageProps {
 
 export default async function ReviewPage({ params }: ReviewPageProps) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "checkout" });
 
   const state = await readCheckoutState();
   if (!state) {
@@ -38,12 +40,17 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   }
 
   return (
-    <ReviewStep
-      locale={locale}
-      address={state.address}
-      totals={totals}
-      shippingTitle={shippingTitle}
-      paymentMethods={state.paymentMethods ?? []}
-    />
+    <>
+      <p className="text-sm text-on-surface mb-6 max-w-2xl leading-relaxed">
+        {t("reviewLead")}
+      </p>
+      <ReviewStep
+        locale={locale}
+        address={state.address}
+        totals={totals}
+        shippingTitle={shippingTitle}
+        paymentMethods={state.paymentMethods ?? []}
+      />
+    </>
   );
 }

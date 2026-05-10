@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { fetchGuestCart, getAdminToken } from "@/lib/checkout";
 import CheckoutStepper from "./CheckoutStepper";
 
@@ -15,7 +16,10 @@ export default async function CheckoutLayout({
   params,
 }: CheckoutLayoutProps) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "checkout" });
+  const [t, tBc] = await Promise.all([
+    getTranslations({ locale, namespace: "checkout" }),
+    getTranslations({ locale, namespace: "breadcrumb" }),
+  ]);
 
   const cookieStore = await cookies();
   // Auth itself is enforced by src/proxy.ts for the /checkout segment, but we
@@ -50,6 +54,15 @@ export default async function CheckoutLayout({
   return (
     <div className="swr-page-shell py-10">
       <div className="mx-auto w-full max-w-[1100px]">
+      <Breadcrumbs
+        className="mb-6"
+        ariaLabel={tBc("ariaLabel")}
+        items={[
+          { label: tBc("home"), href: "/" },
+          { label: tBc("cart"), href: "/cart" },
+          { label: tBc("checkout") },
+        ]}
+      />
       <h1 className="text-3xl font-black text-primary mb-2">{t("heading")}</h1>
       <p className="text-sm text-on-surface-variant mb-8">{t("subheading")}</p>
 

@@ -1,6 +1,6 @@
 /**
- * POST /api/cart  → create a new Magento guest cart, returns { cartId }
- * GET  /api/cart?cartId=xxx → fetch cart items + totals
+ * POST /api/cart  › create a new Magento guest cart, returns { cartId }
+ * GET  /api/cart?cartId=xxx › fetch cart items + totals
  */
 
 import { NextRequest } from "next/server";

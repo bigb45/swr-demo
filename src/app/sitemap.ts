@@ -32,6 +32,7 @@ const STATIC_PATHS: string[] = [
   "/legal/imprint",
   "/legal/terms",
   "/legal/privacy",
+  "/legal/cookies",
   "/legal/compliance",
   "/legal/sds",
 ];

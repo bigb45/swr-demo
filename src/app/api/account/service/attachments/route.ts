@@ -3,7 +3,7 @@
  *
  * **Auth:** `swr_customer_token` cookie
  * **Body:** `multipart/form-data` with repeated field `files` (same as
- * `uploadServiceCaseAttachments` → Magento).
+ * `uploadServiceCaseAttachments` › Magento).
  *
  * Proxies to Magento `SWR_SERVICE_ATTACHMENT_REST_PATH` for clients that
  * cannot call Magento directly. Returns JSON `{ items: UploadedAttachmentRef[] }`.

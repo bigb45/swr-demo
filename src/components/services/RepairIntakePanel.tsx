@@ -17,21 +17,6 @@ export default async function RepairIntakePanel({ locale }: RepairIntakePanelPro
     (await cookies()).get("swr_customer_token")?.value,
   );
 
-  const formLabels = {
-    heading: t("form.heading"),
-    subheading: t("form.subheading"),
-    machineMake: t("form.machineMake"),
-    machineModel: t("form.machineModel"),
-    serial: t("form.serial"),
-    fault: t("form.fault"),
-    contactName: t("form.contactName"),
-    company: t("form.company"),
-    phone: t("form.phone"),
-    email: t("form.email"),
-    submit: t("form.submit"),
-    note: t("form.note"),
-  } as const;
-
   if (hasSession) {
     return (
       <div className="flex flex-col gap-6">
@@ -72,18 +57,6 @@ export default async function RepairIntakePanel({ locale }: RepairIntakePanelPro
             </Link>
           </div>
         </div>
-        <p className="text-[11px] text-on-surface-variant leading-relaxed">
-          {t("intake.guestHint")}
-        </p>
-        <div className="flex flex-col gap-2">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-secondary">
-            {t("intake.guestTitle")}
-          </p>
-          <RepairRequestForm
-            recipientEmail={t("form.recipientEmail")}
-            labels={formLabels}
-          />
-        </div>
       </div>
     );
   }
@@ -91,7 +64,20 @@ export default async function RepairIntakePanel({ locale }: RepairIntakePanelPro
   return (
     <RepairRequestForm
       recipientEmail={t("form.recipientEmail")}
-      labels={formLabels}
+      labels={{
+        heading: t("form.heading"),
+        subheading: t("form.subheading"),
+        machineMake: t("form.machineMake"),
+        machineModel: t("form.machineModel"),
+        serial: t("form.serial"),
+        fault: t("form.fault"),
+        contactName: t("form.contactName"),
+        company: t("form.company"),
+        phone: t("form.phone"),
+        email: t("form.email"),
+        submit: t("form.submit"),
+        note: t("form.note"),
+      }}
     />
   );
 }
