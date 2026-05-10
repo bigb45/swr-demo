@@ -17,7 +17,7 @@ const COOKIE_NAME = "swr_customer_token";
 // may or may not carry a locale prefix — if none is present we assume the
 // default locale (`de`), which matches the old swr-loerrach.de behavior.
 const LEGACY_REDIRECTS: Record<string, string> = {
-  // About + Contact + Imprint (WordPress → new)
+  // About + Contact + Imprint (WordPress › new)
   "/ueber-uns": "/about",
   "/kontakt": "/contact",
   "/impressum": "/legal/imprint",
@@ -30,13 +30,13 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/compliance": "/legal/compliance",
   "/sds": "/legal/sds",
 
-  // 360° Service pillars (WordPress → new)
+  // 360° Service pillars (WordPress › new)
   "/beratung": "/services/consulting",
   "/service": "/services/repair",
   "/lieferungen": "/services/delivery",
   "/zollabwicklung": "/services/delivery",
 
-  // Industry hubs (WordPress German slugs → new English slugs)
+  // Industry hubs (WordPress German slugs › new English slugs)
   "/schweisstechnik": "/industries/welding",
   "/werkzeuge": "/industries/tools",
   "/elektrowerkzeuge": "/industries/power-tools",
@@ -46,7 +46,7 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/arbeitsschutz": "/industries/occupational-safety",
   "/katalog": "/catalog",
 
-  // Supporting pages (WordPress → new)
+  // Supporting pages (WordPress › new)
   "/partner": "/partners",
   "/stellenangebote": "/careers",
   "/ausbildung": "/careers",

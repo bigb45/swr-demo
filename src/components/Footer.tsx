@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
+import CookieSettingsLink from "@/components/CookieSettingsLink";
 
 interface FooterProps {
   locale: string;
@@ -13,6 +15,7 @@ interface LinkItem {
 interface Column {
   heading: string;
   links: LinkItem[];
+  afterLinks?: ReactNode;
 }
 
 export default async function Footer({ locale }: FooterProps) {
@@ -58,9 +61,15 @@ export default async function Footer({ locale }: FooterProps) {
         { href: "/legal/imprint", label: t("imprint") },
         { href: "/legal/terms", label: t("termsOfSale") },
         { href: "/legal/privacy", label: t("privacyPolicy") },
+        { href: "/legal/cookies", label: t("cookiePolicy") },
         { href: "/legal/compliance", label: t("compliance") },
         { href: "/legal/sds", label: t("sdsSheets") },
       ],
+      afterLinks: (
+        <div className="mt-3 pt-1 border-t border-white/10">
+          <CookieSettingsLink />
+        </div>
+      ),
     },
   ];
 
@@ -114,6 +123,7 @@ export default async function Footer({ locale }: FooterProps) {
                 </li>
               ))}
             </ul>
+            {col.afterLinks}
           </div>
         ))}
       </div>

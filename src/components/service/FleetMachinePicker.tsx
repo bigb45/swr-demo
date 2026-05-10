@@ -169,7 +169,7 @@ export default function FleetMachinePicker({
                 </dl>
                 <div className="pt-3 border-t border-outline-variant/30 flex items-center justify-end">
                   <span className="text-xs font-bold uppercase tracking-widest text-primary group-hover:translate-x-0.5 transition-transform">
-                    {labels.selectCta} →
+                    {labels.selectCta} ›
                   </span>
                 </div>
               </Link>

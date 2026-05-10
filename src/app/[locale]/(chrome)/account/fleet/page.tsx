@@ -109,7 +109,7 @@ export default async function FleetPage({ params }: FleetPageProps) {
             {(["import", "register", "track"] as const).map((k) => (
               <li key={k} className="flex items-start gap-2">
                 <span aria-hidden="true" className="text-secondary font-black">
-                  →
+                  ›
                 </span>
                 <span>{t(`empty.bullets.${k}`)}</span>
               </li>

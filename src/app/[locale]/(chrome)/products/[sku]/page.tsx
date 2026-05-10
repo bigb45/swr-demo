@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import {
   getProductBySku,
   getTopLevelCategories,
@@ -21,6 +20,7 @@ import BulkPricingTable from "@/components/ui/BulkPricingTable";
 import AddToCartCluster from "@/components/ui/AddToCartCluster";
 import CertBadge from "@/components/ui/CertBadge";
 import FeatureCard from "@/components/ui/FeatureCard";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import StockBadge from "@/components/ui/StockBadge";
 
 interface ProductDetailPageProps {
@@ -90,7 +90,6 @@ export default async function ProductDetailPage({
 
   const t = await getTranslations({ locale, namespace: "products" });
   const tBc = await getTranslations({ locale, namespace: "breadcrumb" });
-  const tSidebar = await getTranslations({ locale, namespace: "sidebar" });
 
   let product;
   try {
@@ -192,31 +191,28 @@ export default async function ProductDetailPage({
   });
 
   return (
-    <div className="flex min-h-full">
-      {/* Sidebar */}
-      <SideNav locale={locale} categories={categories} width="wide" />
+    <div className="swr-page-shell flex min-h-full flex-col pt-6 sm:pt-8 pb-16">
+      <Breadcrumbs
+        className="mb-6 sm:mb-8"
+        ariaLabel={tBc("ariaLabel")}
+        items={[
+          { label: tBc("home"), href: "/" },
+          { label: tBc("products"), href: "/products" },
+          { label: product.name },
+        ]}
+      />
 
-      {/* Main content */}
-      <div className="flex-1 min-w-0">
-        <div className="px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-16 flex flex-col gap-8 sm:gap-10">
+      <div className="flex min-w-0 flex-1 flex-col gap-8 sm:gap-10 lg:flex-row lg:gap-10">
+        <SideNav
+          locale={locale}
+          categories={categories}
+          width="wide"
+          catalogHeaderTop="flush"
+        />
 
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs text-on-surface-variant" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-primary transition-colors">
-              {tBc("catalog")}
-            </Link>
-            <span className="opacity-40">/</span>
-            <Link href="/products" className="hover:text-primary transition-colors">
-              {tBc("products")}
-            </Link>
-            <span className="opacity-40">/</span>
-            <span className="text-on-surface font-medium truncate max-w-[200px]">
-              {product.name}
-            </span>
-          </nav>
-
+        <div className="flex min-w-0 flex-1 flex-col gap-8 sm:gap-10">
           {/* Product area */}
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-10">
             {/* Gallery — full width on mobile, fixed 376px on desktop */}
             <div className="w-full lg:w-[376px] lg:shrink-0">
               <ProductGallery
@@ -373,7 +369,6 @@ export default async function ProductDetailPage({
               />
             </div>
           </section>
-
         </div>
       </div>
     </div>

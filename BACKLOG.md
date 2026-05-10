@@ -31,7 +31,7 @@ This file is the single trusted backlog. `FEATURES.md` is the doc-derived requir
 
 ## Phase 2 — Next execution queue
 
-Ranked for pick-up order. Each group is ordered high → low value.
+Ranked for pick-up order. Each group is ordered high › low value.
 
 ### Frontend-ready now (no backend blocker)
 
@@ -50,8 +50,8 @@ Ranked for pick-up order. Each group is ordered high → low value.
 
 Listed with the exact backend contract each item needs.
 
-10. **🔴 Accept quotation → cart** — storefront **`acceptQuotation`** + list/detail **`GET /rest/V1/swr-quotations/mine`** are wired; **PDF** → **`GET .../mine/:id/pdf`** (proxied **`/api/account/quotations/[id]/pdf`**). Still blocked until Magento implements **`swr-quotations`** (empty list / 404 today).
-11. **🔴 Registration approval dashboard / sub-users / roles** — needs Magento B2B company module (or custom extension) to model company → admin → sub-user and permissions. Front office staff dashboard may also live in Magento admin unless we build a thin Next.js ops UI.
+10. **🔴 Accept quotation › cart** — storefront **`acceptQuotation`** + list/detail **`GET /rest/V1/swr-quotations/mine`** are wired; **PDF** › **`GET .../mine/:id/pdf`** (proxied **`/api/account/quotations/[id]/pdf`**). Still blocked until Magento implements **`swr-quotations`** (empty list / 404 today).
+11. **🔴 Registration approval dashboard / sub-users / roles** — needs Magento B2B company module (or custom extension) to model company › admin › sub-user and permissions. Front office staff dashboard may also live in Magento admin unless we build a thin Next.js ops UI.
 12. **🔴 Customer-specific net pricing + hide prices for guests** — **Partial:** storefront hides catalog UI prices when `swr_customer_token` is absent. **Still blocked** on Magento: customer-specific net pricing, catalog permissions / shared catalogs, and **customer-scoped or guest-safe product REST** so payloads are not leaked via admin-token fetches or browser tools.
 13. **🔴 Multidimensional variant display on PDP** — needs configurable products in Magento (`configurable_options`). Frontend renders variant selectors / matrix (McMaster-style) that update child SKU/price/stock.
 14. **🟡 Partial delivery indicator / replacement-product notice** — need custom product attributes from the ERP/PIM (e.g. `partial_delivery_allowed`, `replacement_sku`). Frontend renders badge/banner when present.
@@ -87,7 +87,7 @@ Listed with the exact backend contract each item needs.
 | Customer logout | ✅ | 🔴 | `LogoutButton` + `/api/auth/logout` clears the cookie. |
 | Session-aware header / nav (show name, account link) | ✅ | 🔴 | `Header.tsx` and `MobileNav.tsx` read the customer session server-side. |
 | Protected routes (`/account`, `/orders`, `/checkout`) | ✅ | 🔴 | Server-side cookie gate on all protected routes. |
-| New user registration form | ✅ | 🔴 | `/account/register` + `/api/auth/register` → `POST /V1/customers`. |
+| New user registration form | ✅ | 🔴 | `/account/register` + `/api/auth/register` › `POST /V1/customers`. |
 | "Pending approval" state shown to new registrants | ✅ | 🔴 | Success state informs the user that SWR will approve the account. |
 | Password reset flow (request + confirm) | ✅ | 🟡 | `/account/forgot-password`, `/account/reset-password`, `/api/auth/password/*`. |
 | Two-factor authentication UI | ❌ | ⚪ | Requires Magento 2FA module. |
@@ -103,7 +103,7 @@ Listed with the exact backend contract each item needs.
 | Address book (list, add, edit, delete) | ✅ | — | `/account/addresses` + `AddressForm`. Country / region pickers still TODO (see checkout queue). |
 | Sub-user management (create sub-users under same customer number) | ⛔ | ⚪ | Requires Magento B2B company module. |
 | Role / permission display for sub-users | ⛔ | ⚪ | Depends on backend role model. |
-| Configurable email-notification preferences | ❌ | ⚪ | Settings toggle → customer custom attributes. |
+| Configurable email-notification preferences | ❌ | ⚪ | Settings toggle › customer custom attributes. |
 | My Fleet (`/account/fleet`) | ✅ | — | Pluggable `FleetRepository`. `NEXT_PUBLIC_FLEET_DEMO=1` enables a **13-machine** demo seed with `specs[]`, warranty counters, and maintenance log; production stays empty until real data lands. |
 
 ---
@@ -116,12 +116,12 @@ Listed with the exact backend contract each item needs.
 | Order detail view | ✅ | — | Items + totals + billing + shipping + payment. |
 | Order status display (processing, shipped, etc.) | ✅ | — | Mapped through `resolveOrderStatus` in `src/lib/orderStatus.ts`. |
 | Per-order customer reference field | ✅ | — | PO number captured on cart + `/checkout/review`, forwarded as `paymentMethod.po_number`. |
-| Reorder (add previous order items to cart) | ✅ | — | `ReorderButton` on order detail → `POST /api/cart/items` (skips configurables/bundle children per helper). |
+| Reorder (add previous order items to cart) | ✅ | — | `ReorderButton` on order detail › `POST /api/cart/items` (skips configurables/bundle children per helper). |
 | Downloadable order documents (invoice / shipment / credit memo PDFs) | ✅ | — | Streamed via `/api/orders/[id]/{invoices,shipments,creditmemos}/:docId/pdf`; ownership-gated. |
 | Downloadable order confirmation PDF | ✅ | — | `/api/orders/[id]/confirmation` (react-pdf). |
 | ERP-specific order status labels | ✅ | — | `resolveOrderStatus` reads `extension_attributes.erp_status_code` / `erp_status_label`. DE/EN/FR strings seeded. |
 | Quotation list / detail (`/account/quotations`) | 🔄 | 🟡 | Calls **`GET /rest/V1/swr-quotations/mine`** (+ detail by id). Empty until Magento module exists. **PDF:** `GET .../mine/:id/pdf` via `/api/account/quotations/[id]/pdf`. |
-| Accept quotation → cart | 🔄 | 🟡 | **`POST .../mine/:id/accept`** wired in `acceptQuotation`; needs live backend. |
+| Accept quotation › cart | 🔄 | 🟡 | **`POST .../mine/:id/accept`** wired in `acceptQuotation`; needs live backend. |
 
 ---
 
@@ -173,7 +173,7 @@ Listed with the exact backend contract each item needs.
 | Cart totals from Magento (subtotal, tax, grand total) | ✅ | — | `CartProvider` exposes `totals`; cart sidebar reads Magento numbers directly. |
 | Inline add-to-cart on product cards | ✅ | — | Home, listing, category, search. |
 | Cart item images persist across refresh | ✅ | — | Cart API enriches items with product image URLs. |
-| Place order (checkout) | ✅ | — | Signed-in 3-step flow `/checkout/{address,shipping,review}` → `PUT /V1/carts/:id/order`. |
+| Place order (checkout) | ✅ | — | Signed-in 3-step flow `/checkout/{address,shipping,review}` › `PUT /V1/carts/:id/order`. |
 | Billing / shipping address collection | ✅ | — | Step 1 lists saved addresses + inline new-address form. |
 | Order confirmation page | ✅ | — | `/orders/:id` is reused as post-checkout landing page + confirmation PDF. |
 | Customer order reference / PO number field | ✅ | — | Optional PO input on `/checkout/review`. |
@@ -194,7 +194,7 @@ Listed with the exact backend contract each item needs.
 | Return / service case (unified) | 🔄 | 🟡 | **UI:** `/account/service/*`. **Persistence:** demo store / in-memory; optional **`uploadServiceCaseAttachments`** when Magento upload REST exists. Optional **`/account/returns`** alias still open. |
 | Photo upload for returns | 🔄 | 🟡 | **UI accepts files**; **`POST /api/account/service/attachments`** proxies the same contract when enabled; server action also forwards multipart to Magento when the endpoint responds. |
 | Return status (RMA list) | ⛔ | 🟡 | Needs Magento RMA / ERP-backed case feed (today: demo cases only). |
-| Repair request (selection-first) | 🔄 | ⚪ | **`/account/service/pick?kind=repair|inspection`** (fleet grid, past orders, not-listed → `manual=1`); bare `.../new?kind=repair` redirects to pick. `NewCaseForm` with order lines + `machineId` / `orderId`. Marketing: `RepairIntakePanel` on `/services/repair`. Server `submitServiceCase` is demo. ERP/RMA when backend exists. |
+| Repair request (selection-first) | 🔄 | ⚪ | **`/account/service/pick?kind=repair|inspection`** (fleet grid, past orders, not-listed › `manual=1`); bare `.../new?kind=repair` redirects to pick. `NewCaseForm` with order lines + `machineId` / `orderId`. Marketing: `RepairIntakePanel` on `/services/repair`. Server `submitServiceCase` is demo. ERP/RMA when backend exists. |
 | Selection-first repair (FRD / plan AC) | 🔄 | — | Core UX shipped; see [Phase 6 plan](.cursor/plans/phase_6_plan_returns,_repair,_and_machine_workflows_2a9c3629.plan.md). Remainder: RMA, durable uploads, ERP. |
 
 ---
@@ -206,7 +206,7 @@ Listed with the exact backend contract each item needs.
 | Three locales (de, en, fr) | ✅ | — | next-intl, all three message files present. |
 | Locale switcher in header | ✅ | — | `LocaleSwitcher`. |
 | EUR / CHF currency switcher | ✅ | — | `CurrencyProvider` + `CurrencySwitcher`, cookie-persisted. |
-| Currency conversion (EUR → CHF) | ✅ | — | `src/lib/currency.ts`. |
+| Currency conversion (EUR › CHF) | ✅ | — | `src/lib/currency.ts`. |
 | Locale-aware links (no hardcoded `next/link`) | ✅ | — | All links use `@/i18n/navigation`. |
 | Swiss VAT logic (different from DE/EU) | ⛔ | 🔴 | Frontend already takes Magento tax numbers; lever is a CH store view in Magento. |
 | Multiple legal entities (DE / CH) per customer | ⛔ | ⚪ | Needs Magento multi-store / B2B company setup. |

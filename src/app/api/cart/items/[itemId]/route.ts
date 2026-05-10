@@ -1,6 +1,6 @@
 /**
- * PUT    /api/cart/items/[itemId]  → update item qty
- * DELETE /api/cart/items/[itemId]  → remove item
+ * PUT    /api/cart/items/[itemId]  › update item qty
+ * DELETE /api/cart/items/[itemId]  › remove item
  * Body (PUT): { cartId, sku, qty }
  * Body (DELETE): { cartId }
  */

@@ -17,7 +17,7 @@ import { updateCustomerMe } from "@/lib/checkout";
 
 export interface SelectAddressArgs {
   locale: string;
-  /** "saved" → use existing customer address; "new" → use the form fields. */
+  /** "saved" › use existing customer address; "new" › use the form fields. */
   mode: "saved" | "new";
   addressId?: number;
   newAddress?: AddressInput;

@@ -18,6 +18,8 @@ import { getSiteBaseUrl, localeAlternates } from "@/lib/seo";
 import { CustomerSessionProvider } from "@/components/CustomerSessionProvider";
 import { CopilotProvider } from "@/components/copilot/CopilotProvider";
 import CopilotDock from "@/components/copilot/CopilotDock";
+import { CookieConsentProvider } from "@/components/CookieConsentProvider";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -102,10 +104,11 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-surface">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CustomerSessionProvider isAuthenticated={isAuthenticated}>
-            <CurrencyProvider rates={rates} defaultCurrency={defaultCurrency}>
-              <CartProvider>
-                <CopilotProvider>
-                  <Suspense
+            <CookieConsentProvider>
+              <CurrencyProvider rates={rates} defaultCurrency={defaultCurrency}>
+                <CartProvider>
+                  <CopilotProvider>
+                    <Suspense
                   fallback={
                     <div
                       className="sticky top-0 z-50 min-h-[4rem] sm:min-h-[calc(33px+4rem)] md:min-h-[calc(33px+4rem+2.75rem)] bg-white"
@@ -125,9 +128,11 @@ export default async function LocaleLayout({
                   <CopilotDock />
                 </div>
                 <Footer locale={locale} />
-                </CopilotProvider>
-              </CartProvider>
-            </CurrencyProvider>
+                <CookieConsentBanner />
+                  </CopilotProvider>
+                </CartProvider>
+              </CurrencyProvider>
+            </CookieConsentProvider>
           </CustomerSessionProvider>
         </NextIntlClientProvider>
       </body>

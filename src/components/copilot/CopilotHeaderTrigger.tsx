@@ -1,5 +1,6 @@
 "use client";
 
+import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCopilot } from "./CopilotProvider";
@@ -13,6 +14,9 @@ export default function CopilotHeaderTrigger({
 }: CopilotHeaderTriggerProps) {
   const t = useTranslations("copilot");
   const { open, toggle } = useCopilot();
+  const { ready, optionalAllowed } = useCookieConsent();
+
+  if (!ready || !optionalAllowed) return null;
 
   return (
     <button

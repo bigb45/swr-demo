@@ -60,6 +60,8 @@ interface SideNavProps {
   categories: MagentoCategory[];
   activeCategoryId?: number;
   width?: "narrow" | "wide";
+  /** PDP: breadcrumbs sit above the rail—drop extra top padding so the catalog header aligns with the product column. */
+  catalogHeaderTop?: "default" | "flush";
 }
 
 export default async function SideNav({
@@ -67,18 +69,20 @@ export default async function SideNav({
   categories,
   activeCategoryId,
   width = "narrow",
+  catalogHeaderTop = "default",
 }: SideNavProps) {
   const t = await getTranslations({ locale, namespace: "sidebar" });
-  const tNav = await getTranslations({ locale, namespace: "nav" });
 
   const widthClass = width === "wide" ? "w-64" : "w-[175px]";
+  const catalogHeaderPad =
+    catalogHeaderTop === "flush" ? "px-6 pt-0 pb-4" : "px-6 pt-6 pb-4";
 
   return (
     <aside
       className={`hidden lg:flex ${widthClass} shrink-0 bg-surface-container-low flex-col sticky top-[97px] h-[calc(100vh-97px)]`}
     >
       {/* Catalog heading */}
-      <div className="px-6 pt-6 pb-4 shrink-0">
+      <div className={`${catalogHeaderPad} shrink-0`}>
         <h2 className="text-lg font-bold text-primary tracking-tight">
           {t("catalog")}
         </h2>

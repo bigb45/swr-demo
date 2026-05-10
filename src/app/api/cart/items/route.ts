@@ -1,5 +1,5 @@
 /**
- * POST /api/cart/items  → add item to guest cart
+ * POST /api/cart/items  › add item to guest cart
  * Body: { cartId, sku, qty }
  */
 

@@ -86,7 +86,7 @@ export default function CartContent() {
   }
 
   return (
-    <div className="swr-page-shell py-6 sm:py-8 flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
+    <div className="flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
       {/* ── Left: Cart Items ──────────────────────────────────────── */}
       <section className="w-full flex-1 min-w-0">
         {/* Back link */}
@@ -328,7 +328,7 @@ export default function CartContent() {
             {t("shippingAndTaxNote")}
           </p>
 
-          {/* CTA → checkout flow */}
+          {/* CTA › checkout flow */}
           <Link
             href="/checkout/address"
             className="w-full flex items-center justify-between px-6 py-4 bg-secondary text-white font-bold text-sm tracking-wide hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all rounded-(--radius-btn)"

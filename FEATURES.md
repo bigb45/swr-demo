@@ -42,7 +42,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 3.1 | Customer-specific assortments (from PIM, per user/group) | HIGH | Not started |
 | 3.2 | Customers can create their own product lists | HIGH | Not started |
 | 3.3 | Order templates (configurable by customer) | HIGH | Not started |
-| 3.4 | CSV import into shopping cart | MEDIUM | Done (`CsvImportButton` on `/cart`, `sku,qty` rows → `/api/cart/items`) |
+| 3.4 | CSV import into shopping cart | MEDIUM | Done (`CsvImportButton` on `/cart`, `sku,qty` rows › `/api/cart/items`) |
 | 3.5 | Individual order reference per order | HIGH | Done (captured on cart, sent to Magento as `paymentMethod.po_number`, shown on order detail) |
 | 3.6 | View order/repair status in account | HIGH | Partial (orders: list/detail with ERP-aware labels; service cases: hub + `submitServiceCase` + case detail in demo; full repair/RMA status from ERP not wired) |
 | 3.7 | ERP status mapping (e.g. "delivery note printed") | MEDIUM | Done (`resolveOrderStatus` in `src/lib/orderStatus.ts` reads `extension_attributes.erp_status_code`/`erp_status_label`; `orders.erpStatus.*` translations seeded for DE/EN/FR with common codes incl. `delivery_note_printed`, `partially_invoiced`, `awaiting_supplier`, `ready_for_pickup`, `partially_shipped`, `backorder`) |
@@ -55,7 +55,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 |---|---------|----------|--------|
 | 4.1 | C-parts management and key account supply | HIGH | Not started |
 | 4.2 | Booking order items to cost centers | HIGH | Not started |
-| 4.3 | Individual item → different cost center assignment | HIGH | Not started |
+| 4.3 | Individual item › different cost center assignment | HIGH | Not started |
 | 4.4 | Budget management at user or cost center level | HIGH | Not started |
 | 4.5 | Approval workflow — orders require supervisor review | HIGH | Not started |
 | 4.6 | User management — admin, viewer, approver roles | HIGH | Not started |
@@ -100,7 +100,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 |---|---------|----------|--------|
 | 7.1 | Guest cart (add, update qty, remove) | HIGH | Done |
 | 7.2 | Cart totals from Magento (tax, discounts) | HIGH | Done |
-| 7.3 | Place order (authorization) | HIGH | Done (signed-in 3-step `/checkout` flow: address → shipping → review; uses real Magento `estimate-shipping-methods` + `shipping-information` + `PUT /V1/carts/:id/order`; cart auto-assigned to customer; payment hard-coded to `checkmo` for now) |
+| 7.3 | Place order (authorization) | HIGH | Done (signed-in 3-step `/checkout` flow: address › shipping › review; uses real Magento `estimate-shipping-methods` + `shipping-information` + `PUT /V1/carts/:id/order`; cart auto-assigned to customer; payment hard-coded to `checkmo` for now) |
 | 7.4 | CSV import into cart | MEDIUM | Done |
 | 7.5 | Individual order reference field | HIGH | Done (PO number input on cart summary, forwarded to Magento on order placement) |
 | 7.6 | Cost center assignment per item | HIGH | Not started |
@@ -118,7 +118,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 |---|---------|----------|--------|
 | 8.1 | Order history list | HIGH | Done |
 | 8.2 | Order detail page (items, totals, address) | HIGH | Done (items, totals, billing + shipping address blocks, payment method) |
-| 8.3 | Quotation lookup from ERP → accept in shop | MEDIUM | Partial (`/account/quotations` list + detail pages scaffolded with pluggable `src/lib/quotations.ts`; renders empty state today, wires to ERP endpoint later; accept-to-cart still to come) |
+| 8.3 | Quotation lookup from ERP › accept in shop | MEDIUM | Partial (`/account/quotations` list + detail pages scaffolded with pluggable `src/lib/quotations.ts`; renders empty state today, wires to ERP endpoint later; accept-to-cart still to come) |
 | 8.4 | Documents as downloadable PDFs | MEDIUM | Partial — **Done** for Magento-backed **order** docs (confirmation + invoice/shipment/credit memo react-pdf streams). **Open:** quotation-specific ERP PDFs once quotations API exists |
 
 ---
@@ -131,7 +131,7 @@ Priority legend: **HIGH** = especially important, **MEDIUM** = nice to have, **L
 | 9.2 | Continuous return number from ERP | HIGH | Not started |
 | 9.3 | Photo upload with return request | MEDIUM | Partial (file input + metadata on case; bytes not stored until upload endpoint) |
 | 9.4 | Return status display (received, under review, approved, credit note) | HIGH | Not started |
-| 9.5 | Repair request selectable | MEDIUM | Partial (pick equipment → `/account/service/pick`, fleet + order lines + `manual=1`, marketing `RepairIntakePanel`; backend case/RMA open) |
+| 9.5 | Repair request selectable | MEDIUM | Partial (pick equipment › `/account/service/pick`, fleet + order lines + `manual=1`, marketing `RepairIntakePanel`; backend case/RMA open) |
 | 9.6 | Configurable return policies per customer | MEDIUM | Not started |
 
 ---

@@ -6,6 +6,7 @@ import { getProductsByCategory, getCategoryTree } from "@/lib/magento";
 import type { MagentoCategory } from "@/types/magento";
 import ProductGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const revalidate = 60;
 
@@ -86,21 +87,15 @@ export default async function CategoryPage({
 
   return (
     <div className="swr-page-shell py-10">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-        <Link href="/" className="hover:text-gray-900 transition-colors">
-          {tBc("home")}
-        </Link>
-        <span>/</span>
-        <Link
-          href="/products"
-          className="hover:text-gray-900 transition-colors"
-        >
-          {tBc("products")}
-        </Link>
-        <span>/</span>
-        <span className="text-gray-900 font-medium">{category.name}</span>
-      </nav>
+      <Breadcrumbs
+        className="mb-8"
+        ariaLabel={tBc("ariaLabel")}
+        items={[
+          { label: tBc("home"), href: "/" },
+          { label: tBc("products"), href: "/products" },
+          { label: category.name },
+        ]}
+      />
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">{category.name}</h1>

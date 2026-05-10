@@ -126,7 +126,7 @@ export default async function Page({ params }: PageProps) {
                   {t(`subCategories.items.${sc}.body`)}
                 </span>
                 <span className="mt-auto text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
-                  {t("subCategories.cta")} →
+                  {t("subCategories.cta")} ›
                 </span>
               </Link>
             ))}
@@ -218,7 +218,7 @@ export default async function Page({ params }: PageProps) {
                   {t(`guides.items.${g}.body`)}
                 </span>
                 <span className="mt-auto text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
-                  {t("guides.openCatalog")} →
+                  {t("guides.openCatalog")} ›
                 </span>
               </Link>
             ))}

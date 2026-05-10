@@ -8,6 +8,7 @@ import ProductGrid from "@/components/ProductGrid";
 import ProductSearchResultList from "@/components/ProductSearchResultList";
 import Pagination from "@/components/Pagination";
 import ProductsFilterBar from "@/components/products/ProductsFilterBar";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const revalidate = 60;
 
@@ -50,8 +51,11 @@ export default async function ProductsPage({
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10));
   const query = q?.trim() ?? "";
 
-  const t = await getTranslations({ locale, namespace: "products" });
-  const tErr = await getTranslations({ locale, namespace: "errors" });
+  const [t, tErr, tBc] = await Promise.all([
+    getTranslations({ locale, namespace: "products" }),
+    getTranslations({ locale, namespace: "errors" }),
+    getTranslations({ locale, namespace: "breadcrumb" }),
+  ]);
   const magentoBaseUrl = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
   const filters = {
@@ -85,6 +89,14 @@ export default async function ProductsPage({
 
   return (
     <div className="swr-page-shell py-10">
+      <Breadcrumbs
+        className="mb-6"
+        ariaLabel={tBc("ariaLabel")}
+        items={[
+          { label: tBc("home"), href: "/" },
+          { label: tBc("products") },
+        ]}
+      />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
           {query ? t("searchTitle", { query }) : t("title")}
