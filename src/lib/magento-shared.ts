@@ -28,6 +28,32 @@ export function getProductImageUrl(product: MagentoProduct): string | null {
   return `${MEDIA_BASE}/media/catalog/product${entry.file}`;
 }
 
+/** All non-disabled gallery images, ordered by Magento `position`, for card carousels / PDP galleries. */
+export function getProductGalleryUrls(product: MagentoProduct): string[] {
+  const entries = product.media_gallery_entries?.filter(
+    (e) => !e.disabled && e.file && e.media_type !== "external-video",
+  );
+  if (!entries?.length) {
+    const single = getProductImageUrl(product);
+    return single ? [single] : [];
+  }
+  const sorted = [...entries].sort((a, b) => a.position - b.position);
+  const urls: string[] = [];
+  const seen = new Set<string>();
+  for (const e of sorted) {
+    const url = `${MEDIA_BASE}/media/catalog/product${e.file}`;
+    if (!seen.has(url)) {
+      seen.add(url);
+      urls.push(url);
+    }
+  }
+  if (urls.length === 0) {
+    const single = getProductImageUrl(product);
+    return single ? [single] : [];
+  }
+  return urls;
+}
+
 export function getCustomAttribute(
   product: MagentoProduct,
   code: string

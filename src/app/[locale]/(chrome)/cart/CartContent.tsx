@@ -86,7 +86,7 @@ export default function CartContent() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
+    <div className="flex flex-col xl:flex-row gap-8 items-stretch xl:items-start">
       {/* ── Left: Cart Items ──────────────────────────────────────── */}
       <section className="w-full flex-1 min-w-0">
         {/* Back link */}
@@ -301,7 +301,7 @@ export default function CartContent() {
       </section>
 
       {/* ── Right: Order Summary Sidebar — only shown when cart has items ── */}
-      {items.length > 0 && <aside className="w-full lg:w-[395px] lg:shrink-0">
+      {items.length > 0 && <aside className="w-full xl:w-[395px] xl:shrink-0">
         <div
           className="bg-surface-container-lowest p-6 rounded-card"
           style={{ boxShadow: "var(--shadow-ambient)" }}

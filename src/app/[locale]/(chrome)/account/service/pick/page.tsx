@@ -116,7 +116,7 @@ export default async function ServicePickEquipmentPage({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link
-          href="/account/orders"
+          href="/orders"
           className="flex flex-col gap-2 p-6 bg-surface-container-low transition-colors hover:bg-primary-fixed"
           style={{
             borderRadius: "var(--radius-card)",

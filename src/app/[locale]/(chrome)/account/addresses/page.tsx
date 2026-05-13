@@ -25,7 +25,7 @@ export default async function AddressesPage({ params }: AddressesPageProps) {
 
   return (
     <div className="swr-page-shell py-10">
-      <div className="mx-auto w-full max-w-[900px]">
+      <div className="mx-auto w-full max-w-[1280px]">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-black text-primary">{t("heading")}</h1>

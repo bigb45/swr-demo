@@ -49,7 +49,7 @@ export default async function QuotationDetailPage({
 
   return (
     <div className="swr-page-shell py-10">
-      <div className="mx-auto w-full max-w-[900px]">
+      <div className="mx-auto w-full max-w-[1280px]">
       <Link
         href="/account/quotations"
         className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"

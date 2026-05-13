@@ -66,7 +66,7 @@ function PriceFilterFields({
       <button
         type="button"
         onClick={applyPrice}
-        className="self-start text-[11px] font-bold uppercase tracking-widest text-secondary hover:underline"
+        className="w-full px-4 py-2.5 text-xs font-bold uppercase tracking-widest bg-secondary text-on-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)] transition-all rounded-(--radius-btn)"
       >
         {applyLabel}
       </button>

@@ -211,6 +211,9 @@
       "priceMax": "Max",
       "apply": "Anwenden"
     },
+    "galleryPrevImage": "Vorheriges Produktbild",
+    "galleryNextImage": "Nächstes Produktbild",
+    "galleryGoToImage": "Bild {index} von {total}",
     "empty": "Keine Produkte gefunden.",
     "view": "Ansehen",
     "priceOnRequest": "Preis auf Anfrage",

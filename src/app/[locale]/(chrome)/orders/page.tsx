@@ -38,7 +38,7 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
 
   return (
     <div className="swr-page-shell py-10">
-      <div className="mx-auto w-full max-w-[900px]">
+      <div className="mx-auto w-full max-w-[1280px]">
       <h1 className="text-3xl font-black text-primary mb-8">{t("heading")}</h1>
 
       {orders.length > 0 ? (

@@ -211,6 +211,9 @@
       "priceMax": "Max",
       "apply": "Apply"
     },
+    "galleryPrevImage": "Previous product image",
+    "galleryNextImage": "Next product image",
+    "galleryGoToImage": "Go to image {index} of {total}",
     "empty": "No products found.",
     "view": "View",
     "priceOnRequest": "Price on request",

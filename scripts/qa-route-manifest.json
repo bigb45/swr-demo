@@ -1,0 +1,178 @@
+{
+  "description": "Pre-stakeholder route inventory for parallel QA. Prefix each path with /{locale}/ where locale is de, en, or fr.",
+  "locales": ["de", "en", "fr"],
+  "uiEvalChecks": [
+    "HTTP 200 on initial HTML (no Next error overlay for static pages)",
+    "Browser console: no errors (warnings from extensions noted separately)",
+    "Network: document + critical same-origin APIs return 2xx where expected",
+    "Kid Wow: primary action or page purpose obvious within ~3s",
+    "Mom comprehension: non-technical viewer can state purpose in ~5s",
+    "Breakpoints: sm / md / lg / xl — no overlap (cart summary vs line totals), readable touch targets"
+  ],
+  "staticRoutes": [
+    "/",
+    "/products",
+    "/cart",
+    "/checkout/address",
+    "/checkout/shipping",
+    "/checkout/review",
+    "/catalog",
+    "/bulk-order",
+    "/about",
+    "/contact",
+    "/partners",
+    "/careers",
+    "/certificates",
+    "/offers",
+    "/services",
+    "/services/repair",
+    "/services/consulting",
+    "/services/customs",
+    "/services/delivery",
+    "/industries",
+    "/industries/welding",
+    "/legal/terms",
+    "/legal/privacy",
+    "/legal/imprint",
+    "/legal/cookies",
+    "/legal/compliance",
+    "/legal/sds",
+    "/account/login",
+    "/account/register",
+    "/account/forgot-password",
+    "/account/reset-password",
+    "/orders",
+    "/account",
+    "/account/profile",
+    "/account/addresses",
+    "/account/addresses/new",
+    "/account/quotations",
+    "/account/fleet",
+    "/account/service",
+    "/account/service/pick",
+    "/account/service/new"
+  ],
+  "staticRoutes_queryVariants": [
+    { "path": "/account/service/pick", "query": "kind=repair" },
+    { "path": "/account/service/pick", "query": "kind=inspection" },
+    { "path": "/account/service/new", "query": "kind=repair&manual=1" }
+  ],
+  "dynamicRoutes": [
+    {
+      "pattern": "/products/[sku]",
+      "note": "Use a known catalog SKU from Magento (e.g. from listing PDP link)."
+    },
+    {
+      "pattern": "/categories/[id]",
+      "note": "Use a category id from Magento root category tree or listing sidebar."
+    },
+    {
+      "pattern": "/catalog/[id]",
+      "note": "Use a document id from /catalog search results."
+    },
+    {
+      "pattern": "/orders/[id]",
+      "note": "Requires signed-in customer with order history."
+    },
+    {
+      "pattern": "/account/quotations/[id]",
+      "note": "Requires signed-in customer; may be empty until ERP."
+    },
+    {
+      "pattern": "/account/addresses/[id]/edit",
+      "note": "Requires saved address id from address book."
+    },
+    {
+      "pattern": "/account/fleet/[id]",
+      "note": "Use id from demo fleet grid when signed in."
+    },
+    {
+      "pattern": "/account/service/[id]",
+      "note": "Requires existing service case id (demo or live)."
+    }
+  ],
+  "apiSmokePublic": [
+    "/api/cart",
+    "/api/search/products?q=drill"
+  ],
+  "apiSmokeAuthenticated": [
+    "/api/account/profile",
+    "/api/account/addresses"
+  ],
+  "agentPartitions": [
+    {
+      "id": "A_marketing_legal",
+      "name": "Marketing, legal, static company",
+      "routes": [
+        "/",
+        "/about",
+        "/contact",
+        "/partners",
+        "/careers",
+        "/certificates",
+        "/offers",
+        "/industries",
+        "/industries/welding",
+        "/legal/terms",
+        "/legal/privacy",
+        "/legal/imprint",
+        "/legal/cookies",
+        "/legal/compliance",
+        "/legal/sds"
+      ]
+    },
+    {
+      "id": "B_shop_catalog_checkout",
+      "name": "Shop, catalog hub, cart, checkout",
+      "routes": [
+        "/products",
+        "/cart",
+        "/catalog",
+        "/categories",
+        "/bulk-order",
+        "/checkout/address",
+        "/checkout/shipping",
+        "/checkout/review"
+      ],
+      "dynamicIncluded": ["/products/[sku]", "/categories/[id]", "/catalog/[id]"]
+    },
+    {
+      "id": "C_services_industries",
+      "name": "Services pillars",
+      "routes": [
+        "/services",
+        "/services/repair",
+        "/services/consulting",
+        "/services/customs",
+        "/services/delivery"
+      ]
+    },
+    {
+      "id": "D_account_orders",
+      "name": "Auth, account, orders, service flows",
+      "routes": [
+        "/account/login",
+        "/account/register",
+        "/account/forgot-password",
+        "/account/reset-password",
+        "/account",
+        "/account/profile",
+        "/account/addresses",
+        "/account/addresses/new",
+        "/account/quotations",
+        "/account/fleet",
+        "/account/service",
+        "/account/service/pick",
+        "/account/service/new",
+        "/orders"
+      ],
+      "dynamicIncluded": [
+        "/orders/[id]",
+        "/account/quotations/[id]",
+        "/account/addresses/[id]/edit",
+        "/account/fleet/[id]",
+        "/account/service/[id]"
+      ]
+    }
+  ]
+}
