@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 export default function RegisterPage() {
@@ -71,8 +72,9 @@ export default function RegisterPage() {
           </p>
           <Link
             href="/account/login"
-            className="inline-block text-sm font-bold text-secondary hover:underline"
+            className="inline-flex items-center justify-center gap-1 text-sm font-bold text-secondary hover:underline"
           >
+            <ChevronLeft aria-hidden="true" className="h-4 w-4" />
             {t("backToLogin")}
           </Link>
         </div>
@@ -185,8 +187,9 @@ export default function RegisterPage() {
         <p className="mt-6 text-[11px] text-on-surface-variant/70 text-center leading-relaxed">
           <Link
             href="/account/login"
-            className="font-semibold text-secondary hover:underline"
+            className="inline-flex items-center justify-center gap-1 font-semibold text-secondary hover:underline"
           >
+            <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
             {t("backToLogin")}
           </Link>
         </p>

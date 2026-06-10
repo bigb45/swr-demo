@@ -5,7 +5,12 @@ import { routing } from "./i18n/routing";
 const intlProxy = createIntlMiddleware(routing);
 
 const PROTECTED_SEGMENTS = ["/account", "/orders", "/checkout"];
-const PUBLIC_PATHS = ["/account/login", "/account/register"];
+const PUBLIC_PATHS = [
+  "/account/login",
+  "/account/register",
+  "/account/forgot-password",
+  "/account/reset-password",
+];
 const COOKIE_NAME = "swr_customer_token";
 
 // 301 redirects from legacy WordPress URLs (and intermediate migrations) to
@@ -120,7 +125,7 @@ export function proxy(request: NextRequest) {
           (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
         ) ?? routing.defaultLocale;
       const loginUrl = new URL(`/${locale}/account/login`, request.url);
-      loginUrl.searchParams.set("from", pathname);
+      loginUrl.searchParams.set("from", `${pathname}${request.nextUrl.search}`);
       return NextResponse.redirect(loginUrl);
     }
   }

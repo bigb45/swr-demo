@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 
 interface ReorderLine {
@@ -122,9 +123,10 @@ export default function ReorderButton({ locale, items }: ReorderButtonProps) {
             <button
               type="button"
               onClick={() => router.push(`/${locale}/cart`)}
-              className="self-start text-secondary font-semibold hover:underline mt-1"
+              className="inline-flex items-center gap-1 self-start text-secondary font-semibold hover:underline mt-1"
             >
               {t("reorderGoToCart")}
+              <ChevronRight aria-hidden="true" className="h-4 w-4" />
             </button>
           )}
         </div>

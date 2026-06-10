@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { fetchCustomerMe } from "@/lib/checkout";
 import DeleteAddressButton from "./DeleteAddressButton";
@@ -105,9 +106,10 @@ export default async function AddressesPage({ params }: AddressesPageProps) {
       <div className="mt-8">
         <Link
           href="/account"
-          className="text-xs font-semibold text-on-surface-variant hover:text-on-surface"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
-          &larr; {t("backToAccount")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToAccount")}
         </Link>
       </div>
       </div>

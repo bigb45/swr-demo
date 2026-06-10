@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 // Only permit same-origin, absolute-path redirects to avoid open-redirect attacks
@@ -118,9 +119,10 @@ export default function LoginPage() {
           {t("noAccount")}{" "}
           <Link
             href="/account/register"
-            className="font-semibold text-secondary hover:underline"
+            className="inline-flex items-center justify-center gap-1 font-semibold text-secondary hover:underline"
           >
             {t("registerLink")}
+            <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
           </Link>
         </p>
       </div>

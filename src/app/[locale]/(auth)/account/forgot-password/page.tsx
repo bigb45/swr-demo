@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 
 export default function ForgotPasswordPage() {
@@ -56,8 +57,9 @@ export default function ForgotPasswordPage() {
             </p>
             <Link
               href="/account/login"
-              className="text-xs font-semibold text-secondary hover:underline text-center"
+              className="inline-flex items-center justify-center gap-1 text-xs font-semibold text-secondary hover:underline text-center"
             >
+              <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
               {t("backToLogin")}
             </Link>
           </div>
@@ -93,8 +95,9 @@ export default function ForgotPasswordPage() {
 
             <Link
               href="/account/login"
-              className="text-[11px] font-semibold text-on-surface-variant hover:text-on-surface text-center mt-3"
+              className="inline-flex items-center justify-center gap-1 text-[11px] font-semibold text-on-surface-variant hover:text-on-surface text-center mt-3"
             >
+              <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
               {t("backToLogin")}
             </Link>
           </form>

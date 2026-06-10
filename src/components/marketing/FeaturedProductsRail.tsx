@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ProductCard from "@/components/ProductCard";
 import type { MagentoProduct } from "@/types/magento";
@@ -52,9 +53,10 @@ export default function FeaturedProductsRail({
         {viewAllHref && viewAllLabel ? (
           <Link
             href={viewAllHref}
-            className="text-sm font-semibold text-secondary hover:underline whitespace-nowrap"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-secondary hover:underline whitespace-nowrap"
           >
-            {viewAllLabel} ›
+            {viewAllLabel}
+            <ChevronRight aria-hidden="true" className="h-4 w-4" />
           </Link>
         ) : null}
       </div>

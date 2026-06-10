@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { ChevronRight } from "lucide-react";
 import { getCmsPage } from "@/lib/cms";
 import CmsContent from "@/components/CmsContent";
 import { Link } from "@/i18n/navigation";
@@ -125,8 +126,9 @@ export default async function Page({ params }: PageProps) {
                 <span className="text-xs text-on-surface-variant leading-relaxed">
                   {t(`subCategories.items.${sc}.body`)}
                 </span>
-                <span className="mt-auto text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
-                  {t("subCategories.cta")} ›
+                <span className="mt-auto inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
+                  {t("subCategories.cta")}
+                  <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                 </span>
               </Link>
             ))}
@@ -217,8 +219,9 @@ export default async function Page({ params }: PageProps) {
                 <span className="text-xs text-on-surface-variant leading-relaxed">
                   {t(`guides.items.${g}.body`)}
                 </span>
-                <span className="mt-auto text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
-                  {t("guides.openCatalog")} ›
+                <span className="mt-auto inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-primary group-hover:translate-x-0.5 transition-transform">
+                  {t("guides.openCatalog")}
+                  <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                 </span>
               </Link>
             ))}

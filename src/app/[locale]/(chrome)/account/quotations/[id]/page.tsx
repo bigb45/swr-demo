@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   getQuotationForCustomer,
@@ -52,8 +53,9 @@ export default async function QuotationDetailPage({
       <div className="mx-auto w-full max-w-[1280px]">
       <Link
         href="/account/quotations"
-        className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"
+        className="mb-6 inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
       >
+        <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
         {t("backToQuotations")}
       </Link>
 

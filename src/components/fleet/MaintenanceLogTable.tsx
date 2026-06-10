@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import SpecTable from "@/components/ui/SpecTable";
 import type { MaintenanceRecord, MaintenanceKind } from "@/lib/fleet";
@@ -81,9 +82,10 @@ export default function MaintenanceLogTable({
     document: r.documentId ? (
       <Link
         href={`/catalog/${r.documentId}`}
-        className="text-xs font-bold uppercase tracking-widest text-primary hover:underline"
+        className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary hover:underline"
       >
-        {labels.openDocument} ›
+        {labels.openDocument}
+        <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
       </Link>
     ) : (
       "—"

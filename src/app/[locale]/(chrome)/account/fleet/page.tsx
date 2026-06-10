@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { listCustomerMachines, warrantyStatus } from "@/lib/fleet";
 import FleetMachineCard from "@/components/fleet/FleetMachineCard";
@@ -37,9 +38,10 @@ export default async function FleetPage({ params }: FleetPageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account"
-          className="text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
         >
-          ← {t("backToAccount")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToAccount")}
         </Link>
         <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
           {t("heading")}
@@ -109,7 +111,7 @@ export default async function FleetPage({ params }: FleetPageProps) {
             {(["import", "register", "track"] as const).map((k) => (
               <li key={k} className="flex items-start gap-2">
                 <span aria-hidden="true" className="text-secondary font-black">
-                  ›
+                  <ChevronRight className="h-4 w-4" />
                 </span>
                 <span>{t(`empty.bullets.${k}`)}</span>
               </li>

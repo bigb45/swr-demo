@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import FleetMachinePicker, {
   type PickableMachine,
@@ -74,9 +75,10 @@ export default async function ServicePickEquipmentPage({
       <div className="flex flex-col gap-2">
         <Link
           href="/account/service"
-          className="text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
         >
-          ← {t("backToHub")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToHub")}
         </Link>
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
           {t("pick.stepLabel")}
@@ -132,8 +134,9 @@ export default async function ServicePickEquipmentPage({
           <span className="text-sm text-on-surface-variant leading-relaxed">
             {t("pick.altOrder.body")}
           </span>
-          <span className="text-xs font-bold uppercase tracking-widest text-primary mt-1">
-            {t("pick.altOrder.cta")} ›
+          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary mt-1">
+            {t("pick.altOrder.cta")}
+            <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
           </span>
         </Link>
 
@@ -154,8 +157,9 @@ export default async function ServicePickEquipmentPage({
           <span className="text-sm text-on-surface-variant leading-relaxed">
             {t("pick.altManual.body")}
           </span>
-          <span className="text-xs font-bold uppercase tracking-widest text-primary mt-1">
-            {t("pick.altManual.cta")} ›
+          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary mt-1">
+            {t("pick.altManual.cta")}
+            <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
           </span>
         </Link>
       </div>

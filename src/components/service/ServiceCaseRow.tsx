@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import {
   serviceKindAccent,
@@ -78,8 +79,9 @@ export default function ServiceCaseRow({
         <span className="text-xs text-on-surface-variant">
           {labels.updated}: {formatDate(c.updatedAt, locale)}
         </span>
-        <span className="text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-          {labels.viewCase} ›
+        <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+          {labels.viewCase}
+          <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
         </span>
       </div>
     </Link>

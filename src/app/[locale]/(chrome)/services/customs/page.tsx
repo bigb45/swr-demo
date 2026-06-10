@@ -1,11 +1,45 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+import { getCmsPage } from "@/lib/cms";
+import { ServicePillarPage } from "@/components/marketing";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
 
-/** Customs pillar hidden: keep URL for old links, send users to delivery. */
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const page = await getCmsPage("services-customs", locale);
+  const t = await getTranslations({ locale, namespace: "services.customs" });
+  return {
+    title: page?.meta_title ?? t("title"),
+    description: page?.meta_description ?? t("subtitle"),
+  };
+}
+
 export default async function Page({ params }: PageProps) {
   const { locale } = await params;
-  redirect(`/${locale}/services/delivery`);
+  const [page, t, tCommon] = await Promise.all([
+    getCmsPage("services-customs", locale),
+    getTranslations({ locale, namespace: "services.customs" }),
+    getTranslations({ locale, namespace: "services" }),
+  ]);
+
+  return (
+    <ServicePillarPage
+      page={page}
+      fallback={{
+        eyebrow: t("eyebrow"),
+        title: t("title"),
+        subtitle: t("subtitle"),
+        paragraphs: [t("body1"), t("body2"), t("body3")],
+      }}
+      ctaHref="/contact"
+      ctaLabel={tCommon("bookConsultation")}
+      ctaHeading={t("ctaHeading")}
+      ctaBody={t("ctaBody")}
+    />
+  );
 }

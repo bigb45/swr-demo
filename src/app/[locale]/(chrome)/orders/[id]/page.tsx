@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect, notFound } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import AddressBlock from "@/components/orders/AddressBlock";
 import DocumentsSection from "@/components/orders/DocumentsSection";
@@ -104,8 +105,9 @@ export default async function OrderDetailPage({
       <div className="mx-auto w-full max-w-[1280px]">
       <Link
         href="/orders"
-        className="text-xs font-bold text-secondary hover:underline mb-6 inline-block"
+        className="mb-6 inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline"
       >
+        <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
         {t("backToOrders")}
       </Link>
 
@@ -282,7 +284,10 @@ export default async function OrderDetailPage({
                   </span>
                   <span className="font-mono text-xs text-on-surface-variant">{c.id}</span>
                   <span className="text-sm text-on-surface flex-1 truncate">{c.description}</span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary">{tService("viewCase")} ›</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary">
+                    {tService("viewCase")}
+                    <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
+                  </span>
                 </Link>
               </li>
             ))}

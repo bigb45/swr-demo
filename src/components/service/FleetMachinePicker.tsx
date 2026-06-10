@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { WarrantyStatus } from "@/lib/fleet";
 import type { ServiceCaseKind } from "@/lib/service";
@@ -168,8 +169,9 @@ export default function FleetMachinePicker({
                   </div>
                 </dl>
                 <div className="pt-3 border-t border-outline-variant/30 flex items-center justify-end">
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary group-hover:translate-x-0.5 transition-transform">
-                    {labels.selectCta} ›
+                  <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary group-hover:translate-x-0.5 transition-transform">
+                    {labels.selectCta}
+                    <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                   </span>
                 </div>
               </Link>

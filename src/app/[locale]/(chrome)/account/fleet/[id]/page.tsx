@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getCustomerMachine, warrantyStatus } from "@/lib/fleet";
 import MaintenanceLogTable from "@/components/fleet/MaintenanceLogTable";
@@ -75,9 +76,10 @@ export default async function MachinePage({ params }: PageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account/fleet"
-          className="text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
         >
-          ← {t("backToFleet")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToFleet")}
         </Link>
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-xs font-bold uppercase tracking-[0.12em] text-secondary">

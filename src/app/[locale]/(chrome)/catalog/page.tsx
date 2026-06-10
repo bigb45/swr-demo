@@ -134,7 +134,6 @@ export default async function CatalogPage({
             <div className="mt-4 shrink-0">
               <ActiveFilters
                 active={filters}
-                totalCount={totalCount}
                 labels={{
                   activeFilters: t("filters.activeFilters"),
                   resultsShowing: t("filters.resultsShowing", {
@@ -144,6 +143,7 @@ export default async function CatalogPage({
                   typeLabels,
                   categoryLabels,
                   languageLabels,
+                  removeFilter: t("filters.removeFilter"),
                 }}
               />
             </div>

@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { warrantyStatus, type Machine } from "@/lib/fleet";
 
@@ -104,8 +105,9 @@ export default function FleetMachineCard({
             ? `${labels.lastService}: ${formatDate(lastService.date, locale)}`
             : labels.noService}
         </span>
-        <span className="text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-          {labels.viewDetails} ›
+        <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+          {labels.viewDetails}
+          <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
         </span>
       </div>
     </Link>

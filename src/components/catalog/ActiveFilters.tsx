@@ -11,7 +11,6 @@ interface ActiveFiltersProps {
     brands?: string[];
     languages?: string[];
   };
-  totalCount: number;
   labels: {
     activeFilters: string;
     resultsShowing: string;
@@ -19,6 +18,7 @@ interface ActiveFiltersProps {
     typeLabels: Record<string, string>;
     categoryLabels: Record<string, string>;
     languageLabels: Record<string, string>;
+    removeFilter: string;
   };
 }
 
@@ -64,7 +64,6 @@ function buildHrefWithout(
 
 export default function ActiveFilters({
   active,
-  totalCount,
   labels,
 }: ActiveFiltersProps) {
   const chips: Chip[] = [];
@@ -129,7 +128,7 @@ export default function ActiveFilters({
                 strokeLinecap="square"
               />
             </svg>
-            <span className="sr-only">Remove filter</span>
+            <span className="sr-only">{labels.removeFilter}</span>
           </Link>
         ))}
         <Link

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { fetchGuestCart, getAdminToken } from "@/lib/checkout";
@@ -73,9 +74,10 @@ export default async function CheckoutLayout({
       <div className="mt-10">
         <Link
           href="/cart"
-          className="text-xs font-semibold text-on-surface-variant hover:text-on-surface"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
-          &larr; {t("backToCart")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToCart")}
         </Link>
       </div>
       </div>

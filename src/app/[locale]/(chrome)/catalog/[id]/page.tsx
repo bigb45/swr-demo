@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getDocument, listAllDocumentIds } from "@/lib/catalog";
 import PdfViewer from "@/components/catalog/PdfViewer";
@@ -88,7 +89,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
         <Link href="/catalog" className="hover:text-primary">
           {t("breadcrumbCatalog")}
         </Link>
-        <span aria-hidden>›</span>
+        <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
         <span className="text-on-surface truncate">{doc.brand}</span>
       </nav>
 

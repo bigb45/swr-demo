@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ServiceCaseRow from "@/components/service/ServiceCaseRow";
 import {
@@ -66,9 +67,10 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account"
-          className="text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
         >
-          ← {t("backToAccount")}
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToAccount")}
         </Link>
         <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
           {t("heading")}
@@ -100,8 +102,9 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
             <span className="text-xs text-white/80 leading-relaxed">
               {t(`actions.${kind}.body`)}
             </span>
-            <span className="mt-2 text-xs font-bold uppercase tracking-[0.12em] text-white">
-              {t(`actions.${kind}.cta`)} ›
+            <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-white">
+              {t(`actions.${kind}.cta`)}
+              <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
             </span>
           </Link>
         ))}

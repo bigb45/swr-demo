@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { getCustomerEmail, listCustomerOrders } from "@/lib/orders";
 import {
@@ -81,9 +82,10 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
                 <span className="text-right">
                   <Link
                     href={`/orders/${order.entity_id}`}
-                    className="text-xs font-bold text-secondary hover:underline"
+                    className="inline-flex items-center justify-end gap-1 text-xs font-bold text-secondary hover:underline"
                   >
                     {t("viewOrder")}
+                    <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                   </Link>
                 </span>
               </div>
