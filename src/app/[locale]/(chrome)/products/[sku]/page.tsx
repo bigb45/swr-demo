@@ -8,8 +8,7 @@ import {
 } from "@/lib/magento";
 import {
   getCustomAttribute,
-  getProductImageUrl,
-  MEDIA_BASE,
+  getProductGalleryUrls,
 } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import ProductPrice from "@/components/ProductPrice";
@@ -103,17 +102,10 @@ export default async function ProductDetailPage({
 
   const categories = await getTopLevelCategories().catch(() => []);
 
-  const allImages = product.media_gallery_entries ?? [];
-  const primaryImageUrl = getProductImageUrl(product);
-
-  const galleryImages = allImages.length > 0
-    ? allImages.map((entry) => ({
-        src: `${MEDIA_BASE}/media/catalog/product${entry.file}`,
-        alt: entry.label ?? product.name,
-      }))
-    : primaryImageUrl
-    ? [{ src: primaryImageUrl, alt: product.name }]
-    : [];
+  const galleryImages = getProductGalleryUrls(product).map((src) => ({
+    src,
+    alt: product.name,
+  }));
 
   const shortDescription = getCustomAttribute(product, "short_description");
   const description = getCustomAttribute(product, "description");

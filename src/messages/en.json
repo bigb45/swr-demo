@@ -201,6 +201,7 @@
     "searchEmptyHint": "Try a different part number, keyword, or specification.",
     "searchEmptyClear": "Clear search",
     "noFilterResults": "No products match these filters.",
+    "noImage": "No image available",
     "filter": {
       "heading": "Filters",
       "clearAll": "Clear all",
@@ -209,7 +210,16 @@
       "price": "Price",
       "priceMin": "Min",
       "priceMax": "Max",
-      "apply": "Apply"
+      "apply": "Apply",
+      "activeFilters": "Active filters:",
+      "resultsShowing": "{count} results",
+      "removeFilter": "Remove filter",
+      "manufacturerSearch": "Search manufacturers…",
+      "facets": {
+        "manufacturer": "Manufacturer",
+        "brand": "Brand",
+        "countryOfManufacture": "Country of manufacture"
+      }
     },
     "galleryPrevImage": "Previous product image",
     "galleryNextImage": "Next product image",
@@ -219,6 +229,13 @@
     "priceOnRequest": "Price on request",
     "pricesLoginRequired": "Prices are shown after you sign in.",
     "signInForPrices": "Sign in",
+    "signInForPrice": "Sign in for price",
+    "guestPricing": {
+      "title": "Net pricing for registered customers",
+      "body": "Sign in to view your contract and net prices. Registration is free for business accounts.",
+      "signIn": "Sign in",
+      "register": "Register"
+    },
     "signInToAddToCart": "Sign in to add to cart",
     "exclVat": "excl. VAT",
     "inStock": "IN STOCK",
@@ -269,8 +286,8 @@
     "empty": "No products found in this category."
   },
   "pagination": {
-    "prev": "← Prev",
-    "next": "Next ›"
+    "prev": "‹ Prev",
+    "next": "Next"
   },
   "errors": {
     "productsUnavailable": "Could not load products. Make sure Magento is running at {url}.",
@@ -477,7 +494,7 @@
     "loginError": "Invalid email address or password.",
     "loggingIn": "Signing in…",
     "noAccount": "No account yet?",
-    "registerLink": "Register now ›",
+    "registerLink": "Register now",
     "registerHeading": "Create Account",
     "firstName": "First Name",
     "lastName": "Last Name",
@@ -488,7 +505,7 @@
     "registerPending": "Your account has been created and is awaiting approval by our team. You will receive an email once your account has been activated.",
     "passwordMismatch": "Passwords do not match.",
     "registerError": "Registration failed. Please try again.",
-    "backToLogin": "← Back to Sign In",
+    "backToLogin": "Back to Sign In",
     "forgotLink": "Forgot your password?",
     "forgotHeading": "Reset Password",
     "forgotDescription": "Enter the email address on your account and we'll send you a link to set a new password.",
@@ -649,14 +666,14 @@
     "colDate": "Date",
     "colStatus": "Status",
     "colTotal": "Total",
-    "viewOrder": "Details ›",
+    "viewOrder": "Details",
     "orderNumber": "Order #{id}",
-    "backToOrders": "← Back to Order History",
+    "backToOrders": "Back to Order History",
     "reorder": "Reorder",
     "reordering": "Adding to cart…",
     "reorderSummary": "{added} added, {problems} need attention.",
     "reorderNeedsOptions": "Re-add on product page",
-    "reorderGoToCart": "Go to cart ›",
+    "reorderGoToCart": "Go to cart",
     "colProduct": "Product",
     "colSku": "SKU",
     "colQty": "Qty",
@@ -718,8 +735,8 @@
   "quotations": {
     "heading": "Quotations",
     "subheading": "Review open quotations and convert them into orders.",
-    "backToAccount": "← Back to Account",
-    "backToQuotations": "← Back to Quotations",
+    "backToAccount": "Back to Account",
+    "backToQuotations": "Back to Quotations",
     "empty": "No quotations available.",
     "emptyHint": "When our team prepares a quotation for you, it will appear here so you can review and accept it.",
     "colQuotation": "Quotation #",
@@ -731,7 +748,7 @@
     "colQty": "Qty",
     "colUnitPrice": "Unit Price",
     "colRowTotal": "Total",
-    "viewQuotation": "Details ›",
+    "viewQuotation": "Details",
     "downloadPdf": "Download quotation PDF",
     "quotationNumber": "Quotation #{id}",
     "validUntil": "Valid until {date}",
@@ -786,6 +803,7 @@
       "activeFilters": "Active Filters:",
       "manufacturerSearch": "Find manufacturer...",
       "resultsShowing": "Showing {count, plural, =0 {no results} =1 {1 result} other {# results}}",
+      "removeFilter": "Remove filter",
       "mobileShow": "Show filters",
       "mobileHide": "Hide filters",
       "panelAria": "Catalog filters"

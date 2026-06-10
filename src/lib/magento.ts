@@ -1,9 +1,12 @@
 import { revalidateTag, unstable_cache } from "next/cache";
+import { PRODUCT_LIST_RESERVED_PARAMS } from "@/lib/magento-shared";
 import type {
+  MagentoAggregation,
   MagentoCategory,
   MagentoCategoryTree,
   MagentoProduct,
   MagentoProductList,
+  MagentoProductListWithAggregations,
 } from "@/types/magento";
 
 /** Busts `unstable_cache` for the admin token after a 401 from Magento. */
@@ -111,6 +114,48 @@ export async function magentoGet<T>(
   if (!res.ok) {
     throw new Error(
       `Magento REST error: ${res.status} ${res.statusText} — ${path}`
+    );
+  }
+
+  return res.json() as Promise<T>;
+}
+
+async function magentoPost<T>(
+  path: string,
+  body: unknown,
+  revalidate: number | false = false,
+  storeCode?: string,
+): Promise<T> {
+  const nextOptions =
+    revalidate === false
+      ? { cache: "no-store" as const }
+      : { next: { revalidate } };
+
+  const prefix = storeCode ? `/rest/${storeCode}/V1` : `/rest/V1`;
+
+  const doFetch = async (token: string) =>
+    fetch(`${BASE}${prefix}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+      ...nextOptions,
+    });
+
+  let token = await getAdminToken();
+  let res = await doFetch(token);
+
+  if (res.status === 401) {
+    invalidateAdminToken();
+    token = await getAdminToken(true);
+    res = await doFetch(token);
+  }
+
+  if (!res.ok) {
+    throw new Error(
+      `Magento REST error: ${res.status} ${res.statusText} — ${path}`,
     );
   }
 
@@ -234,6 +279,252 @@ export interface ProductSearchFilters {
   categoryId?: string | number;
   priceMin?: number;
   priceMax?: number;
+  /** Attribute code → selected option values (OR within one attribute). */
+  facets?: Record<string, string[]>;
+}
+
+/** Aggregation buckets rendered elsewhere in the filter sidebar. */
+const SKIP_AGGREGATION_CODES = new Set([
+  "category_id",
+  "category_ids",
+  "category",
+  "price",
+]);
+
+const NON_FACET_ATTRIBUTE_CODES = new Set([
+  "category_ids",
+  "description",
+  "short_description",
+  "meta_description",
+  "meta_keyword",
+  "meta_title",
+  "url_key",
+  "image",
+  "small_image",
+  "thumbnail",
+  "swatch_image",
+  "media_gallery",
+  "options_container",
+  "msrp_display_actual_price_type",
+  "tax_class_id",
+  "visibility",
+  "status",
+  "name",
+  "sku",
+  "price",
+  "special_price",
+  "cost",
+  "weight",
+]);
+
+export function parseProductFacetParams(
+  params: Record<string, string | undefined>,
+): Record<string, string[]> {
+  const facets: Record<string, string[]> = {};
+  for (const [key, raw] of Object.entries(params)) {
+    if (PRODUCT_LIST_RESERVED_PARAMS.has(key) || !raw) continue;
+    const values = raw
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+    if (values.length > 0) facets[key] = values;
+  }
+  return facets;
+}
+
+interface MagentoSearchResponse {
+  items?: Array<{ id: number }>;
+  total_count?: number;
+  aggregations?: MagentoAggregation[];
+}
+
+function buildMagentoSearchCriteriaBody(
+  filters: ProductSearchFilters,
+  page: number,
+  pageSize: number,
+) {
+  const filterGroups: Array<{
+    filters: Array<{
+      field: string;
+      value: string;
+      conditionType: string;
+    }>;
+  }> = [];
+
+  if (filters.q && filters.q.trim().length > 0) {
+    filterGroups.push({
+      filters: [
+        {
+          field: "search_term",
+          value: filters.q.trim(),
+          conditionType: "eq",
+        },
+      ],
+    });
+  }
+
+  if (filters.categoryId !== undefined && filters.categoryId !== "") {
+    filterGroups.push({
+      filters: [
+        {
+          field: "category_ids",
+          value: String(filters.categoryId),
+          conditionType: "eq",
+        },
+      ],
+    });
+  }
+
+  if (typeof filters.priceMin === "number" && Number.isFinite(filters.priceMin)) {
+    filterGroups.push({
+      filters: [
+        {
+          field: "price",
+          value: String(filters.priceMin),
+          conditionType: "gteq",
+        },
+      ],
+    });
+  }
+
+  if (typeof filters.priceMax === "number" && Number.isFinite(filters.priceMax)) {
+    filterGroups.push({
+      filters: [
+        {
+          field: "price",
+          value: String(filters.priceMax),
+          conditionType: "lteq",
+        },
+      ],
+    });
+  }
+
+  if (filters.facets) {
+    for (const [field, values] of Object.entries(filters.facets)) {
+      if (values.length === 0) continue;
+      filterGroups.push({
+        filters: values.map((value) => ({
+          field,
+          value,
+          conditionType: "eq",
+        })),
+      });
+    }
+  }
+
+  return {
+    requestName: filters.q?.trim()
+      ? "quick_search_container"
+      : "catalog_view_container",
+    filterGroups,
+    currentPage: page,
+    pageSize,
+  };
+}
+
+function normalizeAggregations(
+  aggregations: MagentoAggregation[] | undefined,
+): MagentoAggregation[] {
+  if (!aggregations?.length) return [];
+  return aggregations
+    .filter(
+      (bucket) =>
+        bucket.options?.length > 0 &&
+        !SKIP_AGGREGATION_CODES.has(bucket.attribute_code),
+    )
+    .map((bucket) => ({
+      ...bucket,
+      options: bucket.options.filter((opt) => opt.count > 0),
+    }))
+    .filter((bucket) => bucket.options.length > 0);
+}
+
+function buildBrowseFacetsFromProducts(
+  items: MagentoProduct[],
+): MagentoAggregation[] {
+  const counts = new Map<string, Map<string, { label: string; count: number }>>();
+
+  for (const product of items) {
+    for (const attr of product.custom_attributes ?? []) {
+      const code = attr.attribute_code;
+      if (
+        NON_FACET_ATTRIBUTE_CODES.has(code) ||
+        SKIP_AGGREGATION_CODES.has(code)
+      ) {
+        continue;
+      }
+      const raw = Array.isArray(attr.value) ? attr.value.join(", ") : attr.value;
+      if (!raw || raw.length > 80 || raw.includes("<")) continue;
+
+      const values = raw.split(",").map((v) => v.trim()).filter(Boolean);
+      for (const value of values) {
+        if (!counts.has(code)) counts.set(code, new Map());
+        const bucket = counts.get(code)!;
+        const existing = bucket.get(value);
+        if (existing) {
+          existing.count += 1;
+        } else {
+          bucket.set(value, { label: value, count: 1 });
+        }
+      }
+    }
+  }
+
+  return [...counts.entries()]
+    .map(([attribute_code, optionMap]) => ({
+      attribute_code,
+      label: attribute_code.replace(/_/g, " "),
+      options: [...optionMap.entries()]
+        .map(([value, meta]) => ({
+          value,
+          label: meta.label,
+          count: meta.count,
+        }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label)),
+    }))
+    .filter((bucket) => bucket.options.length > 0)
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+async function fetchMagentoSearchAggregations(
+  filters: ProductSearchFilters,
+  page: number,
+  pageSize: number,
+): Promise<MagentoAggregation[]> {
+  try {
+    const result = await magentoPost<MagentoSearchResponse>(
+      "/search",
+      {
+        searchCriteria: buildMagentoSearchCriteriaBody(filters, page, pageSize),
+      },
+      filters.q ? false : 60,
+    );
+    return normalizeAggregations(result.aggregations);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Product listing with Magento search aggregations when available. Falls back
+ * to lightweight attribute counts from the current result page in browse mode.
+ */
+export async function getFilteredProductResults(
+  page = 1,
+  pageSize = 20,
+  filters: ProductSearchFilters = {},
+): Promise<MagentoProductListWithAggregations> {
+  const [productList, searchAggregations] = await Promise.all([
+    getFilteredProducts(page, pageSize, filters),
+    fetchMagentoSearchAggregations(filters, page, pageSize),
+  ]);
+
+  const aggregations =
+    searchAggregations.length > 0
+      ? searchAggregations
+      : buildBrowseFacetsFromProducts(productList.items);
+
+  return { ...productList, aggregations };
 }
 
 export async function getFilteredProducts(
@@ -294,6 +585,28 @@ export async function getFilteredProducts(
   }
   if (typeof filters.priceMax === "number" && Number.isFinite(filters.priceMax)) {
     addFilter("price", String(filters.priceMax), "lteq");
+  }
+
+  if (filters.facets) {
+    for (const [field, values] of Object.entries(filters.facets)) {
+      if (values.length === 0) continue;
+      const g = group;
+      values.forEach((value, idx) => {
+        params.set(
+          `searchCriteria[filter_groups][${g}][filters][${idx}][field]`,
+          field,
+        );
+        params.set(
+          `searchCriteria[filter_groups][${g}][filters][${idx}][value]`,
+          value,
+        );
+        params.set(
+          `searchCriteria[filter_groups][${g}][filters][${idx}][condition_type]`,
+          "eq",
+        );
+      });
+      group += 1;
+    }
   }
 
   params.set("searchCriteria[currentPage]", String(page));

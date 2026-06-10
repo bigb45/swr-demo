@@ -79,6 +79,25 @@ export interface MagentoProductList {
     current_page: number;
   };
   total_count: number;
+  aggregations?: MagentoAggregation[];
+}
+
+export interface MagentoAggregationOption {
+  label: string;
+  value: string;
+  count: number;
+}
+
+/** Facet bucket returned by Magento catalog search (`POST /V1/search`). */
+export interface MagentoAggregation {
+  attribute_code: string;
+  label: string;
+  count?: number;
+  options: MagentoAggregationOption[];
+}
+
+export interface MagentoProductListWithAggregations extends MagentoProductList {
+  aggregations: MagentoAggregation[];
 }
 
 export interface MagentoCategory {

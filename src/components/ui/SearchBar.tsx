@@ -118,7 +118,7 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
       window.clearTimeout(timer);
       ac.abort();
     };
-  }, [trimmed, resetListState, tSearch]);
+  }, [trimmed, fromVisualSearch, resetListState, tSearch]);
 
   useEffect(() => {
     if (activeIndex < 0) return;
@@ -324,20 +324,6 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </span>
-            {/* <button
-              type="button"
-              disabled={visualLoading}
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex shrink-0 items-center justify-center rounded-[var(--radius-btn)] text-primary hover:bg-surface-container-low hover:text-primary-container disabled:opacity-50 disabled:pointer-events-none ${compact ? "p-1.5" : "p-2"}`}
-              aria-label={tSearch("visualSearchAria")}
-              title={tSearch("visualSearchAria")}
-            >
-              <ImagePlus
-                size={compact ? 17 : 19}
-                strokeWidth={1.75}
-                aria-hidden
-              />
-            </button> */}
           </div>
           <input
             type="search"
@@ -382,6 +368,23 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <span className="hidden sm:inline">{tNav("search")}</span>
+        </button>
+
+        <button
+          type="button"
+          disabled={visualLoading}
+          onClick={() => fileInputRef.current?.click()}
+          className={`ml-2 inline-flex shrink-0 items-center justify-center bg-surface-container-low text-primary transition-colors hover:bg-surface-container-highest hover:text-primary-container disabled:pointer-events-none disabled:opacity-50 ${compact ? "min-w-9 px-2 py-1.5" : "min-w-10 px-3 py-2"}`}
+          style={{ borderRadius: "var(--radius-btn)" }}
+          aria-label={tSearch("visualSearchAria")}
+          title={tSearch("visualSearchAria")}
+          aria-busy={visualLoading}
+        >
+          <ImagePlus
+            size={compact ? 17 : 19}
+            strokeWidth={1.75}
+            aria-hidden
+          />
         </button>
       </form>
 

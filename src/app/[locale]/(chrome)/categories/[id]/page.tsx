@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { getProductsByCategory, getCategoryTree } from "@/lib/magento";
 import type { MagentoCategory } from "@/types/magento";
 import ProductGrid from "@/components/ProductGrid";
+import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Pagination from "@/components/Pagination";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
@@ -129,6 +130,7 @@ export default async function CategoryPage({
         </div>
       ) : (
         <>
+          <GuestPricingBanner />
           <ProductGrid
             products={productList?.items ?? []}
             emptyMessage={t("empty")}

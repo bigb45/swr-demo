@@ -1,16 +1,19 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import type { MagentoCategory } from "@/types/magento";
+import type { MagentoAggregation, MagentoCategory } from "@/types/magento";
+import { PRODUCT_LIST_RESERVED_PARAMS } from "@/lib/magento-shared";
 
 interface ProductsFilterBarProps {
   categories: MagentoCategory[];
+  aggregations: MagentoAggregation[];
   active: {
     category?: string;
     priceMin?: string;
     priceMax?: string;
+    facets: Record<string, string[]>;
   };
 }
 
@@ -22,6 +25,23 @@ interface PriceFilterFieldsProps {
   applyLabel: string;
   onApply: (min: string, max: string) => void;
 }
+
+function toggleValue(list: string[], value: string): string[] {
+  if (list.includes(value)) return list.filter((v) => v !== value);
+  return [...list, value];
+}
+
+const USER_FACING_FACETS = new Set([
+  "manufacturer",
+  "brand",
+  "country_of_manufacture",
+]);
+
+const FACET_LABEL_KEYS: Record<string, string> = {
+  manufacturer: "facets.manufacturer",
+  brand: "facets.brand",
+  country_of_manufacture: "facets.countryOfManufacture",
+};
 
 function PriceFilterFields({
   initialMin,
@@ -74,13 +94,82 @@ function PriceFilterFields({
   );
 }
 
+interface AccordionSectionProps {
+  heading: string;
+  activeCount: number;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}
+
+function AccordionSection({
+  heading,
+  activeCount,
+  isOpen,
+  onToggle,
+  children,
+}: AccordionSectionProps) {
+  return (
+    <section className="border-b border-outline-variant/40">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between py-3 text-left"
+      >
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-on-surface">
+          {heading}
+          {activeCount > 0 ? (
+            <span
+              className="ml-2 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-primary text-on-primary tabular-nums align-middle"
+              style={{ borderRadius: "3px" }}
+            >
+              {activeCount}
+            </span>
+          ) : null}
+        </span>
+        <svg
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+          className={`w-3 h-3 text-on-surface-variant transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        >
+          <path
+            d="M2 4l4 4 4-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
+          />
+        </svg>
+      </button>
+      {isOpen ? <div className="pb-4">{children}</div> : null}
+    </section>
+  );
+}
+
+function facetSelectionFromActive(
+  active: ProductsFilterBarProps["active"],
+): Record<string, string[]> {
+  return { ...active.facets };
+}
+
+function facetSelectionKey(selection: Record<string, string[]>): string {
+  return Object.entries(selection)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([code, values]) => `${code}:${[...values].sort().join(",")}`)
+    .join("|");
+}
+
 /**
- * URL-state filter sidebar for `/products`. Talks to Magento via plain
- * `searchCriteria` — no GraphQL, no facet counts (that's a separate API
- * spike). Category is the highest-value filter; price range is secondary.
+ * URL-state filter sidebar for `/products`. Category + price are first-class;
+ * Magento search aggregations render as accordion attribute facets below.
  */
 export default function ProductsFilterBar({
   categories,
+  aggregations,
   active,
 }: ProductsFilterBarProps) {
   const t = useTranslations("products.filter");
@@ -88,13 +177,32 @@ export default function ProductsFilterBar({
   const router = useRouter();
   const search = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [openFacet, setOpenFacet] = useState<string | null>(
+    aggregations[0]?.attribute_code ?? null,
+  );
+  const [manufacturerSearch, setManufacturerSearch] = useState("");
+  const activeFacetSelection = facetSelectionFromActive(active);
+  const activeFacetKey = facetSelectionKey(activeFacetSelection);
+  const [facetSelectionState, setFacetSelectionState] = useState(() => ({
+    activeKey: activeFacetKey,
+    selection: activeFacetSelection,
+  }));
+  const facetSelection =
+    facetSelectionState.activeKey === activeFacetKey
+      ? facetSelectionState.selection
+      : activeFacetSelection;
+  const facetSelectionRef = useRef(facetSelection);
 
-  function pushWith(params: URLSearchParams) {
-    // Always drop `page` on any filter change so the user lands on page 1 of
-    // the new result set.
+  useEffect(() => {
+    facetSelectionRef.current = facetSelection;
+  }, [facetSelection]);
+
+  function pushParams(params: URLSearchParams) {
     params.delete("page");
+    const query = params.toString();
+    const href = query ? `/${locale}/products?${query}` : `/${locale}/products`;
     startTransition(() => {
-      router.push(`/${locale}/products?${params.toString()}`);
+      router.push(href);
     });
   }
 
@@ -105,7 +213,7 @@ export default function ProductsFilterBar({
     } else {
       params.delete(key);
     }
-    pushWith(params);
+    pushParams(params);
   }
 
   function applyPrice(min: string, max: string) {
@@ -114,20 +222,63 @@ export default function ProductsFilterBar({
     else params.delete("priceMin");
     if (max.trim()) params.set("priceMax", max.trim());
     else params.delete("priceMax");
-    pushWith(params);
+    pushParams(params);
   }
 
   function clearAll() {
     const params = new URLSearchParams();
-    // Keep the search query so clearing filters doesn't also wipe the
-    // user's keyword search — that's a separate affordance.
     const q = search?.get("q");
     if (q) params.set("q", q);
-    pushWith(params);
+    pushParams(params);
   }
 
+  function handleFacetToggle(attributeCode: string, value: string) {
+    const current = facetSelectionRef.current;
+    const currentValues = current[attributeCode] ?? [];
+    const nextValues = toggleValue(currentValues, value);
+    const next: Record<string, string[]> = { ...current };
+    if (nextValues.length > 0) next[attributeCode] = nextValues;
+    else delete next[attributeCode];
+    facetSelectionRef.current = next;
+    setFacetSelectionState({ activeKey: activeFacetKey, selection: next });
+
+    const params = new URLSearchParams(search?.toString() ?? "");
+    for (const key of [...params.keys()]) {
+      if (!PRODUCT_LIST_RESERVED_PARAMS.has(key)) params.delete(key);
+    }
+    for (const [code, values] of Object.entries(next)) {
+      if (values.length > 0) params.set(code, values.join(","));
+    }
+    pushParams(params);
+  }
+
+  const facetActiveCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const [code, values] of Object.entries(facetSelection)) {
+      counts[code] = values.length;
+    }
+    return counts;
+  }, [facetSelection]);
+
   const hasActive =
-    !!active.category || !!active.priceMin || !!active.priceMax;
+    !!active.category ||
+    !!active.priceMin ||
+    !!active.priceMax ||
+    Object.values(active.facets).some((values) => values.length > 0);
+
+  const filteredManufacturerOptions = useMemo(() => {
+    const bucket = aggregations.find(
+      (a) =>
+        a.attribute_code === "manufacturer" ||
+        a.attribute_code === "brand",
+    );
+    if (!bucket) return [];
+    const q = manufacturerSearch.trim().toLowerCase();
+    if (!q) return bucket.options;
+    return bucket.options.filter((opt) =>
+      opt.label.toLowerCase().includes(q),
+    );
+  }, [aggregations, manufacturerSearch]);
 
   return (
     <aside
@@ -203,6 +354,83 @@ export default function ProductsFilterBar({
           onApply={applyPrice}
         />
       </section>
+
+      {aggregations.filter((bucket) => USER_FACING_FACETS.has(bucket.attribute_code)).map((bucket) => {
+        const isManufacturer =
+          bucket.attribute_code === "manufacturer" ||
+          bucket.attribute_code === "brand";
+        const options = isManufacturer
+          ? filteredManufacturerOptions
+          : bucket.options;
+        const activeValues = facetSelection[bucket.attribute_code] ?? [];
+
+        return (
+          <AccordionSection
+            key={bucket.attribute_code}
+            heading={
+              FACET_LABEL_KEYS[bucket.attribute_code]
+                ? t(FACET_LABEL_KEYS[bucket.attribute_code])
+                : bucket.label || bucket.attribute_code.replace(/_/g, " ")
+            }
+            activeCount={facetActiveCounts[bucket.attribute_code] ?? 0}
+            isOpen={openFacet === bucket.attribute_code}
+            onToggle={() =>
+              setOpenFacet((prev) =>
+                prev === bucket.attribute_code ? null : bucket.attribute_code,
+              )
+            }
+          >
+            {isManufacturer ? (
+              <div className="mb-2 px-2">
+                <input
+                  type="search"
+                  value={manufacturerSearch}
+                  onChange={(e) => setManufacturerSearch(e.target.value)}
+                  placeholder={t("manufacturerSearch")}
+                  className="w-full text-sm px-2 py-1.5 bg-surface-container-lowest border border-outline-variant/60 focus:border-primary focus:outline-none"
+                  style={{ borderRadius: "3px" }}
+                />
+              </div>
+            ) : null}
+            <ul className="flex flex-col gap-0.5">
+              {options.map((opt) => {
+                const checked = activeValues.includes(opt.value);
+                return (
+                  <li key={opt.value}>
+                    <label
+                      className={`flex items-center gap-2 py-1.5 px-2 cursor-pointer transition-colors ${
+                        checked
+                          ? "bg-primary/10 text-primary"
+                          : "text-on-surface hover:bg-surface-container-low"
+                      }`}
+                      style={{ borderRadius: "3px" }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() =>
+                          handleFacetToggle(bucket.attribute_code, opt.value)
+                        }
+                        className="w-3.5 h-3.5 shrink-0 accent-primary"
+                      />
+                      <span
+                        className={`flex-1 truncate text-sm ${
+                          checked ? "font-bold" : ""
+                        }`}
+                      >
+                        {opt.label}
+                      </span>
+                      <span className="text-[11px] text-on-surface-variant tabular-nums">
+                        {opt.count}
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </AccordionSection>
+        );
+      })}
     </aside>
   );
 }

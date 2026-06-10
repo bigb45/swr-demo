@@ -12,14 +12,22 @@ import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";
 import { useCustomerSession } from "./CustomerSessionProvider";
 import StockBadge from "./ui/StockBadge";
+import NoImagePlaceholder from "./ui/NoImagePlaceholder";
 
 interface ProductCardProps {
   product: MagentoProduct;
+  priorityImage?: boolean;
 }
 
 type AddStatus = "idle" | "loading" | "success" | "error";
 
-function ProductCardGallery({ product }: { product: MagentoProduct }) {
+function ProductCardGallery({
+  product,
+  priorityImage = false,
+}: {
+  product: MagentoProduct;
+  priorityImage?: boolean;
+}) {
   const t = useTranslations("products");
   const galleryUrls = useMemo(
     () => getProductGalleryUrls(product),
@@ -50,6 +58,7 @@ function ProductCardGallery({ product }: { product: MagentoProduct }) {
             src={displayUrl}
             alt={product.name}
             fill
+            priority={priorityImage && imageIndex === 0}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
           />
@@ -110,27 +119,13 @@ function ProductCardGallery({ product }: { product: MagentoProduct }) {
           ) : null}
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <svg
-            className="w-16 h-16 text-outline-variant"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-        </div>
+        <NoImagePlaceholder variant="card" />
       )}
     </div>
   );
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, priorityImage }: ProductCardProps) {
   const shortDescription = getCustomAttribute(product, "short_description");
   const { formatPrice } = useCurrency();
   const { isAuthenticated } = useCustomerSession();
@@ -168,7 +163,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         href={href}
         className="flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <ProductCardGallery key={product.sku} product={product} />
+        <ProductCardGallery
+          key={product.sku}
+          product={product}
+          priorityImage={priorityImage}
+        />
 
         <div className="flex flex-col flex-1 px-4 pt-4 gap-2">
           <div className="flex items-center justify-between gap-2">
@@ -193,17 +192,27 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       <div className="flex items-center justify-between gap-3 p-4 pt-3 mt-auto">
         {showGuestPriceGate ? (
-          <div className="flex min-w-0 flex-col gap-1">
-            <span className="text-xs text-gray-600 leading-snug">
-              {t("pricesLoginRequired")}
-            </span>
-            <Link
-              href="/account/login"
-              className="text-xs font-bold text-secondary hover:underline"
+          <Link
+            href="/account/login"
+            className="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-secondary hover:underline"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              className="shrink-0 text-on-surface-variant"
             >
-              {t("signInForPrices")}
-            </Link>
-          </div>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <span>{t("signInForPrice")}</span>
+          </Link>
         ) : (
           <span className="text-lg font-bold text-gray-900">
             {product.price > 0

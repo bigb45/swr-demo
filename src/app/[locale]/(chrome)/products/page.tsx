@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { ChevronLeft } from "lucide-react";
 import {
-  getFilteredProducts,
+  getFilteredProductResults,
   getTopLevelCategories,
+  parseProductFacetParams,
 } from "@/lib/magento";
 import ProductGrid from "@/components/ProductGrid";
 import ProductSearchResultList from "@/components/ProductSearchResultList";
 import Pagination from "@/components/Pagination";
 import ProductsFilterBar from "@/components/products/ProductsFilterBar";
+import ProductsActiveFilters from "@/components/products/ProductsActiveFilters";
+import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export const revalidate = 60;
@@ -16,13 +20,7 @@ const PAGE_SIZE = 20;
 
 interface ProductsPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{
-    page?: string;
-    q?: string;
-    category?: string;
-    priceMin?: string;
-    priceMax?: string;
-  }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 export async function generateMetadata({
@@ -46,15 +44,23 @@ export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
   const { locale } = await params;
-  const { page: pageParam, q, category, priceMin, priceMax } =
-    await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const {
+    page: pageParam,
+    q,
+    category,
+    priceMin,
+    priceMax,
+  } = resolvedSearchParams;
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10));
   const query = q?.trim() ?? "";
+  const facetParams = parseProductFacetParams(resolvedSearchParams);
 
-  const [t, tErr, tBc] = await Promise.all([
+  const [t, tErr, tBc, tFilter] = await Promise.all([
     getTranslations({ locale, namespace: "products" }),
     getTranslations({ locale, namespace: "errors" }),
     getTranslations({ locale, namespace: "breadcrumb" }),
+    getTranslations({ locale, namespace: "products.filter" }),
   ]);
   const magentoBaseUrl = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -63,6 +69,7 @@ export default async function ProductsPage({
     categoryId: category || undefined,
     priceMin: toNumber(priceMin),
     priceMax: toNumber(priceMax),
+    facets: facetParams,
   };
 
   let productList;
@@ -71,7 +78,7 @@ export default async function ProductsPage({
 
   try {
     [productList, categories] = await Promise.all([
-      getFilteredProducts(currentPage, PAGE_SIZE, filters),
+      getFilteredProductResults(currentPage, PAGE_SIZE, filters),
       getTopLevelCategories(),
     ]);
   } catch (e) {
@@ -83,9 +90,14 @@ export default async function ProductsPage({
   if (category) paginationParams.set("category", category);
   if (priceMin) paginationParams.set("priceMin", priceMin);
   if (priceMax) paginationParams.set("priceMax", priceMax);
+  for (const [code, values] of Object.entries(facetParams)) {
+    if (values.length > 0) paginationParams.set(code, values.join(","));
+  }
   const paginationBase = paginationParams.toString()
     ? `/products?${paginationParams.toString()}`
     : "/products";
+
+  const aggregations = productList?.aggregations ?? [];
 
   return (
     <div className="swr-page-shell py-10">
@@ -125,14 +137,40 @@ export default async function ProductsPage({
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
           <ProductsFilterBar
             categories={categories}
+            aggregations={aggregations}
             active={{
               category: category || undefined,
               priceMin: priceMin || undefined,
               priceMax: priceMax || undefined,
+              facets: facetParams,
             }}
           />
 
           <div>
+            {productList ? (
+              <ProductsActiveFilters
+                active={{
+                  q: query || undefined,
+                  category: category || undefined,
+                  priceMin: priceMin || undefined,
+                  priceMax: priceMax || undefined,
+                  facets: facetParams,
+                }}
+                categories={categories}
+                aggregations={aggregations}
+                labels={{
+                  activeFilters: tFilter("activeFilters"),
+                  resultsShowing: tFilter("resultsShowing", {
+                    count: productList.total_count,
+                  }),
+                  clearAll: tFilter("clearAll"),
+                  removeFilter: tFilter("removeFilter"),
+                  allCategories: tFilter("allCategories"),
+                  price: tFilter("price"),
+                }}
+              />
+            ) : null}
+
             {productList?.total_count === 0 && query ? (
               <div className="py-20 flex flex-col items-center gap-5 text-center">
                 <div className="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center">
@@ -154,7 +192,8 @@ export default async function ProductsPage({
                   href={`/${locale}/products`}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-primary border border-primary/30 px-5 py-2.5 rounded-(--radius-btn) hover:bg-primary/5 transition-colors"
                 >
-                  ← {t("searchEmptyClear")}
+                  <ChevronLeft aria-hidden="true" className="h-4 w-4" />
+                  {t("searchEmptyClear")}
                 </a>
               </div>
             ) : productList?.total_count === 0 ? (
@@ -163,6 +202,7 @@ export default async function ProductsPage({
               </p>
             ) : (
               <>
+                <GuestPricingBanner />
                 {query ? (
                   <ProductSearchResultList
                     products={productList?.items ?? []}

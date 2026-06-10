@@ -20,6 +20,15 @@ export const LOCALE_STORE_CODES: Record<string, string> = {
   fr: "fr",
 };
 
+/** URL params owned by the `/products` listing — not treated as attribute facets. */
+export const PRODUCT_LIST_RESERVED_PARAMS = new Set([
+  "page",
+  "q",
+  "category",
+  "priceMin",
+  "priceMax",
+]);
+
 export function getProductImageUrl(product: MagentoProduct): string | null {
   const entry = product.media_gallery_entries?.find((e) =>
     e.types.includes("image")
