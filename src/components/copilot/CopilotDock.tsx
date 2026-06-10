@@ -2,7 +2,7 @@
 
 import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import CopilotPanel from "./CopilotPanel";
 import { useCopilot } from "./CopilotProvider";
@@ -11,9 +11,14 @@ export default function CopilotDock() {
   const { open, setOpen } = useCopilot();
   const t = useTranslations("copilot");
   const { ready, optionalAllowed } = useCookieConsent();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || typeof window === "undefined") return;
     if (!open) return;
     if (window.matchMedia("(min-width: 1024px)").matches) return;
 
@@ -23,9 +28,9 @@ export default function CopilotDock() {
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [open]);
+  }, [open, mounted]);
 
-  if (!ready || !optionalAllowed) return null;
+  if (!mounted || !ready || !optionalAllowed) return null;
 
   return (
     <>

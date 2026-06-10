@@ -42,30 +42,14 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
           { cache: "no-store" },
         );
         if (!res.ok) {
-          // #region agent log
-          fetch(
-            "http://127.0.0.1:7547/ingest/12ce9b7c-5bb7-461a-816f-4c8be1c9bd1b",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-Debug-Session-Id": "074c39",
-              },
-              body: JSON.stringify({
-                sessionId: "074c39",
-                location: "CopilotProductWidget.tsx:fetch",
-                message: "product fetch failed",
-                data: {
-                  status: res.status,
-                  skuLen: sku.length,
-                  skuHasSpace: /\s/.test(sku),
-                },
-                timestamp: Date.now(),
-                hypothesisId: "H3",
-              }),
-            },
-          ).catch(() => {});
-          // #endregion
+          if (process.env.NODE_ENV === "development") {
+            const detail = await res.text().catch(() => "");
+            console.warn("Copilot product fetch failed", {
+              sku,
+              status: res.status,
+              detail: detail.slice(0, 300),
+            });
+          }
           if (!cancel) {
             setProduct(null);
             setState("error");

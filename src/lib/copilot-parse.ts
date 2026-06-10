@@ -140,27 +140,6 @@ function extractSkusFromProse(text: string): string[] {
       if (m[1]) pushSkuUnique(m[1], bucket, seen);
     }
   }
-  // #region agent log
-  fetch("http://127.0.0.1:7547/ingest/12ce9b7c-5bb7-461a-816f-4c8be1c9bd1b", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "074c39",
-    },
-    body: JSON.stringify({
-      sessionId: "074c39",
-      location: "copilot-parse.ts:extractSkusFromProse",
-      message: "prose sku extraction",
-      data: {
-        bucket,
-        proseSample: text.slice(0, 220),
-        patternSources: patterns.map((p) => p.source),
-      },
-      timestamp: Date.now(),
-      hypothesisId: "H1",
-    }),
-  }).catch(() => {});
-  // #endregion
   return bucket;
 }
 
@@ -214,30 +193,6 @@ export function parseCopilotAssistantMessage(rawInput: string): ParsedAssistantB
 
   const skus =
     structuredSkus.length > 0 ? structuredSkus : extractSkusFromProse(displayBase);
-
-  // #region agent log
-  fetch("http://127.0.0.1:7547/ingest/12ce9b7c-5bb7-461a-816f-4c8be1c9bd1b", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "074c39",
-    },
-    body: JSON.stringify({
-      sessionId: "074c39",
-      location: "copilot-parse.ts:parseCopilotAssistantMessage",
-      message: "final parse",
-      data: {
-        structuredCount: structuredSkus.length,
-        usedProseFallback: structuredSkus.length === 0,
-        skuCount: skus.length,
-        skus,
-        displaySample: displayBase.slice(0, 220),
-      },
-      timestamp: Date.now(),
-      hypothesisId: "H2",
-    }),
-  }).catch(() => {});
-  // #endregion
 
   return {
     displayText: displayBase,

@@ -2,18 +2,36 @@
  * POST /api/search/visual
  *
  * Sends an image to Teia `POST /api/v1/chat/image` (SSE, same event shape as
- * `/api/v1/chat/stream`), concatenates streamed text, parses SKU hints, and
- * resolves products from Magento.
+ * `/api/v1/chat/stream`), prefers the terminal StructuredResponse product list,
+ * and resolves products from Magento.
  */
 
 import type { NextRequest } from "next/server";
 import { parseCopilotAssistantMessage } from "@/lib/copilot-parse";
-import { consumeSseBody, extractCompletionText } from "@/lib/copilot-stream";
+import {
+  consumeSseBody,
+  extractCompletionText,
+  parseTeiaStructuredResponse,
+  type ParsedTeiaStructuredResponse,
+} from "@/lib/copilot-stream";
 import { resolveMagentoProductBySkuFlexible } from "@/lib/magento";
 import { buildTeiaImageChatPayload, teiaAiBaseUrl } from "@/lib/teia-chat-proxy";
 import type { MagentoProduct } from "@/types/magento";
 
 const MAX_SKUS = 12;
+
+function noteFromParsedResult(
+  structured: ParsedTeiaStructuredResponse | null,
+  fallbackText: string,
+): string | null {
+  if (structured) {
+    if (structured.suppressAssistantNote) return null;
+    if (structured.displayText) return structured.displayText.slice(0, 800);
+  }
+
+  const trimmed = fallbackText.trim();
+  return trimmed ? trimmed.slice(0, 800) : null;
+}
 
 export async function POST(req: NextRequest) {
   const raw = await req.json().catch(() => null);
@@ -43,6 +61,9 @@ export async function POST(req: NextRequest) {
 
   const contentType = res.headers.get("content-type") ?? "";
   let reply = "";
+  const terminal = {
+    structuredResponse: null as ParsedTeiaStructuredResponse | null,
+  };
 
   if (contentType.includes("text/event-stream") && res.body) {
     let streamError: string | null = null;
@@ -54,6 +75,9 @@ export async function POST(req: NextRequest) {
       (obj) => {
         const err = obj.error;
         if (typeof err === "string" && err.trim()) streamError = err.trim();
+        if (obj.done === true && "response" in obj) {
+          terminal.structuredResponse = parseTeiaStructuredResponse(obj.response);
+        }
       },
     );
     if (streamError) {
@@ -77,7 +101,15 @@ export async function POST(req: NextRequest) {
   }
 
   const parsed = parseCopilotAssistantMessage(reply);
-  const skuCandidates = parsed.skus.slice(0, MAX_SKUS);
+  const structuredResponse = terminal.structuredResponse;
+  const structuredSkus: string[] =
+    structuredResponse && structuredResponse.skus.length > 0
+      ? structuredResponse.skus
+      : [];
+  const skuCandidates: string[] = (structuredSkus.length
+    ? structuredSkus
+    : parsed.skus
+  ).slice(0, MAX_SKUS);
 
   const settled = await Promise.all(
     skuCandidates.map((sku) => resolveMagentoProductBySkuFlexible(sku)),
@@ -88,7 +120,10 @@ export async function POST(req: NextRequest) {
   return Response.json(
     {
       items,
-      assistant_note: parsed.displayText.trim().slice(0, 800) || null,
+      assistant_note: noteFromParsedResult(
+        structuredResponse,
+        parsed.displayText,
+      ),
     },
     {
       status: 200,

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -9,14 +10,33 @@ interface CopilotHeaderTriggerProps {
   className?: string;
 }
 
+function CopilotHeaderPlaceholder({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`inline-flex h-9 shrink-0 items-center sm:min-w-[5.5rem] ${className}`}
+      style={{ minWidth: "2.25rem" }}
+      aria-hidden
+    />
+  );
+}
+
 export default function CopilotHeaderTrigger({
   className = "",
 }: CopilotHeaderTriggerProps) {
   const t = useTranslations("copilot");
   const { open, toggle } = useCopilot();
   const { ready, optionalAllowed } = useCookieConsent();
+  const [mounted, setMounted] = useState(false);
 
-  if (!ready || !optionalAllowed) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !ready) {
+    return <CopilotHeaderPlaceholder className={className} />;
+  }
+
+  if (!optionalAllowed) return null;
 
   return (
     <button
