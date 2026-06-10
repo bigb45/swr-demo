@@ -17,6 +17,7 @@ Shipped vs backlog truth lives outside this file — read these before guessing 
 | [`STATUS.md`](./STATUS.md) | What has landed (pages, flows, recent milestones) |
 | [`BACKLOG.md`](./BACKLOG.md) | Prioritized queue + FRD reconciliation |
 | [`FEATURES.md`](./FEATURES.md) | Stakeholder FRD checklist |
+| [`QA.md`](./QA.md) | Multi-agent audit playbook + smoke test entry |
 
 ---
 

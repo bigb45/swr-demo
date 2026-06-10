@@ -53,9 +53,25 @@
     "/account/service/new"
   ],
   "staticRoutes_queryVariants": [
+    { "path": "/products", "query": "q=drill" },
+    { "path": "/products", "query": "page=2" },
+    { "path": "/products", "query": "priceMin=10&priceMax=500" },
+    { "path": "/catalog", "query": "q=iso" },
+    { "path": "/catalog", "query": "brand=Bosch&type=datasheet" },
     { "path": "/account/service/pick", "query": "kind=repair" },
     { "path": "/account/service/pick", "query": "kind=inspection" },
     { "path": "/account/service/new", "query": "kind=repair&manual=1" }
+  ],
+  "highRiskRoutes": [
+    "/",
+    "/products",
+    "/products?q=drill",
+    "/cart",
+    "/checkout/review",
+    "/catalog",
+    "/account/login",
+    "/account/quotations",
+    "/account/service/pick?kind=repair"
   ],
   "dynamicRoutes": [
     {
@@ -92,7 +108,11 @@
     }
   ],
   "apiSmokePublic": [
-    "/api/cart",
+    {
+      "path": "/api/cart",
+      "expectedStatus": 400,
+      "expectedBodyIncludes": "cartId required"
+    },
     "/api/search/products?q=drill"
   ],
   "apiSmokeAuthenticated": [
@@ -128,7 +148,6 @@
         "/products",
         "/cart",
         "/catalog",
-        "/categories",
         "/bulk-order",
         "/checkout/address",
         "/checkout/shipping",

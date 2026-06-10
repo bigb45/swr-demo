@@ -46,6 +46,7 @@ async function discoverDynamics(page, locale) {
     categoryId: null,
     catalogDocId: null,
     fleetMachineId: null,
+    notes: [],
   };
 
   try {
@@ -75,6 +76,27 @@ async function discoverDynamics(page, locale) {
     }
   } catch {
     // Magento/catalog unavailable
+  }
+
+  if (out.sku && !out.categoryId) {
+    try {
+      await page.goto(`${BASE}/${locale}/products/${encodeURIComponent(out.sku)}`, {
+        waitUntil: "domcontentloaded",
+        timeout: NAV_TIMEOUT,
+      });
+      await page.waitForTimeout(1200);
+      const catHref = await page
+        .locator(`a[href^="/${locale}/categories/"]`)
+        .first()
+        .getAttribute("href")
+        .catch(() => null);
+      if (catHref) {
+        const m = catHref.match(/\/categories\/([^/?#]+)/);
+        if (m) out.categoryId = m[1];
+      }
+    } catch {
+      out.notes.push("category discovery skipped: PDP unavailable");
+    }
   }
 
   try {
@@ -113,6 +135,11 @@ async function discoverDynamics(page, locale) {
     }
   } catch {
     // usually redirect to login when anonymous
+  }
+
+  if (!out.categoryId) out.notes.push("category id not discovered");
+  if (!out.fleetMachineId) {
+    out.notes.push("fleet id not discovered; guest sessions usually redirect to login");
   }
 
   return out;
@@ -211,14 +238,26 @@ async function auditRoute(context, pathWithQuery, locale) {
 
 async function checkPublicApis() {
   const results = [];
-  for (const path of manifest.apiSmokePublic || []) {
+  for (const entry of manifest.apiSmokePublic || []) {
+    const path = typeof entry === "string" ? entry : entry.path;
+    const expectedStatus =
+      typeof entry === "string" ? undefined : entry.expectedStatus;
+    const expectedBodyIncludes =
+      typeof entry === "string" ? undefined : entry.expectedBodyIncludes;
     const url = `${BASE}${path.startsWith("/") ? path : `/${path}`}`;
     try {
       const r = await fetch(url, { redirect: "follow" });
+      const body = expectedBodyIncludes ? await r.text() : "";
+      const statusOk = expectedStatus ? r.status === expectedStatus : r.ok;
+      const bodyOk = expectedBodyIncludes
+        ? body.includes(expectedBodyIncludes)
+        : true;
       results.push({
         url,
         status: r.status,
-        ok: r.ok,
+        expectedStatus,
+        expectedBodyIncludes,
+        ok: statusOk && bodyOk,
       });
     } catch (e) {
       results.push({
