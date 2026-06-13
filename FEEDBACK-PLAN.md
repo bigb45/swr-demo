@@ -519,11 +519,11 @@ D8, A4 (category-specific facets with backend attrs)
 - [x] Watchlist: heart toggle persists (localStorage), header count badge, `/watchlist` page add/remove/clear
 - [x] Homepage: partners carousel visible without scroll; catalog rail removed
 - [x] Copilot visible with essential-only cookies (Edge)
-- [ ] No device permission prompt on load
-- [~] Copilot search: “makita”, “kitchen mops”, German terms return products — frontend fallback shipped; E2E blocked on Magento admin-token lockout
+- [~] No device permission prompt on load — `src/` audit clean (QA.md D6); live Edge retest still open
+- [x] Copilot search: “makita”, German terms return products — `/api/search/products` verified locally (Jun 2026)
 - [x] Registration includes company
-- [ ] Account icon visible Tier 2 desktop + mobile
-- [ ] DE copy review completed; EN/FR synced
+- [x] Account icon visible Tier 2 desktop + mobile (E1)
+- [ ] DE copy review completed; EN/FR synced — see `CONTENT-AUDIT.md` (stakeholder gate)
 - [x] Industries nav removed; old URLs redirect
 
 ---
