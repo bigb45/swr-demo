@@ -1,7 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { getProducts } from "@/lib/magento";
-import { listDocuments } from "@/lib/catalog";
 import {
   Hero,
   Cta,
@@ -9,12 +8,12 @@ import {
   IntentTile,
   RealityStrip,
   PersonCard,
-  CatalogPreviewRail,
+  PartnerLogoCarousel,
   WorkshopBlock,
   FeaturedProductsRail,
 } from "@/components/marketing";
 import type { RealityItem } from "@/components/marketing";
-import { INDUSTRY_SLUGS } from "@/lib/industries";
+import { PARTNER_BRANDS } from "@/lib/partners";
 
 export const revalidate = 60;
 
@@ -42,27 +41,21 @@ const ICON_DELIVERY = (
 );
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const [t, tNav, tServices, tIndustries, tCatalog, tContact] = await Promise.all([
+  const [t, tNav, tServices, tContact] = await Promise.all([
     getTranslations({ locale, namespace: "home" }),
     getTranslations({ locale, namespace: "nav" }),
     getTranslations({ locale, namespace: "services" }),
-    getTranslations({ locale, namespace: "industries" }),
-    getTranslations({ locale, namespace: "catalog" }),
     getTranslations({ locale, namespace: "contact" }),
   ]);
 
   const productList = await getProducts(6).catch(() => ({ items: [] }));
   const products = productList.items;
 
-  const catalogPreview = await listDocuments({ types: ["catalog"], limit: 6 }).catch(
-    () => ({ items: [], totalCount: 0, facets: { brands: [], types: [], categories: [], languages: [] } })
-  );
-
   const intents = [
     {
       question: t("intents.part.question"),
       answer: t("intents.part.answer"),
-      href: "/products",
+      href: "/shop",
       ctaLabel: t("intents.part.cta"),
     },
     {
@@ -139,9 +132,22 @@ export default async function HomePage({ params }: HomePageProps) {
         title={t("hero.title")}
         subtitle={t("hero.subtitle")}
       >
-        <Cta href="/products" label={t("hero.openShop")} variant="primary" />
+        <Cta href="/shop" label={t("hero.openShop")} variant="primary" />
         <Cta href="/catalog" label={t("hero.openCatalog")} variant="white" />
       </Hero>
+
+      {/* Featured products */}
+      <div className="bg-surface-container-low py-14 sm:py-20">
+        <div className="swr-page-shell">
+          <FeaturedProductsRail
+            heading={t("featured.heading")}
+            subheading={t("featured.subheading")}
+            products={products}
+            viewAllHref="/shop"
+            viewAllLabel={t("featured.cta")}
+          />
+        </div>
+      </div>
 
       <RealityStrip heading={t("reality.heading")} items={realityItems} />
 
@@ -171,12 +177,12 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      <CatalogPreviewRail
-        heading={t("catalogPreview.heading")}
-        subheading={t("catalogPreview.subheading")}
-        documents={catalogPreview.items}
-        viewAllLabel={t("catalogPreview.cta")}
-        emptyLabel={tCatalog("emptyState")}
+      <PartnerLogoCarousel
+        heading={t("partners.heading")}
+        subheading={t("partners.subheading")}
+        partners={PARTNER_BRANDS}
+        previousLabel={t("partners.previous")}
+        nextLabel={t("partners.next")}
       />
 
       {/* Services pillars */}
@@ -220,47 +226,6 @@ export default async function HomePage({ params }: HomePageProps) {
           </div>
         </div>
       </section>
-
-      {/* Industries grid (questions, not labels) */}
-      <section className="py-14 sm:py-20">
-        <div className="swr-page-shell flex flex-col gap-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 max-w-3xl">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
-                {t("industries.eyebrow")}
-              </p>
-              <h2 className="text-2xl sm:text-4xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
-                {t("industries.heading")}
-              </h2>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {INDUSTRY_SLUGS.map((slug) => (
-              <ServiceCard
-                key={slug}
-                eyebrow={tIndustries(`slugs.${slug}.eyebrow`)}
-                title={t(`industries.questions.${slug}`)}
-                description={tIndustries(`slugs.${slug}.shortBody`)}
-                href={`/industries/${slug}`}
-                ctaLabel={tIndustries("hub.exploreIndustry")}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured products */}
-      <div className="bg-surface-container-low py-14 sm:py-20">
-        <div className="swr-page-shell">
-          <FeaturedProductsRail
-            heading={t("featured.heading")}
-            subheading={t("featured.subheading")}
-            products={products}
-            viewAllHref="/products"
-            viewAllLabel={t("featured.cta")}
-          />
-        </div>
-      </div>
 
       {/* Real people */}
       <section className="py-14 sm:py-20">
@@ -318,7 +283,7 @@ export default async function HomePage({ params }: HomePageProps) {
         ]}
       >
         <Cta href="/contact" label={tNav("bookConsultation")} variant="primary" />
-        <Cta href="/products" label={tNav("allProducts")} variant="ghost" />
+        <Cta href="/shop" label={tNav("allProducts")} variant="ghost" />
       </WorkshopBlock>
     </>
   );

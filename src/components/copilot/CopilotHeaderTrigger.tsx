@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useHydrated } from "@/hooks/useHydrated";
 import { useCopilot } from "./CopilotProvider";
 
 interface CopilotHeaderTriggerProps {
@@ -25,18 +25,17 @@ export default function CopilotHeaderTrigger({
 }: CopilotHeaderTriggerProps) {
   const t = useTranslations("copilot");
   const { open, toggle } = useCopilot();
-  const { ready, optionalAllowed } = useCookieConsent();
-  const [mounted, setMounted] = useState(false);
+  const { ready, level } = useCookieConsent();
+  const hydrated = useHydrated();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted || !ready) {
+  // Render a stable placeholder during SSR and the first client render so the
+  // markup matches even when this trigger hydrates late (inside <Suspense>)
+  // after CookieConsentProvider has already flipped `ready` to true.
+  if (!hydrated || !ready) {
     return <CopilotHeaderPlaceholder className={className} />;
   }
 
-  if (!optionalAllowed) return null;
+  if (level === "needsChoice") return null;
 
   return (
     <button

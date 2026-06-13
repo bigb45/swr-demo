@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
   useLayoutEffect,
@@ -7,6 +8,7 @@ import {
   useRef,
   useState,
   type RefObject,
+  type ChangeEvent,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -64,6 +66,9 @@ export default function CopilotPanel() {
     setDraft,
     pending,
     submitError,
+    imageAttachment,
+    attachImage,
+    removeImageAttachment,
     clearSubmitError,
     sendDraft,
     submitSuggestion,
@@ -71,6 +76,7 @@ export default function CopilotPanel() {
 
   const rootRef = useRef<HTMLElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   /** Panel only mounts while the dock is open — keep focus contained in the sheet. */
@@ -106,6 +112,13 @@ export default function CopilotPanel() {
     if (e.key !== "Enter" || e.shiftKey) return;
     e.preventDefault();
     await sendDraft();
+  }
+
+  async function onImageSelected(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    await attachImage(file);
   }
 
   return (
@@ -165,6 +178,18 @@ export default function CopilotPanel() {
                 className="max-w-[92%] rounded-[var(--radius-card)] px-3 py-2 text-sm text-on-primary"
                 style={{ backgroundColor: "#005288" }}
               >
+                {m.imagePreviewUrl ? (
+                  <div className="mb-2 overflow-hidden rounded-[var(--radius-btn)] bg-white/10">
+                    <Image
+                      src={m.imagePreviewUrl}
+                      alt={m.imageName ?? ""}
+                      width={220}
+                      height={160}
+                      unoptimized
+                      className="max-h-40 w-full object-cover"
+                    />
+                  </div>
+                ) : null}
                 <p className="whitespace-pre-wrap break-words">{m.content}</p>
               </div>
             </div>
@@ -284,10 +309,86 @@ export default function CopilotPanel() {
             </div>
           </div>
         )}
+        {imageAttachment ? (
+          <div className="flex items-center gap-2 rounded-[var(--radius-card)] bg-surface-container-lowest p-2 shadow-[var(--shadow-ambient)]">
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[var(--radius-btn)] bg-surface-container-low">
+              <Image
+                src={imageAttachment.dataUrl}
+                alt=""
+                fill
+                unoptimized
+                className="object-cover"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-on-surface">
+                {imageAttachment.name}
+              </p>
+              <p className="text-[10px] text-on-surface-variant">
+                {t("uploadOneImage")}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={removeImageAttachment}
+              disabled={pending}
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-highest disabled:opacity-40"
+              aria-label={t("uploadRemove")}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+        ) : null}
         <div
           className="flex min-h-[2.75rem] items-center gap-2 rounded-[var(--radius-card)] bg-surface-container-lowest p-2 shadow-[var(--shadow-ambient)]"
           style={{ borderRadius: "var(--radius-card)" }}
         >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            onChange={onImageSelected}
+            disabled={pending}
+          />
+          <button
+            type="button"
+            disabled={pending || imageAttachment != null}
+            onClick={() => {
+              clearSubmitError();
+              fileInputRef.current?.click();
+            }}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-container-low text-primary transition-colors hover:bg-primary-fixed/50 disabled:opacity-40"
+            aria-label={t("uploadAddImage")}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+          </button>
           <textarea
             ref={textareaRef}
             rows={1}
@@ -300,7 +401,7 @@ export default function CopilotPanel() {
           />
           <button
             type="button"
-            disabled={pending || !draft.trim()}
+            disabled={pending || (!draft.trim() && !imageAttachment)}
             onClick={() => {
               clearSubmitError();
               void sendDraft();

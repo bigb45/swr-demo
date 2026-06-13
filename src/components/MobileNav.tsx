@@ -6,11 +6,15 @@ import { Link } from "@/i18n/navigation";
 import LogoutButton from "./LogoutButton";
 import LocaleSwitcher from "./LocaleSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
+import type { ShopCategoryNavItem } from "@/lib/shop-categories";
+import ShopCategoryIcon from "./shop/ShopCategoryIcon";
 
 interface MobileNavProps {
   links: { href: string; label: string }[];
+  shopCategories: ShopCategoryNavItem[];
   cartLabel: string;
-  bookConsultationLabel: string;
+  watchlistLabel: string;
+  shopAllLabel: string;
   /**
    * When set, renders a Sign Out button at the bottom of the drawer that
    * calls /api/auth/logout and refreshes the route. Pass `undefined` for
@@ -21,8 +25,10 @@ interface MobileNavProps {
 
 export default function MobileNav({
   links,
+  shopCategories,
   cartLabel,
-  bookConsultationLabel,
+  watchlistLabel,
+  shopAllLabel,
   logoutLabel,
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
@@ -114,19 +120,45 @@ export default function MobileNav({
               >
                 {label}
               </Link>
+              {href === "/shop" && shopCategories.length > 0 ? (
+                <div className="mx-6 mb-2 grid grid-cols-1 gap-1 bg-surface-container-low p-2" style={{ borderRadius: "var(--radius-card)" }}>
+                  {shopCategories.map((category) => (
+                    <Link
+                      key={category.id}
+                      href={category.href}
+                      onClick={close}
+                      className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-on-surface hover:bg-white hover:text-primary transition-colors"
+                      style={{ borderRadius: "var(--radius-btn)" }}
+                    >
+                      <ShopCategoryIcon icon={category.icon} className="h-5 w-5 shrink-0" />
+                      {category.name}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/shop"
+                    onClick={close}
+                    className="px-3 py-2 text-xs font-bold uppercase tracking-[0.08em] text-secondary hover:bg-white transition-colors"
+                    style={{ borderRadius: "var(--radius-btn)" }}
+                  >
+                    {shopAllLabel}
+                  </Link>
+                </div>
+              ) : null}
             </li>
           ))}
-          <li className="px-6 pt-4 pb-2">
+          <li className="border-t border-outline-variant/20 mt-2 pt-2">
             <Link
-              href="/contact"
+              href="/watchlist"
               onClick={close}
-              className="flex items-center justify-center gap-2 px-4 py-3 text-white text-sm font-semibold transition-colors"
-              style={{ backgroundColor: "#006e21", borderRadius: "var(--radius-btn)" }}
+              className="flex items-center gap-3 px-6 py-4 text-sm font-semibold text-primary hover:bg-surface-container-low transition-colors"
             >
-              {bookConsultationLabel}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              {watchlistLabel}
             </Link>
           </li>
-          <li className="border-t border-outline-variant/20 mt-2 pt-2">
+          <li className="pt-1">
             <Link
               href="/cart"
               onClick={close}

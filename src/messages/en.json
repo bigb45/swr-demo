@@ -16,6 +16,7 @@
     "orderHistory": "Order History",
     "account": "Account",
     "cart": "Cart",
+    "watchlist": "Watchlist",
     "search": "SEARCH",
     "searchPlaceholder": "Enter part number, keyword, or spec...",
     "settings": "Settings",
@@ -29,7 +30,11 @@
     "primaryNavLabel": "Primary",
     "selectCurrency": "Select currency",
     "selectLanguage": "Select language",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "shopMenu": {
+      "heading": "Shop assortment",
+      "all": "View all categories"
+    }
   },
   "search": {
     "suggestionsLabel": "Product suggestions",
@@ -76,7 +81,15 @@
     "addToCartFailed": "Failed",
     "qtyDecrease": "Decrease quantity",
     "qtyIncrease": "Increase quantity",
-    "cartReconcileFailed": "Your cart could not be updated: {detail}"
+    "cartReconcileFailed": "Your cart could not be updated: {detail}",
+    "uploadAddImage": "Attach image",
+    "uploadRemove": "Remove image",
+    "uploadOneImage": "One image per message",
+    "uploadImageOnly": "Please choose an image file.",
+    "uploadTooLarge": "Image must be under 4 MB.",
+    "uploadReadFailed": "Could not read the image.",
+    "imageDefaultPrompt": "Please analyze this image and find matching products.",
+    "fallbackProductsIntro": "Matching products from our catalog:"
   },
   "hero": {
     "title": "Welding, Tools & Repair.",
@@ -144,6 +157,12 @@
       "subheading": "Brand catalogs from the manufacturers we carry — searchable, filterable, downloadable.",
       "cta": "Open the document library"
     },
+    "partners": {
+      "heading": "Our partners",
+      "subheading": "Selected manufacturers from the SWR range. Catalog links follow once the matching supplier documents are approved.",
+      "previous": "Show previous partners",
+      "next": "Show more partners"
+    },
     "services": {
       "eyebrow": "Beyond the product",
       "heading": "Four things we promise.",
@@ -199,8 +218,11 @@
     "searchTotal": "{count} results",
     "searchEmpty": "No results found for \"{query}\".",
     "searchEmptyHint": "Try a different part number, keyword, or specification.",
-    "searchEmptyClear": "Clear search",
+    "searchEmptyClear": "View categories",
     "noFilterResults": "No products match these filters.",
+    "browseByCategoryEyebrow": "Assortment",
+    "browseByCategoryTitle": "Start with a category.",
+    "browseByCategoryBody": "The full product range is too large for a useful unfiltered entry point. Choose a category or use search.",
     "noImage": "No image available",
     "filter": {
       "heading": "Filters",
@@ -285,6 +307,15 @@
     "products": "products",
     "empty": "No products found in this category."
   },
+  "shop": {
+    "metaTitle": "Shop",
+    "metaDescription": "Assortment overview for welding, tools, machinery, safety, and workshop supplies.",
+    "eyebrow": "SWR assortment",
+    "heading": "Choose your product group.",
+    "subheading": "The shop starts with main categories so you do not land in an unbounded full-catalog listing.",
+    "sidebarHeading": "Categories",
+    "empty": "Categories could not be loaded."
+  },
   "pagination": {
     "prev": "‹ Prev",
     "next": "Next"
@@ -315,7 +346,7 @@
   },
   "cookieConsent": {
     "title": "Cookies and privacy",
-    "description": "We use cookies and similar technologies to operate the shop (cart, checkout, sign-in) and, with your consent, to remember settings and to enable the product assistant. You can choose essential cookies only or accept all optional uses.",
+    "description": "We use cookies and similar technologies to operate the shop (cart, checkout, sign-in, product assistant) and, with your consent, to remember optional settings. You can choose essential cookies only or accept all optional uses.",
     "cookiesPageLink": "Cookie details",
     "privacyLink": "Privacy policy",
     "essentialOnly": "Essential only",
@@ -327,7 +358,7 @@
     "necessaryTitle": "Strictly necessary cookies",
     "necessaryIntro": "These cookies are required to provide functions you explicitly request, such as maintaining a shopping cart, checkout steps, or your signed-in session. They are set based on our legitimate interest in operating the webshop (Art. 6(1)(f) GDPR) and, where applicable, for contract performance (Art. 6(1)(b) GDPR).",
     "optionalTitle": "Optional cookies and features",
-    "optionalIntro": "If you choose “Accept all”, we also store your preferred display currency and enable the product assistant, which may send your messages to an external service provider for processing. You can refuse these uses by choosing “Essential only”.",
+    "optionalIntro": "If you choose “Accept all”, we also store your preferred display currency. The product assistant remains available after any cookie choice because it is treated as a shop function; messages and optional images may be sent to an external service provider for processing.",
     "localStorageTitle": "Browser storage (cart)",
     "localStorageBody": "Your cart identifier may be kept in browser localStorage so the shop works across page views before checkout. It does not replace the cart cookie used for checkout synchronisation. You can clear site data in your browser to remove it.",
     "tableCaption": "Cookies we reference in our consent tool",
@@ -498,6 +529,7 @@
     "registerHeading": "Create Account",
     "firstName": "First Name",
     "lastName": "Last Name",
+    "company": "Company",
     "confirmPassword": "Confirm Password",
     "register": "Register",
     "registering": "Registering…",
@@ -779,7 +811,17 @@
     "products": "Products",
     "catalog": "Catalog",
     "cart": "Shopping cart",
+    "watchlist": "Watchlist",
     "checkout": "Checkout"
+  },
+  "watchlist": {
+    "title": "Watchlist",
+    "add": "Add to watchlist",
+    "added": "On watchlist",
+    "remove": "Remove from watchlist",
+    "empty": "Your watchlist is empty.",
+    "browseShop": "Browse the shop",
+    "clearAll": "Clear all"
   },
   "catalog": {
     "metaTitle": "Document Catalog — manuals, datasheets, brochures",

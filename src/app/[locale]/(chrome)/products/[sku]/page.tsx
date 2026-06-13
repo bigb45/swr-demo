@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import {
   getProductBySku,
-  getTopLevelCategories,
 } from "@/lib/magento";
 import {
   getCustomAttribute,
@@ -12,7 +11,6 @@ import {
 } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import ProductPrice from "@/components/ProductPrice";
-import SideNav from "@/components/ui/SideNav";
 import ProductGallery from "@/components/ui/ProductGallery";
 import SpecTable from "@/components/ui/SpecTable";
 import BulkPricingTable from "@/components/ui/BulkPricingTable";
@@ -99,8 +97,6 @@ export default async function ProductDetailPage({
 
   const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
-
-  const categories = await getTopLevelCategories().catch(() => []);
 
   const galleryImages = getProductGalleryUrls(product).map((src) => ({
     src,
@@ -194,14 +190,7 @@ export default async function ProductDetailPage({
         ]}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col gap-8 sm:gap-10 lg:flex-row lg:gap-10">
-        <SideNav
-          locale={locale}
-          categories={categories}
-          width="wide"
-          catalogHeaderTop="flush"
-        />
-
+      <div className="flex min-w-0 flex-1 flex-col gap-8 sm:gap-10">
         <div className="flex min-w-0 flex-1 flex-col gap-8 sm:gap-10">
           {/* Product area */}
           <div className="flex flex-col gap-8 lg:flex-row lg:gap-10">

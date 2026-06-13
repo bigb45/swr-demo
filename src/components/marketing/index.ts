@@ -18,4 +18,5 @@ export { default as RealityStrip } from "./RealityStrip";
 export type { RealityItem } from "./RealityStrip";
 export { default as PersonCard } from "./PersonCard";
 export { default as CatalogPreviewRail } from "./CatalogPreviewRail";
+export { default as PartnerLogoCarousel } from "./PartnerLogoCarousel";
 export { default as WorkshopBlock } from "./WorkshopBlock";

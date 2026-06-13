@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ChevronLeft } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import {
   getFilteredProductResults,
   getTopLevelCategories,
@@ -13,6 +14,9 @@ import ProductsFilterBar from "@/components/products/ProductsFilterBar";
 import ProductsActiveFilters from "@/components/products/ProductsActiveFilters";
 import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import ShopCategoryGrid from "@/components/shop/ShopCategoryGrid";
+import ShopCategorySidebar from "@/components/shop/ShopCategorySidebar";
+import { toShopCategoryNavItems } from "@/lib/shop-categories";
 
 export const revalidate = 60;
 
@@ -55,12 +59,19 @@ export default async function ProductsPage({
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10));
   const query = q?.trim() ?? "";
   const facetParams = parseProductFacetParams(resolvedSearchParams);
+  const hasCatalogScope =
+    Boolean(query) ||
+    Boolean(category) ||
+    Boolean(priceMin) ||
+    Boolean(priceMax) ||
+    Object.values(facetParams).some((values) => values.length > 0);
 
-  const [t, tErr, tBc, tFilter] = await Promise.all([
+  const [t, tErr, tBc, tFilter, tShop] = await Promise.all([
     getTranslations({ locale, namespace: "products" }),
     getTranslations({ locale, namespace: "errors" }),
     getTranslations({ locale, namespace: "breadcrumb" }),
     getTranslations({ locale, namespace: "products.filter" }),
+    getTranslations({ locale, namespace: "shop" }),
   ]);
   const magentoBaseUrl = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -75,6 +86,45 @@ export default async function ProductsPage({
   let productList;
   let categories: Awaited<ReturnType<typeof getTopLevelCategories>> = [];
   let error: string | null = null;
+
+  if (!hasCatalogScope) {
+    categories = await getTopLevelCategories().catch(() => []);
+    const categoryItems = toShopCategoryNavItems(categories, 8);
+
+    return (
+      <div className="swr-page-shell py-10">
+        <Breadcrumbs
+          className="mb-8"
+          ariaLabel={tBc("ariaLabel")}
+          items={[
+            { label: tBc("home"), href: "/" },
+            { label: t("title") },
+          ]}
+        />
+        <div className="mb-8 max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
+            {t("browseByCategoryEyebrow")}
+          </p>
+          <h1 className="text-3xl sm:text-5xl font-black uppercase text-primary tracking-[-0.03em] leading-tight">
+            {t("browseByCategoryTitle")}
+          </h1>
+          <p className="mt-4 text-sm sm:text-base text-on-surface-variant leading-relaxed">
+            {t("browseByCategoryBody")}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
+          <ShopCategorySidebar
+            heading={tShop("sidebarHeading")}
+            categories={categoryItems}
+          />
+          <ShopCategoryGrid
+            categories={categoryItems}
+            emptyLabel={tShop("empty")}
+          />
+        </div>
+      </div>
+    );
+  }
 
   try {
     [productList, categories] = await Promise.all([
@@ -188,13 +238,13 @@ export default async function ProductsPage({
                     {t("searchEmptyHint")}
                   </p>
                 </div>
-                <a
-                  href={`/${locale}/products`}
+                <Link
+                  href="/shop"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-primary border border-primary/30 px-5 py-2.5 rounded-(--radius-btn) hover:bg-primary/5 transition-colors"
                 >
                   <ChevronLeft aria-hidden="true" className="h-4 w-4" />
                   {t("searchEmptyClear")}
-                </a>
+                </Link>
               </div>
             ) : productList?.total_count === 0 ? (
               <p className="text-sm text-on-surface-variant py-12 text-center">

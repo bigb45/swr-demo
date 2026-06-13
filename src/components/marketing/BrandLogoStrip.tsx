@@ -1,3 +1,5 @@
+import { Link } from "@/i18n/navigation";
+
 export interface BrandLogo {
   name: string;
   src?: string;
@@ -39,6 +41,18 @@ export default function BrandLogoStrip({
             </span>
           );
           if (logo.href) {
+            if (logo.href.startsWith("/")) {
+              return (
+                <Link
+                  key={logo.name}
+                  href={logo.href}
+                  className="shrink-0"
+                  aria-label={logo.name}
+                >
+                  {content}
+                </Link>
+              );
+            }
             return (
               <a
                 key={logo.name}

@@ -16,6 +16,7 @@
     "orderHistory": "Historique des commandes",
     "account": "Compte",
     "cart": "Panier",
+    "watchlist": "Liste de favoris",
     "search": "RECHERCHER",
     "searchPlaceholder": "Entrez un numéro de pièce, un mot-clé ou une spécification...",
     "settings": "Paramètres",
@@ -29,7 +30,11 @@
     "primaryNavLabel": "Navigation principale",
     "selectCurrency": "Sélectionner la devise",
     "selectLanguage": "Sélectionner la langue",
-    "preferences": "Préférences"
+    "preferences": "Préférences",
+    "shopMenu": {
+      "heading": "Assortiment",
+      "all": "Voir toutes les catégories"
+    }
   },
   "search": {
     "suggestionsLabel": "Suggestions de produits",
@@ -76,7 +81,15 @@
     "addToCartFailed": "Échec",
     "qtyDecrease": "Diminuer la quantité",
     "qtyIncrease": "Augmenter la quantité",
-    "cartReconcileFailed": "Votre panier n’a pas pu être mis à jour : {detail}"
+    "cartReconcileFailed": "Votre panier n’a pas pu être mis à jour : {detail}",
+    "uploadAddImage": "Joindre une image",
+    "uploadRemove": "Retirer l’image",
+    "uploadOneImage": "Une image par message",
+    "uploadImageOnly": "Veuillez choisir une image.",
+    "uploadTooLarge": "L’image doit faire moins de 4 Mo.",
+    "uploadReadFailed": "Impossible de lire l’image.",
+    "imageDefaultPrompt": "Veuillez analyser cette image et trouver les produits correspondants.",
+    "fallbackProductsIntro": "Produits correspondants de notre catalogue :"
   },
   "hero": {
     "title": "Soudage, Outillage & Réparation.",
@@ -144,6 +157,12 @@
       "subheading": "Catalogues des fabricants que nous référençons — cherchables, filtrables, téléchargeables.",
       "cta": "Ouvrir la bibliothèque"
     },
+    "partners": {
+      "heading": "Nos partenaires",
+      "subheading": "Fabricants sélectionnés de l'assortiment SWR. Les liens catalogue suivront dès que les documents fournisseur correspondants seront validés.",
+      "previous": "Afficher les partenaires précédents",
+      "next": "Afficher d'autres partenaires"
+    },
     "services": {
       "eyebrow": "Au-delà du produit",
       "heading": "Quatre engagements.",
@@ -199,8 +218,11 @@
     "searchTotal": "{count} résultats",
     "searchEmpty": "Aucun résultat pour \"{query}\".",
     "searchEmptyHint": "Essayez un autre numéro de référence, mot-clé ou spécification.",
-    "searchEmptyClear": "Effacer la recherche",
+    "searchEmptyClear": "Voir les catégories",
     "noFilterResults": "Aucun produit ne correspond à ces filtres.",
+    "browseByCategoryEyebrow": "Assortiment",
+    "browseByCategoryTitle": "Commencez par une catégorie.",
+    "browseByCategoryBody": "La gamme complète est trop vaste pour une entrée utile sans filtre. Choisissez une catégorie ou utilisez la recherche.",
     "noImage": "Aucune image disponible",
     "filter": {
       "heading": "Filtres",
@@ -285,6 +307,15 @@
     "products": "produits",
     "empty": "Aucun produit trouvé dans cette catégorie."
   },
+  "shop": {
+    "metaTitle": "Boutique",
+    "metaDescription": "Vue d'ensemble de l'assortiment : soudage, outils, machines, sécurité et fournitures d'atelier.",
+    "eyebrow": "Assortiment SWR",
+    "heading": "Choisissez votre famille de produits.",
+    "subheading": "La boutique commence par les catégories principales afin d'éviter une liste catalogue complète et ingérable.",
+    "sidebarHeading": "Catégories",
+    "empty": "Les catégories n'ont pas pu être chargées."
+  },
   "pagination": {
     "prev": "‹ Précédent",
     "next": "Suivant"
@@ -315,7 +346,7 @@
   },
   "cookieConsent": {
     "title": "Cookies et confidentialité",
-    "description": "Nous utilisons des cookies et technologies similaires pour faire fonctionner la boutique (panier, commande, connexion) et, avec votre consentement, pour mémoriser des préférences et activer l’assistant produit. Vous pouvez choisir uniquement les cookies essentiels ou accepter toutes les utilisations optionnelles.",
+    "description": "Nous utilisons des cookies et technologies similaires pour faire fonctionner la boutique (panier, commande, connexion, assistant produit) et, avec votre consentement, mémoriser des préférences optionnelles. Vous pouvez choisir uniquement les cookies essentiels ou accepter toutes les utilisations optionnelles.",
     "cookiesPageLink": "Détail des cookies",
     "privacyLink": "Politique de confidentialité",
     "essentialOnly": "Essentiels uniquement",
@@ -327,7 +358,7 @@
     "necessaryTitle": "Cookies strictement nécessaires",
     "necessaryIntro": "Ces cookies sont nécessaires pour fournir les fonctions que vous demandez explicitement, telles que le panier, les étapes de commande ou votre session connectée. Ils sont déposés sur la base de notre intérêt légitime à exploiter la boutique en ligne (art. 6(1)(f) RGPD) et, le cas échéant, pour l’exécution du contrat (art. 6(1)(b) RGPD).",
     "optionalTitle": "Cookies et fonctions optionnels",
-    "optionalIntro": "Si vous choisissez « Tout accepter », nous enregistrons aussi votre devise d’affichage préférée et activons l’assistant produit, qui peut envoyer vos messages à un prestataire externe pour traitement. Vous pouvez refuser ces usages avec « Essentiels uniquement ».",
+    "optionalIntro": "Si vous choisissez « Tout accepter », nous enregistrons aussi votre devise d’affichage préférée. L’assistant produit reste disponible après tout choix de cookies, car il est traité comme une fonction de la boutique ; les messages et images optionnelles peuvent être envoyés à un prestataire externe pour traitement.",
     "localStorageTitle": "Stockage navigateur (panier)",
     "localStorageBody": "L’identifiant de panier peut être conservé dans le localStorage du navigateur pour que la boutique fonctionne d’une page à l’autre avant la commande. Il ne remplace pas le cookie de panier utilisé pour la synchronisation du tunnel. Vous pouvez effacer les données du site dans le navigateur pour le supprimer.",
     "tableCaption": "Cookies mentionnés dans l’outil de consentement",
@@ -498,6 +529,7 @@
     "registerHeading": "Créer un compte",
     "firstName": "Prénom",
     "lastName": "Nom de famille",
+    "company": "Société",
     "confirmPassword": "Confirmer le mot de passe",
     "register": "S'inscrire",
     "registering": "Inscription en cours…",
@@ -779,7 +811,17 @@
     "products": "Produits",
     "catalog": "Catalogue",
     "cart": "Panier",
+    "watchlist": "Liste de favoris",
     "checkout": "Commande"
+  },
+  "watchlist": {
+    "title": "Liste de favoris",
+    "add": "Ajouter aux favoris",
+    "added": "Dans les favoris",
+    "remove": "Retirer des favoris",
+    "empty": "Votre liste de favoris est vide.",
+    "browseShop": "Parcourir la boutique",
+    "clearAll": "Tout retirer"
   },
   "catalog": {
     "metaTitle": "Catalogue de documents — manuels, fiches techniques, brochures",

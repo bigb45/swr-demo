@@ -5,12 +5,30 @@ import type { MagentoCategory } from "@/types/magento";
 /* Category icon SVGs — inline for zero-dependency approach */
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   fasteners: (
-    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 1v18M5 5l4-4 4 4M5 15l4 4 4-4" />
     </svg>
   ),
   rawMaterials: (
-    <svg width="18" height="19" viewBox="0 0 18 19" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="19"
+      viewBox="0 0 18 19"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <rect x="1" y="1" width="16" height="17" rx="1" />
       <line x1="5" y1="6" x2="13" y2="6" />
       <line x1="5" y1="10" x2="13" y2="10" />
@@ -18,22 +36,58 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
     </svg>
   ),
   handTools: (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M3 15L12 6M12 6l2-5 3 3-5 2zM6 12l-3 3" />
     </svg>
   ),
   powerTools: (
-    <svg width="16" height="20" viewBox="0 0 16 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="20"
+      viewBox="0 0 16 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polygon points="8,1 15,10 10,10 10,19 1,10 6,10" />
     </svg>
   ),
   safety: (
-    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 1L1 5v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V5L9 1z" />
     </svg>
   ),
   abrasives: (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="9" cy="9" r="8" />
       <circle cx="9" cy="9" r="3" />
       <line x1="9" y1="1" x2="9" y2="4" />
@@ -46,12 +100,22 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 
 function getIconForCategory(name: string): React.ReactNode {
   const lower = name.toLowerCase();
-  if (lower.includes("fastener") || lower.includes("schraub")) return CATEGORY_ICONS.fasteners;
-  if (lower.includes("raw") || lower.includes("material") || lower.includes("rohstoff")) return CATEGORY_ICONS.rawMaterials;
-  if (lower.includes("hand") || lower.includes("werkzeug")) return CATEGORY_ICONS.handTools;
-  if (lower.includes("power") || lower.includes("elektro")) return CATEGORY_ICONS.powerTools;
-  if (lower.includes("safe") || lower.includes("sicher")) return CATEGORY_ICONS.safety;
-  if (lower.includes("abrasiv") || lower.includes("schleif")) return CATEGORY_ICONS.abrasives;
+  if (lower.includes("fastener") || lower.includes("schraub"))
+    return CATEGORY_ICONS.fasteners;
+  if (
+    lower.includes("raw") ||
+    lower.includes("material") ||
+    lower.includes("rohstoff")
+  )
+    return CATEGORY_ICONS.rawMaterials;
+  if (lower.includes("hand") || lower.includes("werkzeug"))
+    return CATEGORY_ICONS.handTools;
+  if (lower.includes("power") || lower.includes("elektro"))
+    return CATEGORY_ICONS.powerTools;
+  if (lower.includes("safe") || lower.includes("sicher"))
+    return CATEGORY_ICONS.safety;
+  if (lower.includes("abrasiv") || lower.includes("schleif"))
+    return CATEGORY_ICONS.abrasives;
   return CATEGORY_ICONS.handTools;
 }
 
@@ -134,7 +198,16 @@ export default async function SideNav({
               href="/contact"
               className="flex items-center gap-2 text-xs text-on-surface-variant hover:text-primary transition-colors"
             >
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.72 16z" />
               </svg>
               {t("contactSupport")}
@@ -145,7 +218,16 @@ export default async function SideNav({
               href="/locations"
               className="flex items-center gap-2 text-xs text-on-surface-variant hover:text-primary transition-colors"
             >
-              <svg width="9" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="9"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>

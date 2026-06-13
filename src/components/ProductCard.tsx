@@ -6,11 +6,16 @@ import type { MouseEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
-import { getCustomAttribute, getProductGalleryUrls } from "@/lib/magento-shared";
+import {
+  getCustomAttribute,
+  getProductGalleryUrls,
+  getProductImageUrl,
+} from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";
 import { useCustomerSession } from "./CustomerSessionProvider";
+import WatchlistButton from "./WatchlistButton";
 import StockBadge from "./ui/StockBadge";
 import NoImagePlaceholder from "./ui/NoImagePlaceholder";
 
@@ -133,20 +138,30 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const locale = useLocale();
   const t = useTranslations("products");
   const [status, setStatus] = useState<AddStatus>("idle");
+  const [qty, setQty] = useState(1);
 
   const stock = getStockStatus(product);
-  const canAdd =
+  const maxQty =
+    typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
+  // Cart is reserved for signed-in customers with a sellable price; everyone
+  // else (guests, price-on-request) gets the watchlist instead.
+  const canAddToCart =
     isAuthenticated && product.price > 0 && stock.level !== "out";
-  const showGuestPriceGate =
-    !isAuthenticated && product.price > 0;
+  const showGuestPriceGate = !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, t);
+  const watchlistImageUrl = getProductImageUrl(product);
+
+  function updateQty(next: number) {
+    const clamped = Math.max(1, Math.min(maxQty ?? 9999, Math.floor(next)));
+    setQty(Number.isFinite(clamped) ? clamped : 1);
+  }
 
   async function handleAdd() {
-    if (!canAdd || status === "loading") return;
+    if (!canAddToCart || status === "loading") return;
 
     setStatus("loading");
     try {
-      await addItem(product, 1);
+      await addItem(product, qty);
       setStatus("success");
       window.setTimeout(() => setStatus("idle"), 1600);
     } catch {
@@ -190,12 +205,9 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
         </div>
       </Link>
 
-      <div className="flex items-center justify-between gap-3 p-4 pt-3 mt-auto">
+      <div className="flex flex-col gap-3 p-4 pt-3 mt-auto">
         {showGuestPriceGate ? (
-          <Link
-            href="/account/login"
-            className="inline-flex min-w-0 items-center gap-1.5 text-xs font-bold text-secondary hover:underline"
-          >
+          <div className="inline-flex min-w-0 items-center gap-1.5 text-xs font-semibold text-on-surface-variant">
             <svg
               width="14"
               height="14"
@@ -212,7 +224,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             <span>{t("signInForPrice")}</span>
-          </Link>
+          </div>
         ) : (
           <span className="text-lg font-bold text-gray-900">
             {product.price > 0
@@ -220,7 +232,48 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
               : t("priceOnRequest")}
           </span>
         )}
-        {canAdd && (
+        {canAddToCart ? (
+          <div className="flex items-center justify-between gap-2">
+            <div
+              className="inline-flex h-10 items-center rounded-[var(--radius-btn)] bg-surface-container-low"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => updateQty(qty - 1)}
+                disabled={qty <= 1 || status === "loading"}
+                aria-label={t("decreaseQuantity")}
+                className="flex h-10 w-9 items-center justify-center text-primary disabled:opacity-40"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min={1}
+                max={maxQty ?? undefined}
+                value={qty}
+                onChange={(e) => updateQty(Number(e.target.value))}
+                disabled={status === "loading"}
+                aria-label={t("quantity")}
+                className="h-10 w-12 bg-transparent text-center text-sm font-bold tabular-nums text-on-surface outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => updateQty(qty + 1)}
+                disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
+                aria-label={t("increaseQuantity")}
+                className="flex h-10 w-9 items-center justify-center text-primary disabled:opacity-40"
+              >
+                +
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <WatchlistButton
+                variant="icon"
+                sku={product.sku}
+                name={product.name}
+                imageUrl={watchlistImageUrl}
+              />
           <button
             type="button"
             onClick={handleAdd}
@@ -255,6 +308,22 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
               </svg>
             )}
           </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {stock.level === "out" ? (
+              <span className="inline-flex items-center justify-center rounded-full bg-red-600/10 px-2.5 py-1 text-xs font-medium text-red-700">
+                {t("outOfStock")}
+              </span>
+            ) : null}
+            <WatchlistButton
+              variant="full"
+              sku={product.sku}
+              name={product.name}
+              imageUrl={watchlistImageUrl}
+            />
+          </div>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 /**
  * POST /api/auth/register
- * Body: { firstName, lastName, email, password }
+ * Body: { firstName, lastName, company, email, password }
  * Creates a Magento customer account. When "Require Admin Approval" is enabled
  * in Magento, the account stays inactive until manually approved by SWR staff.
  */
@@ -11,9 +11,9 @@ import { extractMagentoMessage } from "@/lib/checkout";
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
 export async function POST(req: NextRequest) {
-  const { firstName, lastName, email, password } = await req.json();
+  const { firstName, lastName, company, email, password } = await req.json();
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !company || !email || !password) {
     return Response.json(
       { error: "All fields are required" },
       { status: 400 },
@@ -30,6 +30,13 @@ export async function POST(req: NextRequest) {
         email,
         website_id: 1,
         store_id: 1,
+        custom_attributes: [
+          {
+            attribute_code:
+              process.env.MAGENTO_CUSTOMER_COMPANY_ATTRIBUTE ?? "company",
+            value: String(company).trim(),
+          },
+        ],
       },
       password,
     }),

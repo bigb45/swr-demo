@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
 import { CartProvider } from "@/components/CartProvider";
+import { WatchlistProvider } from "@/components/WatchlistProvider";
 import { DEFAULT_CURRENCY_BY_LOCALE } from "@/lib/currency";
 import { getCurrencyRates } from "@/lib/currency-rates";
 import { cookies } from "next/headers";
@@ -107,6 +108,7 @@ export default async function LocaleLayout({
             <CookieConsentProvider>
               <CurrencyProvider rates={rates} defaultCurrency={defaultCurrency}>
                 <CartProvider>
+                  <WatchlistProvider>
                   <CopilotProvider>
                     <Suspense
                   fallback={
@@ -130,6 +132,7 @@ export default async function LocaleLayout({
                 <Footer locale={locale} />
                 <CookieConsentBanner />
                   </CopilotProvider>
+                  </WatchlistProvider>
                 </CartProvider>
               </CurrencyProvider>
             </CookieConsentProvider>

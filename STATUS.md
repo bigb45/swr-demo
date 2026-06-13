@@ -1,6 +1,6 @@
 # SWR Frontend — Project Status
 
-_Last updated: May 2026 (9 May) — copilot surface documented; `/bulk-order` redirects to cart; quotations REST + PDF proxy wired to `swr-quotations` contract; checkout/account backlog reconciled with code (payment picker, ISO address pickers, profile, password reset already shipped)._
+_Last updated: June 2026 (13 Jun) — stakeholder feedback Sprint 1 shipped: `/shop` hub, shop mega-menu, watchlist, partner carousel, copilot consent/upload/fallback, registration company field, industries 301s. See `FEEDBACK-PLAN.md` for item-level status._
 
 ---
 
@@ -22,6 +22,7 @@ _Last updated: May 2026 (9 May) — copilot surface documented; `/bulk-order` re
 
 Latest implemented work:
 
+- **Stakeholder feedback Sprint 1 — shop entry/navigation**: primary **Shop** now opens `/shop` (category hub) instead of unfiltered `/products`; desktop gets a hover/focus mega-menu and mobile gets the same category list in the drawer. Bare `/products` now shows category-entry guidance unless a search/facet/category param is present. Header **Industries** and the green consultation CTA were removed; `/industries` and `/industries/:slug` 301 to `/shop`. Homepage moves **Featured products** directly under the hero and replaces the catalog preview rail with a shared partner carousel/config (logo assets still a backend/media follow-up).
 - **Documentation alignment** — `BACKLOG.md`, `FEATURES.md`, `AGENTS.md`, and `STATUS.md` reconciled with codebase facts: Magento **`tier_prices`** = qty-break bulk table (✅); stakeholder **B2B net price / hide-until-login** = **catalog UI hides prices for guests** (✅); **true** payload hiding for anonymous API consumers still needs Magento catalog permissions / shared catalogs; **SPARQUE** not in repo (search/filter via Magento REST); stock badges ✅ on PDP + `ProductCard`; cart **CSV import** ✅; **reorder** ✅; **service-case attachments** — optional `POST /rest/V1/swr-service-case/attachments` forward when implemented (see `src/lib/service-attachment-upload.ts`); otherwise filenames/metadata only; **`/bulk-order`** › locale **`/cart`** redirect page.
 - **Guest catalog prices** — `CustomerSessionProvider` (server reads `swr_customer_token`) feeds `useCustomerSession()`; [`ProductPrice`](src/components/ProductPrice.tsx), [`ProductCard`](src/components/ProductCard.tsx), [`AddToCartCluster`](src/components/ui/AddToCartCluster.tsx), [`SearchSuggestionRow`](src/components/ui/SearchSuggestionRow.tsx), [`CopilotProductWidget`](src/components/copilot/CopilotProductWidget.tsx), and PDP bulk table (server-gated) hide numeric catalog prices until sign-in. Cart/checkout line prices unchanged for guests. Admin-token Magento product payloads still include `price` in network responses until Magento constrains them.
 
@@ -63,8 +64,9 @@ Latest implemented work:
 
 | Page                                    | Notes                                                                                  |
 | --------------------------------------- | -------------------------------------------------------------------------------------- |
-| **Home** `/`                            | Hero, live category grid, featured products, bento section                             |
-| **Product listing** `/products`         | Paginated, search-aware (`q`), live from Magento, inline add-to-cart per card          |
+| **Home** `/`                            | Hero, featured products high on page, partner carousel, service/people/contact sections                             |
+| **Shop hub** `/shop`                    | Category-first tiled shop entry + sidebar, backed by Magento top-level categories      |
+| **Product listing** `/products`         | Search/facet/category-scoped listing, live from Magento, inline add-to-cart per card; bare route shows category-entry CTA          |
 | **Category listing** `/categories/[id]` | Filtered by category, paginated, inline add-to-cart per card                           |
 | **Product detail** `/products/[sku]`    | Gallery, specs, real tier pricing, live bulk-price preview, add-to-cart                |
 | **Cart** `/cart`                        | Guest cart, Magento totals, qty update, undo remove, "Proceed to checkout" CTA, cart image recovery  |
@@ -78,7 +80,7 @@ Latest implemented work:
 | **Quotations** `/account/quotations` + `/account/quotations/[id]` | List + detail call Magento **`GET /rest/V1/swr-quotations/mine`** (+ per-id detail); **download PDF** › `/api/account/quotations/[id]/pdf` › **`GET .../mine/:id/pdf`**; **accept** › `POST .../accept`. Empty state when module not deployed |
 | **Bulk order** `/bulk-order` | Redirects to **`/cart`** (CSV import on cart) |
 | **Legal/info pages**                    | `/legal/{imprint,terms,privacy,compliance,sds}` — Magento CMS-backed with i18n fallback, legacy paths 301-redirected |
-| **Marketing hubs**                      | `/about`, `/contact`, `/services`, `/industries`, `/partners`, `/careers`, `/certificates`, `/offers` — Magento CMS-backed with i18n fallback |
+| **Marketing hubs**                      | `/about`, `/contact`, `/services`, `/partners`, `/careers`, `/certificates`, `/offers` — Magento CMS-backed with i18n fallback. Legacy `/industries*` redirects to `/shop` |
 | **Catalog** `/catalog` + `/catalog/[id]` | Document catalog with multi-select category / type / brand / language facets (accordion sidebar + active-filters chips + manufacturer search), free-text search, `<iframe>` PDF viewer for documents and a YouTube / HTML5 `VideoViewer` for video entries; backed by swappable `CatalogRepository` (JSON impl with ~60 real PDFs + demo video entries today) |
 | **Service pillars** `/services/{consulting,repair,delivery,customs}` | CMS-backed rich content + CTAs + consultation link. `/services/repair` — categories, timeline, `RepairIntakePanel` (account paths to pick + fleet + mailto guest). `/services/customs` — Swiss Delivery Center (zones, duty, checklist, catalog deep links) |
 | **Industry hubs** `/industries/[slug]`  | 7 slugs, CMS-backed, dynamically linked to Magento categories via `findCategoryByName`, `FeaturedProductsRail` from live catalog. `/industries/welding` is a static override with sub-category tiles, gas-safety SpecTable, technical-guide deep links, welding-catalog rail, and a service & installation block |

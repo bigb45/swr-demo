@@ -10,6 +10,7 @@ import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { useCart } from "@/components/CartProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
+import WatchlistButton from "@/components/WatchlistButton";
 import StockBadge from "@/components/ui/StockBadge";
 
 type AddStatus = "idle" | "loading" | "success" | "error";
@@ -28,9 +29,13 @@ export default function ProductSearchResultRow({
   const tSearch = useTranslations("search");
   const { addItem } = useCart();
   const [status, setStatus] = useState<AddStatus>("idle");
+  const [qty, setQty] = useState(1);
 
   const stock = getStockStatus(product);
-  const canAdd = isAuthenticated && product.price > 0 && stock.level !== "out";
+  const maxQty =
+    typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
+  const canAddToCart =
+    isAuthenticated && product.price > 0 && stock.level !== "out";
   const showGuestPriceGate = !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, tProducts);
 
@@ -39,14 +44,19 @@ export default function ProductSearchResultRow({
     ? product.type_id.replace(/_/g, " ")
     : null;
 
+  function updateQty(next: number) {
+    const clamped = Math.max(1, Math.min(maxQty ?? 9999, Math.floor(next)));
+    setQty(Number.isFinite(clamped) ? clamped : 1);
+  }
+
   async function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!canAdd || status === "loading") return;
+    if (!canAddToCart || status === "loading") return;
 
     setStatus("loading");
     try {
-      await addItem(product, 1);
+      await addItem(product, qty);
       setStatus("success");
       window.setTimeout(() => setStatus("idle"), 1600);
     } catch {
@@ -159,59 +169,100 @@ export default function ProductSearchResultRow({
             </p>
           </div>
 
-          <div className="flex flex-col justify-center">
-            {canAdd ? (
-              <button
-                type="button"
-                onClick={handleAdd}
-                disabled={status === "loading"}
-                aria-label={tProducts("addToCart")}
-                className={`px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] transition-all whitespace-nowrap disabled:cursor-not-allowed ${
-                  status === "success"
-                    ? "bg-secondary"
-                    : status === "error"
-                      ? "bg-red-600"
-                      : "bg-primary hover:brightness-110"
-                }`}
-              >
-                {status === "loading" ? (
-                  <svg
-                    width={14}
-                    height={14}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="animate-spin mx-auto"
-                    aria-hidden
+          <div className="flex flex-col justify-center gap-2">
+            {canAddToCart ? (
+              <>
+                <div className="inline-flex h-9 items-center self-start sm:self-end rounded-[3px] bg-surface-container-low">
+                  <button
+                    type="button"
+                    onClick={() => updateQty(qty - 1)}
+                    disabled={qty <= 1 || status === "loading"}
+                    aria-label={tProducts("decreaseQuantity")}
+                    className="flex h-9 w-8 items-center justify-center text-primary disabled:opacity-40"
                   >
-                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                  </svg>
-                ) : status === "success" ? (
-                  "✓"
-                ) : status === "error" ? (
-                  "!"
-                ) : (
-                  tProducts("addToCart")
-                )}
-              </button>
-            ) : showGuestPriceGate && stock.level !== "out" ? (
-              <Link
-                href="/account/login"
-                className="px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] bg-primary hover:brightness-110 transition-all whitespace-nowrap text-center"
-              >
-                {tProducts("signInForPrices")}
-              </Link>
-            ) : stock.level === "out" ? (
-              <span className="inline-flex items-center justify-center rounded-full bg-red-600/10 px-2.5 py-1 text-xs font-medium text-red-700 whitespace-nowrap">
-                {tProducts("outOfStock")}
-              </span>
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={maxQty ?? undefined}
+                    value={qty}
+                    onChange={(e) => updateQty(Number(e.target.value))}
+                    disabled={status === "loading"}
+                    aria-label={tProducts("quantity")}
+                    className="h-9 w-11 bg-transparent text-center text-sm font-bold tabular-nums text-on-surface outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => updateQty(qty + 1)}
+                    disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
+                    aria-label={tProducts("increaseQuantity")}
+                    className="flex h-9 w-8 items-center justify-center text-primary disabled:opacity-40"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex items-center gap-2 self-start sm:self-end">
+                  <WatchlistButton
+                    variant="icon"
+                    size="sm"
+                    sku={product.sku}
+                    name={product.name}
+                    imageUrl={imageUrl}
+                  />
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  disabled={status === "loading"}
+                  aria-label={tProducts("addToCart")}
+                  className={`px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] transition-all whitespace-nowrap disabled:cursor-not-allowed ${
+                    status === "success"
+                      ? "bg-secondary"
+                      : status === "error"
+                        ? "bg-red-600"
+                        : "bg-primary hover:brightness-110"
+                  }`}
+                >
+                  {status === "loading" ? (
+                    <svg
+                      width={14}
+                      height={14}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="animate-spin mx-auto"
+                      aria-hidden
+                    >
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                  ) : status === "success" ? (
+                    "✓"
+                  ) : status === "error" ? (
+                    "!"
+                  ) : (
+                    tProducts("addToCart")
+                  )}
+                </button>
+                </div>
+              </>
             ) : (
-              <span className="text-xs text-on-surface-variant max-w-36 sm:text-right leading-snug">
-                {tProducts("priceOnRequest")}
-              </span>
+              <div className="flex flex-col gap-2 self-start sm:self-end sm:items-end">
+                {stock.level === "out" ? (
+                  <span className="inline-flex items-center justify-center rounded-full bg-red-600/10 px-2.5 py-1 text-xs font-medium text-red-700 whitespace-nowrap">
+                    {tProducts("outOfStock")}
+                  </span>
+                ) : null}
+                <WatchlistButton
+                  variant="full"
+                  sku={product.sku}
+                  name={product.name}
+                  imageUrl={imageUrl}
+                  className="sm:w-auto sm:px-4 whitespace-nowrap"
+                />
+              </div>
             )}
           </div>
         </div>

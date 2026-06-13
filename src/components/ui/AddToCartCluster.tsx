@@ -7,6 +7,8 @@ import { Link } from "@/i18n/navigation";
 import { useCart } from "@/components/CartProvider";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
+import WatchlistButton from "@/components/WatchlistButton";
+import { getProductImageUrl } from "@/lib/magento-shared";
 import type { MagentoProduct } from "@/types/magento";
 
 interface AddToCartClusterProps {
@@ -32,6 +34,10 @@ export default function AddToCartCluster({
     (a, b) => a.qty - b.qty,
   );
   const hideCatalogPrices = !isAuthenticated && product.price > 0;
+  // Cart is reserved for signed-in customers with a sellable price; everyone
+  // else (guests, price-on-request) gets the watchlist instead.
+  const canAddToCart = isAuthenticated && product.price > 0;
+  const watchlistImageUrl = getProductImageUrl(product);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputVal(e.target.value);
@@ -152,6 +158,8 @@ export default function AddToCartCluster({
         </div>
       )}
 
+      {canAddToCart ? (
+      <div className="flex flex-col gap-2">
       <div className="flex items-stretch gap-2 min-h-[60px]">
         {/* QTY stepper */}
         <div
@@ -194,15 +202,6 @@ export default function AddToCartCluster({
         </div>
 
         {/* Add to Cart button */}
-        {hideCatalogPrices ? (
-          <Link
-            href="/account/login"
-            className={`flex-1 min-h-[60px] px-3 py-2 flex items-center justify-center gap-2 text-center text-white font-bold text-sm sm:text-base leading-tight bg-primary hover:brightness-110 transition-all`}
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
-            {t("signInToAddToCart")}
-          </Link>
-        ) : (
         <button
           onClick={handleAddToCart}
           disabled={isLoading}
@@ -232,8 +231,33 @@ export default function AddToCartCluster({
             {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
           </span>
         </button>
-        )}
       </div>
+          <WatchlistButton
+            variant="full"
+            sku={product.sku}
+            name={product.name}
+            imageUrl={watchlistImageUrl}
+          />
+      </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <WatchlistButton
+            variant="full"
+            sku={product.sku}
+            name={product.name}
+            imageUrl={watchlistImageUrl}
+            className="min-h-[52px]"
+          />
+          {hideCatalogPrices ? (
+            <Link
+              href="/account/login"
+              className="text-center text-sm font-bold text-secondary underline"
+            >
+              {t("signInForPrices")}
+            </Link>
+          ) : null}
+        </div>
+      )}
 
       {status === "error" && (
         <p className="text-xs text-red-600 font-medium">{errorMsg}</p>

@@ -23,9 +23,10 @@ import {
   applyTeiaCartAction,
   extractTeiaCartOpFromSseObject,
 } from "@/lib/copilot-teia-cart-action";
-import type { CopilotMessage } from "./types";
+import type { CopilotImageAttachment, CopilotMessage } from "./types";
 
 const SESSION_KEY = "swr_copilot_session_id";
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
 interface CopilotContextValue {
   open: boolean;
@@ -37,6 +38,9 @@ interface CopilotContextValue {
   setDraft: (v: string) => void;
   pending: boolean;
   submitError: string | null;
+  imageAttachment: CopilotImageAttachment | null;
+  attachImage: (file: File) => Promise<void>;
+  removeImageAttachment: () => void;
   clearSubmitError: () => void;
   sendDraft: () => Promise<void>;
   submitSuggestion: (text: string) => Promise<void>;
@@ -84,6 +88,53 @@ function readSessionId(): string {
   }
 }
 
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(reader.error ?? new Error("File read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+const FALLBACK_SEARCH_LIMIT = 4;
+
+/**
+ * D7 fallback: when the assistant reply carries no product SKUs, search the
+ * Magento catalog for the user's text so relevant product cards still appear.
+ */
+async function fetchFallbackSkus(query: string): Promise<string[]> {
+  const q = query.trim();
+  if (q.length < 2) return [];
+  try {
+    const res = await fetch(
+      `/api/search/products?q=${encodeURIComponent(q)}&limit=${FALLBACK_SEARCH_LIMIT}`,
+      { cache: "no-store" },
+    );
+    if (!res.ok) return [];
+    const data: unknown = await res.json();
+    const items =
+      data && typeof data === "object" && Array.isArray((data as { items?: unknown }).items)
+        ? ((data as { items: unknown[] }).items)
+        : [];
+    const skus: string[] = [];
+    const seen = new Set<string>();
+    for (const item of items) {
+      const sku =
+        item && typeof item === "object"
+          ? (item as { sku?: unknown }).sku
+          : undefined;
+      if (typeof sku === "string" && sku.trim() && !seen.has(sku.trim())) {
+        seen.add(sku.trim());
+        skus.push(sku.trim());
+      }
+    }
+    return skus.slice(0, FALLBACK_SEARCH_LIMIT);
+  } catch {
+    return [];
+  }
+}
+
 export function CopilotProvider({ children }: { children: ReactNode }) {
   const t = useTranslations("copilot");
   const {
@@ -100,6 +151,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [imageAttachment, setImageAttachment] =
+    useState<CopilotImageAttachment | null>(null);
 
   const streamingAssistantIdRef = useRef<string | null>(null);
   const submitBusyRef = useRef(false);
@@ -130,26 +183,78 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
     setMessages((prev) => prev.filter((m) => m.id !== id));
   }, []);
 
-  const enrichAssistantMessage = useCallback((messageId: string) => {
-    setMessages((prev) =>
-      prev.map((m) => {
-        if (m.id !== messageId || m.role !== "assistant") return m;
-        const { displayText, skus } = parseCopilotAssistantMessage(m.content);
-        const text = displayText.trim() || m.content;
-        return {
-          ...m,
-          streaming: false,
-          content: text,
-          widgetSkus: skus.length > 0 ? skus : undefined,
-        };
-      }),
-    );
-  }, []);
+  const enrichAssistantMessage = useCallback(
+    async (messageId: string, finalText: string, userQuery: string) => {
+      const { displayText, skus } = parseCopilotAssistantMessage(finalText);
+      const text = displayText.trim() || finalText.trim();
+
+      let widgetSkus = skus;
+      let usedFallback = false;
+      if (widgetSkus.length === 0 && userQuery.trim().length >= 2) {
+        const fallback = await fetchFallbackSkus(userQuery);
+        if (fallback.length > 0) {
+          widgetSkus = fallback;
+          usedFallback = true;
+        }
+      }
+
+      const content =
+        usedFallback && text
+          ? `${text}\n\n${t("fallbackProductsIntro")}`
+          : usedFallback
+            ? t("fallbackProductsIntro")
+            : text;
+
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m.id !== messageId || m.role !== "assistant") return m;
+          return {
+            ...m,
+            streaming: false,
+            content: content || m.content,
+            widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
+          };
+        }),
+      );
+    },
+    [t],
+  );
 
   const toggle = useCallback(() => setOpen((v) => !v), []);
   const close = useCallback(() => setOpen(false), []);
 
   const clearSubmitError = useCallback(() => setSubmitError(null), []);
+
+  const attachImage = useCallback(
+    async (file: File) => {
+      setSubmitError(null);
+      if (!file.type.startsWith("image/")) {
+        setSubmitError(t("uploadImageOnly"));
+        return;
+      }
+      if (file.size > MAX_IMAGE_BYTES) {
+        setSubmitError(t("uploadTooLarge"));
+        return;
+      }
+      const dataUrl = await fileToDataUrl(file);
+      const base64 = dataUrl.split(",", 2)[1] ?? "";
+      if (!base64) {
+        setSubmitError(t("uploadReadFailed"));
+        return;
+      }
+      setImageAttachment({
+        name: file.name,
+        mimeType: file.type || "image/jpeg",
+        dataUrl,
+        base64,
+      });
+    },
+    [t],
+  );
+
+  const removeImageAttachment = useCallback(() => {
+    setImageAttachment(null);
+  }, []);
 
   const tryRestCompletion = useCallback(
     async (body: Record<string, unknown>): Promise<string> => {
@@ -173,8 +278,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   );
 
   const submitWithTrimmedMessage = useCallback(
-    async (trimmed: string) => {
-      if (!trimmed) return;
+    async (trimmed: string, attachment?: CopilotImageAttachment | null) => {
+      const messageText = trimmed || (attachment ? t("imageDefaultPrompt") : "");
+      if (!messageText) return;
       if (submitBusyRef.current) return;
       submitBusyRef.current = true;
 
@@ -200,7 +306,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        const intents = parseAddToCartIntents(trimmed);
+        const intents = parseAddToCartIntents(messageText);
         const beforeSkuQtyMap =
           intents.length > 0
             ? await fetchCartSkuQtyMap(guestCartId)
@@ -211,7 +317,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
         const userMsg = newMsg({
           id: crypto.randomUUID(),
           role: "user",
-          content: trimmed,
+          content: messageText,
+          imagePreviewUrl: attachment?.dataUrl,
+          imageName: attachment?.name,
         });
 
         const assistantId = crypto.randomUUID();
@@ -228,9 +336,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
         const body: Record<string, unknown> = {
           session_id,
-          message: trimmed,
+          message: messageText,
           cart_id: guestCartId,
         };
+        if (attachment) {
+          body.image_base64 = attachment.base64;
+          body.image_mime_type = attachment.mimeType;
+        }
 
         const finalizeCartAfterAgentReply = async () => {
           await refreshTotals();
@@ -257,13 +369,25 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
             const reply = await tryRestCompletion(body);
             if (!reply.trim()) throw new Error(t("emptyReply"));
             const parsed = parseCopilotAssistantMessage(reply.trim());
+            let widgetSkus = parsed.skus;
+            let usedFallback = false;
+            if (widgetSkus.length === 0 && trimmed.trim().length >= 2) {
+              const fb = await fetchFallbackSkus(trimmed);
+              if (fb.length > 0) {
+                widgetSkus = fb;
+                usedFallback = true;
+              }
+            }
+            const baseText = parsed.displayText.trim() || reply.trim();
             setMessages((prev) => [
               ...prev,
               newMsg({
                 id: crypto.randomUUID(),
                 role: "assistant",
-                content: parsed.displayText.trim() || reply.trim(),
-                widgetSkus: parsed.skus.length > 0 ? parsed.skus : undefined,
+                content: usedFallback
+                  ? `${baseText}\n\n${t("fallbackProductsIntro")}`
+                  : baseText,
+                widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
               }),
             ]);
             await finalizeCartAfterAgentReply();
@@ -293,6 +417,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
           const ctype = streamRes.headers.get("content-type") ?? "";
           let streamSucceeded = false;
+          let assistantText = "";
           let teiaCartOp: ReturnType<
             typeof extractTeiaCartOpFromSseObject
           > = null;
@@ -302,7 +427,10 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
             await consumeSseBody(
               streamRes,
               (chunk) => {
-                if (chunk) gotChunk = true;
+                if (chunk) {
+                  gotChunk = true;
+                  assistantText += chunk;
+                }
                 patchStreamingAssistant(chunk);
               },
               (obj) => {
@@ -322,6 +450,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               appended = raw;
             }
             if (appended.trim()) {
+              assistantText += appended;
               patchStreamingAssistant(appended);
               streamSucceeded = true;
             }
@@ -342,7 +471,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 setSubmitError(t("cartReconcileFailed", { detail }));
               }
             }
-            queueMicrotask(() => enrichAssistantMessage(assistantId));
+            await enrichAssistantMessage(assistantId, assistantText, trimmed);
             await finalizeCartAfterAgentReply();
             return;
           }
@@ -377,10 +506,12 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
   const sendDraft = useCallback(async () => {
     const msg = draft.trim();
-    if (!msg || pending) return;
+    const attachment = imageAttachment;
+    if ((!msg && !attachment) || pending) return;
     setDraft("");
-    await submitWithTrimmedMessage(msg);
-  }, [draft, pending, submitWithTrimmedMessage]);
+    setImageAttachment(null);
+    await submitWithTrimmedMessage(msg, attachment);
+  }, [draft, imageAttachment, pending, submitWithTrimmedMessage]);
 
   const submitSuggestion = useCallback(
     async (text: string) => {
@@ -411,6 +542,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       setDraft,
       pending,
       submitError,
+      imageAttachment,
+      attachImage,
+      removeImageAttachment,
       clearSubmitError,
       sendDraft,
       submitSuggestion,
@@ -423,6 +557,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       draft,
       pending,
       submitError,
+      imageAttachment,
+      attachImage,
+      removeImageAttachment,
       clearSubmitError,
       sendDraft,
       submitSuggestion,

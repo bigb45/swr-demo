@@ -16,6 +16,7 @@
     "orderHistory": "Bestellhistorie",
     "account": "Konto",
     "cart": "Warenkorb",
+    "watchlist": "Merkliste",
     "search": "SUCHEN",
     "searchPlaceholder": "Artikelnummer, Stichwort oder Spezifikation eingeben...",
     "settings": "Einstellungen",
@@ -29,7 +30,11 @@
     "primaryNavLabel": "Hauptnavigation",
     "selectCurrency": "Währung auswählen",
     "selectLanguage": "Sprache auswählen",
-    "preferences": "Einstellungen"
+    "preferences": "Einstellungen",
+    "shopMenu": {
+      "heading": "Sortiment",
+      "all": "Alle Kategorien anzeigen"
+    }
   },
   "search": {
     "suggestionsLabel": "Produktvorschläge",
@@ -76,7 +81,15 @@
     "addToCartFailed": "Fehlgeschlagen",
     "qtyDecrease": "Menge verringern",
     "qtyIncrease": "Menge erhöhen",
-    "cartReconcileFailed": "Ihr Warenkorb konnte nicht aktualisiert werden: {detail}"
+    "cartReconcileFailed": "Ihr Warenkorb konnte nicht aktualisiert werden: {detail}",
+    "uploadAddImage": "Bild anhängen",
+    "uploadRemove": "Bild entfernen",
+    "uploadOneImage": "Ein Bild pro Nachricht",
+    "uploadImageOnly": "Bitte ein Bild auswählen.",
+    "uploadTooLarge": "Bild darf höchstens 4 MB groß sein.",
+    "uploadReadFailed": "Bild konnte nicht gelesen werden.",
+    "imageDefaultPrompt": "Bitte analysiere dieses Bild und finde passende Produkte.",
+    "fallbackProductsIntro": "Passende Produkte aus unserem Katalog:"
   },
   "hero": {
     "title": "Schweißtechnik, Werkzeuge & Reparatur.",
@@ -144,6 +157,12 @@
       "subheading": "Markenkataloge der Hersteller in unserem Sortiment — durchsuchbar, filterbar, herunterladbar.",
       "cta": "Zur Dokumentenbibliothek"
     },
+    "partners": {
+      "heading": "Unsere Partner",
+      "subheading": "Ausgewählte Hersteller aus dem SWR Sortiment. Katalogverlinkungen folgen, sobald die passenden Herstellerunterlagen freigegeben sind.",
+      "previous": "Vorherige Partner anzeigen",
+      "next": "Weitere Partner anzeigen"
+    },
     "services": {
       "eyebrow": "Mehr als das Produkt",
       "heading": "Vier Versprechen.",
@@ -199,8 +218,11 @@
     "searchTotal": "{count} Ergebnisse",
     "searchEmpty": "Keine Ergebnisse für \"{query}\" gefunden.",
     "searchEmptyHint": "Versuchen Sie eine andere Artikelnummer, ein anderes Stichwort oder eine andere Spezifikation.",
-    "searchEmptyClear": "Suche zurücksetzen",
+    "searchEmptyClear": "Kategorien anzeigen",
     "noFilterResults": "Keine Produkte entsprechen diesen Filtern.",
+    "browseByCategoryEyebrow": "Sortiment",
+    "browseByCategoryTitle": "Starten Sie mit einer Kategorie.",
+    "browseByCategoryBody": "Der komplette Produktbestand ist zu groß für einen sinnvollen Einstieg ohne Filter. Wählen Sie eine Warengruppe oder nutzen Sie die Suche.",
     "noImage": "Kein Bild verfügbar",
     "filter": {
       "heading": "Filter",
@@ -285,6 +307,15 @@
     "products": "Produkte",
     "empty": "Keine Produkte in dieser Kategorie."
   },
+  "shop": {
+    "metaTitle": "Shop",
+    "metaDescription": "Sortimentsübersicht für Schweißtechnik, Werkzeuge, Maschinen, Arbeitsschutz und Werkstattbedarf.",
+    "eyebrow": "SWR Sortiment",
+    "heading": "Wählen Sie Ihre Warengruppe.",
+    "subheading": "Der Shop beginnt mit den Hauptkategorien. So landen Sie nicht in einer unüberschaubaren Vollsortimentsliste, sondern direkt im passenden Bereich.",
+    "sidebarHeading": "Kategorien",
+    "empty": "Kategorien konnten nicht geladen werden."
+  },
   "pagination": {
     "prev": "‹ Zurück",
     "next": "Weiter"
@@ -315,7 +346,7 @@
   },
   "cookieConsent": {
     "title": "Cookies und Datenschutz",
-    "description": "Wir verwenden Cookies und ähnliche Technologien, um den Shop zu betreiben (Warenkorb, Checkout, Anmeldung) und – nur mit Ihrer Einwilligung – Einstellungen zu speichern sowie den Produktassistenten zu aktivieren. Sie können ausschließlich notwendige Cookies wählen oder allen optionalen Verwendungen zustimmen.",
+    "description": "Wir verwenden Cookies und ähnliche Technologien, um den Shop zu betreiben (Warenkorb, Checkout, Anmeldung, Produktassistent) und – nur mit Ihrer Einwilligung – optionale Einstellungen zu speichern. Sie können ausschließlich notwendige Cookies wählen oder allen optionalen Verwendungen zustimmen.",
     "cookiesPageLink": "Details zu Cookies",
     "privacyLink": "Datenschutzerklärung",
     "essentialOnly": "Nur notwendige",
@@ -327,7 +358,7 @@
     "necessaryTitle": "Unbedingt erforderliche Cookies",
     "necessaryIntro": "Diese Cookies sind erforderlich, um Funktionen bereitzustellen, die Sie ausdrücklich anfordern – etwa Warenkorb, Checkout-Schritte oder Ihre angemeldete Sitzung. Sie werden auf Grundlage unseres berechtigten Interesses am Betrieb des Webshops (Art. 6 Abs. 1 lit. f DSGVO) und, soweit einschlägig, zur Vertragserfüllung (Art. 6 Abs. 1 lit. b DSGVO) gesetzt.",
     "optionalTitle": "Optionale Cookies und Funktionen",
-    "optionalIntro": "Wenn Sie „Alle akzeptieren“ wählen, speichern wir zusätzlich Ihre bevorzugte Anzeigewährung und aktivieren den Produktassistenten. Dabei können Ihre Nachrichten zur Verarbeitung an einen externen Dienst übermittelt werden. Über „Nur notwendige“ können Sie dies ablehnen.",
+    "optionalIntro": "Wenn Sie „Alle akzeptieren“ wählen, speichern wir zusätzlich Ihre bevorzugte Anzeigewährung. Der Produktassistent bleibt nach jeder Cookie-Entscheidung verfügbar, weil er als Shop-Funktion eingestuft ist; Nachrichten und optional angehängte Bilder können zur Verarbeitung an einen externen Dienst übermittelt werden.",
     "localStorageTitle": "Browser-Speicher (Warenkorb)",
     "localStorageBody": "Die Warenkorb-Kennung kann im localStorage Ihres Browsers gespeichert werden, damit der Shop zwischen den Seitenaufrufen funktioniert. Sie ersetzt nicht das Warenkorb-Cookie für die Checkout-Synchronisation. Sie können Seitendaten im Browser löschen, um den Speicher zu entleeren.",
     "tableCaption": "Cookies im Einwilligungsdialog",
@@ -498,6 +529,7 @@
     "registerHeading": "Konto erstellen",
     "firstName": "Vorname",
     "lastName": "Nachname",
+    "company": "Firma",
     "confirmPassword": "Passwort bestätigen",
     "register": "Registrieren",
     "registering": "Registrierung läuft…",
@@ -779,7 +811,17 @@
     "products": "Produkte",
     "catalog": "Katalog",
     "cart": "Warenkorb",
+    "watchlist": "Merkliste",
     "checkout": "Kasse"
+  },
+  "watchlist": {
+    "title": "Merkliste",
+    "add": "Auf die Merkliste",
+    "added": "Auf der Merkliste",
+    "remove": "Von der Merkliste entfernen",
+    "empty": "Ihre Merkliste ist leer.",
+    "browseShop": "Zum Shop",
+    "clearAll": "Alle entfernen"
   },
   "catalog": {
     "metaTitle": "Dokumentenkatalog — Anleitungen, Datenblätter, Prospekte",

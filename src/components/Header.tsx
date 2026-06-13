@@ -6,9 +6,13 @@ import LocaleSwitcher from "./LocaleSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
 import SearchBar from "./ui/SearchBar";
 import CartBadge from "./CartBadge";
+import WatchlistBadge from "./WatchlistBadge";
 import MobileNav from "./MobileNav";
 import LogoutButton from "./LogoutButton";
 import CopilotHeaderTrigger from "@/components/copilot/CopilotHeaderTrigger";
+import ShopMegaMenu from "@/components/ShopMegaMenu";
+import { getTopLevelCategories } from "@/lib/magento";
+import { toShopCategoryNavItems } from "@/lib/shop-categories";
 
 interface HeaderProps {
   locale: string;
@@ -20,12 +24,15 @@ export default async function Header({ locale }: HeaderProps) {
 
   const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
+  const shopCategories = toShopCategoryNavItems(
+    await getTopLevelCategories().catch(() => []),
+    8,
+  );
 
   const primaryLinks = [
-    { href: "/products", label: t("shop") },
+    { href: "/shop", label: t("shop") },
     { href: "/catalog", label: t("catalog") },
     { href: "/services", label: t("services") },
-    { href: "/industries", label: t("industries") },
     { href: "/about", label: t("about") },
     { href: "/contact", label: t("contact") },
   ];
@@ -101,8 +108,10 @@ export default async function Header({ locale }: HeaderProps) {
             {/* Hamburger — mobile only, rendered client-side */}
             <MobileNav
               links={mobileLinks}
+              shopCategories={shopCategories}
               cartLabel={t("cart")}
-              bookConsultationLabel={t("bookConsultation")}
+              watchlistLabel={t("watchlist")}
+              shopAllLabel={t("shopMenu.all")}
               logoutLabel={isAuthenticated ? tAuth("logout") : undefined}
             />
 
@@ -123,15 +132,21 @@ export default async function Header({ locale }: HeaderProps) {
               <SearchBar />
             </div>
 
-            {/* Right — Book consultation + Cart, shown on md+ */}
+            {/* Right — Copilot + Watchlist + Cart, shown on md+ */}
             <div className="hidden md:flex items-center gap-3 ml-auto shrink-0">
               <CopilotHeaderTrigger className="bg-surface-container-low" />
+
               <Link
-                href="/contact"
-                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold transition-colors"
-                style={{ backgroundColor: "#006e21", borderRadius: "var(--radius-btn)" }}
+                href="/watchlist"
+                className="relative inline-flex h-10 w-10 items-center justify-center rounded-[3px] transition-colors hover:bg-surface-container-low"
+                aria-label={t("watchlist")}
+                title={t("watchlist")}
+                style={{ color: "#003a63" }}
               >
-                {t("bookConsultation")}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <WatchlistBadge />
               </Link>
 
               <Link
@@ -151,6 +166,18 @@ export default async function Header({ locale }: HeaderProps) {
 
             <div className="md:hidden flex items-center gap-0.5 ml-auto shrink-0">
               <CopilotHeaderTrigger className="shrink-0 bg-surface-container-low/80" />
+              {/* Watchlist icon — mobile only */}
+              <Link
+                href="/watchlist"
+                className="relative p-2 shrink-0"
+                aria-label={t("watchlist")}
+                style={{ color: "#003a63" }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <WatchlistBadge />
+              </Link>
               {/* Cart icon — mobile only */}
               <Link
                 href="/cart"
@@ -182,13 +209,24 @@ export default async function Header({ locale }: HeaderProps) {
       >
         <div className="swr-page-shell flex items-center gap-6 h-11">
           {primaryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-semibold uppercase tracking-[0.04em] text-on-surface hover:text-primary transition-colors whitespace-nowrap"
-            >
-              {link.label}
-            </Link>
+            link.href === "/shop" ? (
+              <ShopMegaMenu
+                key={link.href}
+                href="/shop"
+                label={link.label}
+                categories={shopCategories}
+                allLabel={t("shopMenu.all")}
+                heading={t("shopMenu.heading")}
+              />
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-semibold uppercase tracking-[0.04em] text-on-surface hover:text-primary transition-colors whitespace-nowrap"
+              >
+                {link.label}
+              </Link>
+            )
           ))}
         </div>
       </nav>
