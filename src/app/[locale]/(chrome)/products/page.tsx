@@ -7,6 +7,7 @@ import {
   getTopLevelCategories,
   parseProductFacetParams,
 } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import ProductGrid from "@/components/ProductGrid";
 import ProductSearchResultList from "@/components/ProductSearchResultList";
 import Pagination from "@/components/Pagination";
@@ -73,6 +74,7 @@ export default async function ProductsPage({
     getTranslations({ locale, namespace: "products.filter" }),
     getTranslations({ locale, namespace: "shop" }),
   ]);
+  const storeCode = LOCALE_STORE_CODES[locale];
   const magentoBaseUrl = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
   const filters = {
@@ -88,7 +90,7 @@ export default async function ProductsPage({
   let error: string | null = null;
 
   if (!hasCatalogScope) {
-    categories = await getTopLevelCategories().catch(() => []);
+    categories = await getTopLevelCategories(storeCode).catch(() => []);
     const categoryItems = toShopCategoryNavItems(categories, 8);
 
     return (
@@ -129,7 +131,7 @@ export default async function ProductsPage({
   try {
     [productList, categories] = await Promise.all([
       getFilteredProductResults(currentPage, PAGE_SIZE, filters),
-      getTopLevelCategories(),
+      getTopLevelCategories(storeCode),
     ]);
   } catch (e) {
     error = e instanceof Error ? e.message : "Unknown error";
@@ -148,6 +150,9 @@ export default async function ProductsPage({
     : "/products";
 
   const aggregations = productList?.aggregations ?? [];
+  const activeCategoryName = category
+    ? categories.find((c) => String(c.id) === category)?.name
+    : undefined;
 
   return (
     <div className="swr-page-shell py-10">
@@ -188,6 +193,7 @@ export default async function ProductsPage({
           <ProductsFilterBar
             categories={categories}
             aggregations={aggregations}
+            activeCategoryName={activeCategoryName}
             active={{
               category: category || undefined,
               priceMin: priceMin || undefined,

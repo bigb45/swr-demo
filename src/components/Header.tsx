@@ -11,7 +11,9 @@ import MobileNav from "./MobileNav";
 import LogoutButton from "./LogoutButton";
 import CopilotHeaderTrigger from "@/components/copilot/CopilotHeaderTrigger";
 import ShopMegaMenu from "@/components/ShopMegaMenu";
+import AccountHeaderButton from "@/components/AccountHeaderButton";
 import { getTopLevelCategories } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import { toShopCategoryNavItems } from "@/lib/shop-categories";
 
 interface HeaderProps {
@@ -25,7 +27,7 @@ export default async function Header({ locale }: HeaderProps) {
   const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
   const shopCategories = toShopCategoryNavItems(
-    await getTopLevelCategories().catch(() => []),
+    await getTopLevelCategories(LOCALE_STORE_CODES[locale]).catch(() => []),
     8,
   );
 
@@ -136,6 +138,8 @@ export default async function Header({ locale }: HeaderProps) {
             <div className="hidden md:flex items-center gap-3 ml-auto shrink-0">
               <CopilotHeaderTrigger className="bg-surface-container-low" />
 
+              <AccountHeaderButton isAuthenticated={isAuthenticated} />
+
               <Link
                 href="/watchlist"
                 className="relative inline-flex h-10 w-10 items-center justify-center rounded-[3px] transition-colors hover:bg-surface-container-low"
@@ -166,6 +170,10 @@ export default async function Header({ locale }: HeaderProps) {
 
             <div className="md:hidden flex items-center gap-0.5 ml-auto shrink-0">
               <CopilotHeaderTrigger className="shrink-0 bg-surface-container-low/80" />
+              <AccountHeaderButton
+                isAuthenticated={isAuthenticated}
+                className="shrink-0 px-1"
+              />
               {/* Watchlist icon — mobile only */}
               <Link
                 href="/watchlist"

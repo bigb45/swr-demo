@@ -6,11 +6,8 @@ import type { MouseEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
-import {
-  getCustomAttribute,
-  getProductGalleryUrls,
-  getProductImageUrl,
-} from "@/lib/magento-shared";
+import { getCustomAttribute, getProductGalleryUrls, getProductImageUrl } from "@/lib/magento-shared";
+import { getDisplayShortDescription } from "@/lib/product-display";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";
@@ -131,7 +128,9 @@ function ProductCardGallery({
 }
 
 export default function ProductCard({ product, priorityImage }: ProductCardProps) {
-  const shortDescription = getCustomAttribute(product, "short_description");
+  const shortDescription = getDisplayShortDescription(
+    getCustomAttribute(product, "short_description"),
+  );
   const { formatPrice } = useCurrency();
   const { isAuthenticated } = useCustomerSession();
   const { addItem } = useCart();

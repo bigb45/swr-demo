@@ -6,6 +6,20 @@ export interface PartnerBrand {
   logoSrc?: string;
 }
 
+/** Static partner logos — replace with CMS/media URLs when available. */
+const PARTNER_LOGO_SRC: Record<string, string> = {
+  Bosch: "/partners/bosch.svg",
+  Metabo: "/partners/metabo.svg",
+  Fronius: "/partners/fronius.svg",
+  "Würth": "/partners/wuerth.svg",
+  Makita: "/partners/makita.svg",
+  Hilti: "/partners/hilti.svg",
+  Fein: "/partners/fein.svg",
+  "3M": "/partners/3m.svg",
+  Uvex: "/partners/uvex.svg",
+  Wiha: "/partners/wiha.svg",
+};
+
 function productHref(name: string): PartnerBrand["productHref"] {
   return `/products?manufacturer=${encodeURIComponent(name)}` as const;
 }
@@ -32,5 +46,6 @@ export const PARTNER_BRANDS: PartnerBrand[] = [
     slug,
     productHref: productHref(name),
     catalogHref: catalogHref(slug),
+    logoSrc: PARTNER_LOGO_SRC[name],
   };
 });

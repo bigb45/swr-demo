@@ -72,6 +72,7 @@ export default function CopilotPanel() {
     clearSubmitError,
     sendDraft,
     submitSuggestion,
+    pageContext,
   } = useCopilot();
 
   const rootRef = useRef<HTMLElement | null>(null);
@@ -91,11 +92,41 @@ export default function CopilotPanel() {
     return rev?.streaming ? "" : (rev?.content ?? "");
   }, [messages]);
 
-  const suggestions = [
-    { id: "s1" as const, label: t("suggestion1") },
-    { id: "s2" as const, label: t("suggestion2") },
-    { id: "s3" as const, label: t("suggestion3") },
-  ] as const;
+  const suggestions = useMemo(() => {
+    const global = [
+      { id: "g1" as const, label: t("suggestion1"), text: t("suggestion1Prompt") },
+      { id: "g2" as const, label: t("suggestion2"), text: t("suggestion2Prompt") },
+      { id: "g3" as const, label: t("suggestion3"), text: t("suggestion3Prompt") },
+      { id: "g4" as const, label: t("suggestion4"), text: t("suggestion4Prompt") },
+    ];
+
+    if (pageContext?.sku || pageContext?.productName) {
+      const name = pageContext.productName ?? pageContext.sku ?? "";
+      return [
+        {
+          id: "p1" as const,
+          label: t("suggestionsPdpRelated"),
+          text: t("suggestionsPdpRelatedPrompt", { name }),
+        },
+        {
+          id: "p2" as const,
+          label: t("suggestionsPdpContract"),
+          text: t("suggestionsPdpContractPrompt", { name }),
+        },
+        {
+          id: "p3" as const,
+          label: t("suggestionsPdpConsumables"),
+          text: t("suggestionsPdpConsumablesPrompt", {
+            name,
+            category: pageContext.categoryName ?? "",
+          }),
+        },
+        ...global.slice(0, 2),
+      ];
+    }
+
+    return global;
+  }, [pageContext, t]);
 
   function formatTime(ms: number) {
     try {
@@ -273,14 +304,14 @@ export default function CopilotPanel() {
           hidden={!suggestionsOpen}
           className="flex flex-wrap gap-2 pt-2"
         >
-          {suggestions.map(({ id, label }) => (
+          {suggestions.map(({ id, label, text }) => (
             <button
               key={id}
               type="button"
               disabled={pending}
               onClick={() => {
                 clearSubmitError();
-                void submitSuggestion(label);
+                void submitSuggestion(text);
               }}
               className="rounded-full border border-outline-variant/50 bg-surface-container-lowest px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary-fixed/40 disabled:opacity-50"
               style={{ borderRadius: "var(--radius-card)" }}

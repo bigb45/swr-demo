@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getTopLevelCategories } from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import { toShopCategoryNavItems } from "@/lib/shop-categories";
 import ShopCategoryGrid from "@/components/shop/ShopCategoryGrid";
 import ShopCategorySidebar from "@/components/shop/ShopCategorySidebar";
@@ -28,7 +29,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
   const [t, tBc, categories] = await Promise.all([
     getTranslations({ locale, namespace: "shop" }),
     getTranslations({ locale, namespace: "breadcrumb" }),
-    getTopLevelCategories().catch(() => []),
+    getTopLevelCategories(LOCALE_STORE_CODES[locale]).catch(() => []),
   ]);
   const categoryItems = toShopCategoryNavItems(categories, 8);
 

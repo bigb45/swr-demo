@@ -533,4 +533,4 @@ D8, A4 (category-specific facets with backend attrs)
 - Update this file as items ship; mirror status in `STATUS.md` and priority in `BACKLOG.md`.
 - Round-2 account feedback → `FEEDBACK-PLAN-R2.md`.
 
-_Last generated: 13 Jun 2026 (D7 Copilot search fallback + guest watchlist behaviour)_
+_Last generated: 13 Jun 2026 (Sprint 2–4: A11 hygiene, A9 logos, Copilot hero, E1 account, A4 facet scaffold, CONTENT-AUDIT)_

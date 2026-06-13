@@ -19,6 +19,7 @@ import CertBadge from "@/components/ui/CertBadge";
 import FeatureCard from "@/components/ui/FeatureCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import StockBadge from "@/components/ui/StockBadge";
+import CopilotPageContextSetter from "@/components/copilot/CopilotPageContextSetter";
 
 interface ProductDetailPageProps {
   params: Promise<{ locale: string; sku: string }>;
@@ -180,6 +181,11 @@ export default async function ProductDetailPage({
 
   return (
     <div className="swr-page-shell flex min-h-full flex-col pt-6 sm:pt-8 pb-16">
+      <CopilotPageContextSetter
+        sku={product.sku}
+        productName={product.name}
+        categoryName={getCustomAttribute(product, "category_name") ?? undefined}
+      />
       <Breadcrumbs
         className="mb-6 sm:mb-8"
         ariaLabel={tBc("ariaLabel")}

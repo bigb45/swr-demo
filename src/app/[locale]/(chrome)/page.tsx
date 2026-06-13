@@ -5,13 +5,13 @@ import {
   Hero,
   Cta,
   ServiceCard,
-  IntentTile,
   RealityStrip,
   PersonCard,
   PartnerLogoCarousel,
   WorkshopBlock,
   FeaturedProductsRail,
 } from "@/components/marketing";
+import CopilotHero from "@/components/copilot/CopilotHero";
 import type { RealityItem } from "@/components/marketing";
 import { PARTNER_BRANDS } from "@/lib/partners";
 
@@ -50,33 +50,6 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const productList = await getProducts(6).catch(() => ({ items: [] }));
   const products = productList.items;
-
-  const intents = [
-    {
-      question: t("intents.part.question"),
-      answer: t("intents.part.answer"),
-      href: "/shop",
-      ctaLabel: t("intents.part.cta"),
-    },
-    {
-      question: t("intents.repair.question"),
-      answer: t("intents.repair.answer"),
-      href: "/services/repair",
-      ctaLabel: t("intents.repair.cta"),
-    },
-    {
-      question: t("intents.swiss.question"),
-      answer: t("intents.swiss.answer"),
-      href: "/services/delivery",
-      ctaLabel: t("intents.swiss.cta"),
-    },
-    {
-      question: t("intents.catalog.question"),
-      answer: t("intents.catalog.answer"),
-      href: "/catalog",
-      ctaLabel: t("intents.catalog.cta"),
-    },
-  ];
 
   const realityItems: RealityItem[] = [
     {
@@ -151,31 +124,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       <RealityStrip heading={t("reality.heading")} items={realityItems} />
 
-      {/* Intent tiles */}
-      <section className="py-14 sm:py-20">
-        <div className="swr-page-shell">
-          <div className="flex flex-col gap-3 mb-10 max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-              {t("intents.eyebrow")}
-            </p>
-            <h2 className="text-2xl sm:text-4xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
-              {t("intents.heading")}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-            {intents.map((intent, idx) => (
-              <IntentTile
-                key={intent.href}
-                question={intent.question}
-                answer={intent.answer}
-                href={intent.href}
-                ctaLabel={intent.ctaLabel}
-                index={idx + 1}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+      <CopilotHero />
 
       <PartnerLogoCarousel
         heading={t("partners.heading")}

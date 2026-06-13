@@ -77,6 +77,7 @@ Exercise these even if automated smoke is green:
 | Guest pricing UX | `/products`, `/categories/[id]`, PDP | Page banner + compact card vs full message on PDP |
 | Product facets | `/products?q=…`, facet query params | URL state, aggregations fallback, active-filter chips, ICU `{count}` |
 | Header / copilot | All pages with chrome | Consent-gated copilot placeholder vs button; no hydration mismatch with contact/cart links |
+| Device permission prompt (D6) | `/de/products` first load, Edge + Chrome clean profile | Code audit (Jun 2026): no `navigator.serial/usb/bluetooth`, `getDisplayMedia`, or protocol handlers in `src/`. If browser still prompts, inspect third-party scripts in DevTools › Application › Permissions and document source in findings |
 | Cart | `/cart` | Client-only cart (`localStorage`), Magento totals, qty/undo, CSV import |
 | Checkout | `/checkout/*` | Signed-in only; address picker, shipping methods, PO number, place order |
 | Hydration | Home, products, PDP, cart | `CartBadge`, `GuestPricingBanner`, image media base URL |

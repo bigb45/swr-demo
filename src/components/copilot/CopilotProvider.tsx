@@ -23,7 +23,7 @@ import {
   applyTeiaCartAction,
   extractTeiaCartOpFromSseObject,
 } from "@/lib/copilot-teia-cart-action";
-import type { CopilotImageAttachment, CopilotMessage } from "./types";
+import type { CopilotImageAttachment, CopilotMessage, CopilotPageContext } from "./types";
 
 const SESSION_KEY = "swr_copilot_session_id";
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
@@ -44,6 +44,8 @@ interface CopilotContextValue {
   clearSubmitError: () => void;
   sendDraft: () => Promise<void>;
   submitSuggestion: (text: string) => Promise<void>;
+  pageContext: CopilotPageContext | null;
+  setPageContext: (ctx: CopilotPageContext | null) => void;
 }
 
 const CopilotContext = createContext<CopilotContextValue | null>(null);
@@ -153,6 +155,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [imageAttachment, setImageAttachment] =
     useState<CopilotImageAttachment | null>(null);
+  const [pageContext, setPageContext] = useState<CopilotPageContext | null>(
+    null,
+  );
 
   const streamingAssistantIdRef = useRef<string | null>(null);
   const submitBusyRef = useRef(false);
@@ -548,6 +553,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       clearSubmitError,
       sendDraft,
       submitSuggestion,
+      pageContext,
+      setPageContext,
     }),
     [
       open,
@@ -563,6 +570,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       clearSubmitError,
       sendDraft,
       submitSuggestion,
+      pageContext,
     ],
   );
 

@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { MagentoAggregation, MagentoCategory } from "@/types/magento";
 import { PRODUCT_LIST_RESERVED_PARAMS } from "@/lib/magento-shared";
+import { isFacetVisibleForCategory } from "@/lib/category-filters";
 
 interface ProductsFilterBarProps {
   categories: MagentoCategory[];
   aggregations: MagentoAggregation[];
+  activeCategoryName?: string;
   active: {
     category?: string;
     priceMin?: string;
@@ -35,6 +37,15 @@ const USER_FACING_FACETS = new Set([
   "manufacturer",
   "brand",
   "country_of_manufacture",
+  "welding_process",
+  "current_type",
+  "duty_cycle",
+  "voltage",
+  "battery_platform",
+  "power_kw",
+  "pressure_bar",
+  "protection_class",
+  "norm",
 ]);
 
 const FACET_LABEL_KEYS: Record<string, string> = {
@@ -170,6 +181,7 @@ function facetSelectionKey(selection: Record<string, string[]>): string {
 export default function ProductsFilterBar({
   categories,
   aggregations,
+  activeCategoryName,
   active,
 }: ProductsFilterBarProps) {
   const t = useTranslations("products.filter");
@@ -355,7 +367,16 @@ export default function ProductsFilterBar({
         />
       </section>
 
-      {aggregations.filter((bucket) => USER_FACING_FACETS.has(bucket.attribute_code)).map((bucket) => {
+      {aggregations
+        .filter(
+          (bucket) =>
+            USER_FACING_FACETS.has(bucket.attribute_code) &&
+            isFacetVisibleForCategory(
+              bucket.attribute_code,
+              activeCategoryName,
+            ),
+        )
+        .map((bucket) => {
         const isManufacturer =
           bucket.attribute_code === "manufacturer" ||
           bucket.attribute_code === "brand";

@@ -17,3 +17,10 @@ export interface CopilotImageAttachment {
   dataUrl: string;
   base64: string;
 }
+
+/** Optional page context for PDP/listing suggestion chips (D3). */
+export interface CopilotPageContext {
+  sku?: string;
+  productName?: string;
+  categoryName?: string;
+}

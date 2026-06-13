@@ -234,12 +234,16 @@ export async function resolveMagentoProductBySkuFlexible(
   }
 }
 
-export async function getCategoryTree(): Promise<MagentoCategoryTree> {
-  return magentoGet<MagentoCategoryTree>("/categories");
+export async function getCategoryTree(
+  storeCode?: string,
+): Promise<MagentoCategoryTree> {
+  return magentoGet<MagentoCategoryTree>("/categories", 300, storeCode);
 }
 
-export async function getTopLevelCategories(): Promise<MagentoCategory[]> {
-  const tree = await getCategoryTree();
+export async function getTopLevelCategories(
+  storeCode?: string,
+): Promise<MagentoCategory[]> {
+  const tree = await getCategoryTree(storeCode);
   return tree.children_data.filter((c) => c.is_active);
 }
 
