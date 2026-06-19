@@ -8,6 +8,7 @@ import ProductGrid from "@/components/ProductGrid";
 import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Pagination from "@/components/Pagination";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import PageHeaderLight from "@/components/ui/PageHeaderLight";
 
 export const revalidate = 60;
 
@@ -87,7 +88,7 @@ export default async function CategoryPage({
     category.children_data?.filter((c) => c.is_active) ?? [];
 
   return (
-    <div className="swr-page-shell py-10">
+    <div className="swr-page-shell pt-10 pb-8">
       <Breadcrumbs
         className="mb-8"
         ariaLabel={tBc("ariaLabel")}
@@ -98,14 +99,15 @@ export default async function CategoryPage({
         ]}
       />
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{category.name}</h1>
-        {productList && (
-          <p className="text-sm text-gray-500 mt-1">
-            {productList.total_count.toLocaleString(locale)} {t("products")}
-          </p>
-        )}
-      </div>
+      <PageHeaderLight
+        className="mb-8"
+        title={category.name}
+        subtitle={
+          productList
+            ? `${productList.total_count.toLocaleString(locale)} ${t("products")}`
+            : undefined
+        }
+      />
 
       {subcategories.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-8">
@@ -113,7 +115,7 @@ export default async function CategoryPage({
             <Link
               key={sub.id}
               href={`/categories/${sub.id}`}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:border-blue-300 hover:text-blue-700 rounded-full transition-colors"
+              className="px-4 py-2 text-sm font-medium text-on-surface-variant bg-surface-container-low hover:bg-primary-fixed hover:text-primary rounded-(--radius-btn) transition-colors"
             >
               {sub.name}
             </Link>
@@ -122,7 +124,10 @@ export default async function CategoryPage({
       )}
 
       {productsError ? (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-6 text-center">
+        <div
+          className="bg-red-50 p-6 text-center"
+          style={{ borderRadius: "var(--radius-card)" }}
+        >
           <p className="text-sm text-red-700 font-medium">
             {tErr("categoryUnavailable")}
           </p>

@@ -6,6 +6,7 @@ import { toShopCategoryNavItems } from "@/lib/shop-categories";
 import ShopCategoryGrid from "@/components/shop/ShopCategoryGrid";
 import ShopCategorySidebar from "@/components/shop/ShopCategorySidebar";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import PageHeaderLight from "@/components/ui/PageHeaderLight";
 
 export const revalidate = 300;
 
@@ -34,7 +35,7 @@ export default async function ShopPage({ params }: ShopPageProps) {
   const categoryItems = toShopCategoryNavItems(categories, 8);
 
   return (
-    <div className="swr-page-shell py-10">
+    <div className="swr-page-shell pt-10 pb-8">
       <Breadcrumbs
         className="mb-8"
         ariaLabel={tBc("ariaLabel")}
@@ -44,17 +45,11 @@ export default async function ShopPage({ params }: ShopPageProps) {
         ]}
       />
 
-      <div className="mb-8 max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
-          {t("eyebrow")}
-        </p>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase text-primary tracking-[-0.03em] leading-tight">
-          {t("heading")}
-        </h1>
-        <p className="mt-4 text-sm sm:text-base text-on-surface-variant leading-relaxed">
-          {t("subheading")}
-        </p>
-      </div>
+      <PageHeaderLight
+        eyebrow={t("eyebrow")}
+        title={t("heading")}
+        subtitle={t("subheading")}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
         <ShopCategorySidebar

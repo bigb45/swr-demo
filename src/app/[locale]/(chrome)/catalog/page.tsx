@@ -117,7 +117,6 @@ export default async function CatalogPage({
           eyebrow={t("eyebrow")}
           title={t("heading")}
           subtitle={t("subheading")}
-          variant="compact"
         />
       </div>
 

@@ -172,7 +172,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const href = `/products/${encodeURIComponent(product.sku)}`;
 
   return (
-    <div className="group relative flex flex-col bg-white rounded-card border border-outline-variant/80 overflow-hidden hover:border-outline-variant transition-all duration-200">
+    <div className="group relative flex flex-col bg-surface-container-lowest rounded-card border border-outline-variant/80 overflow-hidden hover:border-outline-variant transition-all duration-200">
       <Link
         href={href}
         className="flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -185,19 +185,19 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
 
         <div className="flex flex-col flex-1 px-4 pt-4 gap-2">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-xs font-mono text-gray-400 uppercase tracking-wider">
+            <p className="text-xs font-mono text-on-surface-variant/70 uppercase tracking-wider">
               {product.sku}
             </p>
             {stock.level !== "unknown" && (
               <StockBadge level={stock.level} label={stockLabel} />
             )}
           </div>
-          <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-semibold text-primary line-clamp-2 group-hover:text-primary transition-colors">
             {product.name}
           </h3>
           {shortDescription ? (
             <div
-              className="text-xs text-gray-500 line-clamp-2"
+              className="text-xs text-on-surface-variant line-clamp-2"
               dangerouslySetInnerHTML={{ __html: shortDescription }}
             />
           ) : null}
@@ -225,7 +225,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
             <span>{t("signInForPrice")}</span>
           </div>
         ) : (
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-primary">
             {product.price > 0
               ? formatPrice(product.price, locale)
               : t("priceOnRequest")}
@@ -234,7 +234,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
         {canAddToCart ? (
           <div className="flex items-center justify-between gap-2">
             <div
-              className="inline-flex h-10 items-center rounded-[var(--radius-btn)] bg-surface-container-low"
+              className="inline-flex h-10 items-center rounded-(--radius-btn) bg-surface-container-low"
               onClick={(e) => e.stopPropagation()}
             >
               <button

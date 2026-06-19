@@ -2,7 +2,8 @@
 
 import { useState, useTransition, Suspense } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 

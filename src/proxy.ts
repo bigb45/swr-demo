@@ -39,7 +39,8 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/beratung": "/services/consulting",
   "/service": "/services/repair",
   "/lieferungen": "/services/delivery",
-  "/zollabwicklung": "/services/delivery",
+  "/zollabwicklung": "/services/customs",
+  "/customs": "/services/customs",
 
   // Industry hubs (WordPress German slugs › new English slugs)
   "/schweisstechnik": "/industries/welding",
@@ -130,7 +131,9 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  return intlProxy(request);
+  const response = intlProxy(request);
+  response.headers.set("x-pathname", pathname);
+  return response;
 }
 
 export const config = {

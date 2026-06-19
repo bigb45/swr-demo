@@ -41,7 +41,9 @@ export default function ProductPrice({
 
   if (eurPrice <= 0) {
     return (
-      <span className={`text-gray-500 ${className}`}>{priceOnRequestLabel}</span>
+      <span className={`text-on-surface-variant ${className}`}>
+        {priceOnRequestLabel}
+      </span>
     );
   }
 
@@ -49,7 +51,7 @@ export default function ProductPrice({
     <span className={className}>
       {formatPrice(eurPrice, locale)}
       {exclVatLabel ? (
-        <span className="text-sm font-normal text-gray-500 ml-2">
+        <span className="text-sm font-normal text-on-surface-variant ml-2">
           {exclVatLabel}
         </span>
       ) : null}

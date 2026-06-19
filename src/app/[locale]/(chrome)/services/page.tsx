@@ -38,6 +38,12 @@ const ICON_DELIVERY = (
     <circle cx="18.5" cy="18.5" r="2.5" />
   </svg>
 );
+const ICON_CUSTOMS = (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M9 12l2 2 4-4" />
+  </svg>
+);
 
 export default async function Page({ params }: PageProps) {
   const { locale } = await params;
@@ -68,6 +74,13 @@ export default async function Page({ params }: PageProps) {
       eyebrow: tShared("delivery.eyebrow"),
       title: tShared("delivery.title"),
       description: tShared("delivery.shortBody"),
+    },
+    {
+      icon: ICON_CUSTOMS,
+      href: "/services/customs",
+      eyebrow: tShared("customs.eyebrow"),
+      title: tShared("customs.title"),
+      description: tShared("customs.shortBody"),
     },
   ];
 

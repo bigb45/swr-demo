@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
-import { INDUSTRY_SLUGS } from "@/lib/industries";
 import { listAllDocumentIds } from "@/lib/catalog";
 import { getProductsPaginated, getCategoryTree } from "@/lib/magento";
 import type { MagentoCategory } from "@/types/magento";
@@ -16,14 +15,15 @@ function getBaseUrl(): string {
 // stays in sync with the site shell.
 const STATIC_PATHS: string[] = [
   "",
+  "/shop",
   "/products",
   "/catalog",
   "/offers",
-  "/industries",
   "/services",
   "/services/consulting",
   "/services/repair",
   "/services/delivery",
+  "/services/customs",
   "/about",
   "/contact",
   "/partners",
@@ -76,10 +76,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = STATIC_PATHS.map((p) =>
     entry(p, p === "" ? "daily" : "weekly", p === "" ? 1 : 0.7)
   );
-
-  for (const slug of INDUSTRY_SLUGS) {
-    entries.push(entry(`/industries/${slug}`, "weekly", 0.7));
-  }
 
   try {
     const docIds = await listAllDocumentIds();

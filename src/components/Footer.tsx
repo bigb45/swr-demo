@@ -31,9 +31,9 @@ export default async function Footer({ locale }: FooterProps) {
       heading: t("shopHeading"),
       links: [
         { href: "/products", label: tNav("allProducts") },
+        { href: "/shop", label: tNav("shop") },
         { href: "/catalog", label: tNav("catalog") },
         { href: "/offers", label: tNav("offers") },
-        { href: "/industries", label: tNav("industries") },
       ],
     },
     {
@@ -42,6 +42,7 @@ export default async function Footer({ locale }: FooterProps) {
         { href: "/services/consulting", label: tServices("consulting.title") },
         { href: "/services/repair", label: tServices("repair.title") },
         { href: "/services/delivery", label: tServices("delivery.title") },
+        { href: "/services/customs", label: tServices("customs.title") },
       ],
     },
     {

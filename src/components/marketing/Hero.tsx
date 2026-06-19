@@ -5,7 +5,6 @@ interface HeroProps {
   title: string;
   subtitle?: string;
   children?: ReactNode;
-  variant?: "default" | "compact";
 }
 
 export default function Hero({
@@ -13,12 +12,10 @@ export default function Hero({
   title,
   subtitle,
   children,
-  variant = "default",
 }: HeroProps) {
-  const padClass = variant === "compact" ? "py-10" : "py-14 sm:py-20";
   return (
     <section
-      className={`relative overflow-hidden ${padClass}`}
+      className="relative overflow-hidden py-14 sm:py-20"
       style={{
         background: "linear-gradient(160deg, #003a63 0%, #005288 100%)",
       }}
@@ -29,13 +26,7 @@ export default function Hero({
             {eyebrow}
           </p>
         ) : null}
-        <h1
-          className={`font-black text-white tracking-[-0.02em] uppercase ${
-            variant === "compact"
-              ? "text-2xl sm:text-4xl"
-              : "text-3xl sm:text-5xl"
-          }`}
-        >
+        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-[-0.02em] uppercase">
           {title}
         </h1>
         {subtitle ? (

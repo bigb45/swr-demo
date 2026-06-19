@@ -15,6 +15,7 @@ import ProductsFilterBar from "@/components/products/ProductsFilterBar";
 import ProductsActiveFilters from "@/components/products/ProductsActiveFilters";
 import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import PageHeaderLight from "@/components/ui/PageHeaderLight";
 import ShopCategoryGrid from "@/components/shop/ShopCategoryGrid";
 import ShopCategorySidebar from "@/components/shop/ShopCategorySidebar";
 import { toShopCategoryNavItems } from "@/lib/shop-categories";
@@ -94,7 +95,7 @@ export default async function ProductsPage({
     const categoryItems = toShopCategoryNavItems(categories, 8);
 
     return (
-      <div className="swr-page-shell py-10">
+      <div className="swr-page-shell pt-10 pb-8">
         <Breadcrumbs
           className="mb-8"
           ariaLabel={tBc("ariaLabel")}
@@ -103,17 +104,11 @@ export default async function ProductsPage({
             { label: t("title") },
           ]}
         />
-        <div className="mb-8 max-w-3xl">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
-            {t("browseByCategoryEyebrow")}
-          </p>
-          <h1 className="text-3xl sm:text-5xl font-black uppercase text-primary tracking-[-0.03em] leading-tight">
-            {t("browseByCategoryTitle")}
-          </h1>
-          <p className="mt-4 text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            {t("browseByCategoryBody")}
-          </p>
-        </div>
+        <PageHeaderLight
+          eyebrow={t("browseByCategoryEyebrow")}
+          title={t("browseByCategoryTitle")}
+          subtitle={t("browseByCategoryBody")}
+        />
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
           <ShopCategorySidebar
             heading={tShop("sidebarHeading")}
@@ -155,7 +150,7 @@ export default async function ProductsPage({
     : undefined;
 
   return (
-    <div className="swr-page-shell py-10">
+    <div className="swr-page-shell pt-10 pb-8">
       <Breadcrumbs
         className="mb-6"
         ariaLabel={tBc("ariaLabel")}
@@ -164,25 +159,27 @@ export default async function ProductsPage({
           { label: tBc("products") },
         ]}
       />
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          {query ? t("searchTitle", { query }) : t("title")}
-        </h1>
-        {productList && (
-          <p className="text-sm text-gray-500 mt-1">
-            {query
+      <PageHeaderLight
+        className="mb-8"
+        title={query ? t("searchTitle", { query }) : t("title")}
+        subtitle={
+          productList
+            ? query
               ? t("searchTotal", {
                   count: productList.total_count.toLocaleString(locale),
                 })
               : t("total", {
                   count: productList.total_count.toLocaleString(locale),
-                })}
-          </p>
-        )}
-      </div>
+                })
+            : undefined
+        }
+      />
 
       {error ? (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-6 text-center">
+        <div
+          className="bg-red-50 p-6 text-center"
+          style={{ borderRadius: "var(--radius-card)" }}
+        >
           <p className="text-sm text-red-700 font-medium">
             {tErr("productsUnavailable", { url: magentoBaseUrl })}
           </p>

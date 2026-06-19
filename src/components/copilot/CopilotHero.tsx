@@ -10,7 +10,7 @@ import { useCopilot } from "./CopilotProvider";
 const CHIP_KEYS = ["chip1", "chip2", "chip3", "chip4"] as const;
 
 export default function CopilotHero() {
-  const t = useTranslations("copilot.home");
+  const t = useTranslations("copilot");
   const { ready, level } = useCookieConsent();
   const hydrated = useHydrated();
   const { setOpen, setDraft, submitSuggestion } = useCopilot();
@@ -20,8 +20,8 @@ export default function CopilotHero() {
 
   const chips = CHIP_KEYS.map((key) => ({
     key,
-    label: t(key),
-    prompt: t(`${key}Prompt`),
+    label: t(`home.${key}`),
+    prompt: t(`home.${key}Prompt`),
   }));
 
   const openWithMessage = useCallback(
@@ -62,7 +62,7 @@ export default function CopilotHero() {
         >
           <div className="flex flex-col gap-2 max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary-fixed">
-              {t("eyebrow")}
+              {t("home.eyebrow")}
             </p>
             <div className="flex items-center gap-3">
               <BotMessageSquare
@@ -72,17 +72,17 @@ export default function CopilotHero() {
                 aria-hidden
               />
               <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-[-0.02em] leading-tight">
-                {t("heading")}
+                {t("home.heading")}
               </h2>
             </div>
             <p className="text-sm sm:text-base text-primary-fixed/90 leading-relaxed">
-              {t("subtitle")}
+              {t("home.subtitle")}
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
             <label className="sr-only" htmlFor="copilot-hero-input">
-              {t("inputLabel")}
+              {t("home.inputLabel")}
             </label>
             <textarea
               id="copilot-hero-input"
@@ -90,7 +90,7 @@ export default function CopilotHero() {
               onChange={(e) => setLocalDraft(e.target.value)}
               onKeyDown={onKeyDown}
               onFocus={() => setDraft(localDraft)}
-              placeholder={t("placeholder")}
+              placeholder={t("home.placeholder")}
               rows={2}
               className="w-full resize-none bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant px-4 py-3 text-sm sm:text-base outline-none focus-visible:ring-2 focus-visible:ring-secondary"
               style={{ borderRadius: "var(--radius-btn)" }}
@@ -101,13 +101,13 @@ export default function CopilotHero() {
               className="self-start px-6 py-3 text-sm font-bold uppercase tracking-widest bg-secondary text-on-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)] transition-all"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
-              {t("submit")}
+              {t("home.submit")}
             </button>
           </div>
 
           <div className="flex flex-col gap-3">
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary-fixed/80">
-              {t("chipsHeading")}
+              {t("home.chipsHeading")}
             </p>
             <div className="flex flex-wrap gap-2">
               {chips.map((chip) => (
