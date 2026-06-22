@@ -12,7 +12,7 @@ export default function ShopCategorySidebar({
   categories,
 }: ShopCategorySidebarProps) {
   return (
-    <aside className="bg-surface-container-low p-4" style={{ borderRadius: "var(--radius-card)" }}>
+    <aside className="hidden lg:block bg-surface-container-low p-4" style={{ borderRadius: "var(--radius-card)" }}>
       <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-on-surface-variant mb-3">
         {heading}
       </h2>

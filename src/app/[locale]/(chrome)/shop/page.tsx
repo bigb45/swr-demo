@@ -59,6 +59,8 @@ export default async function ShopPage({ params }: ShopPageProps) {
         <ShopCategoryGrid
           categories={categoryItems}
           emptyLabel={t("empty")}
+          allProductsHref="/products?view=all"
+          allProductsLabel={t("allProducts")}
         />
       </div>
     </div>

@@ -355,7 +355,8 @@
     "heading": "Choose your product group.",
     "subheading": "The shop starts with main categories so you do not land in an unbounded full-catalog listing.",
     "sidebarHeading": "Categories",
-    "empty": "Categories could not be loaded."
+    "empty": "Categories could not be loaded.",
+    "allProducts": "All products"
   },
   "pagination": {
     "prev": "‹ Prev",

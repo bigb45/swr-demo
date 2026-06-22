@@ -355,7 +355,8 @@
     "heading": "Wählen Sie Ihre Warengruppe.",
     "subheading": "Der Shop beginnt mit den Hauptkategorien. So landen Sie nicht in einer unüberschaubaren Vollsortimentsliste, sondern direkt im passenden Bereich.",
     "sidebarHeading": "Kategorien",
-    "empty": "Kategorien konnten nicht geladen werden."
+    "empty": "Kategorien konnten nicht geladen werden.",
+    "allProducts": "Alle Produkte"
   },
   "pagination": {
     "prev": "‹ Zurück",

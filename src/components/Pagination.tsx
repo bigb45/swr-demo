@@ -22,6 +22,11 @@ export default function Pagination({
 
   if (totalPages <= 1) return null;
 
+  // baseUrl may already carry a query string (e.g. "/products?view=all"),
+  // so join with "&" in that case instead of producing a malformed "?…?page=".
+  const pageHref = (page: number) =>
+    `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}page=${page}`;
+
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
   const visiblePages = pages.filter(
     (p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2
@@ -36,7 +41,7 @@ export default function Pagination({
     <nav className="flex items-center justify-center gap-1 mt-12">
       {currentPage > 1 && (
         <Link
-          href={`${baseUrl}?page=${currentPage - 1}`}
+          href={pageHref(currentPage - 1)}
           className={`${pageLinkClass} ${inactivePageClass}`}
         >
           {t("prev")}
@@ -54,7 +59,7 @@ export default function Pagination({
               </span>
             )}
             <Link
-              href={`${baseUrl}?page=${page}`}
+              href={pageHref(page)}
               className={`${pageLinkClass} ${
                 page === currentPage ? activePageClass : inactivePageClass
               }`}
@@ -67,7 +72,7 @@ export default function Pagination({
 
       {currentPage < totalPages && (
         <Link
-          href={`${baseUrl}?page=${currentPage + 1}`}
+          href={pageHref(currentPage + 1)}
           className={`${pageLinkClass} ${inactivePageClass}`}
         >
           {t("next")}

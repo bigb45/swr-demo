@@ -355,7 +355,8 @@
     "heading": "Choisissez votre famille de produits.",
     "subheading": "La boutique commence par les catégories principales afin d'éviter une liste catalogue complète et ingérable.",
     "sidebarHeading": "Catégories",
-    "empty": "Les catégories n'ont pas pu être chargées."
+    "empty": "Les catégories n'ont pas pu être chargées.",
+    "allProducts": "Tous les produits"
   },
   "pagination": {
     "prev": "‹ Précédent",

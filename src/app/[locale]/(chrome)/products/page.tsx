@@ -57,11 +57,14 @@ export default async function ProductsPage({
     category,
     priceMin,
     priceMax,
+    view,
   } = resolvedSearchParams;
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10));
   const query = q?.trim() ?? "";
   const facetParams = parseProductFacetParams(resolvedSearchParams);
+  const showAll = view === "all";
   const hasCatalogScope =
+    showAll ||
     Boolean(query) ||
     Boolean(category) ||
     Boolean(priceMin) ||
@@ -117,6 +120,8 @@ export default async function ProductsPage({
           <ShopCategoryGrid
             categories={categoryItems}
             emptyLabel={tShop("empty")}
+            allProductsHref="/products?view=all"
+            allProductsLabel={tShop("allProducts")}
           />
         </div>
       </div>
@@ -133,6 +138,7 @@ export default async function ProductsPage({
   }
 
   const paginationParams = new URLSearchParams();
+  if (showAll) paginationParams.set("view", "all");
   if (query) paginationParams.set("q", query);
   if (category) paginationParams.set("category", category);
   if (priceMin) paginationParams.set("priceMin", priceMin);

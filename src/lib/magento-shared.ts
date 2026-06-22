@@ -27,6 +27,7 @@ export const PRODUCT_LIST_RESERVED_PARAMS = new Set([
   "category",
   "priceMin",
   "priceMax",
+  "view",
 ]);
 
 export function getProductImageUrl(product: MagentoProduct): string | null {
