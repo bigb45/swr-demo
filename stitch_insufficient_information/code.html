@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Industrial Component Spec</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#bdefbe",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#a7c8ff",
+                        "on-secondary-container": "#406c46",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "on-background": "#1a1c1c",
+                        "surface": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed-dim": "#a2d3a4",
+                        "outline-variant": "#c3c6d1",
+                        "outline": "#737780",
+                        "inverse-surface": "#2f3131",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-fixed": "#002109",
+                        "primary": "#001e40",
+                        "tertiary-container": "#333333",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary": "#1e1e1e",
+                        "secondary-container": "#baecbb",
+                        "on-surface-variant": "#43474f",
+                        "background": "#f9f9f9",
+                        "on-primary-container": "#799dd6",
+                        "tertiary-fixed": "#e4e2e2",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary-fixed-variant": "#1f477b",
+                        "secondary": "#3c6842",
+                        "surface-tint": "#3a5f94",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "primary-fixed-dim": "#a7c8ff",
+                        "surface-container": "#eeeeee",
+                        "primary-container": "#003366",
+                        "on-primary-fixed": "#001b3c",
+                        "on-tertiary-container": "#9c9b9b",
+                        "on-secondary-fixed-variant": "#24502c",
+                        "tertiary-fixed-dim": "#c8c6c6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; }
+        .material-symbols-outlined { font-size: 18px; }
+        .blue-gradient { background: linear-gradient(135deg, #001e40 0%, #003366 100%); }
+    </style>
+</head>
+<body class="text-on-surface">
+<div class="min-h-screen p-8 max-w-[1200px] mx-auto">
+<!-- Header -->
+<header class="mb-12 border-l-4 border-primary pl-6">
+<h1 class="text-[1.5rem] font-black tracking-tight text-primary uppercase leading-none">Industrial Component Spec</h1>
+<p class="text-on-surface-variant text-[0.875rem] mt-2 font-medium tracking-tight">Technical Design System / Reference Library v1.0.4</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+<!-- 1. Revised Toggle Buttons -->
+<section class="bg-surface border-b border-r border-outline-variant/30 p-6">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">01 / Revised Toggle Buttons</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between bg-surface-container-low p-3 rounded-sm">
+<span class="text-[0.8125rem] font-semibold text-primary uppercase tracking-tight">Pump System</span>
+<div class="flex bg-surface-container-highest p-0.5 rounded-sm">
+<button class="px-4 py-1 text-[0.75rem] font-black uppercase rounded-sm blue-gradient text-on-primary">ON</button>
+<button class="px-4 py-1 text-[0.75rem] font-black uppercase rounded-sm text-on-surface-variant">OFF</button>
+</div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low p-3 rounded-sm">
+<span class="text-[0.8125rem] font-semibold text-primary uppercase tracking-tight">Main Breaker</span>
+<div class="flex bg-surface-container-highest p-0.5 rounded-sm">
+<button class="px-4 py-1 text-[0.75rem] font-black uppercase rounded-sm text-on-surface-variant">ON</button>
+<button class="px-4 py-1 text-[0.75rem] font-black uppercase rounded-sm bg-error text-white">OFF</button>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Filter Checkboxes -->
+<section class="bg-surface border-b border-r border-outline-variant/30 p-6">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">02 / Material Filter Spec</h3>
+<div class="space-y-1">
+<label class="flex items-center gap-3 p-2 hover:bg-surface-container transition-colors cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded-sm border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="text-[0.8125rem] font-medium text-on-surface uppercase tracking-tight">Stainless 316 (Marine)</span>
+</label>
+<label class="flex items-center gap-3 p-2 hover:bg-surface-container transition-colors cursor-pointer group">
+<input class="w-4 h-4 rounded-sm border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="text-[0.8125rem] font-medium text-on-surface uppercase tracking-tight">Alloy 20 (Acid Resist)</span>
+</label>
+<label class="flex items-center gap-3 p-2 hover:bg-surface-container transition-colors cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded-sm border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="text-[0.8125rem] font-medium text-on-surface uppercase tracking-tight">PTFE Coated Steel</span>
+</label>
+<label class="flex items-center gap-3 p-2 hover:bg-surface-container transition-colors cursor-pointer group">
+<input class="w-4 h-4 rounded-sm border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="text-[0.8125rem] font-medium text-on-surface-variant uppercase tracking-tight opacity-60">Hastelloy C-276</span>
+</label>
+</div>
+</section>
+<!-- 3. Numeric Range Sliders -->
+<section class="bg-surface border-b border-outline-variant/30 p-6 lg:border-r-0">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">03 / Precision Range Sliders</h3>
+<div class="space-y-8">
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-[0.6875rem] font-bold text-primary uppercase">Pressure (PSI)</span>
+<span class="text-[0.6875rem] font-mono font-bold text-secondary">450 - 1200</span>
+</div>
+<div class="relative w-full h-1 bg-surface-container-highest rounded-none">
+<div class="absolute left-1/4 right-1/4 h-full bg-primary"></div>
+<div class="absolute left-1/4 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-primary rounded-sm shadow-sm"></div>
+<div class="absolute right-1/4 top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 border-primary rounded-sm shadow-sm"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="text-[0.6875rem] font-bold text-primary uppercase">Flow Rate (GPM)</span>
+<span class="text-[0.6875rem] font-mono font-bold text-on-surface">12.5</span>
+</div>
+<input class="w-full h-1 bg-surface-container-highest appearance-none cursor-pointer accent-primary" type="range"/>
+</div>
+</div>
+</section>
+<!-- 4. Search Inputs -->
+<section class="bg-surface border-b border-r border-outline-variant/30 p-6">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">04 / Unified Search Core</h3>
+<div class="space-y-4">
+<div class="relative">
+<input class="w-full bg-white border border-outline-variant/50 rounded-sm py-2 pl-3 pr-10 text-[0.8125rem] placeholder:text-outline focus:ring-1 focus:ring-primary focus:border-primary" placeholder="PART # OR KEYWORD..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-dashed border-outline-variant rounded-sm py-2 pl-3 pr-10 text-[0.8125rem] placeholder:text-outline font-medium tracking-tight" placeholder="SCAN COMPONENT..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-primary">photo_camera</span>
+</div>
+</div>
+</section>
+<!-- 5. Variant Selection Pills -->
+<section class="bg-surface border-b border-r border-outline-variant/30 p-6">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">05 / Variant Selection Pills</h3>
+<div class="flex flex-wrap gap-2">
+<button class="bg-primary text-on-primary text-[0.6875rem] font-black px-3 py-1.5 rounded-sm uppercase tracking-tighter">DN50 / 2"</button>
+<button class="bg-surface-container-highest text-on-surface-variant text-[0.6875rem] font-bold px-3 py-1.5 rounded-sm uppercase tracking-tighter border border-transparent hover:border-outline-variant">DN80 / 3"</button>
+<button class="bg-surface-container-highest text-on-surface-variant text-[0.6875rem] font-bold px-3 py-1.5 rounded-sm uppercase tracking-tighter border border-transparent hover:border-outline-variant">DN100 / 4"</button>
+<button class="bg-surface-container-highest text-on-surface-variant text-[0.6875rem] font-bold px-3 py-1.5 rounded-sm uppercase tracking-tighter border border-transparent hover:border-outline-variant">DN150 / 6"</button>
+<button class="bg-surface-container-highest text-on-surface-variant text-[0.6875rem] font-bold px-3 py-1.5 rounded-sm uppercase tracking-tighter border border-transparent hover:border-outline-variant">DN200 / 8"</button>
+<button class="bg-surface-container-highest text-on-surface-variant text-[0.6875rem] font-bold px-3 py-1.5 rounded-sm uppercase tracking-tighter border border-transparent hover:border-outline-variant">DN250 / 10"</button>
+</div>
+</section>
+<!-- 6. Radio Buttons -->
+<section class="bg-surface border-b border-outline-variant/30 p-6 lg:border-r-0">
+<h3 class="text-[0.6875rem] font-bold tracking-widest text-on-surface-variant uppercase mb-6">06 / Radio Standard</h3>
+<div class="space-y-1">
+<label class="flex items-center gap-3 p-2 cursor-pointer group">
+<input checked="" class="w-4 h-4 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" name="voltage" type="radio"/>
+<div class="flex flex-col">
+<span class="text-[0.8125rem] font-bold text-on-surface uppercase leading-none">120V / 60Hz</span>
+<span class="text-[0.625rem] text-on-surface-variant font-mono uppercase mt-1">Single Phase Standard</span>
+</div>
+</label>
+<label class="flex items-center gap-3 p-2 cursor-pointer group">
+<input class="w-4 h-4 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" name="voltage" type="radio"/>
+<div class="flex flex-col">
+<span class="text-[0.8125rem] font-bold text-on-surface uppercase leading-none">240V / 50Hz</span>
+<span class="text-[0.625rem] text-on-surface-variant font-mono uppercase mt-1">International Standard</span>
+</div>
+</label>
+<label class="flex items-center gap-3 p-2 cursor-pointer group">
+<input class="w-4 h-4 border-outline-variant text-primary focus:ring-0 focus:ring-offset-0" name="voltage" type="radio"/>
+<div class="flex flex-col">
+<span class="text-[0.8125rem] font-bold text-on-surface uppercase leading-none">480V / 3-Phase</span>
+<span class="text-[0.625rem] text-on-surface-variant font-mono uppercase mt-1">Industrial Heavy Duty</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Additional Detail: Tonal Shifts Grid -->
+<div class="md:col-span-2 lg:col-span-3 bg-surface-container-high p-8 mt-12">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h2 class="text-primary font-black text-lg tracking-tighter uppercase mb-2">Technical Summary</h2>
+<div class="flex gap-4">
+<div class="bg-white p-4 border-l-2 border-secondary shadow-sm">
+<p class="text-[0.6875rem] font-bold text-outline uppercase tracking-widest mb-1">Stock Status</p>
+<p class="text-xl font-black text-secondary leading-none">94.2%</p>
+</div>
+<div class="bg-white p-4 border-l-2 border-primary shadow-sm">
+<p class="text-[0.6875rem] font-bold text-outline uppercase tracking-widest mb-1">QC Passed</p>
+<p class="text-xl font-black text-primary leading-none">1,208</p>
+</div>
+</div>
+</div>
+<div class="w-full md:w-auto">
+<button class="w-full md:w-auto px-8 py-3 blue-gradient text-on-primary text-[0.875rem] font-black uppercase tracking-widest rounded-sm">Generate Full Catalog Export</button>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-16 pt-8 border-t border-outline-variant/30 flex justify-between items-center text-[0.6875rem] font-bold text-outline uppercase tracking-widest">
+<div>Confidential / Industrial Engineering Division</div>
+<div class="flex gap-6">
+<span>Ref: ISO-9001-2024</span>
+<span>System: Machined_UI_Core</span>
+</div>
+</footer>
+</div>
+</body></html>
