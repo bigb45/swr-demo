@@ -58,7 +58,7 @@ export default async function Header({ locale }: HeaderProps) {
       <div style={{ backgroundColor: "#003a63", color: "#ffffff" }}>
         <div className="swr-page-shell h-[33px] hidden sm:flex items-center justify-end gap-6 text-xs">
           <a
-            href="tel:+49762116037"
+            href="tel:+497621160370"
             className="hidden lg:inline text-white/80 hover:text-white transition-colors"
           >
             +49 7621 160 370

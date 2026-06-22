@@ -94,34 +94,34 @@ export default function ProductGallery({
             <button
               onClick={prev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full shadow-md hover:brightness-110 transition-all"
+              className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
             <button
               onClick={next}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full shadow-md hover:brightness-110 transition-all"
+              className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
 
             {/* Dot indicators */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            <div className="absolute bottom-3 left-1/2 flex max-w-[calc(100%-2rem)] -translate-x-1/2 gap-1.5 overflow-x-auto rounded-full bg-surface-container-lowest/90 px-2 py-1 shadow-ambient">
               {images.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveIdx(idx)}
                   aria-label={`Go to image ${idx + 1}`}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  className={
                     idx === activeIdx
-                      ? "bg-primary w-3"
-                      : "bg-primary/30 hover:bg-primary/60"
-                  }`}
+                      ? "h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+                      : "h-1.5 w-1.5 shrink-0 rounded-full bg-outline-variant hover:bg-on-surface-variant/60"
+                  }
                 />
               ))}
             </div>

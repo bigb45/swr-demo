@@ -70,7 +70,7 @@ function ProductCardGallery({
                 <button
                   type="button"
                   aria-label={t("galleryPrevImage")}
-                  className="flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-surface-container-lowest/95 text-primary shadow-ambient hover:bg-primary-fixed transition-colors"
+                  className="flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
                   onClick={goPrev}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -82,7 +82,7 @@ function ProductCardGallery({
                 <button
                   type="button"
                   aria-label={t("galleryNextImage")}
-                  className="flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-surface-container-lowest/95 text-primary shadow-ambient hover:bg-primary-fixed transition-colors"
+                  className="flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
                   onClick={goNext}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
