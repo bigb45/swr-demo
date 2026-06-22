@@ -24,6 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",
+    "docx": "^9.7.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "playwright": "^1.51.0",
