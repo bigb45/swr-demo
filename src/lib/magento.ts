@@ -89,10 +89,10 @@ export async function magentoGet<T>(
 
   // Magento REST supports per-store-view scoping via /rest/<storeCode>/V1/...
   // Calls without a storeCode target the default admin scope.
-  const prefix = storeCode ? `/rest/${storeCode}/V1` : `/rest/V1`;
+  const buildPrefix = (code?: string) => (code ? `/rest/${code}/V1` : `/rest/V1`);
 
-  const doFetch = async (token: string) =>
-    fetch(`${BASE}${prefix}${path}`, {
+  const doFetch = async (token: string, code?: string) =>
+    fetch(`${BASE}${buildPrefix(code)}${path}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -101,14 +101,29 @@ export async function magentoGet<T>(
     });
 
   let token = await getAdminToken();
-  let res = await doFetch(token);
+  let res = await doFetch(token, storeCode);
 
   // If Magento rejected the cached token (e.g. admin re-login, token revoked,
   // or server-side TTL shorter than our cache), refresh once and retry.
   if (res.status === 401) {
     invalidateAdminToken();
     token = await getAdminToken(true);
-    res = await doFetch(token);
+    res = await doFetch(token, storeCode);
+  }
+
+  // A store-scoped request 400s when that store view code isn't configured on
+  // the target Magento instance (e.g. a dev/staging box that only has the
+  // `default` store view, not the de/en/fr views this storefront expects).
+  // Fall back to the default scope so the catalog still renders; when the
+  // proper store views are added on the backend, the scoped path resolves
+  // normally and this fallback never triggers.
+  if (res.status === 400 && storeCode) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `[magento] store view "${storeCode}" not available — falling back to default scope for ${path}`,
+      );
+    }
+    res = await doFetch(token, undefined);
   }
 
   if (!res.ok) {
