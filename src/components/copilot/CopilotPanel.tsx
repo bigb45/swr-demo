@@ -14,6 +14,16 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { useCopilot } from "./CopilotProvider";
 import CopilotProductWidget from "./CopilotProductWidget";
+import type { CopilotStatus } from "./types";
+
+const STATUS_LABEL_KEY: Record<Exclude<CopilotStatus, "idle">, string> = {
+  thinking: "statusThinking",
+  searching: "statusSearching",
+  findingProducts: "statusFindingProducts",
+  updatingCart: "statusUpdatingCart",
+  analyzingImage: "statusAnalyzingImage",
+  working: "statusWorking",
+};
 
 function getFocusable(root: HTMLElement | null): HTMLElement[] {
   if (!root) return [];
@@ -56,6 +66,18 @@ function useCopilotFocusTrap(
   }, [active, rootRef]);
 }
 
+function CopilotStatusRow({ label }: { label: string }) {
+  return (
+    <span className="inline-flex items-center gap-2 text-on-surface-variant">
+      <span
+        className="h-2 w-2 shrink-0 rounded-full bg-secondary animate-pulse motion-reduce:animate-none"
+        aria-hidden
+      />
+      <span className="text-sm font-medium">{label}</span>
+    </span>
+  );
+}
+
 export default function CopilotPanel() {
   const t = useTranslations("copilot");
   const locale = useLocale();
@@ -65,6 +87,7 @@ export default function CopilotPanel() {
     draft,
     setDraft,
     pending,
+    status,
     submitError,
     imageAttachment,
     attachImage,
@@ -87,10 +110,14 @@ export default function CopilotPanel() {
     textareaRef.current?.focus({ preventScroll: true });
   }, []);
 
+  const statusLabel = status === "idle" ? "" : t(STATUS_LABEL_KEY[status]);
+
   const liveText = useMemo(() => {
     const rev = [...messages].reverse().find((m) => m.role === "assistant");
-    return rev?.streaming ? "" : (rev?.content ?? "");
-  }, [messages]);
+    // While the assistant is still working, announce the current phase; once the
+    // reply is finalized, announce its text.
+    return rev?.streaming ? statusLabel : (rev?.content ?? "");
+  }, [messages, statusLabel]);
 
   const suggestions = useMemo(() => {
     const global = [
@@ -159,10 +186,7 @@ export default function CopilotPanel() {
       className="flex h-full min-h-0 w-full min-w-0 flex-col bg-surface"
       aria-label={t("panelAria")}
     >
-      <div
-        className="flex shrink-0 flex-col text-on-primary"
-        style={{ backgroundColor: "#003a63" }}
-      >
+      <div className="flex shrink-0 flex-col bg-primary text-on-primary">
         <div className="flex items-center gap-3 px-3 py-2.5">
           <button
             type="button"
@@ -205,10 +229,7 @@ export default function CopilotPanel() {
         {messages.map((m) =>
           m.role === "user" ? (
             <div key={m.id} className="flex justify-end">
-              <div
-                className="max-w-[92%] rounded-[var(--radius-card)] px-3 py-2 text-sm text-on-primary"
-                style={{ backgroundColor: "#005288" }}
-              >
+              <div className="max-w-[92%] rounded-[var(--radius-card)] bg-primary-container px-3 py-2 text-sm text-on-primary">
                 {m.imagePreviewUrl ? (
                   <div className="mb-2 overflow-hidden rounded-[var(--radius-btn)] bg-white/10">
                     <Image
@@ -225,16 +246,15 @@ export default function CopilotPanel() {
               </div>
             </div>
           ) : (
-            <div key={m.id} className="space-y-2">
+            <div key={m.id} className="space-y-1.5">
               <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">
                 <span
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-btn)] text-on-primary"
-                  style={{ backgroundColor: "#003a63" }}
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-btn)] bg-primary text-on-primary"
                   aria-hidden
                 >
                   <svg
-                    width="16"
-                    height="16"
+                    width="15"
+                    height="15"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -250,13 +270,14 @@ export default function CopilotPanel() {
                   {t("assistantLabel")} • {formatTime(m.createdAt)}
                 </span>
               </div>
-              <div
-                className="rounded-[var(--radius-card)] border border-outline-variant/40 bg-surface-container-lowest p-3 text-sm text-on-surface shadow-[var(--shadow-ambient)]"
-                style={{ borderRadius: "var(--radius-card)" }}
-              >
-                <p className="whitespace-pre-wrap break-words text-on-surface-variant">
-                  {m.content || (m.streaming ? t("assistantTyping") : "")}
-                </p>
+              <div className="rounded-[var(--radius-card)] bg-surface-container-lowest px-3 py-2.5 text-sm text-on-surface">
+                {m.content ? (
+                  <p className="whitespace-pre-wrap break-words text-on-surface">
+                    {m.content}
+                  </p>
+                ) : m.streaming ? (
+                  <CopilotStatusRow label={statusLabel || t("statusThinking")} />
+                ) : null}
                 {!m.streaming && m.widgetSkus && m.widgetSkus.length > 0 && (
                   <div className="mt-3 space-y-2">
                     {m.widgetSkus.map((widgetSku) => (
@@ -273,7 +294,7 @@ export default function CopilotPanel() {
         )}
       </div>
 
-      <div className="shrink-0 border-t border-outline-variant/30 bg-surface-container-low px-3 py-2">
+      <div className="shrink-0 bg-surface-container-low px-3 py-2">
         <button
           type="button"
           aria-expanded={suggestionsOpen}
@@ -322,7 +343,7 @@ export default function CopilotPanel() {
         </div>
       </div>
 
-      <div className="shrink-0 space-y-2 border-t border-outline-variant/30 bg-surface-container-low p-3">
+      <div className="shrink-0 space-y-2 bg-surface-container-low p-3">
         {submitError && (
           <div
             className="rounded-[var(--radius-btn)] bg-error/10 px-2 py-1.5 text-xs text-error"
@@ -437,47 +458,21 @@ export default function CopilotPanel() {
               clearSubmitError();
               void sendDraft();
             }}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-btn)] text-on-primary disabled:opacity-40"
-            style={{ backgroundColor: "#003a63" }}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-btn)] bg-primary text-on-primary disabled:opacity-40"
             aria-label={t("sendAria")}
           >
-            {pending ? (
-              <svg
-                className="animate-spin"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-            ) : (
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M22 2L11 13" />
-                <path d="M22 2L15 22l-4-9-9-4 20-7z" />
-              </svg>
-            )}
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <path d="M22 2L11 13" />
+              <path d="M22 2L15 22l-4-9-9-4 20-7z" />
+            </svg>
           </button>
         </div>
       </div>

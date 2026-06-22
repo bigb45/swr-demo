@@ -34,11 +34,7 @@ export default function CopilotDock() {
       {!open && (
         <button
           type="button"
-          className="fixed bottom-6 right-6 z-[46] inline-flex h-14 w-14 items-center justify-center text-on-primary shadow-[var(--shadow-ambient)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
-          style={{
-            backgroundColor: "#003a63",
-            borderRadius: "var(--radius-card)",
-          }}
+          className="fixed bottom-6 right-6 z-[46] inline-flex h-14 w-14 items-center justify-center rounded-[var(--radius-card)] bg-primary text-on-primary shadow-[var(--shadow-ambient)] transition-transform hover:scale-[1.02] active:scale-[0.98]"
           aria-label={t("openFabAria")}
           onClick={() => setOpen(true)}
         >
@@ -53,13 +49,9 @@ export default function CopilotDock() {
       {open && (
         <>
           {/**
-           * Flex lane on lg+: reserves horizontal space while the real drawer is viewport-fixed.
+           * Scrim only below lg: under 1024px the panel is a modal sheet that
+           * covers the page. On lg+ the panel floats and never blocks the page.
            */}
-          <div
-            aria-hidden
-            className="pointer-events-none hidden shrink-0 self-stretch lg:block lg:w-[380px]"
-          />
-
           <button
             type="button"
             className="fixed inset-0 z-[47] bg-black/30 lg:hidden"
@@ -68,8 +60,10 @@ export default function CopilotDock() {
           />
 
           <div
-            role="presentation"
-            className="fixed top-[var(--swr-header-offset)] right-0 bottom-0 z-[48] flex min-h-0 w-[min(100vw,400px)] max-w-full flex-col overflow-hidden border-outline-variant/30 shadow-[var(--shadow-ambient)] lg:w-[380px] lg:border-l lg:border-outline-variant/30 lg:shadow-[var(--shadow-ambient)]"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("panelAria")}
+            className="fixed z-[48] flex min-h-0 flex-col overflow-hidden bg-surface shadow-[var(--shadow-ambient)] inset-x-0 bottom-0 top-[var(--swr-header-offset)] [padding-bottom:env(safe-area-inset-bottom)] lg:inset-auto lg:right-6 lg:bottom-6 lg:top-auto lg:h-[min(680px,calc(100dvh-var(--swr-header-offset)-3rem))] lg:w-[400px] lg:rounded-[var(--radius-card)] lg:[padding-bottom:0]"
           >
             <CopilotPanel />
           </div>

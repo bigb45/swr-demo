@@ -24,3 +24,5 @@ export interface CopilotPageContext {
   productName?: string;
   categoryName?: string;
 }
+
+export type { CopilotStatus } from "@/lib/copilot-stream";

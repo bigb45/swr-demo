@@ -12,7 +12,12 @@ import {
 } from "react";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/components/CartProvider";
-import { consumeSseBody, extractCompletionText } from "@/lib/copilot-stream";
+import {
+  consumeSseBody,
+  deriveCopilotStatus,
+  extractCompletionText,
+  extractStructuredProductReply,
+} from "@/lib/copilot-stream";
 import { parseCopilotAssistantMessage } from "@/lib/copilot-parse";
 import {
   fetchCartSkuQtyMap,
@@ -23,10 +28,20 @@ import {
   applyTeiaCartAction,
   extractTeiaCartOpFromSseObject,
 } from "@/lib/copilot-teia-cart-action";
-import type { CopilotImageAttachment, CopilotMessage, CopilotPageContext } from "./types";
+import type {
+  CopilotImageAttachment,
+  CopilotMessage,
+  CopilotPageContext,
+  CopilotStatus,
+} from "./types";
 
 const SESSION_KEY = "swr_copilot_session_id";
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+
+/** Sliding idle window before a fresh conversation is started. */
+const SESSION_IDLE_TTL_MS = 15 * 60 * 1000;
+/** Absolute lifetime cap regardless of activity. */
+const SESSION_MAX_TTL_MS = 4 * 60 * 60 * 1000;
 
 interface CopilotContextValue {
   open: boolean;
@@ -37,6 +52,7 @@ interface CopilotContextValue {
   draft: string;
   setDraft: (v: string) => void;
   pending: boolean;
+  status: CopilotStatus;
   submitError: string | null;
   imageAttachment: CopilotImageAttachment | null;
   attachImage: (file: File) => Promise<void>;
@@ -61,33 +77,90 @@ function newMsg(
   };
 }
 
+interface StoredSession {
+  id: string;
+  createdAt: number;
+  lastActivityAt: number;
+}
+
+function readStoredSession(): StoredSession | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      typeof (parsed as StoredSession).id === "string" &&
+      typeof (parsed as StoredSession).createdAt === "number" &&
+      typeof (parsed as StoredSession).lastActivityAt === "number"
+    ) {
+      return parsed as StoredSession;
+    }
+  } catch {
+    /** sessionStorage unavailable or legacy plain-string value */
+  }
+  return null;
+}
+
+function writeStoredSession(session: StoredSession): void {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  } catch {
+    /** sessionStorage unavailable */
+  }
+}
+
+function isSessionExpired(session: StoredSession, now: number): boolean {
+  return (
+    now - session.lastActivityAt > SESSION_IDLE_TTL_MS ||
+    now - session.createdAt > SESSION_MAX_TTL_MS
+  );
+}
+
+function mintSession(now: number): StoredSession {
+  const session = { id: crypto.randomUUID(), createdAt: now, lastActivityAt: now };
+  writeStoredSession(session);
+  return session;
+}
+
+/**
+ * Ensure a valid (non-expired) session exists without extending its idle
+ * clock — used on mount so a hard refresh after the idle window still rolls a
+ * fresh conversation.
+ */
+function ensureSessionId(): string {
+  const now = Date.now();
+  const existing = readStoredSession();
+  if (existing && !isSessionExpired(existing, now)) return existing.id;
+  return mintSession(now).id;
+}
+
+/**
+ * Return the active session id for an outbound message, minting a fresh one if
+ * expired and refreshing `lastActivityAt` to slide the idle window forward.
+ */
+function getActiveSessionId(): string {
+  const now = Date.now();
+  const existing = readStoredSession();
+  if (existing && !isSessionExpired(existing, now)) {
+    writeStoredSession({ ...existing, lastActivityAt: now });
+    return existing.id;
+  }
+  return mintSession(now).id;
+}
+
 function useSessionIdReady(): boolean {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     queueMicrotask(() => {
-      try {
-        let id = sessionStorage.getItem(SESSION_KEY);
-        if (!id) {
-          id = crypto.randomUUID();
-          sessionStorage.setItem(SESSION_KEY, id);
-        }
-      } catch {
-        /** sessionStorage unavailable */
-      }
+      ensureSessionId();
       setReady(true);
     });
   }, []);
 
   return ready;
-}
-
-function readSessionId(): string {
-  try {
-    return sessionStorage.getItem(SESSION_KEY) ?? "";
-  } catch {
-    return "";
-  }
 }
 
 function fileToDataUrl(file: File): Promise<string> {
@@ -152,6 +225,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<CopilotMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState<CopilotStatus>("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [imageAttachment, setImageAttachment] =
     useState<CopilotImageAttachment | null>(null);
@@ -189,11 +263,18 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const enrichAssistantMessage = useCallback(
-    async (messageId: string, finalText: string, userQuery: string) => {
+    async (
+      messageId: string,
+      finalText: string,
+      userQuery: string,
+      structured?: { message: string; skus: string[] } | null,
+    ) => {
       const { displayText, skus } = parseCopilotAssistantMessage(finalText);
-      const text = displayText.trim() || finalText.trim();
+      const structuredSkus = structured?.skus ?? [];
+      const text =
+        structured?.message?.trim() || displayText.trim() || finalText.trim();
 
-      let widgetSkus = skus;
+      let widgetSkus = structuredSkus.length > 0 ? structuredSkus : skus;
       let usedFallback = false;
       if (widgetSkus.length === 0 && userQuery.trim().length >= 2) {
         const fallback = await fetchFallbackSkus(userQuery);
@@ -262,7 +343,12 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const tryRestCompletion = useCallback(
-    async (body: Record<string, unknown>): Promise<string> => {
+    async (
+      body: Record<string, unknown>,
+    ): Promise<{
+      text: string;
+      structured: { message: string; skus: string[] } | null;
+    }> => {
       const fallback = await fetch("/api/copilot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -274,9 +360,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
         throw new Error(text.slice(0, 400) || t("errorGeneric"));
       }
       try {
-        return extractCompletionText(JSON.parse(text));
+        const parsedJson = JSON.parse(text);
+        return {
+          text: extractCompletionText(parsedJson),
+          structured: extractStructuredProductReply(parsedJson),
+        };
       } catch {
-        return text;
+        return { text, structured: null };
       }
     },
     [t],
@@ -297,7 +387,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        const session_id = readSessionId();
+        const session_id = getActiveSessionId();
         if (!session_id) {
           setSubmitError(t("sessionInitializing"));
           return;
@@ -338,6 +428,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
         setMessages((prev) => [...prev, userMsg, assistantSkeleton]);
         setPending(true);
+        setStatus(attachment ? "analyzingImage" : "thinking");
 
         const body: Record<string, unknown> = {
           session_id,
@@ -371,10 +462,14 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
         const fallbackOrThrow = async (reason?: Error): Promise<void> => {
           discardStreamingAssistant();
           try {
-            const reply = await tryRestCompletion(body);
-            if (!reply.trim()) throw new Error(t("emptyReply"));
+            const { text: reply, structured } = await tryRestCompletion(body);
+            const structuredSkus = structured?.skus ?? [];
+            if (!reply.trim() && structuredSkus.length === 0) {
+              throw new Error(t("emptyReply"));
+            }
             const parsed = parseCopilotAssistantMessage(reply.trim());
-            let widgetSkus = parsed.skus;
+            let widgetSkus =
+              structuredSkus.length > 0 ? structuredSkus : parsed.skus;
             let usedFallback = false;
             if (widgetSkus.length === 0 && trimmed.trim().length >= 2) {
               const fb = await fetchFallbackSkus(trimmed);
@@ -383,7 +478,10 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 usedFallback = true;
               }
             }
-            const baseText = parsed.displayText.trim() || reply.trim();
+            const baseText =
+              structured?.message?.trim() ||
+              parsed.displayText.trim() ||
+              reply.trim();
             setMessages((prev) => [
               ...prev,
               newMsg({
@@ -426,6 +524,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           let teiaCartOp: ReturnType<
             typeof extractTeiaCartOpFromSseObject
           > = null;
+          let structuredReply: ReturnType<
+            typeof extractStructuredProductReply
+          > = null;
 
           if (ctype.includes("text/event-stream")) {
             let gotChunk = false;
@@ -438,19 +539,25 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 }
                 patchStreamingAssistant(chunk);
               },
-              (obj) => {
+              (obj, eventName) => {
+                const nextStatus = deriveCopilotStatus(eventName, obj);
+                if (nextStatus) setStatus(nextStatus);
                 if (obj.done === true) {
                   const extracted = extractTeiaCartOpFromSseObject(obj);
                   if (extracted) teiaCartOp = extracted;
                 }
+                const structured = extractStructuredProductReply(obj);
+                if (structured) structuredReply = structured;
               },
             );
-            streamSucceeded = gotChunk;
+            streamSucceeded = gotChunk || structuredReply !== null;
           } else {
             const raw = await streamRes.text().catch(() => "");
             let appended = "";
             try {
-              appended = extractCompletionText(JSON.parse(raw));
+              const parsedJson = JSON.parse(raw);
+              appended = extractCompletionText(parsedJson);
+              structuredReply = extractStructuredProductReply(parsedJson);
             } catch {
               appended = raw;
             }
@@ -459,6 +566,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               patchStreamingAssistant(appended);
               streamSucceeded = true;
             }
+            if (structuredReply !== null) streamSucceeded = true;
           }
 
           if (streamSucceeded) {
@@ -476,7 +584,12 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 setSubmitError(t("cartReconcileFailed", { detail }));
               }
             }
-            await enrichAssistantMessage(assistantId, assistantText, trimmed);
+            await enrichAssistantMessage(
+              assistantId,
+              assistantText,
+              trimmed,
+              structuredReply,
+            );
             await finalizeCartAfterAgentReply();
             return;
           }
@@ -490,6 +603,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       } finally {
         submitBusyRef.current = false;
         setPending(false);
+        setStatus("idle");
         finalizeStreamingAssistant();
       }
     },
@@ -546,6 +660,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       draft,
       setDraft,
       pending,
+      status,
       submitError,
       imageAttachment,
       attachImage,
@@ -563,6 +678,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       messages,
       draft,
       pending,
+      status,
       submitError,
       imageAttachment,
       attachImage,

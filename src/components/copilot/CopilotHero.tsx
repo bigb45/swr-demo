@@ -115,7 +115,7 @@ export default function CopilotHero() {
                   key={chip.key}
                   type="button"
                   onClick={() => void openWithMessage(chip.prompt)}
-                  className="px-3 py-2 text-xs sm:text-sm font-semibold bg-primary-container text-on-primary-container hover:brightness-110 transition-colors text-left"
+                  className="px-3 py-2 text-xs sm:text-sm font-semibold bg-primary-container text-on-primary hover:brightness-110 transition-colors text-left"
                   style={{ borderRadius: "var(--radius-btn)" }}
                 >
                   {chip.label}

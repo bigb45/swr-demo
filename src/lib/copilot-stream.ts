@@ -163,12 +163,44 @@ export function parseTeiaStructuredResponse(
   };
 }
 
-/** Incrementally read `text/event-stream` from a fetch Response body. */
+/**
+ * Reads the new product reply envelope `{ reply, intent, action, response }`
+ * (stream `done` event or non-stream JSON body). Tolerates being handed the
+ * inner `response` object directly. Returns the structured SKUs (from
+ * `response.items[].sku`) plus a display message, or null when neither present.
+ */
+export function extractStructuredProductReply(
+  envelope: unknown,
+): { message: string; skus: string[] } | null {
+  if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
+    return null;
+  }
+  const o = envelope as Record<string, unknown>;
+  const response =
+    o.response && typeof o.response === "object" ? o.response : o;
+  const parsed = parseTeiaStructuredResponse(response);
+
+  if (parsed.skus.length === 0 && !parsed.displayText) return null;
+
+  const replyText =
+    parsed.displayText ||
+    (typeof o.reply === "string" ? o.reply.trim() : "");
+
+  return { message: replyText, skus: parsed.skus };
+}
+
+/**
+ * Incrementally read `text/event-stream` from a fetch Response body.
+ *
+ * Tracks the SSE `event:` name across the lines of one event so progress
+ * frames (`tool_call`, `artifact`, `delta`, …) can be mapped to a status
+ * phase. The event name resets on the blank line that terminates each event.
+ */
 export async function consumeSseBody(
   res: Response,
   onChunk: (s: string) => void,
   /** Called for each `data:` line that parses as a JSON object (e.g. Teia `done` + `action`). */
-  onDataObject?: (obj: Record<string, unknown>) => void,
+  onDataObject?: (obj: Record<string, unknown>, eventName: string) => void,
 ): Promise<void> {
   const reader = res.body?.getReader();
   if (!reader) {
@@ -176,15 +208,24 @@ export async function consumeSseBody(
   }
   const dec = new TextDecoder();
   let buf = "";
+  let currentEvent = "";
 
   const handleLine = (line: string) => {
+    if (line === "") {
+      currentEvent = "";
+      return;
+    }
+    if (line.startsWith("event:")) {
+      currentEvent = line.slice(6).trim();
+      return;
+    }
     if (!line.startsWith("data:")) return;
     const raw = line.slice(5).trim();
     if (onDataObject && raw.startsWith("{")) {
       try {
         const parsed: unknown = JSON.parse(raw);
         if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-          onDataObject(parsed as Record<string, unknown>);
+          onDataObject(parsed as Record<string, unknown>, currentEvent);
         }
       } catch {
         /** not JSON */
@@ -212,4 +253,59 @@ export async function consumeSseBody(
   } finally {
     reader.releaseLock();
   }
+}
+
+export type CopilotStatus =
+  | "idle"
+  | "thinking"
+  | "searching"
+  | "findingProducts"
+  | "updatingCart"
+  | "analyzingImage"
+  | "working";
+
+function readToolName(obj: Record<string, unknown>): string {
+  for (const key of ["name", "tool", "tool_name", "function"]) {
+    const v = obj[key];
+    if (typeof v === "string" && v.trim()) return v.trim().toLowerCase();
+  }
+  return "";
+}
+
+/**
+ * Map a Teia SSE progress frame to a UI status phase. Works whether the type
+ * is on the `event:` line or implied by the data payload shape. Returns the
+ * next status, or `null` when the frame carries no phase signal.
+ */
+export function deriveCopilotStatus(
+  eventName: string,
+  obj: Record<string, unknown>,
+): CopilotStatus | null {
+  const evt = eventName.trim().toLowerCase();
+
+  // Answer tokens streaming -> the reply is now visible, clear the status row.
+  if (evt === "delta" || typeof obj.text === "string") return "idle";
+
+  // Product results arrived.
+  if (
+    evt === "artifact" ||
+    obj.type === "product_list" ||
+    Array.isArray((obj as { items?: unknown }).items)
+  ) {
+    return "findingProducts";
+  }
+
+  // A tool is being invoked.
+  const looksLikeToolCall =
+    evt === "tool_call" ||
+    evt === "tool" ||
+    (typeof obj.name === "string" && "arguments" in obj);
+  if (looksLikeToolCall) {
+    const tool = readToolName(obj);
+    if (/cart/.test(tool)) return "updatingCart";
+    if (/search|find|lookup|catalog|product/.test(tool)) return "searching";
+    return "working";
+  }
+
+  return null;
 }

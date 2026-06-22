@@ -41,12 +41,11 @@ export default function CopilotHeaderTrigger({
     <button
       type="button"
       onClick={toggle}
-      className={`inline-flex items-center gap-2 px-3 py-2.5 text-sm font-bold transition-colors md:px-4 md:py-2.5 border border-primary/15 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-[var(--radius-btn)] border border-primary/15 px-3 py-2.5 text-sm font-bold text-primary transition-colors md:px-4 md:py-2.5 ${
+        open ? "bg-surface-container-low" : "bg-surface-container-lowest"
+      } ${className}`}
       style={{
-        color: "#003a63",
-        borderRadius: "var(--radius-btn)",
         boxShadow: open ? undefined : ("var(--shadow-ambient)" as const),
-        backgroundColor: open ? "#f3f3f3" : "#ffffff",
       }}
       aria-expanded={open}
       aria-controls="swr-copilot-panel-root"
