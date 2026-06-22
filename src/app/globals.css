@@ -129,6 +129,36 @@
  */
 
 /* ---------------------------------------------------------------------------
+ * Search dropdown "busy" border — animated moving primary gradient shown
+ * only while results are being fetched (text or visual search).
+ * Thin wrapper ring around the panel; respects reduced-motion.
+ * ------------------------------------------------------------------------- */
+@keyframes searchbar-border-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.searchbar-busy-border {
+  padding: 1.5px;
+  background-image: linear-gradient(
+    115deg,
+    var(--color-primary) 0%,
+    var(--color-primary-container) 18%,
+    var(--color-surface-tint) 36%,
+    var(--color-primary-fixed) 50%,
+    var(--color-surface-tint) 64%,
+    var(--color-primary-container) 82%,
+    var(--color-primary) 100%
+  );
+  background-size: 200% 100%;
+  animation: searchbar-border-pan 2s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .searchbar-busy-border {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * swr-prose — rich-text styles for Magento CMS content.
  * Tuned to DESIGN.md tokens, dense B2B rhythm (no extra whitespace).
  * ------------------------------------------------------------------------- */

@@ -390,9 +390,12 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
 
       {showSuggestionsPanel ? (
         <div
-          className="absolute left-0 right-0 top-full mt-1 overflow-hidden rounded-card bg-surface-container-lowest border border-outline-variant/25 max-h-[min(70vh,28rem)] flex flex-col"
+          className={`absolute left-0 right-0 top-full mt-1 rounded-card ${panelBusy ? "searchbar-busy-border" : ""}`}
           style={{ boxShadow: "0 10px 30px rgba(26,28,28,0.06)" }}
           onMouseDown={(e) => e.preventDefault()}
+        >
+        <div
+          className={`overflow-hidden rounded-card bg-surface-container-lowest max-h-[min(70vh,28rem)] flex flex-col ${panelBusy ? "" : "border border-outline-variant/25"}`}
         >
           {assistantVisualNote && fromVisualSearch && !panelError ? (
             <div className="max-h-28 overflow-y-auto px-3 py-2 text-xs text-on-surface-variant border-b border-outline-variant/20 bg-surface-container-low">
@@ -444,6 +447,7 @@ export default function SearchBar({ compact = false }: SearchBarProps) {
               </Link>
             </div>
           ) : null}
+        </div>
         </div>
       ) : null}
     </div>
