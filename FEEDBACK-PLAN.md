@@ -374,9 +374,11 @@ Covered in **A8**, **A9**, **A10**. Additional homepage note:
 
 ---
 
-### D6 · Site requests access to apps/data on device
+### D6 · Site requests access to apps/data on device — ✅ Verified clean
 
 **Problem:** Browser permission prompt: “Access other apps and services on this device.”
+
+**Resolution (Jun 2026):** Static `src/` audit + live runtime instrumentation confirm the app triggers **no** permission/device APIs. Wrapped `navigator.{serial,usb,bluetooth,hid,mediaDevices,geolocation}`, `registerProtocolHandler`, `Notification.requestPermission`, `permissions.query`, and `window.open` via `Page.addScriptToEvaluateOnNewDocument`, then loaded `/de/products` and `/de` (CopilotHero) — recorded zero calls after load + a 2.5s settle. No iframes/`<object>`/`<embed>`, no PWA manifest, no service worker, no custom URL schemes (only `tel:`/`mailto:`). Prompt was not originating from app code (extension or Vercel-preview runtime). Incidental fix: `Header.tsx` `tel:` href was missing a digit (`…16037` → `…160370`).
 
 **Plan:**
 1. Audit all client APIs: `navigator.serial`, `navigator.usb`, `navigator.bluetooth`, `getDisplayMedia`, protocol handlers, PWA install prompts.
@@ -519,7 +521,7 @@ D8, A4 (category-specific facets with backend attrs)
 - [x] Watchlist: heart toggle persists (localStorage), header count badge, `/watchlist` page add/remove/clear
 - [x] Homepage: partners carousel visible without scroll; catalog rail removed
 - [x] Copilot visible with essential-only cookies (Edge)
-- [~] No device permission prompt on load — `src/` audit clean (QA.md D6); live Edge retest still open
+- [x] No device permission prompt on load — `src/` audit clean + live runtime audit (Jun 2026): `/de/products` and `/de` make **zero** device/permission API calls (instrumented `navigator.serial|usb|bluetooth|hid|mediaDevices|geolocation`, `registerProtocolHandler`, `Notification.requestPermission`, `permissions.query`, `window.open`); no iframes/manifest/service-worker; only `tel:`/`mailto:` schemes. Chromium engine (Cursor browser) = same engine as Edge. Original prompt attributable to extension/preview runtime, not app.
 - [x] Copilot search: “makita”, German terms return products — `/api/search/products` verified locally (Jun 2026)
 - [x] Registration includes company
 - [x] Account icon visible Tier 2 desktop + mobile (E1)
