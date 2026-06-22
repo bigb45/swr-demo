@@ -56,6 +56,51 @@ export interface MagentoProductExtensionAttributes {
   salable_quantity?: unknown;
 }
 
+/** A single selectable value of a select-type customizable option. */
+export interface MagentoProductOptionValue {
+  title: string;
+  sort_order: number;
+  price: number;
+  price_type: "fixed" | "percent";
+  option_type_id: number;
+}
+
+/**
+ * Magento product Customizable Option (a.k.a. "custom option"). Distinct from
+ * product attributes / layered navigation — these are per-product add-ons the
+ * shopper picks on the PDP. `values` is present for select-type options
+ * (drop_down/radio/checkbox/multiple); text types (field/area) have none.
+ */
+export interface MagentoProductOption {
+  option_id: number;
+  title: string;
+  type:
+    | "field"
+    | "area"
+    | "drop_down"
+    | "radio"
+    | "checkbox"
+    | "multiple"
+    | "file"
+    | "date"
+    | "date_time"
+    | "time";
+  is_require: boolean;
+  sort_order: number;
+  max_characters?: number;
+  values?: MagentoProductOptionValue[];
+}
+
+/**
+ * Custom-option selection sent to Magento when adding a line to the cart.
+ * `option_value` is the option_type_id (single), comma-joined ids (multi),
+ * or raw text (field/area).
+ */
+export interface MagentoCustomOptionSelection {
+  option_id: string;
+  option_value: string;
+}
+
 export interface MagentoProduct {
   id: number;
   sku: string;
@@ -69,6 +114,7 @@ export interface MagentoProduct {
   media_gallery_entries?: MagentoMediaEntry[];
   custom_attributes?: MagentoCustomAttribute[];
   extension_attributes?: MagentoProductExtensionAttributes;
+  options?: MagentoProductOption[];
 }
 
 export interface MagentoProductList {
@@ -153,6 +199,12 @@ export interface MagentoOrderItem {
   product_type?: string;
   /** Set on children of configurable / bundle parents; skipped when reordering. */
   parent_item_id?: number;
+  /** Selected customizable options carried over from the quote line. */
+  product_option?: {
+    extension_attributes?: {
+      custom_options?: MagentoCustomOptionSelection[];
+    };
+  };
 }
 
 export interface MagentoOrderPayment {

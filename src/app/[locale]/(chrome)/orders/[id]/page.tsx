@@ -7,6 +7,8 @@ import AddressBlock from "@/components/orders/AddressBlock";
 import DocumentsSection from "@/components/orders/DocumentsSection";
 import ReorderButton from "@/components/orders/ReorderButton";
 import { getOrderDocuments, getOrderForCustomer } from "@/lib/orders";
+import { getProductBySku } from "@/lib/magento";
+import { resolveSelectedOptionLabels } from "@/lib/custom-options";
 import { resolveOrderStatus, statusBadgeClasses } from "@/lib/orderStatus";
 import { listCasesForOrder } from "@/lib/service";
 
@@ -57,6 +59,37 @@ export default async function OrderDetailPage({
 
   const visibleItems = order.items.filter(
     (item) => item.price > 0 || item.row_total > 0,
+  );
+
+  // Resolve custom-option ids/text into human-readable labels using each
+  // product's option definitions (order payload only carries ids).
+  const itemsWithOptions = visibleItems.filter(
+    (item) =>
+      (item.product_option?.extension_attributes?.custom_options?.length ?? 0) >
+      0,
+  );
+  const optionProductsBySku = new Map(
+    await Promise.all(
+      [...new Set(itemsWithOptions.map((item) => item.sku))].map(
+        async (sku) => {
+          try {
+            const product = await getProductBySku(sku);
+            return [sku, product.options] as const;
+          } catch {
+            return [sku, undefined] as const;
+          }
+        },
+      ),
+    ),
+  );
+  const selectedOptionsByItemId = new Map(
+    itemsWithOptions.map((item) => [
+      item.item_id,
+      resolveSelectedOptionLabels(
+        item.product_option?.extension_attributes?.custom_options,
+        optionProductsBySku.get(item.sku),
+      ),
+    ]),
   );
 
   // For reorder we intentionally skip child lines of configurable/bundle
@@ -178,6 +211,19 @@ export default async function OrderDetailPage({
               >
                 <td className="px-4 py-3 font-medium text-on-surface">
                   {item.name}
+                  {(selectedOptionsByItemId.get(item.item_id)?.length ?? 0) >
+                  0 ? (
+                    <ul className="mt-1 text-xs font-normal text-on-surface-variant">
+                      {selectedOptionsByItemId
+                        .get(item.item_id)!
+                        .map((opt, idx) => (
+                          <li key={`${opt.label}-${idx}`}>
+                            <span className="font-medium">{opt.label}:</span>{" "}
+                            {opt.value}
+                          </li>
+                        ))}
+                    </ul>
+                  ) : null}
                 </td>
                 <td className="px-4 py-3 text-on-surface-variant">
                   {item.sku}

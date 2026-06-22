@@ -259,6 +259,12 @@
     "browseByCategoryTitle": "Start with a category.",
     "browseByCategoryBody": "The full product range is too large for a useful unfiltered entry point. Choose a category or use search.",
     "noImage": "No image available",
+    "options": {
+      "chooseOption": "Please choose…",
+      "textPlaceholder": "Enter value",
+      "requiredError": "Please select an option.",
+      "optionsTotal": "Price with options"
+    },
     "filter": {
       "heading": "Filters",
       "clearAll": "Clear all",

@@ -6,6 +6,8 @@
 import { NextRequest } from "next/server";
 import { getProductBySku } from "@/lib/magento";
 import { getProductImageUrl } from "@/lib/magento-shared";
+import { resolveSelectedOptionLabels } from "@/lib/custom-options";
+import type { MagentoCustomOptionSelection } from "@/types/magento";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -17,6 +19,11 @@ interface MagentoCartItem {
   price: number;
   product_type: string;
   quote_id: string;
+  product_option?: {
+    extension_attributes?: {
+      custom_options?: MagentoCustomOptionSelection[];
+    };
+  };
 }
 
 export async function POST() {
@@ -67,7 +74,7 @@ export async function GET(req: NextRequest) {
       [...new Set(items.map((item) => item.sku))].map(async (sku) => {
         try {
           const product = await getProductBySku(sku);
-          return [sku, getProductImageUrl(product)] as const;
+          return [sku, product] as const;
         } catch {
           return [sku, null] as const;
         }
@@ -75,9 +82,18 @@ export async function GET(req: NextRequest) {
     ),
   );
 
-  const itemsWithImages = items.map((item) => ({
-    ...item,
-    imageUrl: productsBySku.get(item.sku) ?? null,
-  }));
+  const itemsWithImages = items.map((item) => {
+    const product = productsBySku.get(item.sku) ?? null;
+    const customOptions =
+      item.product_option?.extension_attributes?.custom_options;
+    return {
+      ...item,
+      imageUrl: product ? getProductImageUrl(product) : null,
+      selectedOptions: resolveSelectedOptionLabels(
+        customOptions,
+        product?.options,
+      ),
+    };
+  });
   return Response.json({ items: itemsWithImages, totals });
 }

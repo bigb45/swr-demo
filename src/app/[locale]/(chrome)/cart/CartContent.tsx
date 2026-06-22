@@ -210,6 +210,15 @@ export default function CartContent() {
                         <div className="flex flex-col gap-1 min-w-0">
                           <p className="text-sm font-semibold text-primary leading-snug line-clamp-2">{item.name}</p>
                           <p className="text-xs text-on-surface-variant">{t("skuLabel")}: {item.sku}</p>
+                          {item.selectedOptions && item.selectedOptions.length > 0 ? (
+                            <ul className="text-xs text-on-surface-variant">
+                              {item.selectedOptions.map((opt, idx) => (
+                                <li key={`${opt.label}-${idx}`}>
+                                  <span className="font-medium">{opt.label}:</span> {opt.value}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : null}
                           <CartStockBadge level={item.stockLevel} t={tProducts} />
                         </div>
                       </div>
@@ -244,6 +253,15 @@ export default function CartContent() {
                       <div className="flex-1 min-w-0 flex flex-col gap-2">
                         <p className="text-sm font-semibold text-primary leading-snug line-clamp-2">{item.name}</p>
                         <p className="text-xs text-on-surface-variant">{t("skuLabel")}: {item.sku}</p>
+                          {item.selectedOptions && item.selectedOptions.length > 0 ? (
+                            <ul className="text-xs text-on-surface-variant">
+                              {item.selectedOptions.map((opt, idx) => (
+                                <li key={`${opt.label}-${idx}`}>
+                                  <span className="font-medium">{opt.label}:</span> {opt.value}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : null}
                         <CartStockBadge level={item.stockLevel} t={tProducts} />
                         <div className="flex items-center justify-between mt-1">
                           <QtyStepper

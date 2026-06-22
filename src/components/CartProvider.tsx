@@ -10,7 +10,17 @@ import {
 } from "react";
 import { getProductImageUrl } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
-import type { MagentoProduct, MagentoCartTotals } from "@/types/magento";
+import type {
+  MagentoProduct,
+  MagentoCartTotals,
+  MagentoCustomOptionSelection,
+} from "@/types/magento";
+
+/** Resolved (human-readable) custom-option pick shown on a cart/order line. */
+export interface CartItemSelectedOption {
+  label: string;
+  value: string;
+}
 
 export interface CartItem {
   itemId: number;
@@ -20,6 +30,7 @@ export interface CartItem {
   unitPrice: number;
   qty: number;
   stockLevel: StockLevel;
+  selectedOptions?: CartItemSelectedOption[];
 }
 
 interface MagentoCartItem {
@@ -31,6 +42,7 @@ interface MagentoCartItem {
   product_type: string;
   quote_id: string;
   imageUrl?: string | null;
+  selectedOptions?: CartItemSelectedOption[];
 }
 
 interface CartContextValue {
@@ -45,7 +57,11 @@ interface CartContextValue {
    * users don't see a misleading empty state.
    */
   fetchError: boolean;
-  addItem: (product: MagentoProduct, qty: number) => Promise<void>;
+  addItem: (
+    product: MagentoProduct,
+    qty: number,
+    customOptions?: MagentoCustomOptionSelection[],
+  ) => Promise<void>;
   /**
    * Add a line to the cart by SKU alone. Used for reorder + CSV import where
    * we only have `{sku, qty}` in hand and no full MagentoProduct. Throws on
@@ -200,11 +216,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return newId;
   }, [cartId, fetchCart]);
 
-  const addItem = useCallback(async (product: MagentoProduct, qty: number) => {
+  const addItem = useCallback(async (
+    product: MagentoProduct,
+    qty: number,
+    customOptions?: MagentoCustomOptionSelection[],
+  ) => {
     let id = await ensureCart();
     setCartId(id);
 
-    let res = await postCartItem(id, product.sku, qty);
+    let res = await postCartItem(id, product.sku, qty, customOptions);
 
     if (!res.ok && (await isStaleCartResponse(res))) {
       // Stored cart id no longer exists in Magento — wipe it and retry once
@@ -212,12 +232,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearPersistedCartId();
       id = await ensureCart();
       setCartId(id);
-      res = await postCartItem(id, product.sku, qty);
+      res = await postCartItem(id, product.sku, qty, customOptions);
     }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error ?? "Failed to add item");
+    }
+
+    // With custom options the same SKU can map to multiple distinct quote
+    // lines, and the line carries selected-option labels only via the cart
+    // GET. Refetch to get the authoritative items (correct itemId + resolved
+    // options) instead of the optimistic merge-by-sku below.
+    if (customOptions && customOptions.length > 0) {
+      await res.json().catch(() => ({}));
+      await fetchCart(id);
+      return;
     }
 
     const added: MagentoCartItem = await res.json();
@@ -242,7 +272,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         },
       ];
     });
-  }, []);
+  }, [ensureCart, fetchCart]);
 
   const addBySku = useCallback(async (sku: string, qty: number) => {
     let id = await ensureCart();
@@ -388,15 +418,21 @@ function magentoItemsToCartItems(items: MagentoCartItem[], previous: CartItem[])
       unitPrice: item.price,
       qty: item.qty,
       stockLevel: match?.stockLevel ?? "unknown",
+      selectedOptions: item.selectedOptions ?? match?.selectedOptions,
     };
   });
 }
 
-function postCartItem(cartId: string, sku: string, qty: number): Promise<Response> {
+function postCartItem(
+  cartId: string,
+  sku: string,
+  qty: number,
+  customOptions?: MagentoCustomOptionSelection[],
+): Promise<Response> {
   return fetch("/api/cart/items", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cartId, sku, qty }),
+    body: JSON.stringify({ cartId, sku, qty, customOptions }),
   });
 }
 

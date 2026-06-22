@@ -8,7 +8,15 @@ import { useCart } from "@/components/CartProvider";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
 import WatchlistButton from "@/components/WatchlistButton";
+import ProductCustomOptions from "@/components/ui/ProductCustomOptions";
 import { getProductImageUrl } from "@/lib/magento-shared";
+import {
+  buildCustomOptionsPayload,
+  getMissingRequiredOptions,
+  getSupportedOptions,
+  isSelectOption,
+  type CustomOptionSelectionState,
+} from "@/lib/custom-options";
 import type { MagentoProduct } from "@/types/magento";
 
 interface AddToCartClusterProps {
@@ -29,6 +37,30 @@ export default function AddToCartCluster({
   const [inputVal, setInputVal] = useState("1");
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [optionSelection, setOptionSelection] =
+    useState<CustomOptionSelectionState>({});
+  const [missingOptionIds, setMissingOptionIds] = useState<Set<string>>(
+    new Set(),
+  );
+
+  const supportedOptions = getSupportedOptions(product.options);
+
+  const optionsSurcharge = supportedOptions.reduce((sum, opt) => {
+    if (!isSelectOption(opt.type)) return sum;
+    const raw = optionSelection[String(opt.option_id)];
+    const ids = Array.isArray(raw) ? raw : raw ? [raw] : [];
+    for (const id of ids) {
+      const value = opt.values?.find(
+        (v) => String(v.option_type_id) === id,
+      );
+      if (!value?.price) continue;
+      sum +=
+        value.price_type === "percent"
+          ? (product.price * value.price) / 100
+          : value.price;
+    }
+    return sum;
+  }, 0);
 
   const sortedTiers = [...(product.tier_prices ?? [])].sort(
     (a, b) => a.qty - b.qty,
@@ -57,12 +89,42 @@ export default function AddToCartCluster({
     setInputVal(String(next));
   }
 
+  function handleOptionChange(optionId: string, next: string | string[]) {
+    setOptionSelection((prev) => ({ ...prev, [optionId]: next }));
+    if (missingOptionIds.has(optionId)) {
+      setMissingOptionIds((prev) => {
+        const updated = new Set(prev);
+        updated.delete(optionId);
+        return updated;
+      });
+    }
+  }
+
   async function handleAddToCart() {
     if (hideCatalogPrices) return;
+
+    const missing = getMissingRequiredOptions(product.options, optionSelection);
+    if (missing.length > 0) {
+      setMissingOptionIds(new Set(missing.map((o) => String(o.option_id))));
+      setStatus("error");
+      setErrorMsg(t("options.requiredError"));
+      setTimeout(() => setStatus("idle"), 3000);
+      return;
+    }
+
+    const customOptions = buildCustomOptionsPayload(
+      product.options,
+      optionSelection,
+    );
+
     setStatus("loading");
     setErrorMsg("");
     try {
-      await addItem(product, qty);
+      await addItem(
+        product,
+        qty,
+        customOptions.length > 0 ? customOptions : undefined,
+      );
       setStatus("success");
       setTimeout(() => setStatus("idle"), 2000);
     } catch (err) {
@@ -159,7 +221,27 @@ export default function AddToCartCluster({
       )}
 
       {canAddToCart ? (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
+      {supportedOptions.length > 0 ? (
+        <div className="rounded-(--radius-input) border border-outline-variant/40 bg-surface-container-low p-3">
+          <ProductCustomOptions
+            options={product.options ?? []}
+            value={optionSelection}
+            onChange={handleOptionChange}
+            missingOptionIds={missingOptionIds}
+          />
+          {optionsSurcharge > 0 ? (
+            <div className="mt-3 flex items-baseline justify-between border-t border-outline-variant/40 pt-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
+                {t("options.optionsTotal")}
+              </span>
+              <span className="text-sm font-bold text-on-surface">
+                {formatPrice(currentUnitPrice + optionsSurcharge, locale)}
+              </span>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <div className="flex items-stretch gap-2 min-h-[60px]">
         {/* QTY stepper */}
         <div

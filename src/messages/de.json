@@ -259,6 +259,12 @@
     "browseByCategoryTitle": "Starten Sie mit einer Kategorie.",
     "browseByCategoryBody": "Der komplette Produktbestand ist zu groß für einen sinnvollen Einstieg ohne Filter. Wählen Sie eine Warengruppe oder nutzen Sie die Suche.",
     "noImage": "Kein Bild verfügbar",
+    "options": {
+      "chooseOption": "Bitte wählen…",
+      "textPlaceholder": "Wert eingeben",
+      "requiredError": "Bitte eine Option auswählen.",
+      "optionsTotal": "Preis mit Optionen"
+    },
     "filter": {
       "heading": "Filter",
       "clearAll": "Alle löschen",

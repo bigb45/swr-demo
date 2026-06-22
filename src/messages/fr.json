@@ -259,6 +259,12 @@
     "browseByCategoryTitle": "Commencez par une catégorie.",
     "browseByCategoryBody": "La gamme complète est trop vaste pour une entrée utile sans filtre. Choisissez une catégorie ou utilisez la recherche.",
     "noImage": "Aucune image disponible",
+    "options": {
+      "chooseOption": "Veuillez choisir…",
+      "textPlaceholder": "Saisir une valeur",
+      "requiredError": "Veuillez sélectionner une option.",
+      "optionsTotal": "Prix avec options"
+    },
     "filter": {
       "heading": "Filtres",
       "clearAll": "Tout effacer",
