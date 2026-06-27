@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { Link } from "@/i18n/navigation";
 import type { PartnerBrand } from "@/lib/partners";
 
 interface PartnerLogoCarouselProps {
@@ -30,13 +29,13 @@ export default function PartnerLogoCarousel({
   }
 
   return (
-    <section className="bg-surface-container-low py-14 sm:py-20">
+    <section className="bg-surface-container-lowest py-14 sm:py-20">
       <div className="swr-page-shell flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
+            <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
               {heading}
-            </p>
+            </h2>
             <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
               {subheading}
             </p>
@@ -46,7 +45,7 @@ export default function PartnerLogoCarousel({
               type="button"
               onClick={() => scrollBy(-1)}
               aria-label={previousLabel}
-              className="h-10 w-10 inline-flex items-center justify-center bg-white text-primary hover:bg-primary hover:text-white transition-colors"
+              className="h-10 w-10 inline-flex items-center justify-center bg-white text-primary hover:bg-primary hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -57,7 +56,7 @@ export default function PartnerLogoCarousel({
               type="button"
               onClick={() => scrollBy(1)}
               aria-label={nextLabel}
-              className="h-10 w-10 inline-flex items-center justify-center bg-white text-primary hover:bg-primary hover:text-white transition-colors"
+              className="h-10 w-10 inline-flex items-center justify-center bg-white text-primary hover:bg-primary hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -73,12 +72,9 @@ export default function PartnerLogoCarousel({
           style={{ scrollbarWidth: "thin" }}
         >
           {partners.map((partner) => (
-            <Link
+            <div
               key={partner.slug}
-              href={partner.productHref}
-              aria-disabled="true"
-              onClick={(e) => e.preventDefault()}
-              className="group min-w-[180px] cursor-default bg-surface-container-lowest px-5 py-6 flex flex-col items-center justify-center gap-3 text-center"
+              className="min-w-[180px] bg-surface-container-low px-5 py-6 flex flex-col items-center justify-center gap-3 text-center"
               style={{ borderRadius: "var(--radius-card)" }}
             >
               {partner.logoSrc ? (
@@ -87,17 +83,17 @@ export default function PartnerLogoCarousel({
                   alt={partner.name}
                   width={128}
                   height={56}
-                  className="h-12 w-auto object-contain grayscale group-hover:grayscale-0 transition"
+                  className="h-12 w-auto object-contain grayscale"
                 />
               ) : (
-                <span className="flex h-14 w-14 items-center justify-center bg-primary text-white text-lg font-black tracking-[-0.04em] group-hover:bg-secondary" style={{ borderRadius: "var(--radius-btn)" }}>
+                <span className="flex h-14 w-14 items-center justify-center bg-primary text-white text-lg font-black tracking-[-0.04em]" style={{ borderRadius: "var(--radius-btn)" }}>
                   {partner.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
               <span className="text-sm font-bold uppercase tracking-[0.06em] text-primary">
                 {partner.name}
               </span>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

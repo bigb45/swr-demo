@@ -57,7 +57,7 @@ export default function CopilotHero() {
     <section className="py-14 sm:py-20 bg-surface-container-low">
       <div className="swr-page-shell">
         <div
-          className="flex flex-col gap-6 p-6 sm:p-10 bg-primary text-on-primary shadow-[var(--shadow-ambient)]"
+          className="flex flex-col gap-6 p-6 sm:p-10 bg-primary text-on-primary shadow-(--shadow-ambient)"
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <div className="flex flex-col gap-2 max-w-3xl">
@@ -98,7 +98,7 @@ export default function CopilotHero() {
             <button
               type="button"
               onClick={() => void onSubmit()}
-              className="self-start px-6 py-3 text-sm font-bold uppercase tracking-widest bg-secondary text-on-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)] transition-all"
+              className="self-start px-6 py-3 text-sm font-bold uppercase tracking-widest bg-secondary text-on-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {t("home.submit")}
@@ -115,7 +115,7 @@ export default function CopilotHero() {
                   key={chip.key}
                   type="button"
                   onClick={() => void openWithMessage(chip.prompt)}
-                  className="px-3 py-2 text-xs sm:text-sm font-semibold bg-primary-container text-on-primary hover:brightness-110 transition-colors text-left"
+                  className="px-3 py-2 text-xs sm:text-sm font-semibold bg-primary-container text-on-primary hover:brightness-110 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary text-left"
                   style={{ borderRadius: "var(--radius-btn)" }}
                 >
                   {chip.label}

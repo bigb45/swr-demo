@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
+import { Headset, Wrench, Truck, ArrowRight } from "lucide-react";
 import { getProducts } from "@/lib/magento";
 import {
   Hero,
@@ -21,24 +23,6 @@ interface HomePageProps {
   params: Promise<{ locale: string }>;
 }
 
-const ICON_CONSULTING = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-  </svg>
-);
-const ICON_REPAIR = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-  </svg>
-);
-const ICON_DELIVERY = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="1" y="3" width="15" height="13" />
-    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-    <circle cx="5.5" cy="18.5" r="2.5" />
-    <circle cx="18.5" cy="18.5" r="2.5" />
-  </svg>
-);
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const [t, tNav, tServices, tContact] = await Promise.all([
@@ -48,7 +32,7 @@ export default async function HomePage({ params }: HomePageProps) {
     getTranslations({ locale, namespace: "contact" }),
   ]);
 
-  const productList = await getProducts(6).catch(() => ({ items: [] }));
+  const productList = await getProducts(4).catch(() => ({ items: [] }));
   const products = productList.items;
 
   const realityItems: RealityItem[] = [
@@ -76,21 +60,21 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const servicePillars = [
     {
-      icon: ICON_CONSULTING,
+      icon: <Headset size={26} strokeWidth={1.5} aria-hidden />,
       eyebrow: tServices("consulting.eyebrow"),
       title: tServices("consulting.title"),
       description: t("services.consulting"),
       href: "/services/consulting",
     },
     {
-      icon: ICON_REPAIR,
+      icon: <Wrench size={26} strokeWidth={1.5} aria-hidden />,
       eyebrow: tServices("repair.eyebrow"),
       title: tServices("repair.title"),
       description: t("services.repair"),
       href: "/services/repair",
     },
     {
-      icon: ICON_DELIVERY,
+      icon: <Truck size={26} strokeWidth={1.5} aria-hidden />,
       eyebrow: tServices("delivery.eyebrow"),
       title: tServices("delivery.title"),
       description: t("services.delivery"),
@@ -98,20 +82,47 @@ export default async function HomePage({ params }: HomePageProps) {
     },
   ];
 
+  const heroMedia = (
+    <div className="relative mx-auto w-full max-w-md">
+      <div
+        aria-hidden
+        className="absolute inset-0 translate-x-4 translate-y-4 border border-white/15"
+        style={{ borderRadius: "var(--radius-card)" }}
+      />
+      <div
+        className="relative overflow-hidden ring-1 ring-white/15"
+        style={{
+          borderRadius: "var(--radius-card)",
+          boxShadow: "0 30px 60px rgba(0,18,40,0.45)",
+        }}
+      >
+        <Image
+          src="/hero-valve.png"
+          alt=""
+          width={620}
+          height={620}
+          priority
+          className="h-auto w-full object-cover"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Hero
         eyebrow={t("hero.eyebrow")}
         title={t("hero.title")}
         subtitle={t("hero.subtitle")}
+        media={heroMedia}
       >
         <Cta href="/shop" label={t("hero.openShop")} variant="primary" />
         <Cta href="/catalog" label={t("hero.openCatalog")} variant="white" />
       </Hero>
 
-      {/* Featured products */}
-      <div className="bg-surface-container-low py-14 sm:py-20">
-        <div className="swr-page-shell">
+      {/* Live shop slice */}
+      <section className="bg-surface-container-low py-14 sm:py-20">
+        <div className="swr-page-shell swr-reveal">
           <FeaturedProductsRail
             heading={t("featured.heading")}
             subheading={t("featured.subheading")}
@@ -120,7 +131,7 @@ export default async function HomePage({ params }: HomePageProps) {
             viewAllLabel={t("featured.cta")}
           />
         </div>
-      </div>
+      </section>
 
       <RealityStrip heading={t("reality.heading")} items={realityItems} />
 
@@ -134,70 +145,75 @@ export default async function HomePage({ params }: HomePageProps) {
         nextLabel={t("partners.next")}
       />
 
-      {/* Services pillars */}
+      {/* Service commitments */}
       <section className="bg-surface-container-low py-14 sm:py-20">
         <div className="swr-page-shell flex flex-col gap-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div className="swr-reveal flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
+              <p className="mb-2 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+                <span aria-hidden className="inline-block h-1.5 w-1.5 bg-secondary" />
                 {t("services.eyebrow")}
               </p>
-              <h2 className="text-2xl sm:text-4xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
+              <h2 className="text-2xl font-black uppercase leading-tight tracking-[-0.02em] text-primary sm:text-4xl">
                 {t("services.heading")}
               </h2>
-              <p className="mt-3 text-sm sm:text-base text-on-surface-variant leading-relaxed">
+              <p className="mt-3 text-sm leading-relaxed text-on-surface-variant sm:text-base">
                 {t("services.subheading")}
               </p>
             </div>
             <Link
               href="/services"
-              className="text-xs font-bold uppercase tracking-[0.08em] text-primary hover:underline whitespace-nowrap inline-flex items-center gap-1.5"
+              className="group inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-bold uppercase tracking-[0.08em] text-primary hover:underline"
             >
               {t("services.cta")}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-0.5"
+                aria-hidden
+              />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {servicePillars.map((p) => (
-              <ServiceCard
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            {servicePillars.map((p, i) => (
+              <div
                 key={p.href}
-                icon={p.icon}
-                eyebrow={p.eyebrow}
-                title={p.title}
-                description={p.description}
-                href={p.href}
-                ctaLabel={tServices("hub.learnMore")}
-              />
+                className="swr-reveal swr-lift h-full"
+                style={{ animationDelay: `${i * 0.05}s` }}
+              >
+                <ServiceCard
+                  icon={p.icon}
+                  eyebrow={p.eyebrow}
+                  title={p.title}
+                  description={p.description}
+                  href={p.href}
+                  ctaLabel={tServices("hub.learnMore")}
+                />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Real people */}
+      {/* The people behind the shop */}
       <section className="py-14 sm:py-20">
-        <div className="swr-page-shell grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 items-center">
-          <div className="flex flex-col gap-3 max-w-md">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-              {t("people.eyebrow")}
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
+        <div className="swr-page-shell swr-reveal grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
+          <div className="flex max-w-md flex-col gap-3">
+            <h2 className="text-2xl font-black uppercase leading-tight tracking-[-0.02em] text-primary sm:text-3xl">
               {t("people.heading")}
             </h2>
-            <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+            <p className="text-sm leading-relaxed text-on-surface-variant sm:text-base">
               {t("people.body")}
             </p>
             <Link
               href="/about"
-              className="mt-2 text-xs font-bold uppercase tracking-[0.08em] text-primary hover:underline inline-flex items-center gap-1.5 self-start"
+              className="group mt-2 inline-flex items-center gap-1.5 self-start text-xs font-bold uppercase tracking-[0.08em] text-primary hover:underline"
             >
               {t("people.cta")}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-0.5"
+                aria-hidden
+              />
             </Link>
           </div>
           <PersonCard
@@ -211,7 +227,6 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       <WorkshopBlock
-        eyebrow={t("workshop.eyebrow")}
         heading={t("workshop.heading")}
         body={t("workshop.body")}
         contactLines={[
@@ -231,7 +246,11 @@ export default async function HomePage({ params }: HomePageProps) {
           },
         ]}
       >
-        <Cta href="/contact" label={tNav("bookConsultation")} variant="primary" />
+        <Cta
+          href="/contact"
+          label={tNav("bookConsultation")}
+          variant="primary"
+        />
         <Cta href="/shop" label={tNav("allProducts")} variant="ghost" />
       </WorkshopBlock>
     </>

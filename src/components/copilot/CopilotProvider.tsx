@@ -19,6 +19,7 @@ import {
   extractStructuredProductReply,
 } from "@/lib/copilot-stream";
 import { parseCopilotAssistantMessage } from "@/lib/copilot-parse";
+import { mapSessionHistory } from "@/lib/copilot-history";
 import {
   fetchCartSkuQtyMap,
   parseAddToCartIntents,
@@ -38,10 +39,12 @@ import type {
 const SESSION_KEY = "swr_copilot_session_id";
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
-/** Sliding idle window before a fresh conversation is started. */
-const SESSION_IDLE_TTL_MS = 15 * 60 * 1000;
-/** Absolute lifetime cap regardless of activity. */
-const SESSION_MAX_TTL_MS = 4 * 60 * 60 * 1000;
+/**
+ * Client-side idle window, mirroring Teia's `CHAT_SESSION_TTL` (default 3600s,
+ * refreshed each turn). Used as a fast pre-filter before asking the backend to
+ * restore; the backend `404` remains authoritative for true expiry.
+ */
+const SESSION_TTL_MS = 60 * 60 * 1000;
 
 interface CopilotContextValue {
   open: boolean;
@@ -53,6 +56,9 @@ interface CopilotContextValue {
   setDraft: (v: string) => void;
   pending: boolean;
   status: CopilotStatus;
+  restoring: boolean;
+  sessionNotice: string | null;
+  dismissSessionNotice: () => void;
   submitError: string | null;
   imageAttachment: CopilotImageAttachment | null;
   attachImage: (file: File) => Promise<void>;
@@ -79,7 +85,6 @@ function newMsg(
 
 interface StoredSession {
   id: string;
-  createdAt: number;
   lastActivityAt: number;
 }
 
@@ -92,13 +97,12 @@ function readStoredSession(): StoredSession | null {
       parsed &&
       typeof parsed === "object" &&
       typeof (parsed as StoredSession).id === "string" &&
-      typeof (parsed as StoredSession).createdAt === "number" &&
       typeof (parsed as StoredSession).lastActivityAt === "number"
     ) {
       return parsed as StoredSession;
     }
   } catch {
-    /** sessionStorage unavailable or legacy plain-string value */
+    /** sessionStorage unavailable or legacy value */
   }
   return null;
 }
@@ -111,56 +115,23 @@ function writeStoredSession(session: StoredSession): void {
   }
 }
 
-function isSessionExpired(session: StoredSession, now: number): boolean {
-  return (
-    now - session.lastActivityAt > SESSION_IDLE_TTL_MS ||
-    now - session.createdAt > SESSION_MAX_TTL_MS
-  );
+function clearStoredSession(): void {
+  try {
+    sessionStorage.removeItem(SESSION_KEY);
+  } catch {
+    /** sessionStorage unavailable */
+  }
 }
 
 function mintSession(now: number): StoredSession {
-  const session = { id: crypto.randomUUID(), createdAt: now, lastActivityAt: now };
+  const session = { id: crypto.randomUUID(), lastActivityAt: now };
   writeStoredSession(session);
   return session;
 }
 
-/**
- * Ensure a valid (non-expired) session exists without extending its idle
- * clock — used on mount so a hard refresh after the idle window still rolls a
- * fresh conversation.
- */
-function ensureSessionId(): string {
-  const now = Date.now();
-  const existing = readStoredSession();
-  if (existing && !isSessionExpired(existing, now)) return existing.id;
-  return mintSession(now).id;
-}
-
-/**
- * Return the active session id for an outbound message, minting a fresh one if
- * expired and refreshing `lastActivityAt` to slide the idle window forward.
- */
-function getActiveSessionId(): string {
-  const now = Date.now();
-  const existing = readStoredSession();
-  if (existing && !isSessionExpired(existing, now)) {
-    writeStoredSession({ ...existing, lastActivityAt: now });
-    return existing.id;
-  }
-  return mintSession(now).id;
-}
-
-function useSessionIdReady(): boolean {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    queueMicrotask(() => {
-      ensureSessionId();
-      setReady(true);
-    });
-  }, []);
-
-  return ready;
+/** Slide the idle window forward for the active id (mirrors Teia's per-turn TTL refresh). */
+function touchStoredSession(id: string, now: number): void {
+  writeStoredSession({ id, lastActivityAt: now });
 }
 
 function fileToDataUrl(file: File): Promise<string> {
@@ -219,13 +190,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
     updateQty,
     removeItem,
   } = useCart();
-  const sessionBootstrap = useSessionIdReady();
-
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<CopilotMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<CopilotStatus>("idle");
+  const [restoring, setRestoring] = useState(true);
+  const [sessionNotice, setSessionNotice] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [imageAttachment, setImageAttachment] =
     useState<CopilotImageAttachment | null>(null);
@@ -235,6 +206,92 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
   const streamingAssistantIdRef = useRef<string | null>(null);
   const submitBusyRef = useRef(false);
+  const sessionIdRef = useRef<string | null>(null);
+
+  /** Keep `t` reachable from the once-only mount effect without re-running it. */
+  const tRef = useRef(t);
+  useEffect(() => {
+    tRef.current = t;
+  }, [t]);
+
+  const dismissSessionNotice = useCallback(() => setSessionNotice(null), []);
+
+  /**
+   * On mount: resolve the session and replay its transcript.
+   * - no stored id           -> fresh session, empty chat
+   * - stored but past 1h TTL  -> fresh session + notice (skip the network call)
+   * - stored and fresh        -> GET history; 200 replays it, 404 rolls a new
+   *                              session + notice, a network error keeps the id
+   *                              (backend may still hold context).
+   */
+  useEffect(() => {
+    let cancelled = false;
+    const now = Date.now();
+
+    const adopt = (id: string) => {
+      sessionIdRef.current = id;
+    };
+
+    const startFresh = (notify: boolean) => {
+      clearStoredSession();
+      const minted = mintSession(now);
+      if (cancelled) return;
+      adopt(minted.id);
+      if (notify) setSessionNotice(tRef.current("sessionExpiredNotice"));
+      setRestoring(false);
+    };
+
+    const stored = readStoredSession();
+
+    if (!stored) {
+      const minted = mintSession(now);
+      if (!cancelled) {
+        adopt(minted.id);
+        setRestoring(false);
+      }
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    if (now - stored.lastActivityAt > SESSION_TTL_MS) {
+      startFresh(true);
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/copilot/chat/sessions/${encodeURIComponent(stored.id)}`,
+          { cache: "no-store" },
+        );
+        if (cancelled) return;
+        if (res.ok) {
+          const data: unknown = await res.json().catch(() => null);
+          const restored = mapSessionHistory(data);
+          if (cancelled) return;
+          adopt(stored.id);
+          if (restored.length > 0) setMessages(restored);
+          setRestoring(false);
+          return;
+        }
+        // 404 (expired/missing) or other non-OK -> roll a fresh conversation.
+        startFresh(true);
+      } catch {
+        // Transient network error: keep the id so the backend can continue
+        // context on the next turn; don't wipe a possibly-valid session.
+        if (cancelled) return;
+        adopt(stored.id);
+        setRestoring(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const patchStreamingAssistant = useCallback((append: string) => {
     const id = streamingAssistantIdRef.current;
@@ -382,16 +439,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       try {
         setSubmitError(null);
 
-        if (!sessionBootstrap) {
+        const session_id = sessionIdRef.current;
+        if (restoring || !session_id) {
           setSubmitError(t("sessionInitializing"));
           return;
         }
-
-        const session_id = getActiveSessionId();
-        if (!session_id) {
-          setSubmitError(t("sessionInitializing"));
-          return;
-        }
+        // Slide the idle window forward, mirroring Teia's per-turn TTL refresh.
+        touchStoredSession(session_id, Date.now());
 
         let guestCartId: string;
         try {
@@ -616,7 +670,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       getOrCreateCartId,
       patchStreamingAssistant,
       refreshTotals,
-      sessionBootstrap,
+      restoring,
       t,
       tryRestCompletion,
       updateQty,
@@ -661,6 +715,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       setDraft,
       pending,
       status,
+      restoring,
+      sessionNotice,
+      dismissSessionNotice,
       submitError,
       imageAttachment,
       attachImage,
@@ -679,6 +736,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       draft,
       pending,
       status,
+      restoring,
+      sessionNotice,
+      dismissSessionNotice,
       submitError,
       imageAttachment,
       attachImage,

@@ -31,7 +31,7 @@ export default function RealityStrip({ heading, items }: RealityStripProps) {
                 {item.label}
               </dt>
               {item.sublabel ? (
-                <p className="text-xs text-white/60 leading-relaxed">
+                <p className="text-xs text-white/75 leading-relaxed">
                   {item.sublabel}
                 </p>
               ) : null}

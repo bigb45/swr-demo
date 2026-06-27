@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -88,6 +89,9 @@ export default function CopilotPanel() {
     setDraft,
     pending,
     status,
+    restoring,
+    sessionNotice,
+    dismissSessionNotice,
     submitError,
     imageAttachment,
     attachImage,
@@ -101,7 +105,15 @@ export default function CopilotPanel() {
   const rootRef = useRef<HTMLElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const pinnedRef = useRef(true);
+  const lastScrollTopRef = useRef(0);
+  const reducedMotionRef = useRef(false);
+  const narrowViewportRef = useRef(false);
+  const followRafRef = useRef<number | null>(null);
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [showJump, setShowJump] = useState(false);
 
   /** Panel only mounts while the dock is open — keep focus contained in the sheet. */
   useCopilotFocusTrap(true, rootRef);
@@ -109,6 +121,127 @@ export default function CopilotPanel() {
   useLayoutEffect(() => {
     textareaRef.current?.focus({ preventScroll: true });
   }, []);
+
+  /**
+   * ChatGPT-style: once a reply finishes (composer re-enables), put the cursor
+   * back in the input so the user can immediately keep typing.
+   */
+  const prevPendingRef = useRef(pending);
+  useEffect(() => {
+    if (prevPendingRef.current && !pending) {
+      textareaRef.current?.focus({ preventScroll: true });
+    }
+    prevPendingRef.current = pending;
+  }, [pending]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // Below `lg` (1024px) the dock is a full-screen sheet sized with dynamic
+    // viewport height; smooth scrolling there fights the mobile URL-bar resize
+    // and oscillates, so the auto-follow snaps instantly on narrow viewports.
+    const narrow = window.matchMedia("(max-width: 1023px)");
+    const sync = () => {
+      reducedMotionRef.current = motion.matches;
+      narrowViewportRef.current = narrow.matches;
+    };
+    sync();
+    motion.addEventListener("change", sync);
+    narrow.addEventListener("change", sync);
+    return () => {
+      motion.removeEventListener("change", sync);
+      narrow.removeEventListener("change", sync);
+    };
+  }, []);
+
+  const PIN_THRESHOLD = 64;
+  /** Treat as "already at the bottom" within this slack to avoid redundant scrolls. */
+  const AT_BOTTOM_EPSILON = 4;
+
+  const followBehavior = useCallback((): ScrollBehavior => {
+    return reducedMotionRef.current || narrowViewportRef.current
+      ? "auto"
+      : "smooth";
+  }, []);
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
+
+  /**
+   * Re-pin only when the view actually reaches the bottom. Unpinning is driven
+   * solely by the user scrolling UP — detected as a decrease in scrollTop, which
+   * our own auto-scroll (always downward) can never produce. This keeps the
+   * smart-pin working even while content height grows during streaming.
+   */
+  const onThreadScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const top = el.scrollTop;
+    const scrolledUp = top < lastScrollTopRef.current - 1;
+    lastScrollTopRef.current = top;
+
+    if (scrolledUp) {
+      pinnedRef.current = false;
+      setShowJump(true);
+      return;
+    }
+    const distance = el.scrollHeight - top - el.clientHeight;
+    if (distance < PIN_THRESHOLD) {
+      pinnedRef.current = true;
+      setShowJump(false);
+    }
+  }, []);
+
+  const jumpToLatest = useCallback(() => {
+    pinnedRef.current = true;
+    setShowJump(false);
+    scrollToBottom(followBehavior());
+  }, [scrollToBottom, followBehavior]);
+
+  /** Open an existing thread already scrolled to the newest message. */
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+      lastScrollTopRef.current = el.scrollTop;
+    }
+  }, []);
+
+  /**
+   * Follow the bottom whenever the thread's content height changes — covers
+   * streamed tokens, newly added bubbles, and async-loaded product widgets
+   * (whose cards grow from a loading placeholder after the text has settled).
+   */
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      if (!pinnedRef.current) return;
+      // Coalesce bursts of resize callbacks (e.g. several widgets loading) into
+      // one scroll per frame, and skip when already at the bottom so a settling
+      // layout can't trigger an endless scroll loop.
+      if (followRafRef.current !== null) return;
+      followRafRef.current = requestAnimationFrame(() => {
+        followRafRef.current = null;
+        const el = scrollRef.current;
+        if (!el || !pinnedRef.current) return;
+        const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+        if (distance <= AT_BOTTOM_EPSILON) return;
+        scrollToBottom(followBehavior());
+      });
+    });
+    ro.observe(content);
+    return () => {
+      ro.disconnect();
+      if (followRafRef.current !== null) {
+        cancelAnimationFrame(followRafRef.current);
+        followRafRef.current = null;
+      }
+    };
+  }, [scrollToBottom, followBehavior]);
 
   const statusLabel = status === "idle" ? "" : t(STATUS_LABEL_KEY[status]);
 
@@ -219,14 +352,40 @@ export default function CopilotPanel() {
         {liveText}
       </div>
 
-      <div className="swr-hide-scrollbar min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-4">
-        {messages.length === 0 && (
-          <p className="text-center text-sm text-on-surface-variant">
-            {t("emptyState")}
-          </p>
-        )}
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        <div
+          ref={scrollRef}
+          onScroll={onThreadScroll}
+          className="swr-hide-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain"
+        >
+        <div ref={contentRef} className="space-y-3 px-3 py-4">
+          {sessionNotice && (
+            <div
+              className="flex items-start justify-between gap-2 rounded-[var(--radius-card)] bg-secondary-container/60 px-3 py-2 text-xs text-on-surface"
+              role="status"
+            >
+              <span className="min-w-0 flex-1 break-words">{sessionNotice}</span>
+              <button
+                type="button"
+                onClick={dismissSessionNotice}
+                className="shrink-0 font-semibold text-primary underline"
+              >
+                {t("dismissNotice")}
+              </button>
+            </div>
+          )}
 
-        {messages.map((m) =>
+          {restoring && messages.length === 0 && (
+            <CopilotStatusRow label={t("restoringConversation")} />
+          )}
+
+          {!restoring && messages.length === 0 && (
+            <p className="text-center text-sm text-on-surface-variant">
+              {t("emptyState")}
+            </p>
+          )}
+
+          {messages.map((m) =>
           m.role === "user" ? (
             <div key={m.id} className="flex justify-end">
               <div className="max-w-[92%] rounded-[var(--radius-card)] bg-primary-container px-3 py-2 text-sm text-on-primary">
@@ -291,6 +450,34 @@ export default function CopilotPanel() {
               </div>
             </div>
           ),
+        )}
+        </div>
+        </div>
+
+        {showJump && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center">
+            <button
+              type="button"
+              onClick={jumpToLatest}
+              className="pointer-events-auto inline-flex min-h-11 items-center gap-1.5 rounded-[var(--radius-btn)] bg-secondary px-3 py-2 text-xs font-semibold text-on-secondary shadow-[var(--shadow-ambient)] transition-transform hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              aria-label={t("jumpToLatestAria")}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+              <span>{t("jumpToLatest")}</span>
+            </button>
+          </div>
         )}
       </div>
 

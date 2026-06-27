@@ -24,7 +24,7 @@ export default function FeaturedProductsRail({
     if (!emptyLabel) return null;
     return (
       <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-black uppercase tracking-[-0.02em] text-primary">
+        <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-[-0.02em] text-primary leading-tight">
           {heading}
         </h2>
         {subheading ? (
@@ -41,7 +41,7 @@ export default function FeaturedProductsRail({
     <section className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-black uppercase tracking-[-0.02em] text-primary">
+          <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-[-0.02em] text-primary leading-tight">
             {heading}
           </h2>
           {subheading ? (

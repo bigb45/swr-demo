@@ -21,13 +21,13 @@ export default function ServiceCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col gap-4 p-6 bg-surface-container-lowest hover:bg-surface-container-low transition-colors"
+      className="group flex h-full flex-col gap-4 p-6 bg-surface-container-lowest border border-transparent hover:border-secondary/40 hover:bg-surface-container-low transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
       style={{
         borderRadius: "var(--radius-card)",
         boxShadow: "var(--shadow-ambient)",
       }}
     >
-      {icon ? <div className="text-primary">{icon}</div> : null}
+      {icon ? <div className="text-primary group-hover:text-secondary transition-colors">{icon}</div> : null}
       {eyebrow ? (
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-secondary">
           {eyebrow}

@@ -219,3 +219,127 @@
 .swr-prose code { font-family: var(--font-mono); font-size: 0.8125rem; background: var(--color-surface-container-low); padding: 0.125rem 0.375rem; border-radius: 3px; }
 .swr-prose pre { font-family: var(--font-mono); background: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); padding: 1rem; border-radius: var(--radius-card); overflow-x: auto; margin: 1rem 0; }
 .swr-prose pre code { background: none; padding: 0; }
+
+/* ---------------------------------------------------------------------------
+ * Homepage depth, texture & motion kit.
+ * Motion is CSS-only (no JS, no animation library). Scroll reveals run on the
+ * native view() timeline, so browsers without support — and reduced-motion
+ * users — simply see fully-rendered, static content. Nothing ever stays hidden.
+ * ------------------------------------------------------------------------- */
+
+/* Engineering blueprint grid — sits behind dark brand panels (Hero, CTAs). */
+.swr-blueprint {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 54px 54px;
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 0%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(120% 100% at 50% 0%, #000 35%, transparent 100%);
+}
+
+/* Fine grain to break flat fills. Pseudo element keeps it out of flow. */
+.swr-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Tonal hairline used to separate sections without a hard 1px border. */
+.swr-edge-top {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-outline-variant) 70%, transparent) 18%,
+    color-mix(in srgb, var(--color-outline-variant) 70%, transparent) 82%,
+    transparent
+  );
+}
+
+/* Card hover lift, tinted to surface (no generic black drop shadow). */
+.swr-lift {
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.28s ease;
+}
+.swr-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(0, 40, 74, 0.12);
+}
+
+/* Hero load-in cascade. */
+@keyframes swr-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .swr-hero-in {
+    animation: swr-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .swr-hero-in-1 { animation-delay: 0.07s; }
+  .swr-hero-in-2 { animation-delay: 0.15s; }
+  .swr-hero-in-3 { animation-delay: 0.24s; }
+  .swr-hero-in-4 { animation-delay: 0.33s; }
+}
+
+/* Scroll-triggered reveal for sections below the fold. */
+@keyframes swr-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .swr-reveal {
+      animation: swr-reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 2% cover 22%;
+    }
+  }
+}
+
+/* Brand marquee track (partner / capability strips). Pauses on hover. */
+@keyframes swr-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.swr-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: swr-marquee 38s linear infinite;
+}
+.swr-marquee-track:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .swr-marquee-track {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

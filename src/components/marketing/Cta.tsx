@@ -15,7 +15,7 @@ export default function Cta({
   icon,
 }: CtaProps) {
   const base =
-    "inline-flex items-center gap-2 px-6 py-3 text-sm sm:text-base font-bold transition-all";
+    "inline-flex items-center gap-2 px-6 py-3 text-sm sm:text-base font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2";
   const radius = { borderRadius: "var(--radius-btn)" } as const;
 
   if (variant === "primary") {
@@ -27,7 +27,7 @@ export default function Cta({
       >
         {label}
         {icon ?? (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
           </svg>
