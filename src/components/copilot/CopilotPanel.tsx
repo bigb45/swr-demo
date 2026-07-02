@@ -13,9 +13,11 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { useCopilot } from "./CopilotProvider";
 import CopilotProductWidget from "./CopilotProductWidget";
-import type { CopilotStatus } from "./types";
+import CopilotOptionsPicker from "./CopilotOptionsPicker";
+import type { CopilotStatus, CopilotSuggestedPrompt } from "./types";
 
 const STATUS_LABEL_KEY: Record<Exclude<CopilotStatus, "idle">, string> = {
   thinking: "statusThinking",
@@ -67,6 +69,72 @@ function useCopilotFocusTrap(
   }, [active, rootRef]);
 }
 
+/**
+ * Backend-supplied follow-up chips that fade/slide in once a reply settles.
+ * Mounting the component is the animation trigger — it is only rendered after
+ * the assistant message stops streaming, so the chips "appear" with the reply.
+ */
+function CopilotSuggestedPrompts({
+  prompts,
+  disabled,
+  label,
+  onPick,
+}: {
+  prompts: CopilotSuggestedPrompt[];
+  disabled: boolean;
+  label: string;
+  onPick: (text: string) => void;
+}) {
+  const reduce = useReducedMotion();
+
+  const container: Variants = {
+    hidden: {},
+    show: {
+      transition: reduce
+        ? {}
+        : { staggerChildren: 0.06, delayChildren: 0.08 },
+    },
+  };
+
+  const chip: Variants = {
+    hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: reduce
+        ? { duration: 0.2 }
+        : { type: "spring", stiffness: 520, damping: 32 },
+    },
+  };
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="show"
+      variants={container}
+      className="flex flex-wrap gap-2 pt-2"
+      aria-label={label}
+    >
+      {prompts.map((p, i) => (
+        <motion.button
+          key={`${i}:${p.short}`}
+          type="button"
+          variants={chip}
+          whileHover={reduce ? undefined : { y: -1 }}
+          whileTap={reduce ? undefined : { scale: 0.97 }}
+          disabled={disabled}
+          onClick={() => onPick(p.expanded)}
+          className="rounded-full border border-outline-variant/50 bg-surface-container-lowest px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary-fixed/40 disabled:opacity-50"
+          style={{ borderRadius: "var(--radius-card)" }}
+        >
+          {p.short}
+        </motion.button>
+      ))}
+    </motion.div>
+  );
+}
+
 function CopilotStatusRow({ label }: { label: string }) {
   return (
     <span className="inline-flex items-center gap-2 text-on-surface-variant">
@@ -99,7 +167,6 @@ export default function CopilotPanel() {
     clearSubmitError,
     sendDraft,
     submitSuggestion,
-    pageContext,
   } = useCopilot();
 
   const rootRef = useRef<HTMLElement | null>(null);
@@ -107,12 +174,13 @@ export default function CopilotPanel() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  /** Follow-ups on the latest assistant turn (suggestions / options picker). */
+  const latestFollowupsRef = useRef<HTMLDivElement | null>(null);
   const pinnedRef = useRef(true);
   const lastScrollTopRef = useRef(0);
   const reducedMotionRef = useRef(false);
   const narrowViewportRef = useRef(false);
   const followRafRef = useRef<number | null>(null);
-  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [showJump, setShowJump] = useState(false);
 
   /** Panel only mounts while the dock is open — keep focus contained in the sheet. */
@@ -155,6 +223,8 @@ export default function CopilotPanel() {
   }, []);
 
   const PIN_THRESHOLD = 64;
+  /** Extra slack below the thread tail before surfacing "Jump to latest". */
+  const JUMP_PAST_TAIL_BUFFER = 56;
   /** Treat as "already at the bottom" within this slack to avoid redundant scrolls. */
   const AT_BOTTOM_EPSILON = 4;
 
@@ -168,6 +238,29 @@ export default function CopilotPanel() {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
+
+  const updateJumpVisibility = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    if (distanceFromBottom < PIN_THRESHOLD) {
+      setShowJump(false);
+      return;
+    }
+
+    const followups = latestFollowupsRef.current;
+    if (followups && followups.offsetHeight > 0) {
+      const scrollRect = el.getBoundingClientRect();
+      const fuRect = followups.getBoundingClientRect();
+      // Scrolling up moves newer content off the bottom edge; once follow-ups
+      // have dropped below the viewport (+ buffer), surface the jump control.
+      setShowJump(fuRect.top > scrollRect.bottom + JUMP_PAST_TAIL_BUFFER);
+      return;
+    }
+
+    setShowJump(distanceFromBottom > 120);
   }, []);
 
   /**
@@ -185,15 +278,16 @@ export default function CopilotPanel() {
 
     if (scrolledUp) {
       pinnedRef.current = false;
-      setShowJump(true);
-      return;
     }
     const distance = el.scrollHeight - top - el.clientHeight;
     if (distance < PIN_THRESHOLD) {
       pinnedRef.current = true;
       setShowJump(false);
+      return;
     }
-  }, []);
+
+    updateJumpVisibility();
+  }, [updateJumpVisibility]);
 
   const jumpToLatest = useCallback(() => {
     pinnedRef.current = true;
@@ -219,6 +313,9 @@ export default function CopilotPanel() {
     const content = contentRef.current;
     if (!content || typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(() => {
+      if (!pinnedRef.current) {
+        updateJumpVisibility();
+      }
       if (!pinnedRef.current) return;
       // Coalesce bursts of resize callbacks (e.g. several widgets loading) into
       // one scroll per frame, and skip when already at the bottom so a settling
@@ -241,7 +338,7 @@ export default function CopilotPanel() {
         followRafRef.current = null;
       }
     };
-  }, [scrollToBottom, followBehavior]);
+  }, [scrollToBottom, followBehavior, updateJumpVisibility]);
 
   const statusLabel = status === "idle" ? "" : t(STATUS_LABEL_KEY[status]);
 
@@ -252,41 +349,31 @@ export default function CopilotPanel() {
     return rev?.streaming ? statusLabel : (rev?.content ?? "");
   }, [messages, statusLabel]);
 
-  const suggestions = useMemo(() => {
-    const global = [
-      { id: "g1" as const, label: t("suggestion1"), text: t("suggestion1Prompt") },
-      { id: "g2" as const, label: t("suggestion2"), text: t("suggestion2Prompt") },
-      { id: "g3" as const, label: t("suggestion3"), text: t("suggestion3Prompt") },
-      { id: "g4" as const, label: t("suggestion4"), text: t("suggestion4Prompt") },
-    ];
+  /**
+   * Once the newest turn is a settled assistant reply, surface its backend
+   * `suggested_prompts` (animated, below the bubble).
+   */
+  const lastMessage = messages[messages.length - 1];
+  const dynamicPromptsMessageId =
+    lastMessage &&
+    lastMessage.role === "assistant" &&
+    !lastMessage.streaming &&
+    lastMessage.suggestedPrompts &&
+    lastMessage.suggestedPrompts.length > 0
+      ? lastMessage.id
+      : null;
 
-    if (pageContext?.sku || pageContext?.productName) {
-      const name = pageContext.productName ?? pageContext.sku ?? "";
-      return [
-        {
-          id: "p1" as const,
-          label: t("suggestionsPdpRelated"),
-          text: t("suggestionsPdpRelatedPrompt", { name }),
-        },
-        {
-          id: "p2" as const,
-          label: t("suggestionsPdpContract"),
-          text: t("suggestionsPdpContractPrompt", { name }),
-        },
-        {
-          id: "p3" as const,
-          label: t("suggestionsPdpConsumables"),
-          text: t("suggestionsPdpConsumablesPrompt", {
-            name,
-            category: pageContext.categoryName ?? "",
-          }),
-        },
-        ...global.slice(0, 2),
-      ];
-    }
-
-    return global;
-  }, [pageContext, t]);
+  /** Required-options gate on the newest settled assistant reply. */
+  const optionsRequest =
+    lastMessage &&
+    lastMessage.role === "assistant" &&
+    !lastMessage.streaming &&
+    lastMessage.optionsRequest
+      ? lastMessage.optionsRequest
+      : null;
+  const optionsRequestMessageId = optionsRequest ? lastMessage.id : null;
+  const lastAssistantId =
+    lastMessage?.role === "assistant" ? lastMessage.id : null;
 
   function formatTime(ms: number) {
     try {
@@ -448,6 +535,31 @@ export default function CopilotPanel() {
                   </div>
                 )}
               </div>
+              {m.id === lastAssistantId ? (
+                <div ref={latestFollowupsRef} className="space-y-1.5">
+                  {m.id === optionsRequestMessageId && m.optionsRequest && (
+                    <CopilotOptionsPicker
+                      request={m.optionsRequest}
+                      disabled={pending}
+                      onSubmit={(text) => {
+                        clearSubmitError();
+                        void submitSuggestion(text);
+                      }}
+                    />
+                  )}
+                  {m.id === dynamicPromptsMessageId && m.suggestedPrompts && (
+                    <CopilotSuggestedPrompts
+                      prompts={m.suggestedPrompts}
+                      disabled={pending}
+                      label={t("suggestedFollowupsAria")}
+                      onPick={(text) => {
+                        clearSubmitError();
+                        void submitSuggestion(text);
+                      }}
+                    />
+                  )}
+                </div>
+              ) : null}
             </div>
           ),
         )}
@@ -479,55 +591,6 @@ export default function CopilotPanel() {
             </button>
           </div>
         )}
-      </div>
-
-      <div className="shrink-0 bg-surface-container-low px-3 py-2">
-        <button
-          type="button"
-          aria-expanded={suggestionsOpen}
-          aria-controls="swr-copilot-suggestion-chips"
-          onClick={() => setSuggestionsOpen((o) => !o)}
-          className="flex w-full min-h-11 items-center justify-between gap-2 rounded-[var(--radius-btn)] px-1 py-1 text-left text-on-surface-variant hover:bg-surface-container-highest/60"
-        >
-          <span className="text-[10px] font-semibold uppercase tracking-wider">
-            {t("suggestionsToggle")}
-          </span>
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`shrink-0 text-primary transition-transform ${suggestionsOpen ? "rotate-180" : ""}`}
-            aria-hidden
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </button>
-        <div
-          id="swr-copilot-suggestion-chips"
-          hidden={!suggestionsOpen}
-          className="flex flex-wrap gap-2 pt-2"
-        >
-          {suggestions.map(({ id, label, text }) => (
-            <button
-              key={id}
-              type="button"
-              disabled={pending}
-              onClick={() => {
-                clearSubmitError();
-                void submitSuggestion(text);
-              }}
-              className="rounded-full border border-outline-variant/50 bg-surface-container-lowest px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary-fixed/40 disabled:opacity-50"
-              style={{ borderRadius: "var(--radius-card)" }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="shrink-0 space-y-2 bg-surface-container-low p-3">
