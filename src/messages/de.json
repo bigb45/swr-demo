@@ -85,9 +85,20 @@
     "emptyState": "Fragen Sie zu Produkten, Spezifikationen oder zu Ihrem Bestellablauf.",
     "suggestionsHeading": "Vorschläge",
     "suggestionsToggle": "Vorschläge",
+    "suggestedFollowupsAria": "Vorgeschlagene Folgefragen",
+    "optionsConfigureLabel": "Erforderliche Optionen",
+    "optionsRequiredMarkAria": "erforderlich",
+    "optionsRequiredError": "Bitte wählen Sie eine erforderliche Option.",
+    "optionsChoose": "Auswählen…",
+    "optionsSubmit": "In den Warenkorb",
+    "optionsSubmitting": "Wird hinzugefügt…",
+    "optionsSelectionMessage": "Füge {name} mit {selections} in meinen Warenkorb.",
+    "optionsSelectionMessageNoName": "Verwende diese Optionen: {selections}.",
     "productLoading": "Produkt wird geladen…",
     "productNotFound": "Dieses Produkt konnte nicht geladen werden ({sku}).",
     "widgetAddToCart": "In den Warenkorb",
+    "widgetSelectOptions": "Optionen wählen",
+    "widgetConfigureHint": "Bitte wählen Sie die erforderlichen Optionen, bevor Sie in den Warenkorb legen.",
     "addingToCart": "Wird hinzugefügt…",
     "addToCartSuccess": "Hinzugefügt",
     "addToCartFailed": "Fehlgeschlagen",
@@ -129,8 +140,7 @@
       "chip3Prompt": "Wie funktioniert Lieferung und Zollabfertigung in die Schweiz?",
       "chip4": "Technisches Dokument",
       "chip4Prompt": "Ich brauche ein Datenblatt, Handbuch oder Zertifikat aus dem Katalog."
-    },
-    "suggestedFollowupsAria": "Vorgeschlagene Folgefragen"
+    }
   },
   "hero": {
     "title": "Schweißtechnik, Werkzeuge & Reparatur.",
@@ -1478,22 +1488,10 @@
       "ctaHeading": "Versand in die Schweiz?",
       "ctaBody": "Wir erledigen die Papiere. Sie bekommen die Ware.",
       "facts": {
-        "aeo": {
-          "value": "AEO-F",
-          "label": "Zugelassener Wirtschaftsbeteiligter"
-        },
-        "delivery": {
-          "value": "1–3 Tage",
-          "label": "Laufzeit, Grenze bis Tür"
-        },
-        "currency": {
-          "value": "CHF / EUR",
-          "label": "Rechnungswährung auf Wunsch"
-        },
-        "team": {
-          "value": "1 Ansprechpartner",
-          "label": "Eine Person, jede Sendung"
-        }
+        "aeo": { "value": "AEO-F", "label": "Zugelassener Wirtschaftsbeteiligter" },
+        "delivery": { "value": "1–3 Tage", "label": "Laufzeit, Grenze bis Tür" },
+        "currency": { "value": "CHF / EUR", "label": "Rechnungswährung auf Wunsch" },
+        "team": { "value": "1 Ansprechpartner", "label": "Eine Person, jede Sendung" }
       },
       "zones": {
         "eyebrow": "Versandzonen",

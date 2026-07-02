@@ -5,6 +5,7 @@
  */
 
 import type { NextRequest } from "next/server";
+import { getSupportedOptions } from "@/lib/custom-options";
 import { resolveMagentoProductBySkuFlexible } from "@/lib/magento";
 import { getProductImageUrl } from "@/lib/magento-shared";
 import { getStockStatus } from "@/lib/stock";
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
       price: product.price,
       imageUrl: getProductImageUrl(product),
       stockLevel: stock.level,
+      options: getSupportedOptions(product.options),
     },
     {
       status: 200,

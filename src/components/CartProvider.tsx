@@ -67,7 +67,11 @@ interface CartContextValue {
    * we only have `{sku, qty}` in hand and no full MagentoProduct. Throws on
    * Magento errors so callers can collect per-line outcomes.
    */
-  addBySku: (sku: string, qty: number) => Promise<void>;
+  addBySku: (
+    sku: string,
+    qty: number,
+    customOptions?: MagentoCustomOptionSelection[],
+  ) => Promise<void>;
   updateQty: (itemId: number, sku: string, qty: number) => Promise<void>;
   removeItem: (itemId: number) => Promise<void>;
   restoreItem: (item: CartItem) => Promise<void>;
@@ -274,26 +278,40 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, [ensureCart, fetchCart]);
 
-  const addBySku = useCallback(async (sku: string, qty: number) => {
-    let id = await ensureCart();
-    setCartId(id);
-
-    let res = await postCartItem(id, sku, qty);
-
-    if (!res.ok && (await isStaleCartResponse(res))) {
-      clearPersistedCartId();
-      id = await ensureCart();
+  const addBySku = useCallback(
+    async (
+      sku: string,
+      qty: number,
+      customOptions?: MagentoCustomOptionSelection[],
+    ) => {
+      let id = await ensureCart();
       setCartId(id);
-      res = await postCartItem(id, sku, qty);
-    }
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error ?? "Failed to add item");
-    }
+      let res = await postCartItem(id, sku, qty, customOptions);
 
-    await fetchCart(id);
-  }, [fetchCart]);
+      if (!res.ok && (await isStaleCartResponse(res))) {
+        clearPersistedCartId();
+        id = await ensureCart();
+        setCartId(id);
+        res = await postCartItem(id, sku, qty, customOptions);
+      }
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error ?? "Failed to add item");
+      }
+
+      // Same SKU can map to multiple quote lines when custom options differ.
+      if (customOptions && customOptions.length > 0) {
+        await res.json().catch(() => ({}));
+        await fetchCart(id);
+        return;
+      }
+
+      await fetchCart(id);
+    },
+    [fetchCart],
+  );
 
   const updateQty = useCallback(async (itemId: number, sku: string, qty: number) => {
     const id = cartId ?? localStorage.getItem(CART_ID_KEY);

@@ -85,9 +85,20 @@
     "emptyState": "Ask anything about products, specs, or your order workflow.",
     "suggestionsHeading": "Suggested prompts",
     "suggestionsToggle": "Suggested prompts",
+    "suggestedFollowupsAria": "Suggested follow-ups",
+    "optionsConfigureLabel": "Required options",
+    "optionsRequiredMarkAria": "required",
+    "optionsRequiredError": "Please choose a required option.",
+    "optionsChoose": "Choose…",
+    "optionsSubmit": "Add to cart",
+    "optionsSubmitting": "Adding…",
+    "optionsSelectionMessage": "Add the {name} to my cart with {selections}.",
+    "optionsSelectionMessageNoName": "Use these options: {selections}.",
     "productLoading": "Loading product…",
     "productNotFound": "This product could not be loaded ({sku}).",
     "widgetAddToCart": "Add to cart",
+    "widgetSelectOptions": "Select options",
+    "widgetConfigureHint": "Choose the required options before adding to cart.",
     "addingToCart": "Adding…",
     "addToCartSuccess": "Added",
     "addToCartFailed": "Failed",
@@ -129,8 +140,7 @@
       "chip3Prompt": "How does delivery and customs clearance to Switzerland work?",
       "chip4": "Technical document",
       "chip4Prompt": "I need a datasheet, manual, or certificate from the catalog."
-    },
-    "suggestedFollowupsAria": "Suggested follow-ups"
+    }
   },
   "hero": {
     "title": "Welding, Tools & Repair.",
@@ -1478,22 +1488,13 @@
       "ctaHeading": "Shipping to Switzerland?",
       "ctaBody": "We handle the paperwork. You get the goods.",
       "facts": {
-        "aeo": {
-          "value": "AEO-F",
-          "label": "Authorised Economic Operator"
-        },
-        "delivery": {
-          "value": "1–3 days",
-          "label": "Transit, border to door"
-        },
+        "aeo": { "value": "AEO-F", "label": "Authorised Economic Operator" },
+        "delivery": { "value": "1–3 days", "label": "Transit, border to door" },
         "currency": {
           "value": "CHF / EUR",
           "label": "Invoice currency on request"
         },
-        "team": {
-          "value": "1 contact",
-          "label": "Same person, every shipment"
-        }
+        "team": { "value": "1 contact", "label": "Same person, every shipment" }
       },
       "zones": {
         "eyebrow": "Shipping zones",
