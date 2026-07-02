@@ -129,7 +129,8 @@
       "chip3Prompt": "Comment fonctionnent la livraison et le dédouanement vers la Suisse ?",
       "chip4": "Document technique",
       "chip4Prompt": "J'ai besoin d'une fiche technique, d'un manuel ou d'un certificat du catalogue."
-    }
+    },
+    "suggestedFollowupsAria": "Questions de suivi suggérées"
   },
   "hero": {
     "title": "Soudage, Outillage & Réparation.",
@@ -1477,10 +1478,22 @@
       "ctaHeading": "Expédition vers la Suisse ?",
       "ctaBody": "Nous nous occupons des papiers. Vous recevez la marchandise.",
       "facts": {
-        "aeo": { "value": "AEO-F", "label": "Opérateur économique agréé" },
-        "delivery": { "value": "1–3 jours", "label": "Frontière à porte" },
-        "currency": { "value": "CHF / EUR", "label": "Devise de facturation au choix" },
-        "team": { "value": "1 contact", "label": "Une personne, chaque envoi" }
+        "aeo": {
+          "value": "AEO-F",
+          "label": "Opérateur économique agréé"
+        },
+        "delivery": {
+          "value": "1–3 jours",
+          "label": "Frontière à porte"
+        },
+        "currency": {
+          "value": "CHF / EUR",
+          "label": "Devise de facturation au choix"
+        },
+        "team": {
+          "value": "1 contact",
+          "label": "Une personne, chaque envoi"
+        }
       },
       "zones": {
         "eyebrow": "Zones d'expédition",

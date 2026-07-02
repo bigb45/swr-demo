@@ -9,6 +9,10 @@
  */
 
 import type { CopilotMessage } from "@/components/copilot/types";
+import {
+  extractSuggestedPrompts,
+  extractNeedsOptions,
+} from "@/lib/copilot-stream";
 
 interface TeiaProductItem {
   sku?: unknown;
@@ -93,12 +97,17 @@ export function mapSessionHistory(
           : "";
       const content = structuredMessage || asString(m.reply).trim();
       const widgetSkus = productSkusFromResponse(response);
+      const suggestedPrompts = extractSuggestedPrompts(entry);
+      const optionsRequest = extractNeedsOptions(entry);
       out.push({
         id: crypto.randomUUID(),
         role: "assistant",
         content,
         streaming: false,
         widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
+        suggestedPrompts:
+          suggestedPrompts.length > 0 ? suggestedPrompts : undefined,
+        optionsRequest: optionsRequest ?? undefined,
         createdAt,
       });
     }

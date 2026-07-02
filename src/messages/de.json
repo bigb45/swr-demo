@@ -129,7 +129,8 @@
       "chip3Prompt": "Wie funktioniert Lieferung und Zollabfertigung in die Schweiz?",
       "chip4": "Technisches Dokument",
       "chip4Prompt": "Ich brauche ein Datenblatt, Handbuch oder Zertifikat aus dem Katalog."
-    }
+    },
+    "suggestedFollowupsAria": "Vorgeschlagene Folgefragen"
   },
   "hero": {
     "title": "Schweißtechnik, Werkzeuge & Reparatur.",
@@ -1477,10 +1478,22 @@
       "ctaHeading": "Versand in die Schweiz?",
       "ctaBody": "Wir erledigen die Papiere. Sie bekommen die Ware.",
       "facts": {
-        "aeo": { "value": "AEO-F", "label": "Zugelassener Wirtschaftsbeteiligter" },
-        "delivery": { "value": "1–3 Tage", "label": "Laufzeit, Grenze bis Tür" },
-        "currency": { "value": "CHF / EUR", "label": "Rechnungswährung auf Wunsch" },
-        "team": { "value": "1 Ansprechpartner", "label": "Eine Person, jede Sendung" }
+        "aeo": {
+          "value": "AEO-F",
+          "label": "Zugelassener Wirtschaftsbeteiligter"
+        },
+        "delivery": {
+          "value": "1–3 Tage",
+          "label": "Laufzeit, Grenze bis Tür"
+        },
+        "currency": {
+          "value": "CHF / EUR",
+          "label": "Rechnungswährung auf Wunsch"
+        },
+        "team": {
+          "value": "1 Ansprechpartner",
+          "label": "Eine Person, jede Sendung"
+        }
       },
       "zones": {
         "eyebrow": "Versandzonen",

@@ -1,3 +1,8 @@
+import type {
+  CopilotSuggestedPrompt,
+  CopilotOptionsRequest,
+} from "@/lib/copilot-stream";
+
 export interface CopilotMessage {
   id: string;
   role: "user" | "assistant";
@@ -6,6 +11,10 @@ export interface CopilotMessage {
   imageName?: string;
   /** Optional product cards below the prose (SKUs parsed post-reply). */
   widgetSkus?: string[];
+  /** Backend-supplied follow-up chips, rendered (animated) once the reply settles. */
+  suggestedPrompts?: CopilotSuggestedPrompt[];
+  /** Required-options gate ("needs_options"); renders an inline picker under the bubble. */
+  optionsRequest?: CopilotOptionsRequest;
   /** Set while assistant message is actively streaming tokens. */
   streaming?: boolean;
   createdAt: number;
@@ -25,4 +34,10 @@ export interface CopilotPageContext {
   categoryName?: string;
 }
 
-export type { CopilotStatus } from "@/lib/copilot-stream";
+export type {
+  CopilotStatus,
+  CopilotSuggestedPrompt,
+  CopilotOptionsRequest,
+  CopilotOptionGroup,
+  CopilotOptionValue,
+} from "@/lib/copilot-stream";

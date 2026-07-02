@@ -8,6 +8,142 @@ export interface ParsedTeiaStructuredResponse {
   suppressAssistantNote: boolean;
 }
 
+/** One backend-supplied follow-up chip: `short` is the label, `expanded` the prompt sent on tap. */
+export interface CopilotSuggestedPrompt {
+  short: string;
+  expanded: string;
+}
+
+/** One selectable value inside a required-option group (Teia `needs_options`). */
+export interface CopilotOptionValue {
+  valueId: string;
+  label: string;
+  /** Pre-formatted surcharge string straight from the backend (e.g. "$3.00"), if any. */
+  price?: string;
+}
+
+/** A required customizable-option group the shopper must resolve before add-to-cart. */
+export interface CopilotOptionGroup {
+  optionId: string;
+  title: string;
+  /** Magento option type: radio | drop_down | checkbox | multiple | field | area. */
+  type: string;
+  required: boolean;
+  values: CopilotOptionValue[];
+}
+
+/** Teia `response.type === "needs_options"` envelope, normalized for the picker UI. */
+export interface CopilotOptionsRequest {
+  message: string;
+  productName?: string;
+  sku?: string;
+  options: CopilotOptionGroup[];
+}
+
+function asTrimmed(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+/**
+ * Reads Teia's `needs_options` reply (a required-options gate returned when an
+ * add-to-cart hits a configurable product). Tolerates the object being the
+ * terminal `done` envelope or the inner `response` directly. Returns null when
+ * the reply is not a needs_options gate or carries no usable option group.
+ */
+export function extractNeedsOptions(
+  envelope: unknown,
+): CopilotOptionsRequest | null {
+  if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
+    return null;
+  }
+  const o = envelope as Record<string, unknown>;
+  const response =
+    o.response && typeof o.response === "object" && !Array.isArray(o.response)
+      ? (o.response as Record<string, unknown>)
+      : o;
+
+  if (response.type !== "needs_options") return null;
+  const rawOptions = response.options;
+  if (!Array.isArray(rawOptions)) return null;
+
+  const options: CopilotOptionGroup[] = [];
+  for (const rawOpt of rawOptions) {
+    if (!rawOpt || typeof rawOpt !== "object") continue;
+    const opt = rawOpt as Record<string, unknown>;
+    const optionId = asTrimmed(opt.option_id) || asTrimmed(opt.id);
+    const title = asTrimmed(opt.title) || asTrimmed(opt.label);
+    if (!optionId || !title) continue;
+
+    const type = (asTrimmed(opt.type) || "radio").toLowerCase();
+    const required = opt.required === true || opt.is_require === true;
+
+    const values: CopilotOptionValue[] = [];
+    const rawValues = Array.isArray(opt.values) ? opt.values : [];
+    for (const rawVal of rawValues) {
+      if (!rawVal || typeof rawVal !== "object") continue;
+      const v = rawVal as Record<string, unknown>;
+      const valueId =
+        asTrimmed(v.value_id) ||
+        asTrimmed(v.option_type_id) ||
+        asTrimmed(v.id);
+      const label = asTrimmed(v.label) || asTrimmed(v.title);
+      if (!valueId || !label) continue;
+      const price = asTrimmed(v.price);
+      values.push({ valueId, label, price: price || undefined });
+    }
+
+    options.push({ optionId, title, type, required, values });
+  }
+
+  if (options.length === 0) return null;
+
+  const product =
+    response.product && typeof response.product === "object"
+      ? (response.product as Record<string, unknown>)
+      : null;
+
+  return {
+    message: asTrimmed(response.message),
+    productName:
+      asTrimmed(response.product_name) ||
+      (product ? asTrimmed(product.name) : "") ||
+      undefined,
+    sku:
+      asTrimmed(response.sku) ||
+      asTrimmed(response.product_sku) ||
+      (product ? asTrimmed(product.sku) : "") ||
+      undefined,
+    options,
+  };
+}
+
+/**
+ * Reads the `suggested_prompts: [{ short, expanded }]` array carried on the
+ * terminal reply envelope (stream `done` event or non-stream JSON body).
+ * Tolerates entries that only provide one of the two fields by mirroring it.
+ */
+export function extractSuggestedPrompts(
+  envelope: unknown,
+): CopilotSuggestedPrompt[] {
+  if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
+    return [];
+  }
+  const raw = (envelope as Record<string, unknown>).suggested_prompts;
+  if (!Array.isArray(raw)) return [];
+
+  const out: CopilotSuggestedPrompt[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+    const r = item as Record<string, unknown>;
+    const short = typeof r.short === "string" ? r.short.trim() : "";
+    const expanded = typeof r.expanded === "string" ? r.expanded.trim() : "";
+    const label = short || expanded;
+    const text = expanded || short;
+    if (label && text) out.push({ short: label, expanded: text });
+  }
+  return out;
+}
+
 function fragmentFromParsedObject(data: Record<string, unknown>): string {
   const pickScalar = (): string => {
     for (const k of [

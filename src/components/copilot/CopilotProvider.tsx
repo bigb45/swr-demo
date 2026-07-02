@@ -17,6 +17,10 @@ import {
   deriveCopilotStatus,
   extractCompletionText,
   extractStructuredProductReply,
+  extractSuggestedPrompts,
+  extractNeedsOptions,
+  type CopilotSuggestedPrompt,
+  type CopilotOptionsRequest,
 } from "@/lib/copilot-stream";
 import { parseCopilotAssistantMessage } from "@/lib/copilot-parse";
 import { mapSessionHistory } from "@/lib/copilot-history";
@@ -325,6 +329,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       finalText: string,
       userQuery: string,
       structured?: { message: string; skus: string[] } | null,
+      suggestedPrompts?: CopilotSuggestedPrompt[],
+      optionsRequest?: CopilotOptionsRequest | null,
     ) => {
       const { displayText, skus } = parseCopilotAssistantMessage(finalText);
       const structuredSkus = structured?.skus ?? [];
@@ -333,7 +339,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
       let widgetSkus = structuredSkus.length > 0 ? structuredSkus : skus;
       let usedFallback = false;
-      if (widgetSkus.length === 0 && userQuery.trim().length >= 2) {
+      // A required-options gate carries no products; never pad it with a
+      // fallback catalog search — the shopper must resolve options first.
+      if (
+        !optionsRequest &&
+        widgetSkus.length === 0 &&
+        userQuery.trim().length >= 2
+      ) {
         const fallback = await fetchFallbackSkus(userQuery);
         if (fallback.length > 0) {
           widgetSkus = fallback;
@@ -356,6 +368,11 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
             streaming: false,
             content: content || m.content,
             widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
+            suggestedPrompts:
+              suggestedPrompts && suggestedPrompts.length > 0
+                ? suggestedPrompts
+                : m.suggestedPrompts,
+            optionsRequest: optionsRequest ?? m.optionsRequest,
           };
         }),
       );
@@ -405,6 +422,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
     ): Promise<{
       text: string;
       structured: { message: string; skus: string[] } | null;
+      suggestedPrompts: CopilotSuggestedPrompt[];
+      optionsRequest: CopilotOptionsRequest | null;
     }> => {
       const fallback = await fetch("/api/copilot/chat", {
         method: "POST",
@@ -421,9 +440,11 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
         return {
           text: extractCompletionText(parsedJson),
           structured: extractStructuredProductReply(parsedJson),
+          suggestedPrompts: extractSuggestedPrompts(parsedJson),
+          optionsRequest: extractNeedsOptions(parsedJson),
         };
       } catch {
-        return { text, structured: null };
+        return { text, structured: null, suggestedPrompts: [], optionsRequest: null };
       }
     },
     [t],
@@ -494,9 +515,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           body.image_mime_type = attachment.mimeType;
         }
 
+        // Set when the reply is a required-options gate: nothing was added, so
+        // the SKU-shortfall reconciler must not add the base product.
+        let optionsGatePending = false;
+
         const finalizeCartAfterAgentReply = async () => {
           await refreshTotals();
-          if (intents.length > 0) {
+          if (intents.length > 0 && !optionsGatePending) {
             await new Promise((r) => setTimeout(r, 450));
             try {
               await patchGuestCartShortfall(
@@ -516,16 +541,26 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
         const fallbackOrThrow = async (reason?: Error): Promise<void> => {
           discardStreamingAssistant();
           try {
-            const { text: reply, structured } = await tryRestCompletion(body);
+            const {
+              text: reply,
+              structured,
+              suggestedPrompts,
+              optionsRequest,
+            } = await tryRestCompletion(body);
+            if (optionsRequest) optionsGatePending = true;
             const structuredSkus = structured?.skus ?? [];
-            if (!reply.trim() && structuredSkus.length === 0) {
+            if (!reply.trim() && structuredSkus.length === 0 && !optionsRequest) {
               throw new Error(t("emptyReply"));
             }
             const parsed = parseCopilotAssistantMessage(reply.trim());
             let widgetSkus =
               structuredSkus.length > 0 ? structuredSkus : parsed.skus;
             let usedFallback = false;
-            if (widgetSkus.length === 0 && trimmed.trim().length >= 2) {
+            if (
+              !optionsRequest &&
+              widgetSkus.length === 0 &&
+              trimmed.trim().length >= 2
+            ) {
               const fb = await fetchFallbackSkus(trimmed);
               if (fb.length > 0) {
                 widgetSkus = fb;
@@ -545,6 +580,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                   ? `${baseText}\n\n${t("fallbackProductsIntro")}`
                   : baseText,
                 widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
+                suggestedPrompts:
+                  suggestedPrompts.length > 0 ? suggestedPrompts : undefined,
+                optionsRequest: optionsRequest ?? undefined,
               }),
             ]);
             await finalizeCartAfterAgentReply();
@@ -581,6 +619,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           let structuredReply: ReturnType<
             typeof extractStructuredProductReply
           > = null;
+          let suggestedPrompts: CopilotSuggestedPrompt[] = [];
+          let optionsRequest: CopilotOptionsRequest | null = null;
 
           if (ctype.includes("text/event-stream")) {
             let gotChunk = false;
@@ -602,9 +642,14 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 }
                 const structured = extractStructuredProductReply(obj);
                 if (structured) structuredReply = structured;
+                const sp = extractSuggestedPrompts(obj);
+                if (sp.length > 0) suggestedPrompts = sp;
+                const opts = extractNeedsOptions(obj);
+                if (opts) optionsRequest = opts;
               },
             );
-            streamSucceeded = gotChunk || structuredReply !== null;
+            streamSucceeded =
+              gotChunk || structuredReply !== null || optionsRequest !== null;
           } else {
             const raw = await streamRes.text().catch(() => "");
             let appended = "";
@@ -612,6 +657,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               const parsedJson = JSON.parse(raw);
               appended = extractCompletionText(parsedJson);
               structuredReply = extractStructuredProductReply(parsedJson);
+              suggestedPrompts = extractSuggestedPrompts(parsedJson);
+              optionsRequest = extractNeedsOptions(parsedJson);
             } catch {
               appended = raw;
             }
@@ -621,7 +668,10 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               streamSucceeded = true;
             }
             if (structuredReply !== null) streamSucceeded = true;
+            if (optionsRequest !== null) streamSucceeded = true;
           }
+
+          if (optionsRequest) optionsGatePending = true;
 
           if (streamSucceeded) {
             if (teiaCartOp) {
@@ -643,6 +693,8 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               assistantText,
               trimmed,
               structuredReply,
+              suggestedPrompts,
+              optionsRequest,
             );
             await finalizeCartAfterAgentReply();
             return;
