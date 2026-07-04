@@ -9,6 +9,7 @@ import CsvImportButton from "@/components/cart/CsvImportButton";
 import type { StockLevel } from "@/lib/stock";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { notify } from "@/lib/toast";
 
 export default function CartContent() {
   const t = useTranslations("cart");
@@ -16,7 +17,6 @@ export default function CartContent() {
   const { items, totals, loading, fetchError, updateQty, removeItem, restoreItem } =
     useCart();
   const { formatAmount } = useCurrency();
-  const [cartError, setCartError] = useState<string | null>(null);
   const [removedItem, setRemovedItem] = useState<(typeof items)[number] | null>(null);
   const [undoLoading, setUndoLoading] = useState(false);
   const undoTimeoutRef = useRef<number | null>(null);
@@ -36,11 +36,10 @@ export default function CartContent() {
   }, []);
 
   async function handleQtyCommit(itemId: number, sku: string, qty: number) {
-    setCartError(null);
     try {
       await updateQty(itemId, sku, qty);
     } catch (err) {
-      setCartError(err instanceof Error ? err.message : t("updateError"));
+      notify.error(err instanceof Error ? err.message : t("updateError"));
       throw err;
     }
   }
@@ -51,7 +50,6 @@ export default function CartContent() {
     }
 
     setRemovedItem(null);
-    setCartError(null);
     setUndoLoading(false);
     try {
       await removeItem(item.itemId);
@@ -62,7 +60,7 @@ export default function CartContent() {
         undoTimeoutRef.current = null;
       }, 6000);
     } catch (err) {
-      setCartError(err instanceof Error ? err.message : t("updateError"));
+      notify.error(err instanceof Error ? err.message : t("updateError"));
     }
   }
 
@@ -70,7 +68,6 @@ export default function CartContent() {
     if (!removedItem) return;
 
     setUndoLoading(true);
-    setCartError(null);
     try {
       await restoreItem(removedItem);
       setRemovedItem(null);
@@ -79,7 +76,7 @@ export default function CartContent() {
         undoTimeoutRef.current = null;
       }
     } catch (err) {
-      setCartError(err instanceof Error ? err.message : t("updateError"));
+      notify.error(err instanceof Error ? err.message : t("updateError"));
     } finally {
       setUndoLoading(false);
     }
@@ -108,12 +105,6 @@ export default function CartContent() {
           </h1>
           <p className="text-sm text-on-surface-variant">{t("subheading")}</p>
         </div>
-
-        {cartError && (
-          <div className="mb-6 rounded-card border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-            {cartError}
-          </div>
-        )}
 
         {fetchError && items.length === 0 && !loading && (
           <div

@@ -9,6 +9,7 @@ import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
 import { getDisplayShortDescription } from "@/lib/product-display";
 import NoImagePlaceholder from "@/components/ui/NoImagePlaceholder";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
+import { notify } from "@/lib/toast";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { useCart } from "@/components/CartProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
@@ -30,6 +31,7 @@ export default function ProductSearchResultRow({
   const { isAuthenticated } = useCustomerSession();
   const locale = useLocale();
   const tProducts = useTranslations("products");
+  const tCart = useTranslations("cart");
   const tSearch = useTranslations("search");
   const { addItem } = useCart();
   const [status, setStatus] = useState<AddStatus>("idle");
@@ -62,9 +64,11 @@ export default function ProductSearchResultRow({
     try {
       await addItem(product, qty);
       setStatus("success");
+      notify.success(tProducts("added"));
       window.setTimeout(() => setStatus("idle"), 1600);
     } catch {
       setStatus("error");
+      notify.error(tCart("updateError"));
       window.setTimeout(() => setStatus("idle"), 2400);
     }
   }

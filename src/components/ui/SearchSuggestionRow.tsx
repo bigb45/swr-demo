@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
 import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
+import { notify } from "@/lib/toast";
 import { useCurrency } from "@/components/CurrencyProvider";
 import { useCart } from "@/components/CartProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
@@ -28,6 +29,7 @@ export default function SearchSuggestionRow({
   const { isAuthenticated } = useCustomerSession();
   const locale = useLocale();
   const tProducts = useTranslations("products");
+  const tCart = useTranslations("cart");
   const tSearch = useTranslations("search");
   const { addItem } = useCart();
   const [status, setStatus] = useState<AddStatus>("idle");
@@ -48,9 +50,11 @@ export default function SearchSuggestionRow({
     try {
       await addItem(product, 1);
       setStatus("success");
+      notify.success(tProducts("added"));
       window.setTimeout(() => setStatus("idle"), 1600);
     } catch {
       setStatus("error");
+      notify.error(tCart("updateError"));
       window.setTimeout(() => setStatus("idle"), 2400);
     }
   }

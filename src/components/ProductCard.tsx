@@ -9,6 +9,7 @@ import type { MagentoProduct } from "@/types/magento";
 import { getCustomAttribute, getProductGalleryUrls, getProductImageUrl } from "@/lib/magento-shared";
 import { getDisplayShortDescription } from "@/lib/product-display";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
+import { notify } from "@/lib/toast";
 import { useCurrency } from "./CurrencyProvider";
 import { useCart } from "./CartProvider";
 import { useCustomerSession } from "./CustomerSessionProvider";
@@ -136,6 +137,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const { addItem } = useCart();
   const locale = useLocale();
   const t = useTranslations("products");
+  const tCart = useTranslations("cart");
   const [status, setStatus] = useState<AddStatus>("idle");
   const [qty, setQty] = useState(1);
 
@@ -162,9 +164,11 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
     try {
       await addItem(product, qty);
       setStatus("success");
+      notify.success(t("added"));
       window.setTimeout(() => setStatus("idle"), 1600);
     } catch {
       setStatus("error");
+      notify.error(tCart("updateError"));
       window.setTimeout(() => setStatus("idle"), 2400);
     }
   }

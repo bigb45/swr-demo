@@ -43,6 +43,11 @@ const nextConfig: NextConfig = {
         hostname: "46.224.237.247",
         pathname: "/media/**",
       },
+      {
+        protocol: "https",
+        hostname: "bimblobs.blob.core.windows.net",
+        pathname: "/**",
+      },
     ],
   },
 };

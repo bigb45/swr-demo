@@ -12,6 +12,16 @@ export interface MagentoCustomAttribute {
   value: string | string[];
 }
 
+/** Image entry from the `teia_pim_images` custom attribute (JSON-encoded string). */
+export interface TeiaPimImage {
+  url: string;
+  thumbnail_url?: string;
+  normalized_url?: string;
+  type: string;
+  label?: string;
+  position?: number;
+}
+
 export interface MagentoTierPrice {
   customer_group_id: number;
   qty: number;

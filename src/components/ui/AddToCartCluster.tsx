@@ -18,6 +18,7 @@ import {
   type CustomOptionSelectionState,
 } from "@/lib/custom-options";
 import type { MagentoProduct } from "@/types/magento";
+import { notify } from "@/lib/toast";
 
 interface AddToCartClusterProps {
   product: MagentoProduct;
@@ -108,6 +109,7 @@ export default function AddToCartCluster({
       setMissingOptionIds(new Set(missing.map((o) => String(o.option_id))));
       setStatus("error");
       setErrorMsg(t("options.requiredError"));
+      notify.error(t("options.requiredError"));
       setTimeout(() => setStatus("idle"), 3000);
       return;
     }
@@ -126,10 +128,13 @@ export default function AddToCartCluster({
         customOptions.length > 0 ? customOptions : undefined,
       );
       setStatus("success");
+      notify.success(t("added"));
       setTimeout(() => setStatus("idle"), 2000);
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Error");
+      const message = err instanceof Error ? err.message : "Error";
+      setErrorMsg(message);
       setStatus("error");
+      notify.error(message);
       setTimeout(() => setStatus("idle"), 3000);
     }
   }

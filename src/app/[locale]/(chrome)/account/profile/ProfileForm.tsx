@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { notify } from "@/lib/toast";
 
 interface ProfileFormProps {
   initial: {
@@ -27,7 +28,6 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const emailChanged = email.trim().toLowerCase() !== initial.email.toLowerCase();
@@ -36,7 +36,6 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    setSuccess(false);
 
     if (wantsPwChange && newPassword !== confirmPassword) {
       setError(t("passwordMismatch"));
@@ -65,7 +64,7 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
         setError(data.error ?? t("profileSaveError"));
         return;
       }
-      setSuccess(true);
+      notify.success(t("profileSaved"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -194,11 +193,6 @@ export default function ProfileForm({ initial, redirectTo }: ProfileFormProps) {
       </div>
 
       {error && <p className="text-xs font-semibold text-red-600">{error}</p>}
-      {success && (
-        <p className="text-xs font-semibold text-success">
-          {t("profileSaved")}
-        </p>
-      )}
 
       <div className="flex items-center justify-end gap-3">
         <Link

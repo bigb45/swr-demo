@@ -14,6 +14,7 @@ import {
   isTextOption,
   type CustomOptionSelectionState,
 } from "@/lib/custom-options";
+import { notify } from "@/lib/toast";
 import type { MagentoProductOption } from "@/types/magento";
 import type {
   CopilotOptionGroup,
@@ -326,9 +327,11 @@ function CopilotOptionsPickerDirect({
       );
       setAddStatus("success");
       setSubmitted(true);
+      notify.success(t("addToCartSuccess"));
       window.setTimeout(() => setAddStatus("idle"), 1600);
     } catch {
       setAddStatus("error");
+      notify.error(t("addToCartFailed"));
       window.setTimeout(() => setAddStatus("idle"), 2400);
     }
   };

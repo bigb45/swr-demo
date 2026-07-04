@@ -2,7 +2,11 @@
  * Pure helpers and env-derived constants safe for **client** bundles.
  * Server-only Magento REST code lives in `magento.ts` (uses `next/cache`).
  */
-import type { MagentoCategory, MagentoProduct } from "@/types/magento";
+import type {
+  MagentoCategory,
+  MagentoProduct,
+  TeiaPimImage,
+} from "@/types/magento";
 
 const envBase = process.env.MAGENTO_URL ?? "http://localhost:8000";
 
@@ -30,12 +34,42 @@ export const PRODUCT_LIST_RESERVED_PARAMS = new Set([
   "view",
 ]);
 
+export function getTeiaPimImages(product: MagentoProduct): TeiaPimImage[] {
+  const raw = getCustomAttribute(product, "teia_pim_images");
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (entry): entry is TeiaPimImage =>
+          typeof entry === "object" &&
+          entry !== null &&
+          typeof (entry as TeiaPimImage).url === "string" &&
+          typeof (entry as TeiaPimImage).type === "string" &&
+          (entry as TeiaPimImage).type.startsWith("image/"),
+      )
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  } catch {
+    return [];
+  }
+}
+
+function getTeiaPimImageUrl(image: TeiaPimImage): string {
+  return image.normalized_url ?? image.url;
+}
+
 export function getProductImageUrl(product: MagentoProduct): string | null {
   const entry = product.media_gallery_entries?.find((e) =>
     e.types.includes("image")
   );
-  if (!entry) return null;
-  return `${MEDIA_BASE}/media/catalog/product${entry.file}`;
+  if (entry) {
+    return `${MEDIA_BASE}/media/catalog/product${entry.file}`;
+  }
+
+  const pimImages = getTeiaPimImages(product);
+  if (pimImages.length === 0) return null;
+  return getTeiaPimImageUrl(pimImages[0]);
 }
 
 /** All non-disabled gallery images, ordered by Magento `position`, for card carousels / PDP galleries. */
@@ -43,23 +77,31 @@ export function getProductGalleryUrls(product: MagentoProduct): string[] {
   const entries = product.media_gallery_entries?.filter(
     (e) => !e.disabled && e.file && e.media_type !== "external-video",
   );
-  if (!entries?.length) {
-    const single = getProductImageUrl(product);
-    return single ? [single] : [];
+  if (entries?.length) {
+    const sorted = [...entries].sort((a, b) => a.position - b.position);
+    const urls: string[] = [];
+    const seen = new Set<string>();
+    for (const e of sorted) {
+      const url = `${MEDIA_BASE}/media/catalog/product${e.file}`;
+      if (!seen.has(url)) {
+        seen.add(url);
+        urls.push(url);
+      }
+    }
+    if (urls.length > 0) return urls;
   }
-  const sorted = [...entries].sort((a, b) => a.position - b.position);
+
+  const pimImages = getTeiaPimImages(product);
+  if (pimImages.length === 0) return [];
+
   const urls: string[] = [];
   const seen = new Set<string>();
-  for (const e of sorted) {
-    const url = `${MEDIA_BASE}/media/catalog/product${e.file}`;
+  for (const image of pimImages) {
+    const url = getTeiaPimImageUrl(image);
     if (!seen.has(url)) {
       seen.add(url);
       urls.push(url);
     }
-  }
-  if (urls.length === 0) {
-    const single = getProductImageUrl(product);
-    return single ? [single] : [];
   }
   return urls;
 }

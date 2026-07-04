@@ -1,5 +1,6 @@
 import { revalidateTag, unstable_cache } from "next/cache";
 import { PRODUCT_LIST_RESERVED_PARAMS } from "@/lib/magento-shared";
+import { broadcastServerLog } from "@/lib/devLogBridge";
 import type {
   MagentoAggregation,
   MagentoCategory,
@@ -77,6 +78,52 @@ function invalidateAdminToken() {
   tokenExpiresAt = 0;
 }
 
+const VERBOSE =
+  process.env.NODE_ENV !== "production" &&
+  process.env.MAGENTO_LOG_VERBOSE !== "0";
+
+async function logMagentoCall(opts: {
+  method: string;
+  url: string;
+  reqHeaders: Record<string, string>;
+  reqBody?: unknown;
+  res: Response;
+  ms: number;
+}) {
+  const { method, url, reqHeaders, reqBody, res, ms } = opts;
+  const summary = `[magento] ${method} ${url} -> ${res.status} (${ms}ms)`;
+  console.log(summary);
+  broadcastServerLog(summary);
+  if (!VERBOSE) return;
+
+  const safeReqHeaders = { ...reqHeaders, Authorization: "Bearer <redacted>" };
+
+  let resBody: string;
+  try {
+    resBody = await res.clone().text();
+  } catch {
+    resBody = "<unreadable>";
+  }
+  const truncated =
+    resBody.length > 4000
+      ? `${resBody.slice(0, 4000)}\n…(truncated ${resBody.length - 4000} chars)`
+      : resBody;
+
+  console.dir(
+    {
+      request: { method, url, headers: safeReqHeaders, body: reqBody },
+      response: {
+        status: res.status,
+        statusText: res.statusText,
+        headers: Object.fromEntries(res.headers.entries()),
+        body: truncated,
+      },
+      ms,
+    },
+    { depth: null, colors: true },
+  );
+}
+
 export async function magentoGet<T>(
   path: string,
   revalidate: number | false = 60,
@@ -91,14 +138,26 @@ export async function magentoGet<T>(
   // Calls without a storeCode target the default admin scope.
   const buildPrefix = (code?: string) => (code ? `/rest/${code}/V1` : `/rest/V1`);
 
-  const doFetch = async (token: string, code?: string) =>
-    fetch(`${BASE}${buildPrefix(code)}${path}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  const doFetch = async (token: string, code?: string) => {
+    const url = `${BASE}${buildPrefix(code)}${path}`;
+    const reqHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const start = Date.now();
+    const res = await fetch(url, {
+      headers: reqHeaders,
       ...nextOptions,
     });
+    await logMagentoCall({
+      method: "GET",
+      url,
+      reqHeaders,
+      res,
+      ms: Date.now() - start,
+    });
+    return res;
+  };
 
   let token = await getAdminToken();
   let res = await doFetch(token, storeCode);
@@ -148,16 +207,29 @@ async function magentoPost<T>(
 
   const prefix = storeCode ? `/rest/${storeCode}/V1` : `/rest/V1`;
 
-  const doFetch = async (token: string) =>
-    fetch(`${BASE}${prefix}${path}`, {
+  const doFetch = async (token: string) => {
+    const url = `${BASE}${prefix}${path}`;
+    const reqHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const start = Date.now();
+    const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers: reqHeaders,
       body: JSON.stringify(body),
       ...nextOptions,
     });
+    await logMagentoCall({
+      method: "POST",
+      url,
+      reqHeaders,
+      reqBody: body,
+      res,
+      ms: Date.now() - start,
+    });
+    return res;
+  };
 
   let token = await getAdminToken();
   let res = await doFetch(token);

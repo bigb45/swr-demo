@@ -3,6 +3,7 @@
 import type { MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useWatchlist } from "./WatchlistProvider";
+import { notify } from "@/lib/toast";
 
 interface WatchlistButtonProps {
   sku: string;
@@ -49,7 +50,11 @@ export default function WatchlistButton({
   function onClick(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    const wasActive = active;
     toggle({ sku, name, imageUrl });
+    if (!wasActive) {
+      notify.success(t("added"));
+    }
   }
 
   const label = active ? t("remove") : t("add");

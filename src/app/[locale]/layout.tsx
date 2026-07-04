@@ -21,6 +21,8 @@ import { CopilotProvider } from "@/components/copilot/CopilotProvider";
 import CopilotDock from "@/components/copilot/CopilotDock";
 import { CookieConsentProvider } from "@/components/CookieConsentProvider";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
+import Toaster from "@/components/ui/Toaster";
+import DevConsoleBridge from "@/components/DevConsoleBridge";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -130,7 +132,9 @@ export default async function LocaleLayout({
                   <CopilotDock />
                 </div>
                 <Footer locale={locale} />
+                <Toaster />
                 <CookieConsentBanner />
+                {process.env.NODE_ENV === "development" && <DevConsoleBridge />}
                   </CopilotProvider>
                   </WatchlistProvider>
                 </CartProvider>

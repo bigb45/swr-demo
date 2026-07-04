@@ -16,6 +16,7 @@ import {
   getSupportedOptions,
   type CustomOptionSelectionState,
 } from "@/lib/custom-options";
+import { notify } from "@/lib/toast";
 import type { MagentoProductOption } from "@/types/magento";
 
 interface CopilotProductDto {
@@ -146,9 +147,11 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
         customOptions.length > 0 ? customOptions : undefined,
       );
       setAddStatus("success");
+      notify.success(tc("addToCartSuccess"));
       window.setTimeout(() => setAddStatus("idle"), 1600);
     } catch {
       setAddStatus("error");
+      notify.error(tc("addToCartFailed"));
       window.setTimeout(() => setAddStatus("idle"), 2400);
     }
   }, [
