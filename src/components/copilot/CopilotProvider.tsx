@@ -32,7 +32,9 @@ import {
 import {
   applyTeiaCartAction,
   extractTeiaCartOpFromSseObject,
+  type TeiaCartOp,
 } from "@/lib/copilot-teia-cart-action";
+import { notify } from "@/lib/toast";
 import type {
   CopilotImageAttachment,
   CopilotMessage,
@@ -50,9 +52,17 @@ const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
  */
 const SESSION_TTL_MS = 60 * 60 * 1000;
 
+export type CopilotPresentation = "closed" | "minimized" | "expanded";
+
 interface CopilotContextValue {
+  presentation: CopilotPresentation;
+  isExpanded: boolean;
+  /** @deprecated Prefer `isExpanded` / `expand()` / `minimize()` / `close()`. */
   open: boolean;
+  /** @deprecated Prefer `expand()` / `close()`. */
   setOpen: (open: boolean) => void;
+  expand: () => void;
+  minimize: () => void;
   toggle: () => void;
   close: () => void;
   messages: CopilotMessage[];
@@ -194,7 +204,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
     updateQty,
     removeItem,
   } = useCart();
-  const [open, setOpen] = useState(false);
+  const [presentation, setPresentation] =
+    useState<CopilotPresentation>("closed");
+  const isExpanded = presentation === "expanded";
   const [messages, setMessages] = useState<CopilotMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
@@ -380,8 +392,26 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
     [t],
   );
 
-  const toggle = useCallback(() => setOpen((v) => !v), []);
-  const close = useCallback(() => setOpen(false), []);
+  const expand = useCallback(
+    () => setPresentation("expanded"),
+    [],
+  );
+  const minimize = useCallback(
+    () => setPresentation((prev) => (prev === "expanded" ? "minimized" : prev)),
+    [],
+  );
+  const close = useCallback(() => setPresentation("closed"), []);
+  const toggle = useCallback(
+    () =>
+      setPresentation((prev) =>
+        prev === "expanded" ? "minimized" : "expanded",
+      ),
+    [],
+  );
+  const setOpen = useCallback(
+    (next: boolean) => setPresentation(next ? "expanded" : "closed"),
+    [],
+  );
 
   const clearSubmitError = useCallback(() => setSubmitError(null), []);
 
@@ -613,9 +643,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           const ctype = streamRes.headers.get("content-type") ?? "";
           let streamSucceeded = false;
           let assistantText = "";
-          let teiaCartOp: ReturnType<
-            typeof extractTeiaCartOpFromSseObject
-          > = null;
+          const teiaCartOpHolder = { op: null as TeiaCartOp | null };
           let structuredReply: ReturnType<
             typeof extractStructuredProductReply
           > = null;
@@ -638,7 +666,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 if (nextStatus) setStatus(nextStatus);
                 if (obj.done === true) {
                   const extracted = extractTeiaCartOpFromSseObject(obj);
-                  if (extracted) teiaCartOp = extracted;
+                  if (extracted) {
+                    teiaCartOpHolder.op = extracted;
+                  }
                 }
                 const structured = extractStructuredProductReply(obj);
                 if (structured) structuredReply = structured;
@@ -674,18 +704,27 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
           if (optionsRequest) optionsGatePending = true;
 
           if (streamSucceeded) {
-            if (teiaCartOp) {
+            if (teiaCartOpHolder.op) {
+              const op = teiaCartOpHolder.op;
               try {
-                await applyTeiaCartAction(teiaCartOp, {
+                await applyTeiaCartAction(op, {
                   cartId: guestCartId,
                   addBySku,
                   updateQty,
                   removeItem,
                 });
+                const successKey =
+                  op.type === "add_to_cart"
+                    ? "cartAddSuccess"
+                    : op.type === "remove_from_cart"
+                      ? "cartRemoveSuccess"
+                      : "cartUpdateSuccess";
+                notify.success(t(successKey));
               } catch (e) {
                 const detail =
                   e instanceof Error ? e.message : t("errorGeneric");
                 setSubmitError(t("cartReconcileFailed", { detail }));
+                notify.error(t("cartReconcileFailed", { detail }));
               }
             }
             await enrichAssistantMessage(
@@ -749,17 +788,21 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     function onEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") minimize();
     }
-    if (!open) return;
+    if (!isExpanded) return;
     document.addEventListener("keydown", onEscape);
     return () => document.removeEventListener("keydown", onEscape);
-  }, [open]);
+  }, [isExpanded, minimize]);
 
   const value = useMemo(
     () => ({
-      open,
+      presentation,
+      isExpanded,
+      open: isExpanded,
       setOpen,
+      expand,
+      minimize,
       toggle,
       close,
       messages,
@@ -781,7 +824,11 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       setPageContext,
     }),
     [
-      open,
+      presentation,
+      isExpanded,
+      setOpen,
+      expand,
+      minimize,
       toggle,
       close,
       messages,

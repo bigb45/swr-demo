@@ -2,6 +2,7 @@
 
 import { useCookieConsent } from "@/components/CookieConsentProvider";
 import { BotMessageSquare } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useHydrated } from "@/hooks/useHydrated";
 import { useCopilot } from "./CopilotProvider";
@@ -10,11 +11,11 @@ interface CopilotHeaderTriggerProps {
   className?: string;
 }
 
-function CopilotHeaderPlaceholder({ className = "" }: { className?: string }) {
+/** Invisible size reserve — no background (gray slab was mistaken for a broken button). */
+function CopilotHeaderPlaceholder() {
   return (
     <span
-      className={`inline-flex h-9 shrink-0 items-center sm:min-w-[5.5rem] ${className}`}
-      style={{ minWidth: "2.25rem" }}
+      className="inline-flex h-9 w-9 shrink-0 items-center sm:min-w-22"
       aria-hidden
     />
   );
@@ -24,15 +25,21 @@ export default function CopilotHeaderTrigger({
   className = "",
 }: CopilotHeaderTriggerProps) {
   const t = useTranslations("copilot");
-  const { open, toggle } = useCopilot();
+  const { isExpanded, toggle } = useCopilot();
   const { ready, level } = useCookieConsent();
   const hydrated = useHydrated();
+  const [mounted, setMounted] = useState(false);
 
-  // Render a stable placeholder during SSR and the first client render so the
-  // markup matches even when this trigger hydrates late (inside <Suspense>)
-  // after CookieConsentProvider has already flipped `ready` to true.
-  if (!hydrated || !ready) {
-    return <CopilotHeaderPlaceholder className={className} />;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // `useHydrated` can stay false when this client island streams in late inside
+  // `<Suspense>` (Header). `mounted` guarantees a post-mount re-render on mobile.
+  const clientActive = hydrated || mounted;
+
+  if (!clientActive || !ready) {
+    return <CopilotHeaderPlaceholder />;
   }
 
   if (level === "needsChoice") return null;
@@ -42,14 +49,14 @@ export default function CopilotHeaderTrigger({
       type="button"
       onClick={toggle}
       className={`inline-flex items-center gap-2 rounded-[var(--radius-btn)] border border-primary/15 px-3 py-2.5 text-sm font-bold text-primary transition-colors md:px-4 md:py-2.5 ${
-        open ? "bg-surface-container-low" : "bg-surface-container-lowest"
+        isExpanded ? "bg-surface-container-low" : "bg-surface-container-lowest"
       } ${className}`}
       style={{
-        boxShadow: open ? undefined : ("var(--shadow-ambient)" as const),
+        boxShadow: isExpanded ? undefined : ("var(--shadow-ambient)" as const),
       }}
-      aria-expanded={open}
+      aria-expanded={isExpanded}
       aria-controls="swr-copilot-panel-root"
-      aria-label={open ? t("closeAria") : t("openHeaderAria")}
+      aria-label={isExpanded ? t("minimizeAria") : t("openHeaderAria")}
     >
       <BotMessageSquare
         className="shrink-0"

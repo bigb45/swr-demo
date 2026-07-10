@@ -4,18 +4,28 @@
  * only reads `action`). Normalize and apply via storefront cart APIs.
  */
 
-export type TeiaCartOpType =
-  | "add_to_cart"
-  | "remove_from_cart"
-  | "update_cart";
+import type { MagentoCustomOptionSelection } from "@/types/magento";
+
+export type TeiaCartOpType = "add_to_cart" | "remove_from_cart" | "update_cart";
+
+/** A resolved custom-option choice the agent already validated against the
+ * product (`option_id`/`value_id` are Magento option ids, not labels). */
+export interface TeiaCartOption {
+  option_id: string;
+  value_id: string;
+}
 
 export interface TeiaCartOp {
   type: TeiaCartOpType;
   sku?: string;
   qty: number;
+  options?: TeiaCartOption[];
 }
 
-function pickString(o: Record<string, unknown>, key: string): string | undefined {
+function pickString(
+  o: Record<string, unknown>,
+  key: string,
+): string | undefined {
   const v = o[key];
   return typeof v === "string" && v.trim() ? v.trim() : undefined;
 }
@@ -111,11 +121,35 @@ function unwrapCartOp(raw: unknown): TeiaCartOp | null {
 
   const qty = pickQty(fields) ?? 1;
 
+  const options = unwrapCartOptions(fields["options"]);
+
   if (!typeRaw) return null;
   const type = normalizeOpType(typeRaw);
   if (!type) return null;
 
-  return { type, sku, qty };
+  return { type, sku, qty, options };
+}
+
+/**
+ * Parse an agent `options` array of `{ option_id, value_id }` (accepting the
+ * `option_value` alias) into validated custom-option choices. Returns undefined
+ * when absent or empty so add-to-cart stays byte-for-byte identical for
+ * option-less products.
+ */
+function unwrapCartOptions(raw: unknown): TeiaCartOption[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const options: TeiaCartOption[] = [];
+  for (const entry of raw) {
+    const rec = coerceRecord(entry);
+    if (!rec) continue;
+    const optionId = pickString(rec, "option_id");
+    const valueId =
+      pickString(rec, "value_id") ?? pickString(rec, "option_value");
+    if (optionId && valueId) {
+      options.push({ option_id: optionId, value_id: valueId });
+    }
+  }
+  return options.length ? options : undefined;
 }
 
 /** Read cart command from a Teia `data: { done, action?, intent? }` object. */
@@ -156,7 +190,11 @@ export async function applyTeiaCartAction(
   op: TeiaCartOp,
   deps: {
     cartId: string;
-    addBySku: (sku: string, qty: number) => Promise<void>;
+    addBySku: (
+      sku: string,
+      qty: number,
+      customOptions?: MagentoCustomOptionSelection[],
+    ) => Promise<void>;
     updateQty: (itemId: number, sku: string, qty: number) => Promise<void>;
     removeItem: (itemId: number) => Promise<void>;
   },
@@ -165,7 +203,16 @@ export async function applyTeiaCartAction(
 
   if (op.type === "add_to_cart") {
     if (!op.sku) return;
-    await addBySku(op.sku, op.qty || 1);
+    const customOptions: MagentoCustomOptionSelection[] | undefined =
+      op.options?.map((o) => ({
+        option_id: o.option_id,
+        option_value: o.value_id,
+      }));
+    await addBySku(
+      op.sku,
+      op.qty || 1,
+      customOptions?.length ? customOptions : undefined,
+    );
     return;
   }
 

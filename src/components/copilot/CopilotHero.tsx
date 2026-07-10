@@ -13,7 +13,7 @@ export default function CopilotHero() {
   const t = useTranslations("copilot");
   const { ready, level } = useCookieConsent();
   const hydrated = useHydrated();
-  const { setOpen, setDraft, submitSuggestion } = useCopilot();
+  const { expand, setDraft, submitSuggestion } = useCopilot();
   const [localDraft, setLocalDraft] = useState("");
 
   const showCopilot = hydrated && ready && level !== "needsChoice";
@@ -28,16 +28,16 @@ export default function CopilotHero() {
     async (text: string) => {
       const trimmed = text.trim();
       if (!trimmed) return;
-      setOpen(true);
+      expand();
       await submitSuggestion(trimmed);
     },
-    [setOpen, submitSuggestion],
+    [expand, submitSuggestion],
   );
 
   async function onSubmit() {
     const trimmed = localDraft.trim();
     if (!trimmed) {
-      setOpen(true);
+      expand();
       return;
     }
     setLocalDraft("");

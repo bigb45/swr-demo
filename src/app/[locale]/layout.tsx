@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Inter, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
@@ -73,6 +73,11 @@ export async function generateMetadata({
   };
 }
 
+/** Keyboard overlays content; layout viewport stays stable on iOS Safari. */
+export const viewport: Viewport = {
+  interactiveWidget: "overlays-content",
+};
+
 interface LocaleLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -112,29 +117,36 @@ export default async function LocaleLayout({
                 <CartProvider>
                   <WatchlistProvider>
                   <CopilotProvider>
-                    <Suspense
-                  fallback={
                     <div
-                      className="sticky top-0 z-50 min-h-[4rem] sm:min-h-[calc(33px+4rem)] md:min-h-[calc(33px+4rem+2.75rem)] bg-white"
-                      style={{
-                        boxShadow: "0 10px 30px rgba(26,28,28,0.06)",
-                      }}
-                      aria-hidden
-                    />
-                  }
-                >
-                  <Header locale={locale} />
-                </Suspense>
-                <div className="flex min-h-0 flex-1 w-full overflow-hidden">
-                  <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
-                    {children}
-                  </main>
-                  <CopilotDock />
-                </div>
-                <Footer locale={locale} />
-                <Toaster />
-                <CookieConsentBanner />
-                {process.env.NODE_ENV === "development" && <DevConsoleBridge />}
+                      id="swr-app-shell"
+                      className="flex min-h-full w-full flex-1 flex-col"
+                    >
+                      <Suspense
+                        fallback={
+                          <div
+                            className="sticky top-0 z-50 min-h-[4rem] sm:min-h-[calc(33px+4rem)] md:min-h-[calc(33px+4rem+2.75rem)] bg-white"
+                            style={{
+                              boxShadow: "0 10px 30px rgba(26,28,28,0.06)",
+                            }}
+                            aria-hidden
+                          />
+                        }
+                      >
+                        <Header locale={locale} />
+                      </Suspense>
+                      <div className="flex min-h-0 flex-1 w-full overflow-hidden">
+                        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+                          {children}
+                        </main>
+                      </div>
+                      <Footer locale={locale} />
+                      <Toaster />
+                      <CookieConsentBanner />
+                      {process.env.NODE_ENV === "development" && (
+                        <DevConsoleBridge />
+                      )}
+                    </div>
+                    <CopilotDock />
                   </CopilotProvider>
                   </WatchlistProvider>
                 </CartProvider>
