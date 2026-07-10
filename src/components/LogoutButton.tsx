@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "@/i18n/navigation";
+import { useCart } from "@/components/CartProvider";
+import { useWatchlist } from "@/components/WatchlistProvider";
 
 interface LogoutButtonProps {
   label: string;
@@ -21,6 +23,8 @@ export default function LogoutButton({
   onLoggedOut,
 }: LogoutButtonProps) {
   const router = useRouter();
+  const { clearCart } = useCart();
+  const { clear: clearWatchlist } = useWatchlist();
   const [pending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,6 +33,8 @@ export default function LogoutButton({
     setSubmitting(true);
     try {
       await fetch("/api/auth/logout", { method: "POST" });
+      clearCart();
+      clearWatchlist();
     } catch {
       // Cookie deletion is local — even on network failure the user can retry.
     } finally {

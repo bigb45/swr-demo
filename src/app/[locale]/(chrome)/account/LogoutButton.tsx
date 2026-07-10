@@ -2,6 +2,8 @@
 
 import { useRouter } from "@/i18n/navigation";
 import { useTransition } from "react";
+import { useCart } from "@/components/CartProvider";
+import { useWatchlist } from "@/components/WatchlistProvider";
 
 interface LogoutButtonProps {
   label: string;
@@ -19,11 +21,15 @@ export default function LogoutButton({
   variant = "inline",
 }: LogoutButtonProps) {
   const router = useRouter();
+  const { clearCart } = useCart();
+  const { clear: clearWatchlist } = useWatchlist();
   const [isPending, startTransition] = useTransition();
 
   function handleLogout() {
     startTransition(async () => {
       await fetch("/api/auth/logout", { method: "POST" });
+      clearCart();
+      clearWatchlist();
       router.push("/account/login");
       router.refresh();
     });
