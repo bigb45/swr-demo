@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getProductsByCategory, getCategoryTree } from "@/lib/magento";
-import type { MagentoCategory } from "@/types/magento";
+import {
+  getProductsByCategory,
+  getCategoryById,
+  getCategoryWithSubcategories,
+} from "@/lib/magento";
+import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
 import ProductGrid from "@/components/ProductGrid";
 import GuestPricingBanner from "@/components/products/GuestPricingBanner";
 import Pagination from "@/components/Pagination";
@@ -17,33 +21,22 @@ interface CategoryPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
-function findCategory(
-  tree: MagentoCategory,
-  id: number
-): MagentoCategory | null {
-  if (tree.id === id) return tree;
-  for (const child of tree.children_data ?? []) {
-    const found = findCategory(child, id);
-    if (found) return found;
-  }
-  return null;
-}
-
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const { id } = await params;
-  try {
-    const tree = await getCategoryTree();
-    const category = findCategory(tree, parseInt(id, 10));
-    if (!category) return { title: "Category not found" };
-    return {
-      title: category.name,
-      description: `Browse ${category.name} — professional tools and hardware.`,
-    };
-  } catch {
-    return { title: "Category" };
-  }
+  const { locale, id } = await params;
+  const categoryId = parseInt(id, 10);
+  if (isNaN(categoryId)) return { title: "Category not found" };
+
+  const category = await getCategoryById(
+    categoryId,
+    LOCALE_STORE_CODES[locale],
+  );
+  if (!category) return { title: "Category not found" };
+  return {
+    title: category.name,
+    description: `Browse ${category.name} — professional tools and hardware.`,
+  };
 }
 
 const PAGE_SIZE = 20;
@@ -62,18 +55,19 @@ export default async function CategoryPage({
   const t = await getTranslations({ locale, namespace: "categories" });
   const tBc = await getTranslations({ locale, namespace: "breadcrumb" });
   const tErr = await getTranslations({ locale, namespace: "errors" });
+  const storeCode = LOCALE_STORE_CODES[locale];
 
-  const [treeResult, productsResult] = await Promise.allSettled([
-    getCategoryTree(),
+  const [categoryResult, productsResult] = await Promise.allSettled([
+    getCategoryWithSubcategories(categoryId, storeCode),
     getProductsByCategory(categoryId, currentPage, PAGE_SIZE),
   ]);
 
-  const category =
-    treeResult.status === "fulfilled"
-      ? findCategory(treeResult.value, categoryId)
-      : null;
+  const categoryData =
+    categoryResult.status === "fulfilled" ? categoryResult.value : null;
 
-  if (!category) notFound();
+  if (!categoryData) notFound();
+
+  const { category, subcategories } = categoryData;
 
   const productList =
     productsResult.status === "fulfilled" ? productsResult.value : null;
@@ -83,9 +77,6 @@ export default async function CategoryPage({
         ? productsResult.reason.message
         : "Unknown error"
       : null;
-
-  const subcategories =
-    category.children_data?.filter((c) => c.is_active) ?? [];
 
   return (
     <div className="swr-page-shell pt-10 pb-8">

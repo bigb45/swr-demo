@@ -327,11 +327,146 @@ export async function getCategoryTree(
   return magentoGet<MagentoCategoryTree>("/categories", 300, storeCode);
 }
 
+/** Magento "Default Category" — immediate children are the shop top-level set. */
+const ROOT_CATEGORY_ID = 2;
+
+/**
+ * Active categories directly under the store root (shop mega menu, filters).
+ *
+ * Avoids `GET /categories` (full tree) and even `?depth=1` — both take minutes
+ * on this catalog. Instead: read the root's `children` id list, then hydrate
+ * those rows via `/categories/list` (~sub-second).
+ */
 export async function getTopLevelCategories(
   storeCode?: string,
 ): Promise<MagentoCategory[]> {
-  const tree = await getCategoryTree(storeCode);
-  return tree.children_data.filter((c) => c.is_active);
+  const root = await magentoGet<{ id: number; children?: string }>(
+    `/categories/${ROOT_CATEGORY_ID}?fields=id,children`,
+    300,
+    storeCode,
+  );
+
+  const ids = (root.children ?? "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (ids.length === 0) return [];
+
+  const params = new URLSearchParams({
+    "searchCriteria[filter_groups][0][filters][0][field]": "entity_id",
+    "searchCriteria[filter_groups][0][filters][0][value]": ids.join(","),
+    "searchCriteria[filter_groups][0][filters][0][condition_type]": "in",
+    "searchCriteria[pageSize]": String(ids.length),
+    fields: "items[id,parent_id,name,is_active,position,level],total_count",
+  });
+
+  const list = await magentoGet<{
+    items?: Array<Omit<MagentoCategory, "children_data"> & {
+      children_data?: MagentoCategory[];
+    }>;
+  }>(`/categories/list?${params.toString()}`, 300, storeCode);
+
+  return (list.items ?? [])
+    .filter((category) => category.is_active)
+    .map((category) => ({
+      ...category,
+      children_data: category.children_data ?? [],
+    }));
+}
+
+async function fetchCategoriesByEntityIds(
+  ids: string[],
+  storeCode?: string,
+): Promise<MagentoCategory[]> {
+  if (ids.length === 0) return [];
+
+  const params = new URLSearchParams({
+    "searchCriteria[filter_groups][0][filters][0][field]": "entity_id",
+    "searchCriteria[filter_groups][0][filters][0][value]": ids.join(","),
+    "searchCriteria[filter_groups][0][filters][0][condition_type]": "in",
+    "searchCriteria[sortOrders][0][field]": "position",
+    "searchCriteria[sortOrders][0][direction]": "ASC",
+    "searchCriteria[pageSize]": String(ids.length),
+    fields: "items[id,parent_id,name,is_active,position,level],total_count",
+  });
+
+  const list = await magentoGet<{
+    items?: Array<Omit<MagentoCategory, "children_data"> & {
+      children_data?: MagentoCategory[];
+    }>;
+  }>(`/categories/list?${params.toString()}`, 300, storeCode);
+
+  return (list.items ?? [])
+    .filter((category) => category.is_active)
+    .map((category) => ({
+      ...category,
+      children_data: category.children_data ?? [],
+    }));
+}
+
+/** Single category row — used for metadata and existence checks. */
+export async function getCategoryById(
+  id: string | number,
+  storeCode?: string,
+): Promise<MagentoCategory | null> {
+  try {
+    const category = await magentoGet<
+      Omit<MagentoCategory, "children_data"> & { children_data?: MagentoCategory[] }
+    >(
+      `/categories/${id}?fields=id,parent_id,name,is_active,position,level`,
+      300,
+      storeCode,
+    );
+    return { ...category, children_data: category.children_data ?? [] };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Category plus its immediate active children — avoids the full category tree.
+ * Uses `GET /categories/{id}` + `/categories/list` (~sub-second on this catalog).
+ */
+export async function getCategoryWithSubcategories(
+  id: string | number,
+  storeCode?: string,
+): Promise<{ category: MagentoCategory; subcategories: MagentoCategory[] } | null> {
+  try {
+    const row = await magentoGet<{
+      id: number;
+      parent_id?: number;
+      name: string;
+      is_active: boolean;
+      position?: number;
+      level?: number;
+      children?: string;
+    }>(
+      `/categories/${id}?fields=id,parent_id,name,is_active,level,children`,
+      300,
+      storeCode,
+    );
+
+    const childIds = (row.children ?? "")
+      .split(",")
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    const subcategories = await fetchCategoriesByEntityIds(childIds, storeCode);
+
+    const category: MagentoCategory = {
+      id: row.id,
+      parent_id: row.parent_id ?? 0,
+      name: row.name,
+      is_active: row.is_active,
+      position: row.position ?? 0,
+      level: row.level ?? 0,
+      children_data: subcategories,
+    };
+
+    return { category, subcategories };
+  } catch {
+    return null;
+  }
 }
 
 export async function getProductsByCategory(

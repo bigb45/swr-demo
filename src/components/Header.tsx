@@ -12,9 +12,6 @@ import LogoutButton from "./LogoutButton";
 import CopilotHeaderTrigger from "@/components/copilot/CopilotHeaderTrigger";
 import ShopMegaMenu from "@/components/ShopMegaMenu";
 import AccountHeaderButton from "@/components/AccountHeaderButton";
-import { getTopLevelCategories } from "@/lib/magento";
-import { LOCALE_STORE_CODES } from "@/lib/magento-shared";
-import { toShopCategoryNavItems } from "@/lib/shop-categories";
 
 interface HeaderProps {
   locale: string;
@@ -26,10 +23,6 @@ export default async function Header({ locale }: HeaderProps) {
 
   const cookieStore = await cookies();
   const isAuthenticated = !!cookieStore.get("swr_customer_token")?.value;
-  const shopCategories = toShopCategoryNavItems(
-    await getTopLevelCategories(LOCALE_STORE_CODES[locale]).catch(() => []),
-    8,
-  );
 
   const primaryLinks = [
     { href: "/shop", label: t("shop") },
@@ -110,7 +103,6 @@ export default async function Header({ locale }: HeaderProps) {
             {/* Hamburger — mobile only, rendered client-side */}
             <MobileNav
               links={mobileLinks}
-              shopCategories={shopCategories}
               cartLabel={t("cart")}
               watchlistLabel={t("watchlist")}
               shopAllLabel={t("shopMenu.all")}
@@ -222,7 +214,6 @@ export default async function Header({ locale }: HeaderProps) {
                 key={link.href}
                 href="/shop"
                 label={link.label}
-                categories={shopCategories}
                 allLabel={t("shopMenu.all")}
                 heading={t("shopMenu.heading")}
               />

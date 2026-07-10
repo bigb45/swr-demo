@@ -6,12 +6,11 @@ import { Link } from "@/i18n/navigation";
 import LogoutButton from "./LogoutButton";
 import LocaleSwitcher from "./LocaleSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
-import type { ShopCategoryNavItem } from "@/lib/shop-categories";
 import ShopCategoryIcon from "./shop/ShopCategoryIcon";
+import { useShopCategories } from "@/lib/useShopCategories";
 
 interface MobileNavProps {
   links: { href: string; label: string }[];
-  shopCategories: ShopCategoryNavItem[];
   cartLabel: string;
   watchlistLabel: string;
   shopAllLabel: string;
@@ -25,7 +24,6 @@ interface MobileNavProps {
 
 export default function MobileNav({
   links,
-  shopCategories,
   cartLabel,
   watchlistLabel,
   shopAllLabel,
@@ -33,6 +31,8 @@ export default function MobileNav({
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("nav");
+  // Load categories only once the drawer has been opened.
+  const { categories: shopCategories } = useShopCategories(open);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -120,9 +120,9 @@ export default function MobileNav({
               >
                 {label}
               </Link>
-              {href === "/shop" && shopCategories.length > 0 ? (
+              {href === "/shop" && (shopCategories?.length ?? 0) > 0 ? (
                 <div className="mx-6 mb-2 grid grid-cols-1 gap-1 bg-surface-container-low p-2" style={{ borderRadius: "var(--radius-card)" }}>
-                  {shopCategories.map((category) => (
+                  {(shopCategories ?? []).map((category) => (
                     <Link
                       key={category.id}
                       href={category.href}

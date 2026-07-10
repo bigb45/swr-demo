@@ -2,13 +2,12 @@
 
 import { useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import type { ShopCategoryNavItem } from "@/lib/shop-categories";
 import ShopCategoryIcon from "./shop/ShopCategoryIcon";
+import { useShopCategories } from "@/lib/useShopCategories";
 
 interface ShopMegaMenuProps {
   label: string;
   href: "/shop";
-  categories: ShopCategoryNavItem[];
   allLabel: string;
   heading: string;
 }
@@ -16,20 +15,28 @@ interface ShopMegaMenuProps {
 export default function ShopMegaMenu({
   label,
   href,
-  categories,
   allLabel,
   heading,
 }: ShopMegaMenuProps) {
   const [open, setOpen] = useState(false);
+  // Once the menu has been opened once we start (and keep) loading categories.
+  const [primed, setPrimed] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const { categories, loading } = useShopCategories(primed);
+
+  const reveal = () => {
+    setOpen(true);
+    setPrimed(true);
+  };
 
   return (
     <div
       ref={rootRef}
       className="relative h-full flex items-center"
-      onMouseEnter={() => setOpen(true)}
+      onMouseEnter={reveal}
       onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
+      onFocus={reveal}
       onBlur={(event) => {
         if (!rootRef.current?.contains(event.relatedTarget as Node | null)) setOpen(false);
       }}
@@ -52,20 +59,32 @@ export default function ShopMegaMenu({
         aria-label={heading}
       >
         <div className="grid grid-cols-2 gap-2">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={category.href}
-              className="group flex items-center gap-3 bg-surface-container-lowest px-3 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors"
-              style={{ borderRadius: "var(--radius-btn)" }}
-              role="menuitem"
-            >
-              <span className="flex h-9 w-9 items-center justify-center bg-white p-1" style={{ borderRadius: "var(--radius-btn)" }}>
-                <ShopCategoryIcon icon={category.icon} className="h-7 w-7" />
-              </span>
-              {category.name}
-            </Link>
-          ))}
+          {loading && categories.length === 0
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 bg-surface-container-lowest px-3 py-3"
+                  style={{ borderRadius: "var(--radius-btn)" }}
+                  aria-hidden="true"
+                >
+                  <span className="h-9 w-9 animate-pulse bg-surface-container-highest" style={{ borderRadius: "var(--radius-btn)" }} />
+                  <span className="h-3 w-28 animate-pulse bg-surface-container-highest" style={{ borderRadius: "var(--radius-btn)" }} />
+                </div>
+              ))
+            : categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={category.href}
+                  className="group flex items-center gap-3 bg-surface-container-lowest px-3 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors"
+                  style={{ borderRadius: "var(--radius-btn)" }}
+                  role="menuitem"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center bg-white p-1" style={{ borderRadius: "var(--radius-btn)" }}>
+                    <ShopCategoryIcon icon={category.icon} className="h-7 w-7" />
+                  </span>
+                  {category.name}
+                </Link>
+              ))}
         </div>
         <Link
           href={href}
