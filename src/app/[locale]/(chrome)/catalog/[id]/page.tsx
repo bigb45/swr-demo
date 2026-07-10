@@ -27,7 +27,7 @@ export async function generateMetadata({
   if (!doc) return { title: "Not found" };
   const t = await getTranslations({ locale, namespace: "catalog" });
   return {
-    title: `${doc.title} — ${doc.brand}`,
+    title: `${doc.title} · ${doc.brand}`,
     description: doc.description ?? t("metaDescription"),
     ...localeAlternates(locale, `/catalog/${id}`),
   };

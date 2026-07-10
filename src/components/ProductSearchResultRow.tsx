@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
 import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
+import { getSupportedOptions } from "@/lib/custom-options";
 import { getDisplayShortDescription } from "@/lib/product-display";
 import NoImagePlaceholder from "@/components/ui/NoImagePlaceholder";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
@@ -40,8 +41,14 @@ export default function ProductSearchResultRow({
   const stock = getStockStatus(product);
   const maxQty =
     typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
-  const canAddToCart =
-    isAuthenticated && product.price > 0 && stock.level !== "out";
+  // Guests may add to cart (prices stay hidden; checkout requires sign-in).
+  const canAddToCart = product.price > 0 && stock.level !== "out";
+  // Products with required custom options must be configured on the PDP
+  // before adding — same guard as ProductCard.
+  const hasRequiredOptions = getSupportedOptions(product.options).some(
+    (option) => option.is_require,
+  );
+  const shouldConfigureBeforeAdd = canAddToCart && hasRequiredOptions;
   const showGuestPriceGate = !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, tProducts);
 
@@ -58,7 +65,7 @@ export default function ProductSearchResultRow({
   async function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!canAddToCart || status === "loading") return;
+    if (!canAddToCart || shouldConfigureBeforeAdd || status === "loading") return;
 
     setStatus("loading");
     try {
@@ -165,7 +172,23 @@ export default function ProductSearchResultRow({
           </div>
 
           <div className="flex flex-col justify-center gap-2">
-            {canAddToCart ? (
+            {shouldConfigureBeforeAdd ? (
+              <div className="flex items-center gap-2 self-start sm:self-end">
+                <WatchlistButton
+                  variant="icon"
+                  size="sm"
+                  sku={product.sku}
+                  name={product.name}
+                  imageUrl={imageUrl}
+                />
+                <Link
+                  href={href}
+                  className="px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] bg-primary hover:brightness-110 transition-all whitespace-nowrap"
+                >
+                  {tProducts("selectOptions")}
+                </Link>
+              </div>
+            ) : canAddToCart ? (
               <>
                 <div className="inline-flex h-9 items-center self-start sm:self-end rounded-[3px] bg-surface-container-low">
                   <button

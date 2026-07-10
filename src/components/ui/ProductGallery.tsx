@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import type { StockLevel } from "@/lib/stock";
 import StockBadge from "./StockBadge";
 import NoImagePlaceholder from "./NoImagePlaceholder";
@@ -33,6 +34,7 @@ export default function ProductGallery({
   stockLevel,
   stockLabel,
 }: ProductGalleryProps) {
+  const t = useTranslations("products");
   const [activeIdx, setActiveIdx] = useState(0);
   const active = images[activeIdx] ?? images[0];
   const touchStartX = useRef<number | null>(null);
@@ -93,7 +95,7 @@ export default function ProductGallery({
           <>
             <button
               onClick={prev}
-              aria-label="Previous image"
+              aria-label={t("galleryPrevImage")}
               className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -102,7 +104,7 @@ export default function ProductGallery({
             </button>
             <button
               onClick={next}
-              aria-label="Next image"
+              aria-label={t("galleryNextImage")}
               className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-(--radius-btn) bg-primary text-white shadow-ambient hover:bg-primary/90 transition-colors"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -116,7 +118,10 @@ export default function ProductGallery({
                 <button
                   key={idx}
                   onClick={() => setActiveIdx(idx)}
-                  aria-label={`Go to image ${idx + 1}`}
+                  aria-label={t("galleryGoToImage", {
+                    index: idx + 1,
+                    total: images.length,
+                  })}
                   className={
                     idx === activeIdx
                       ? "h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
@@ -142,7 +147,10 @@ export default function ProductGallery({
                   : "opacity-60 hover:opacity-100"
               }`}
               style={{ borderRadius: "var(--radius-table)" }}
-              aria-label={`View image ${idx + 1}`}
+              aria-label={t("galleryGoToImage", {
+                index: idx + 1,
+                total: images.length,
+              })}
             >
               <Image
                 src={img.src}

@@ -177,7 +177,7 @@ export default async function OrderDetailPage({
             {paymentMethod ? (
               <span className="font-medium">{paymentMethod}</span>
             ) : (
-              <span className="text-on-surface-variant">—</span>
+              <span className="text-on-surface-variant">-</span>
             )}
           </div>
           {poRef ? (
@@ -365,6 +365,7 @@ export default async function OrderDetailPage({
           downloadCreditmemo: t("downloadCreditmemo"),
           trackingNumber: t("trackingNumber"),
           noDocuments: t("noDocuments"),
+          downloadError: t("downloadError"),
         }}
       />
       </div>

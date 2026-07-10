@@ -134,7 +134,8 @@ export default async function ProductsPage({
       getTopLevelCategories(storeCode),
     ]);
   } catch (e) {
-    error = e instanceof Error ? e.message : "Unknown error";
+    console.error("[products] catalog fetch failed:", e);
+    error = "unavailable";
   }
 
   const paginationParams = new URLSearchParams();
@@ -189,7 +190,6 @@ export default async function ProductsPage({
           <p className="text-sm text-red-700 font-medium">
             {tErr("productsUnavailable", { url: magentoBaseUrl })}
           </p>
-          <p className="text-xs text-red-500 mt-1 font-mono">{error}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">

@@ -111,7 +111,7 @@ export default function ShipmentPdf({
                 <View key={t.entity_id ?? i} style={styles.trackRow}>
                   <Text>
                     {labels.carrier}:{" "}
-                    {t.title ?? t.carrier_code ?? "—"}
+                    {t.title ?? t.carrier_code ?? "-"}
                   </Text>
                   <Text>
                     {labels.trackingNumber}:{" "}

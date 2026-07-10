@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ServiceTimeline from "@/components/service/ServiceTimeline";
+import DemoDataNotice from "@/components/ui/DemoDataNotice";
 import {
   getCase,
   SERVICE_STATUSES,
@@ -44,7 +45,7 @@ export async function generateMetadata({
   const c = await getCase(id);
   const t = await getTranslations({ locale, namespace: "service" });
   if (!c) return { title: t("metaTitle") };
-  return { title: `${c.id} — ${t(`kind.${c.kind}`)} · ${t("metaTitle")}` };
+  return { title: `${c.id} · ${t(`kind.${c.kind}`)} · ${t("metaTitle")}` };
 }
 
 export default async function ServiceCasePage({ params }: PageProps) {
@@ -101,6 +102,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
         <p className="text-sm text-on-surface-variant max-w-3xl leading-relaxed">
           {c.description}
         </p>
+        <DemoDataNotice label={t("demoNotice")} className="mt-2 max-w-3xl" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6">

@@ -125,31 +125,35 @@ export default function CartContent() {
     ? "1fr 126px 126px 126px"
     : "1fr 126px";
 
+  const cartCardClass =
+    "bg-surface-container-lowest rounded-card overflow-hidden";
+  const cartCardStyle = { boxShadow: "var(--shadow-ambient)" } as const;
+
   return (
     <div className="flex flex-col xl:flex-row gap-8 items-stretch xl:items-start">
       {/* ── Left: Cart Items ──────────────────────────────────────── */}
       <section className="w-full flex-1 min-w-0">
-        {/* Back link */}
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors mb-5"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          {t("backToCatalog")}
-        </Link>
-
-        {/* Heading */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary leading-tight mb-2">
-            {t("heading")}
-          </h1>
-          {!isAuthenticated ? (
-            <p className="text-sm text-on-surface-variant">{t("subheadingGuest")}</p>
-          ) : null}
-        </div>
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-3xl font-bold text-primary leading-tight mb-2">
+              {t("heading")}
+            </h1>
+            {!isAuthenticated ? (
+              <p className="text-sm text-on-surface-variant">{t("subheadingGuest")}</p>
+            ) : null}
+          </div>
+          <Link
+            href="/products"
+            className="inline-flex shrink-0 items-center gap-2 self-start px-3 py-2 text-sm font-semibold text-primary bg-surface-container-lowest hover:bg-surface-container-low active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] transition-all rounded-(--radius-btn)"
+            style={cartCardStyle}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            {t("backToShop")}
+          </Link>
+        </header>
 
         {fetchError && items.length === 0 && !loading && (
           <div
@@ -180,9 +184,12 @@ export default function CartContent() {
         )}
 
         {loading && items.length === 0 ? (
-          <CartSkeleton label={t("loading")} />
+          <div className={cartCardClass} style={cartCardStyle}>
+            <CartSkeleton label={t("loading")} />
+          </div>
         ) : items.length === 0 ? (
-          <div className="py-20 flex flex-col items-center gap-6 text-center">
+          <div className={`${cartCardClass} py-20 px-6`} style={cartCardStyle}>
+            <div className="flex flex-col items-center gap-6 text-center">
             {/* Cart illustration */}
             <div className="w-20 h-20 rounded-full bg-surface-container-low flex items-center justify-center">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" className="text-on-surface-variant/40">
@@ -207,9 +214,10 @@ export default function CartContent() {
             <div className="w-full max-w-sm pt-4 border-t border-outline-variant/30">
               <CsvImportButton />
             </div>
+            </div>
           </div>
         ) : (
-          <>
+          <div className={cartCardClass} style={cartCardStyle}>
             {/* Table header — desktop only */}
             <div
               className="hidden lg:grid text-xs font-semibold uppercase tracking-wide text-on-surface-variant bg-surface-container-low px-4 py-2"
@@ -232,7 +240,7 @@ export default function CartContent() {
               {items.map((item) => {
                 const lineTotal = item.unitPrice * item.qty;
                 return (
-                  <div key={item.itemId} className="py-5 px-4">
+                  <div key={item.itemId} className="group py-5 px-4">
                     {/* Desktop: 4-column grid */}
                     <div
                       className="hidden lg:grid items-center gap-4"
@@ -242,7 +250,7 @@ export default function CartContent() {
                       <div className="flex gap-4 items-start">
                         <div className="w-20 h-20 bg-surface-container-low shrink-0 overflow-hidden rounded-card">
                           {item.imageUrl ? (
-                            <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="w-full h-full object-cover" />
+                            <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-on-surface-variant/30">
                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
@@ -307,7 +315,7 @@ export default function CartContent() {
                     <div className="lg:hidden flex gap-3">
                       <div className="w-16 h-16 bg-surface-container-low shrink-0 overflow-hidden rounded-card">
                         {item.imageUrl ? (
-                          <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="w-full h-full object-cover" />
+                          <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-on-surface-variant/30">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
@@ -353,8 +361,8 @@ export default function CartContent() {
             </div>
 
             {/* CSV toolbar */}
-            <div className="mt-6 border-t border-outline-variant/30 pt-4">
-              <div className="flex flex-col gap-3 rounded-card bg-surface-container-low px-4 py-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+            <div className="border-t border-outline-variant/30 bg-surface-container-low px-4 py-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
                   <CsvImportButton />
                   <button
@@ -372,13 +380,16 @@ export default function CartContent() {
                 ) : null}
               </div>
             </div>
-          </>
+          </div>
         )}
       </section>
 
       {/* ── Right: Order Summary Sidebar — only shown when cart has items ── */}
       {items.length > 0 && (
-        <aside className="w-full xl:w-[395px] xl:shrink-0">
+        <aside
+          className="w-full xl:w-[395px] xl:shrink-0 xl:sticky xl:self-start"
+          style={{ top: "calc(var(--swr-header-offset) + 1rem)" }}
+        >
           {isAuthenticated ? (
             <div
               className="bg-surface-container-lowest p-6 rounded-card"

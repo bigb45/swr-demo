@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { Headset, Wrench, Truck, ArrowRight } from "lucide-react";
+import { Headset, Wrench, Truck, FileCheck, ArrowRight } from "lucide-react";
 import { getProducts } from "@/lib/magento";
 import {
   Hero,
@@ -79,6 +79,13 @@ export default async function HomePage({ params }: HomePageProps) {
       title: tServices("delivery.title"),
       description: t("services.delivery"),
       href: "/services/delivery",
+    },
+    {
+      icon: <FileCheck size={26} strokeWidth={1.5} aria-hidden />,
+      eyebrow: tServices("customs.eyebrow"),
+      title: tServices("customs.title"),
+      description: t("services.customs"),
+      href: "/services/customs",
     },
   ];
 
@@ -173,7 +180,7 @@ export default async function HomePage({ params }: HomePageProps) {
               />
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {servicePillars.map((p, i) => (
               <div
                 key={p.href}

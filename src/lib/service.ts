@@ -128,7 +128,7 @@ function seedIfNeeded() {
       customerId: "demo",
       reason: "damaged_in_transit",
       description:
-        "Housing arrived cracked on one unit. Other three are fine — keeping those, please replace the damaged one.",
+        "Housing arrived cracked on one unit. Other three are fine. Keeping those, please replace the damaged one.",
       contactName: "Anja Werner",
       contactEmail: "anja.werner@example.com",
       contactPhone: "+49 7621 55 012",
@@ -188,7 +188,7 @@ function seedIfNeeded() {
       customerId: "demo",
       reason: "breakdown",
       description:
-        "Torch trigger intermittent — cuts out mid-arc. Possibly water in gas line after last site job.",
+        "Torch trigger intermittent. Cuts out mid-arc. Possibly water in gas line after last site job.",
       contactName: "Frank Klein",
       contactEmail: "f.klein@example.com",
       contactPhone: "+49 7621 55 014",
@@ -233,7 +233,7 @@ function seedIfNeeded() {
           at: iso(now - 1 * day),
           status: "awaiting_customer",
           author: "swr",
-          note: "Replacement trigger is €86.40. Approve to proceed — covered by warranty if trigger was supplied with the machine.",
+          note: "Replacement trigger is €86.40. Approve to proceed. Covered by warranty if trigger was supplied with the machine.",
         },
       ],
     },

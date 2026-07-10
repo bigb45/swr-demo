@@ -9,6 +9,7 @@ import MaintenanceLogTable from "@/components/fleet/MaintenanceLogTable";
 import type { MaintenanceKind } from "@/lib/fleet";
 import { listCasesForMachine } from "@/lib/service";
 import SpecTable from "@/components/ui/SpecTable";
+import DemoDataNotice from "@/components/ui/DemoDataNotice";
 
 interface PageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -38,7 +39,7 @@ export async function generateMetadata({
     return { title: t("metaTitle") };
   }
   return {
-    title: `${machine.brand} ${machine.model} — ${t("metaTitle")}`,
+    title: `${machine.brand} ${machine.model} · ${t("metaTitle")}`,
   };
 }
 
@@ -100,6 +101,7 @@ export default async function MachinePage({ params }: PageProps) {
             {machine.notes}
           </p>
         ) : null}
+        <DemoDataNotice label={t("demoNotice")} className="mt-2 max-w-2xl" />
       </div>
 
       {/* Spec block */}

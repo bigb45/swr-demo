@@ -78,7 +78,7 @@ export default function MaintenanceLogTable({
         ) : null}
       </div>
     ),
-    technician: r.technician ?? "—",
+    technician: r.technician ?? "-",
     document: r.documentId ? (
       <Link
         href={`/catalog/${r.documentId}`}
@@ -88,7 +88,7 @@ export default function MaintenanceLogTable({
         <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
       </Link>
     ) : (
-      "—"
+      "-"
     ),
   }));
 

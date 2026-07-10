@@ -57,10 +57,14 @@ function ResetPasswordInner() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+        <label
+          htmlFor="reset-email"
+          className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           {t("email")}
         </label>
         <input
+          id="reset-email"
           type="email"
           required
           autoComplete="email"
@@ -71,10 +75,14 @@ function ResetPasswordInner() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+        <label
+          htmlFor="reset-new-password"
+          className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           {t("newPassword")}
         </label>
         <input
+          id="reset-new-password"
           type="password"
           required
           autoComplete="new-password"
@@ -85,10 +93,14 @@ function ResetPasswordInner() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+        <label
+          htmlFor="reset-confirm-password"
+          className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+        >
           {t("confirmPassword")}
         </label>
         <input
+          id="reset-confirm-password"
           type="password"
           required
           autoComplete="new-password"
@@ -99,7 +111,9 @@ function ResetPasswordInner() {
       </div>
 
       {error && (
-        <p className="text-xs font-semibold text-red-600 text-center">{error}</p>
+        <p role="alert" className="text-xs font-semibold text-red-600 text-center">
+          {error}
+        </p>
       )}
 
       <button

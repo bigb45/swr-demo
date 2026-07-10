@@ -111,7 +111,6 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
   const handleAdd = useCallback(async () => {
     if (!product || product.price <= 0 || product.stockLevel === "out")
       return;
-    if (!isAuthenticated) return;
     if (addStatus === "loading") return;
 
     if (hasOptions && !optionsOpen) {
@@ -159,10 +158,10 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
     qty,
     addBySku,
     addStatus,
-    isAuthenticated,
     hasOptions,
     optionsOpen,
     optionSelection,
+    tc,
   ]);
 
   if (state === "loading") {
@@ -182,14 +181,16 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
   }
 
   const href = `/products/${encodeURIComponent(product.sku)}`;
-  const stockLabel = getStockLabel(product.stockLevel, (key) =>
-    tp(key as "inStock" | "lowStock" | "outOfStock"),
-  );
+  // No badge is rendered for "unknown" stock — never claim availability.
+  const stockLabel =
+    product.stockLevel !== "unknown"
+      ? getStockLabel(product.stockLevel, (key) =>
+          tp(key as "inStock" | "lowStock" | "outOfStock"),
+        )
+      : null;
   const showCatalogPrice = isAuthenticated || product.price <= 0;
   const showAddToCart =
-    isAuthenticated &&
-    product.stockLevel !== "out" &&
-    product.price > 0;
+    product.stockLevel !== "out" && product.price > 0;
 
   const addButtonLabel =
     addStatus === "loading"
@@ -222,7 +223,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center text-[10px] text-on-surface-variant/50">
-              —
+              -
             </div>
           )}
         </Link>
@@ -231,7 +232,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
             <span className="font-mono text-[10px] uppercase tracking-wide text-on-surface-variant">
               {product.sku}
             </span>
-            {product.stockLevel !== "unknown" && (
+            {product.stockLevel !== "unknown" && stockLabel && (
               <StockBadge
                 level={product.stockLevel}
                 label={stockLabel}
@@ -274,6 +275,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
                 value={optionSelection}
                 onChange={handleOptionChange}
                 missingOptionIds={missingOptionIds}
+                hidePrices={!showCatalogPrice}
               />
             </div>
           ) : null}
@@ -283,7 +285,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
                 type="button"
                 className="px-2 py-1 text-sm text-on-surface hover:bg-surface-container-highest disabled:opacity-40"
                 aria-label={tc("qtyDecrease")}
-                disabled={qty <= 1 || (!isAuthenticated && product.price > 0)}
+                disabled={qty <= 1}
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
               >
                 −
@@ -295,43 +297,28 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
                 type="button"
                 className="px-2 py-1 text-sm text-on-surface hover:bg-surface-container-highest disabled:opacity-40"
                 aria-label={tc("qtyIncrease")}
-                disabled={
-                  qty >= 99 ||
-                  product.stockLevel === "out" ||
-                  (!isAuthenticated && product.price > 0)
-                }
+                disabled={qty >= 99 || product.stockLevel === "out"}
                 onClick={() => setQty((q) => Math.min(99, q + 1))}
               >
                 +
               </button>
             </div>
             {showAddToCart && (
-                <button
-                  type="button"
-                  onClick={() => void handleAdd()}
-                  disabled={addStatus === "loading"}
-                  className={`rounded-[var(--radius-btn)] px-4 py-2 text-xs font-semibold text-on-secondary transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                    addStatus === "success"
-                      ? "bg-secondary"
-                      : addStatus === "error"
-                        ? "bg-error"
-                        : "bg-secondary hover:brightness-110"
-                  }`}
-                >
-                  {addButtonLabel}
-                </button>
-              )}
-            {!showAddToCart &&
-              !isAuthenticated &&
-              product.price > 0 &&
-              product.stockLevel !== "out" && (
-                <Link
-                  href="/account/login"
-                  className="rounded-[var(--radius-btn)] px-4 py-2 text-xs font-semibold text-white bg-primary hover:brightness-110 transition-colors"
-                >
-                  {tp("signInToAddToCart")}
-                </Link>
-              )}
+              <button
+                type="button"
+                onClick={() => void handleAdd()}
+                disabled={addStatus === "loading"}
+                className={`rounded-[var(--radius-btn)] px-4 py-2 text-xs font-semibold text-on-secondary transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                  addStatus === "success"
+                    ? "bg-secondary"
+                    : addStatus === "error"
+                      ? "bg-error"
+                      : "bg-secondary hover:brightness-110"
+                }`}
+              >
+                {addButtonLabel}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -340,7 +327,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
 }
 
 function getStockLabel(
-  level: StockLevel,
+  level: Exclude<StockLevel, "unknown">,
   t: (key: "inStock" | "lowStock" | "outOfStock") => string,
 ): string {
   switch (level) {
@@ -350,8 +337,5 @@ function getStockLabel(
       return t("lowStock");
     case "out":
       return t("outOfStock");
-    case "unknown":
-    default:
-      return t("inStock");
   }
 }

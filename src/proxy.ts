@@ -42,14 +42,15 @@ const LEGACY_REDIRECTS: Record<string, string> = {
   "/zollabwicklung": "/services/customs",
   "/customs": "/services/customs",
 
-  // Industry hubs (WordPress German slugs › new English slugs)
-  "/schweisstechnik": "/industries/welding",
-  "/werkzeuge": "/industries/tools",
-  "/elektrowerkzeuge": "/industries/power-tools",
-  "/maschinen": "/industries/machines",
-  "/betriebseinrichtungen": "/industries/facility-equipment",
-  "/werkstattbedarf": "/industries/workshop-supplies",
-  "/arbeitsschutz": "/industries/occupational-safety",
+  // Former industry hubs (WordPress German slugs). The /industries/* pages
+  // were retired — send visitors to the live shop instead.
+  "/schweisstechnik": "/shop",
+  "/werkzeuge": "/shop",
+  "/elektrowerkzeuge": "/shop",
+  "/maschinen": "/shop",
+  "/betriebseinrichtungen": "/shop",
+  "/werkstattbedarf": "/shop",
+  "/arbeitsschutz": "/shop",
   "/katalog": "/catalog",
 
   // Supporting pages (WordPress › new)

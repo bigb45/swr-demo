@@ -194,6 +194,7 @@ export default function AddressForm({
             country: t("country"),
             region: t("region"),
             regionOptional: t("regionOptional"),
+            selectRegion: t("selectRegion"),
           }}
           countryHint={t("countryHint")}
         />

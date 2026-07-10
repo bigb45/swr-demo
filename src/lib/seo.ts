@@ -11,7 +11,7 @@ export function getSiteBaseUrl(): string {
 /**
  * Build canonical + hreflang alternates for a page that exists at the same
  * sub-path in every locale (e.g. "/about", "/services/consulting",
- * "/industries/welding"). Pass an empty string for the home page.
+ * "/services/customs"). Pass an empty string for the home page.
  *
  * Usage in a page's generateMetadata:
  *   return { ...localeAlternates(locale, "/about"), title, description };

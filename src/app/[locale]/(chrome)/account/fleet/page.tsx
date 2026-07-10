@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { listCustomerMachines, warrantyStatus } from "@/lib/fleet";
 import FleetMachineCard from "@/components/fleet/FleetMachineCard";
+import DemoDataNotice from "@/components/ui/DemoDataNotice";
 
 interface FleetPageProps {
   params: Promise<{ locale: string }>;
@@ -49,6 +50,7 @@ export default async function FleetPage({ params }: FleetPageProps) {
         <p className="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
           {t("subheading")}
         </p>
+        <DemoDataNotice label={t("demoNotice")} className="mt-2 max-w-2xl" />
       </div>
 
       {/* Counters — warranty split (active / expiring ≤90d / expired) + activity */}

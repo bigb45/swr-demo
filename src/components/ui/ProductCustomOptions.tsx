@@ -17,6 +17,7 @@ interface ProductCustomOptionsProps {
   value: CustomOptionSelectionState;
   onChange: (optionId: string, next: string | string[]) => void;
   missingOptionIds?: Set<string>;
+  hidePrices?: boolean;
 }
 
 export default function ProductCustomOptions({
@@ -24,6 +25,7 @@ export default function ProductCustomOptions({
   value,
   onChange,
   missingOptionIds,
+  hidePrices = false,
 }: ProductCustomOptionsProps) {
   const t = useTranslations("products");
   const { formatPrice } = useCurrency();
@@ -33,7 +35,7 @@ export default function ProductCustomOptions({
   if (supported.length === 0) return null;
 
   function priceSuffix(optValue: MagentoProductOptionValue): string | null {
-    if (!optValue.price) return null;
+    if (hidePrices || !optValue.price) return null;
     if (optValue.price_type === "percent") return `+${optValue.price}%`;
     return `+ ${formatPrice(optValue.price, locale)}`;
   }

@@ -79,7 +79,7 @@ export default function WatchlistPageClient() {
                   />
                 ) : (
                   <span className="flex h-full items-center justify-center text-[10px] text-on-surface-variant/50">
-                    —
+                    -
                   </span>
                 )}
               </Link>

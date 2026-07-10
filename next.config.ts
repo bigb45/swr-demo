@@ -5,6 +5,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   async redirects() {
+    // The /industries hub pages were retired; keep old locale-prefixed URLs
+    // alive with permanent redirects into the shop.
     return [
       {
         source: "/:locale/industries",

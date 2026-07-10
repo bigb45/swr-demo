@@ -61,7 +61,7 @@ export async function GET(
     adjustment: t("adjustment"),
     refundTotal: t("refundTotal"),
     companyName: "SWR Handelsgesellschaft mbH",
-    companyTagline: "Lörrach — Qualität verbindet",
+    companyTagline: "Lörrach · Qualität verbindet",
     footer: "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
   };
 

@@ -37,7 +37,7 @@ export async function generateMetadata({
         getCustomAttribute(product, "short_description")?.replace(
           /<[^>]+>/g,
           ""
-        ) ?? `${product.name} — SKU: ${product.sku}`,
+        ) ?? `${product.name} · SKU: ${product.sku}`,
     };
   } catch {
     return { title: "Product not found" };

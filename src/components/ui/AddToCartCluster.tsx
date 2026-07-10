@@ -67,9 +67,7 @@ export default function AddToCartCluster({
     (a, b) => a.qty - b.qty,
   );
   const hideCatalogPrices = !isAuthenticated && product.price > 0;
-  // Cart is reserved for signed-in customers with a sellable price; everyone
-  // else (guests, price-on-request) gets the watchlist instead.
-  const canAddToCart = isAuthenticated && product.price > 0;
+  const canAddToCart = product.price > 0;
   const watchlistImageUrl = getProductImageUrl(product);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -102,8 +100,6 @@ export default function AddToCartCluster({
   }
 
   async function handleAddToCart() {
-    if (hideCatalogPrices) return;
-
     const missing = getMissingRequiredOptions(product.options, optionSelection);
     if (missing.length > 0) {
       setMissingOptionIds(new Set(missing.map((o) => String(o.option_id))));
@@ -131,7 +127,10 @@ export default function AddToCartCluster({
       notify.success(t("added"));
       setTimeout(() => setStatus("idle"), 2000);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error";
+      const message =
+        err instanceof Error && err.message
+          ? err.message
+          : t("addToCartError");
       setErrorMsg(message);
       setStatus("error");
       notify.error(message);
@@ -234,8 +233,9 @@ export default function AddToCartCluster({
             value={optionSelection}
             onChange={handleOptionChange}
             missingOptionIds={missingOptionIds}
+            hidePrices={hideCatalogPrices}
           />
-          {optionsSurcharge > 0 ? (
+          {!hideCatalogPrices && optionsSurcharge > 0 ? (
             <div className="mt-3 flex items-baseline justify-between border-t border-outline-variant/40 pt-2">
               <span className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
                 {t("options.optionsTotal")}
@@ -315,7 +315,7 @@ export default function AddToCartCluster({
             </svg>
           )}
           <span className="line-clamp-2 text-pretty">
-            {isLoading ? "" : isSuccess ? t("added") : t("addToCart")}
+            {isLoading ? t("adding") : isSuccess ? t("added") : t("addToCart")}
           </span>
         </button>
       </div>

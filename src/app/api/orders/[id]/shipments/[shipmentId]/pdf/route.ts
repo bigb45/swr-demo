@@ -58,7 +58,7 @@ export async function GET(
     trackingNumber: t("trackingNumber"),
     noTracking: t("noTracking"),
     companyName: "SWR Handelsgesellschaft mbH",
-    companyTagline: "Lörrach — Qualität verbindet",
+    companyTagline: "Lörrach · Qualität verbindet",
     footer: "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
   };
 

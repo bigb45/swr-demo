@@ -42,7 +42,7 @@ async function fetchAdminTokenFromMagento(): Promise<string> {
         ? " Check MAGENTO_ADMIN_USER / MAGENTO_ADMIN_PASSWORD for this host (they must match a valid Magento admin user on that instance). If the storefront uses Apache from the project root, MAGENTO_URL may need a /pub suffix."
         : "";
     throw new Error(
-      `Failed to get Magento admin token: ${res.status}${hint}${detail ? ` — ${detail.slice(0, 200)}` : ""}`,
+      `Failed to get Magento admin token: ${res.status}${hint}${detail ? `: ${detail.slice(0, 200)}` : ""}`,
     );
   }
 
@@ -179,7 +179,7 @@ export async function magentoGet<T>(
   if (res.status === 400 && storeCode) {
     if (process.env.NODE_ENV !== "production") {
       console.warn(
-        `[magento] store view "${storeCode}" not available — falling back to default scope for ${path}`,
+        `[magento] store view "${storeCode}" not available, falling back to default scope for ${path}`,
       );
     }
     res = await doFetch(token, undefined);
@@ -187,7 +187,7 @@ export async function magentoGet<T>(
 
   if (!res.ok) {
     throw new Error(
-      `Magento REST error: ${res.status} ${res.statusText} — ${path}`
+      `Magento REST error: ${res.status} ${res.statusText} (${path})`
     );
   }
 
@@ -242,7 +242,7 @@ async function magentoPost<T>(
 
   if (!res.ok) {
     throw new Error(
-      `Magento REST error: ${res.status} ${res.statusText} — ${path}`,
+      `Magento REST error: ${res.status} ${res.statusText} (${path})`,
     );
   }
 

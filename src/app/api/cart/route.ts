@@ -13,13 +13,13 @@ const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
 const CUSTOMER_COOKIE = "swr_customer_token";
 
 function stripGuestPrices<T extends Record<string, unknown>>(totals: T): T {
-  const zeroed = { ...totals };
+  const zeroed: Record<string, unknown> = { ...totals };
   for (const key of Object.keys(zeroed)) {
     if (typeof zeroed[key] === "number") {
       zeroed[key] = 0;
     }
   }
-  return zeroed;
+  return zeroed as T;
 }
 
 interface MagentoCartItem {

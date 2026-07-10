@@ -13,6 +13,7 @@ interface CountryRegionFieldsProps {
     country: string;
     region: string;
     regionOptional: string;
+    selectRegion: string;
   };
   required?: boolean;
   idPrefix?: string;
@@ -57,18 +58,6 @@ export default function CountryRegionFields({
     return (
       <>
         <div className="flex flex-col gap-1.5">
-          <label className={labelClass} htmlFor={regionFieldId}>
-            {labels.region} <span className="lowercase">({labels.regionOptional})</span>
-          </label>
-          <input
-            id={regionFieldId}
-            autoComplete="address-level1"
-            value={region}
-            onChange={(e) => onRegionChange(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
           <label className={labelClass} htmlFor={countryFieldId}>
             {labels.country}
           </label>
@@ -85,35 +74,10 @@ export default function CountryRegionFields({
             <p className="text-[10px] text-on-surface-variant/60">{countryHint}</p>
           )}
         </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <div className="flex flex-col gap-1.5">
-        <label className={labelClass} htmlFor={regionFieldId}>
-          {labels.region}
-          {!hasRegions && (
-            <span className="lowercase"> ({labels.regionOptional})</span>
-          )}
-        </label>
-        {hasRegions ? (
-          <select
-            id={regionFieldId}
-            autoComplete="address-level1"
-            value={region}
-            onChange={(e) => onRegionChange(e.target.value)}
-            className={inputClass}
-          >
-            <option value="">—</option>
-            {regions.map((r) => (
-              <option key={r.id} value={r.name}>
-                {r.name}
-              </option>
-            ))}
-          </select>
-        ) : (
+        <div className="flex flex-col gap-1.5">
+          <label className={labelClass} htmlFor={regionFieldId}>
+            {labels.region} <span className="lowercase">({labels.regionOptional})</span>
+          </label>
           <input
             id={regionFieldId}
             autoComplete="address-level1"
@@ -121,8 +85,13 @@ export default function CountryRegionFields({
             onChange={(e) => onRegionChange(e.target.value)}
             className={inputClass}
           />
-        )}
-      </div>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
       <div className="flex flex-col gap-1.5">
         <label className={labelClass} htmlFor={countryFieldId}>
           {labels.country}
@@ -144,6 +113,39 @@ export default function CountryRegionFields({
             </option>
           ))}
         </select>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label className={labelClass} htmlFor={regionFieldId}>
+          {labels.region}
+          {!hasRegions && (
+            <span className="lowercase"> ({labels.regionOptional})</span>
+          )}
+        </label>
+        {hasRegions ? (
+          <select
+            id={regionFieldId}
+            required={required}
+            autoComplete="address-level1"
+            value={region}
+            onChange={(e) => onRegionChange(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">{labels.selectRegion}</option>
+            {regions.map((r) => (
+              <option key={r.id} value={r.name}>
+                {r.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            id={regionFieldId}
+            autoComplete="address-level1"
+            value={region}
+            onChange={(e) => onRegionChange(e.target.value)}
+            className={inputClass}
+          />
+        )}
       </div>
     </>
   );

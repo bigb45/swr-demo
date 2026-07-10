@@ -21,6 +21,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = sanitizeRedirect(searchParams.get("from"));
+  const showResetSuccess = searchParams.get("reset") === "1";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,12 +65,25 @@ export default function LoginPage() {
           </h1>
         </div>
 
+        {showResetSuccess && (
+          <p
+            role="status"
+            className="mb-4 bg-surface-container-low px-4 py-3 text-xs font-medium leading-relaxed text-secondary rounded-(--radius-input)"
+          >
+            {t("resetSuccess")}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+            <label
+              htmlFor="login-email"
+              className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+            >
               {t("email")}
             </label>
             <input
+              id="login-email"
               type="email"
               required
               autoComplete="email"
@@ -80,10 +94,14 @@ export default function LoginPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+            <label
+              htmlFor="login-password"
+              className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+            >
               {t("password")}
             </label>
             <input
+              id="login-password"
               type="password"
               required
               autoComplete="current-password"
@@ -94,7 +112,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-xs font-semibold text-red-600 text-center">
+            <p role="alert" className="text-xs font-semibold text-red-600 text-center">
               {error}
             </p>
           )}

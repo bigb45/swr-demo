@@ -35,7 +35,7 @@ export async function generateMetadata({
   if (!category) return { title: "Category not found" };
   return {
     title: category.name,
-    description: `Browse ${category.name} — professional tools and hardware.`,
+    description: `Browse ${category.name}: professional tools and hardware.`,
   };
 }
 
@@ -71,12 +71,13 @@ export default async function CategoryPage({
 
   const productList =
     productsResult.status === "fulfilled" ? productsResult.value : null;
-  const productsError =
-    productsResult.status === "rejected"
-      ? productsResult.reason instanceof Error
-        ? productsResult.reason.message
-        : "Unknown error"
-      : null;
+  const productsError = productsResult.status === "rejected";
+  if (productsError) {
+    console.error(
+      `[categories/${categoryId}] product fetch failed:`,
+      productsResult.reason,
+    );
+  }
 
   return (
     <div className="swr-page-shell pt-10 pb-8">
@@ -122,7 +123,6 @@ export default async function CategoryPage({
           <p className="text-sm text-red-700 font-medium">
             {tErr("categoryUnavailable")}
           </p>
-          <p className="text-xs text-red-500 mt-1 font-mono">{productsError}</p>
         </div>
       ) : (
         <>

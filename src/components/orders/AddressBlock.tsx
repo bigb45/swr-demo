@@ -55,7 +55,7 @@ export default function AddressBlock({
           ) : null}
         </div>
       ) : (
-        <div className="text-sm text-on-surface-variant">{fallback ?? "—"}</div>
+        <div className="text-sm text-on-surface-variant">{fallback ?? "-"}</div>
       )}
     </div>
   );

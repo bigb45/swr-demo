@@ -273,6 +273,7 @@ export default function AddressStep({
                 country: tAddr("country"),
                 region: tAddr("region"),
                 regionOptional: tAddr("regionOptional"),
+                selectRegion: tAddr("selectRegion"),
               }}
               countryHint={tAddr("countryHint")}
             />

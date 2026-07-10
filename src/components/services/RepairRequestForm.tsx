@@ -47,7 +47,7 @@ const EMPTY: FormState = {
 // A Resend / SMTP integration is a separate ticket; this form's contract is
 // intentionally compatible with one (just swap the submit handler).
 function buildMailto(recipient: string, state: FormState, labels: RepairRequestFormProps["labels"]): string {
-  const subject = `Repair request — ${state.machineMake} ${state.machineModel}`.trim();
+  const subject = `Repair request: ${state.machineMake} ${state.machineModel}`.trim();
   const lines = [
     `${labels.machineMake}: ${state.machineMake}`,
     `${labels.machineModel}: ${state.machineModel}`,

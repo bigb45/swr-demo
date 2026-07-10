@@ -61,7 +61,7 @@ export default function BulkPricingTable({
                     {row.savingsLabel}
                   </span>
                 ) : (
-                  <span className="text-on-surface-variant">—</span>
+                  <span className="text-on-surface-variant">-</span>
                 )}
               </td>
             </tr>

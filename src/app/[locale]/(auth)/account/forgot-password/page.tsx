@@ -66,10 +66,14 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant">
+              <label
+                htmlFor="forgot-email"
+                className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant"
+              >
                 {t("email")}
               </label>
               <input
+                id="forgot-email"
                 type="email"
                 required
                 autoComplete="email"
@@ -80,7 +84,7 @@ export default function ForgotPasswordPage() {
             </div>
 
             {error && (
-              <p className="text-xs font-semibold text-red-600 text-center">
+              <p role="alert" className="text-xs font-semibold text-red-600 text-center">
                 {error}
               </p>
             )}

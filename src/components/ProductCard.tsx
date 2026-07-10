@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
 import { getCustomAttribute, getProductGalleryUrls, getProductImageUrl } from "@/lib/magento-shared";
+import { getSupportedOptions } from "@/lib/custom-options";
 import { getDisplayShortDescription } from "@/lib/product-display";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { notify } from "@/lib/toast";
@@ -25,7 +26,7 @@ interface ProductCardProps {
 type AddStatus = "idle" | "loading" | "success" | "error";
 
 const GALLERY_NAV_CLASS =
-  "pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover/card:opacity-100 group-focus-within/card:opacity-100 [@media(hover:none)]:opacity-100";
+  "pointer-events-none absolute inset-0 z-2 opacity-0 transition-opacity duration-200 group-hover/card:opacity-100 group-focus-within/card:opacity-100 [@media(hover:none)]:opacity-100";
 
 function GalleryNavButton({
   direction,
@@ -103,7 +104,7 @@ function ProductCardGallery({
             fill
             priority={priorityImage && imageIndex === 0}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-contain p-4 transition-transform duration-300 group-hover/card:scale-[1.03]"
+            className="object-contain p-4"
           />
           {showGalleryNav ? (
             <>
@@ -206,8 +207,11 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const stock = getStockStatus(product);
   const maxQty =
     typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
-  const canAddToCart =
-    isAuthenticated && product.price > 0 && stock.level !== "out";
+  const canAddToCart = product.price > 0 && stock.level !== "out";
+  const hasRequiredOptions = getSupportedOptions(product.options).some(
+    (option) => option.is_require,
+  );
+  const shouldConfigureBeforeAdd = canAddToCart && hasRequiredOptions;
   const showGuestPriceGate = !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, t);
   const watchlistImageUrl = getProductImageUrl(product);
@@ -218,7 +222,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   }
 
   async function handleAdd() {
-    if (!canAddToCart || status === "loading") return;
+    if (!canAddToCart || shouldConfigureBeforeAdd || status === "loading") return;
 
     setStatus("loading");
     try {
@@ -237,10 +241,16 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
 
   return (
     <article className="group/card relative flex flex-col overflow-hidden rounded-card border border-outline-variant/80 bg-surface-container-lowest transition-colors duration-200 hover:border-outline-variant">
+      {/* Full-card link overlay. Interactive controls (watchlist, gallery
+          nav, add-to-cart) sit above it via z-index so no button ever nests
+          inside the anchor. */}
       <Link
         href={href}
-        className="flex min-h-0 flex-1 flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
-      >
+        aria-label={product.name}
+        className="absolute inset-0 z-1 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+      />
+
+      <div className="flex min-h-0 flex-1 flex-col">
         <ProductCardGallery
           key={product.sku}
           product={product}
@@ -271,7 +281,7 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
                 sku={product.sku}
                 name={product.name}
                 imageUrl={watchlistImageUrl}
-                className="shrink-0 border-transparent bg-transparent opacity-0 shadow-none transition-opacity duration-200 group-hover/card:opacity-100 group-focus-within/card:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+                className="relative z-2 shrink-0 border-transparent bg-transparent opacity-0 shadow-none transition-opacity duration-200 group-hover/card:opacity-100 group-focus-within/card:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
               />
             ) : null}
           </div>
@@ -285,9 +295,9 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
             />
           ) : null}
         </div>
-      </Link>
+      </div>
 
-      <div className="mt-auto border-t border-outline-variant/15 bg-surface-container-low px-4 py-3">
+      <div className="relative z-2 mt-auto border-t border-outline-variant/15 bg-surface-container-low px-4 py-3">
         <div className="mb-2.5 min-h-5.5">
           {showGuestPriceGate ? (
             <div className="inline-flex min-w-0 items-center gap-1.5 text-xs font-semibold text-on-surface-variant">
@@ -318,56 +328,65 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
         </div>
 
         {canAddToCart ? (
-          <div className="flex items-stretch gap-2">
-            <div
-              className="inline-flex h-9 min-w-0 shrink-0 items-center rounded-(--radius-btn) bg-surface-container-lowest"
-              onClick={(e) => e.stopPropagation()}
+          shouldConfigureBeforeAdd ? (
+            <Link
+              href={href}
+              className="inline-flex h-9 w-full items-center justify-center rounded-(--radius-btn) bg-secondary px-2 text-xs font-bold tracking-wide text-white transition-all hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
             >
+              <span className="truncate">{t("selectOptions")}</span>
+            </Link>
+          ) : (
+            <div className="flex items-stretch gap-2">
+              <div
+                className="inline-flex h-9 min-w-0 shrink-0 items-center rounded-(--radius-btn) bg-surface-container-lowest"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => updateQty(qty - 1)}
+                  disabled={qty <= 1 || status === "loading"}
+                  aria-label={t("decreaseQuantity")}
+                  className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min={1}
+                  max={maxQty ?? undefined}
+                  value={qty}
+                  onChange={(e) => updateQty(Number(e.target.value))}
+                  disabled={status === "loading"}
+                  aria-label={t("quantity")}
+                  className="h-9 w-9 min-w-0 bg-transparent text-center text-xs font-bold tabular-nums text-on-surface outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => updateQty(qty + 1)}
+                  disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
+                  aria-label={t("increaseQuantity")}
+                  className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
+                >
+                  +
+                </button>
+              </div>
               <button
                 type="button"
-                onClick={() => updateQty(qty - 1)}
-                disabled={qty <= 1 || status === "loading"}
-                aria-label={t("decreaseQuantity")}
-                className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
-              >
-                -
-              </button>
-              <input
-                type="number"
-                min={1}
-                max={maxQty ?? undefined}
-                value={qty}
-                onChange={(e) => updateQty(Number(e.target.value))}
+                onClick={handleAdd}
                 disabled={status === "loading"}
-                aria-label={t("quantity")}
-                className="h-9 w-9 min-w-0 bg-transparent text-center text-xs font-bold tabular-nums text-on-surface outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => updateQty(qty + 1)}
-                disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
-                aria-label={t("increaseQuantity")}
-                className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
+                className={`inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) px-2 text-xs font-bold tracking-wide text-white transition-all disabled:cursor-not-allowed ${
+                  status === "success"
+                    ? "bg-green-600"
+                    : status === "error"
+                      ? "bg-red-600"
+                      : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+                }`}
               >
-                +
+                <AddToCartIcon status={status} />
+                <span className="truncate">{t("addToCart")}</span>
               </button>
             </div>
-            <button
-              type="button"
-              onClick={handleAdd}
-              disabled={status === "loading"}
-              className={`inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) px-2 text-xs font-bold tracking-wide text-white transition-all disabled:cursor-not-allowed ${
-                status === "success"
-                  ? "bg-green-600"
-                  : status === "error"
-                    ? "bg-red-600"
-                    : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
-              }`}
-            >
-              <AddToCartIcon status={status} />
-              <span className="truncate">{t("addToCart")}</span>
-            </button>
-          </div>
+          )
         ) : (
           <WatchlistButton
             variant="full"

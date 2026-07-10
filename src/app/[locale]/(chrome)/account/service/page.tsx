@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ServiceCaseRow from "@/components/service/ServiceCaseRow";
+import DemoDataNotice from "@/components/ui/DemoDataNotice";
 import {
   listCustomerCases,
   isTerminalStatus,
@@ -78,6 +79,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
         <p className="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
           {t("subheading")}
         </p>
+        <DemoDataNotice label={t("demoNotice")} className="mt-2 max-w-2xl" />
       </div>
 
       {/* Quick actions */}

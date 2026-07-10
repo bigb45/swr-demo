@@ -12,12 +12,14 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
+import { usePathname } from "@/i18n/navigation";
 import CopilotPanel from "./CopilotPanel";
 import { useCopilot } from "./CopilotProvider";
 
 export default function CopilotDock() {
   const { presentation, isExpanded, expand, minimize } = useCopilot();
   const t = useTranslations("copilot");
+  const pathname = usePathname();
   const { ready, level } = useCookieConsent();
   const hydrated = useHydrated();
   const [mounted, setMounted] = useState(false);
@@ -78,7 +80,13 @@ export default function CopilotDock() {
     };
   }, [isExpanded, mobileSheet]);
 
-  if (!clientActive || !ready || level === "needsChoice") return null;
+  // Checkout is a focused flow — keep the assistant out of it entirely.
+  const onCheckout =
+    pathname === "/checkout" || pathname.startsWith("/checkout/");
+
+  if (onCheckout || !clientActive || !ready || level === "needsChoice") {
+    return null;
+  }
 
   const panelMotion = reduceMotion
     ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 0 } }

@@ -1,12 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Suspense } from "react";
 import { Inter, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import "../globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
 import { CartProvider } from "@/components/CartProvider";
 import { WatchlistProvider } from "@/components/WatchlistProvider";
@@ -18,7 +15,6 @@ import type { Locale } from "@/i18n/routing";
 import { getSiteBaseUrl, localeAlternates } from "@/lib/seo";
 import { CustomerSessionProvider } from "@/components/CustomerSessionProvider";
 import { CopilotProvider } from "@/components/copilot/CopilotProvider";
-import CopilotDock from "@/components/copilot/CopilotDock";
 import { CookieConsentProvider } from "@/components/CookieConsentProvider";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import Toaster from "@/components/ui/Toaster";
@@ -117,36 +113,12 @@ export default async function LocaleLayout({
                 <CartProvider>
                   <WatchlistProvider>
                   <CopilotProvider>
-                    <div
-                      id="swr-app-shell"
-                      className="flex min-h-full w-full flex-1 flex-col"
-                    >
-                      <Suspense
-                        fallback={
-                          <div
-                            className="sticky top-0 z-50 min-h-[4rem] sm:min-h-[calc(33px+4rem)] md:min-h-[calc(33px+4rem+2.75rem)] bg-white"
-                            style={{
-                              boxShadow: "0 10px 30px rgba(26,28,28,0.06)",
-                            }}
-                            aria-hidden
-                          />
-                        }
-                      >
-                        <Header locale={locale} />
-                      </Suspense>
-                      <div className="flex min-h-0 flex-1 w-full overflow-hidden">
-                        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
-                          {children}
-                        </main>
-                      </div>
-                      <Footer locale={locale} />
-                      <Toaster />
-                      <CookieConsentBanner />
-                      {process.env.NODE_ENV === "development" && (
-                        <DevConsoleBridge />
-                      )}
-                    </div>
-                    <CopilotDock />
+                    {children}
+                    <Toaster />
+                    <CookieConsentBanner />
+                    {process.env.NODE_ENV === "development" && (
+                      <DevConsoleBridge />
+                    )}
                   </CopilotProvider>
                   </WatchlistProvider>
                 </CartProvider>
