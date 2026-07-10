@@ -307,6 +307,7 @@
     "galleryPrevImage": "Image produit précédente",
     "galleryNextImage": "Image produit suivante",
     "galleryGoToImage": "Aller à l’image {index} sur {total}",
+    "galleryImageCount": "{current} / {total}",
     "empty": "Aucun produit trouvé.",
     "view": "Voir",
     "priceOnRequest": "Prix sur demande",
