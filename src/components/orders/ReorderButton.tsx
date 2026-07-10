@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
+import { notify } from "@/lib/toast";
 
 interface ReorderLine {
   sku: string;
@@ -75,6 +76,14 @@ export default function ReorderButton({ locale, items }: ReorderButtonProps) {
         }
       }
       setResults(rows);
+
+      const added = rows.filter((r) => r.ok).length;
+      const problems = rows.length - added;
+      if (added > 0 && problems === 0) {
+        notify.success(t("reorderToastSuccess", { added }));
+      } else if (problems > 0) {
+        notify.error(t("reorderToastPartial", { added, problems }));
+      }
     });
   }
 

@@ -802,6 +802,8 @@
     "reorder": "Reorder",
     "reordering": "Adding to cart…",
     "reorderSummary": "{added} added, {problems} need attention.",
+    "reorderToastSuccess": "{added} items added to cart",
+    "reorderToastPartial": "{added} added, {problems} need attention",
     "reorderNeedsOptions": "Re-add on product page",
     "reorderGoToCart": "Go to cart",
     "colProduct": "Product",
@@ -895,6 +897,7 @@
     },
     "acceptToCart": "Accept and add to cart",
     "accepting": "Accepting…",
+    "acceptSuccessToast": "Quotation accepted and added to cart",
     "acceptError": {
       "not_found": "Quotation not found.",
       "already_converted": "This quotation has already been accepted.",
@@ -1309,12 +1312,12 @@
     }
   },
   "cart": {
-    "heading": "Your Procurement Cart",
-    "subheading": "Review technical specifications and quantities before final authorization.",
+    "heading": "Your cart",
+    "subheadingGuest": "Build your list and export it as CSV. Sign in to see prices and checkout.",
     "empty": "Your cart is empty.",
-    "emptyHint": "Add items from our catalog to place an authorization order.",
-    "browseProducts": "Browse Catalog",
-    "continueProcurement": "Continue Procurement",
+    "emptyHint": "Add items from our catalog or import a CSV to get started.",
+    "browseProducts": "Browse catalog",
+    "backToCatalog": "Back to catalog",
     "colItem": "Item Description / SKU",
     "colUnitPrice": "Unit Price",
     "colQuantity": "Quantity",
@@ -1331,6 +1334,8 @@
       "importing": "Importing…",
       "hint": "Two columns: SKU, quantity. First row may be a header.",
       "summary": "Added {added} items. {problems} problems.",
+      "toastSuccess": "{added} items added to cart",
+      "toastPartial": "{added} added, {problems} problems",
       "row": "Row {n}",
       "errMissingSku": "Missing SKU",
       "errInvalidQty": "Invalid quantity",
@@ -1348,10 +1353,13 @@
     "shippingAndTaxNote": "Shipping and tax are calculated in checkout.",
     "proceedToCheckout": "Proceed to Checkout",
     "legalDisclaimer": "By proceeding you agree to the SWR Terms of Sale and General Terms and Conditions.",
-    "trustIso": "ISO 9001:2015 Certified",
-    "trustIsoDesc": "All components undergo rigorous material testing and structural validation.",
-    "trustSupport": "Technical Support Active",
-    "trustSupportDesc": "Dedicated application engineers are available for technical inquiries."
+    "guest": {
+      "sidebarTitle": "Sign in for pricing and checkout",
+      "sidebarBody": "You can build and export your product list now. Prices and checkout are available after you sign in.",
+      "signIn": "Sign in",
+      "register": "Create account",
+      "exportNote": "Export includes SKU, product name, and quantity only."
+    }
   },
   "services": {
     "bookConsultation": "Book a Consultation",

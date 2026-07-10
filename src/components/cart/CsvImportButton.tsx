@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/components/CartProvider";
+import { notify } from "@/lib/toast";
 
 interface ParsedRow {
   lineNumber: number;
@@ -123,6 +124,7 @@ export default function CsvImportButton({ className }: { className?: string }) {
           parseError: t("errEmpty"),
         },
       ]);
+      notify.error(t("errEmpty"));
       return;
     }
 
@@ -142,6 +144,14 @@ export default function CsvImportButton({ className }: { className?: string }) {
       }
       outcomes.sort((a, b) => a.lineNumber - b.lineNumber);
       setResults(outcomes);
+
+      const added = outcomes.filter((r) => r.ok).length;
+      const problems = outcomes.length - added;
+      if (added > 0 && problems === 0) {
+        notify.success(t("toastSuccess", { added }));
+      } else if (problems > 0) {
+        notify.error(t("toastPartial", { added, problems }));
+      }
     });
   }
 

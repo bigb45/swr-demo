@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { acceptQuotationAction } from "./actions";
 import type { AcceptQuotationResult } from "@/lib/quotations";
+import { setCartToastFlash } from "@/lib/cart-toast-flash";
+import { notify } from "@/lib/toast";
 
 interface AcceptButtonProps {
   quotationId: string;
@@ -22,8 +24,11 @@ export default function AcceptButton({ quotationId, disabled }: AcceptButtonProp
       const res = await acceptQuotationAction(quotationId);
       setResult(res);
       if (res.success) {
+        setCartToastFlash("quotations.acceptSuccessToast");
         router.push("/cart");
         router.refresh();
+      } else {
+        notify.error(t(`acceptError.${res.code}`));
       }
     });
   }

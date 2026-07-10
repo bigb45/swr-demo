@@ -6,10 +6,12 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
   type ReactNode,
 } from "react";
 import { getProductImageUrl } from "@/lib/magento-shared";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
+import { useCustomerSession } from "@/components/CustomerSessionProvider";
 import type {
   MagentoProduct,
   MagentoCartTotals,
@@ -130,6 +132,8 @@ async function ensureCart(): Promise<string> {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useCustomerSession();
+  const wasAuthenticatedRef = useRef(isAuthenticated);
   const [items, setItems] = useState<CartItem[]>([]);
   const [totals, setTotals] = useState<MagentoCartTotals | null>(null);
   const [cartId, setCartId] = useState<string | null>(null);
@@ -192,6 +196,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     persistCartId(stored);
     fetchCart(stored).finally(() => setLoading(false));
   }, [fetchCart]);
+
+  // Re-fetch when the user signs in so guest-stripped prices are replaced.
+  useEffect(() => {
+    if (!wasAuthenticatedRef.current && isAuthenticated) {
+      const id = cartId ?? localStorage.getItem(CART_ID_KEY);
+      if (id) void fetchCart(id);
+    }
+    wasAuthenticatedRef.current = isAuthenticated;
+  }, [isAuthenticated, cartId, fetchCart]);
 
   const refreshTotals = useCallback(async () => {
     const id = cartId ?? localStorage.getItem(CART_ID_KEY);

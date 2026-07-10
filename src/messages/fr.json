@@ -802,6 +802,8 @@
     "reorder": "Recommander",
     "reordering": "Ajout au panier…",
     "reorderSummary": "{added} ajouté(s), {problems} à revoir.",
+    "reorderToastSuccess": "{added} articles ajoutés au panier",
+    "reorderToastPartial": "{added} ajouté(s), {problems} à revoir",
     "reorderNeedsOptions": "À rajouter depuis la fiche produit",
     "reorderGoToCart": "Accéder au panier",
     "colProduct": "Produit",
@@ -895,6 +897,7 @@
     },
     "acceptToCart": "Accepter et ajouter au panier",
     "accepting": "Acceptation…",
+    "acceptSuccessToast": "Devis accepté et ajouté au panier",
     "acceptError": {
       "not_found": "Devis introuvable.",
       "already_converted": "Ce devis a déjà été accepté.",
@@ -1309,12 +1312,12 @@
     }
   },
   "cart": {
-    "heading": "Votre panier d'approvisionnement",
-    "subheading": "Vérifiez les spécifications techniques et les quantités avant l'autorisation finale.",
+    "heading": "Votre panier",
+    "subheadingGuest": "Constituez votre liste et exportez-la en CSV. Connectez-vous pour voir les prix et passer commande.",
     "empty": "Votre panier est vide.",
-    "emptyHint": "Ajoutez des articles de notre catalogue pour passer une commande d'autorisation.",
+    "emptyHint": "Ajoutez des articles du catalogue ou importez un fichier CSV.",
     "browseProducts": "Parcourir le catalogue",
-    "continueProcurement": "Continuer les achats",
+    "backToCatalog": "Retour au catalogue",
     "colItem": "Description de l'article / SKU",
     "colUnitPrice": "Prix unitaire",
     "colQuantity": "Quantité",
@@ -1331,6 +1334,8 @@
       "importing": "Import en cours…",
       "hint": "Deux colonnes : SKU, quantité. La première ligne peut être un en-tête.",
       "summary": "{added} articles ajoutés. {problems} problèmes.",
+      "toastSuccess": "{added} articles ajoutés au panier",
+      "toastPartial": "{added} ajouté(s), {problems} problèmes",
       "row": "Ligne {n}",
       "errMissingSku": "SKU manquant",
       "errInvalidQty": "Quantité invalide",
@@ -1348,10 +1353,13 @@
     "shippingAndTaxNote": "Les frais de livraison et la TVA sont calculés lors de la validation.",
     "proceedToCheckout": "Passer à la caisse",
     "legalDisclaimer": "En continuant, vous acceptez les conditions générales de vente de SWR.",
-    "trustIso": "Certifié ISO 9001:2015",
-    "trustIsoDesc": "Tous les composants subissent des tests de matériaux rigoureux et une validation structurelle.",
-    "trustSupport": "Support technique actif",
-    "trustSupportDesc": "Des ingénieurs d'application dédiés sont disponibles pour les demandes techniques."
+    "guest": {
+      "sidebarTitle": "Connectez-vous pour les prix et la commande",
+      "sidebarBody": "Vous pouvez constituer et exporter votre liste dès maintenant. Les prix et la commande sont disponibles après connexion.",
+      "signIn": "Se connecter",
+      "register": "Créer un compte",
+      "exportNote": "L'export inclut uniquement le SKU, le nom du produit et la quantité."
+    }
   },
   "services": {
     "bookConsultation": "Prendre rendez-vous",

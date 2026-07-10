@@ -802,6 +802,8 @@
     "reorder": "Erneut bestellen",
     "reordering": "Wird zum Warenkorb hinzugefügt…",
     "reorderSummary": "{added} hinzugefügt, {problems} benötigen Aufmerksamkeit.",
+    "reorderToastSuccess": "{added} Artikel zum Warenkorb hinzugefügt",
+    "reorderToastPartial": "{added} hinzugefügt, {problems} benötigen Aufmerksamkeit",
     "reorderNeedsOptions": "Bitte auf Produktseite erneut hinzufügen",
     "reorderGoToCart": "Zum Warenkorb",
     "colProduct": "Produkt",
@@ -895,6 +897,7 @@
     },
     "acceptToCart": "Annehmen und in den Warenkorb",
     "accepting": "Annehmen…",
+    "acceptSuccessToast": "Angebot angenommen und zum Warenkorb hinzugefügt",
     "acceptError": {
       "not_found": "Angebot nicht gefunden.",
       "already_converted": "Dieses Angebot wurde bereits angenommen.",
@@ -1309,12 +1312,12 @@
     }
   },
   "cart": {
-    "heading": "Ihr Beschaffungswarenkorb",
-    "subheading": "Überprüfen Sie technische Spezifikationen und Mengen vor der endgültigen Autorisierung.",
+    "heading": "Ihr Warenkorb",
+    "subheadingGuest": "Erstellen Sie Ihre Liste und exportieren Sie sie als CSV. Melden Sie sich an, um Preise zu sehen und zur Kasse zu gehen.",
     "empty": "Ihr Warenkorb ist leer.",
-    "emptyHint": "Fügen Sie Artikel aus unserem Katalog hinzu, um eine Bestellung zu autorisieren.",
+    "emptyHint": "Fügen Sie Artikel aus dem Katalog hinzu oder importieren Sie eine CSV-Datei.",
     "browseProducts": "Zum Katalog",
-    "continueProcurement": "Einkauf fortsetzen",
+    "backToCatalog": "Zurück zum Katalog",
     "colItem": "Artikelbeschreibung / SKU",
     "colUnitPrice": "Stückpreis",
     "colQuantity": "Menge",
@@ -1331,6 +1334,8 @@
       "importing": "Importiere…",
       "hint": "Zwei Spalten: SKU, Menge. Die erste Zeile darf eine Kopfzeile sein.",
       "summary": "{added} Artikel hinzugefügt. {problems} Probleme.",
+      "toastSuccess": "{added} Artikel zum Warenkorb hinzugefügt",
+      "toastPartial": "{added} hinzugefügt, {problems} Probleme",
       "row": "Zeile {n}",
       "errMissingSku": "Fehlende SKU",
       "errInvalidQty": "Ungültige Menge",
@@ -1348,10 +1353,13 @@
     "shippingAndTaxNote": "Versand und MwSt. werden im Bestellvorgang berechnet.",
     "proceedToCheckout": "Zur Kasse",
     "legalDisclaimer": "Mit dem Fortfahren stimmen Sie den SWR Verkaufsbedingungen und AGB zu.",
-    "trustIso": "ISO 9001:2015 Zertifiziert",
-    "trustIsoDesc": "Alle Komponenten durchlaufen strenge Materialprüfungen und Strukturvalidierungen.",
-    "trustSupport": "Technischer Support aktiv",
-    "trustSupportDesc": "Dedizierte Applikationsingenieure stehen für technische Anfragen zur Verfügung."
+    "guest": {
+      "sidebarTitle": "Anmelden für Preise und Kasse",
+      "sidebarBody": "Sie können Ihre Produktliste jetzt erstellen und exportieren. Preise und Kasse sind nach der Anmeldung verfügbar.",
+      "signIn": "Anmelden",
+      "register": "Konto erstellen",
+      "exportNote": "Der Export enthält nur SKU, Produktname und Menge."
+    }
   },
   "services": {
     "bookConsultation": "Beratung vereinbaren",

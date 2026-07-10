@@ -10,6 +10,17 @@ import { resolveSelectedOptionLabels } from "@/lib/custom-options";
 import type { MagentoCustomOptionSelection } from "@/types/magento";
 
 const MAGENTO = process.env.MAGENTO_URL ?? "http://localhost:8000";
+const CUSTOMER_COOKIE = "swr_customer_token";
+
+function stripGuestPrices<T extends Record<string, unknown>>(totals: T): T {
+  const zeroed = { ...totals };
+  for (const key of Object.keys(zeroed)) {
+    if (typeof zeroed[key] === "number") {
+      zeroed[key] = 0;
+    }
+  }
+  return zeroed;
+}
 
 interface MagentoCartItem {
   item_id: number;
@@ -95,5 +106,18 @@ export async function GET(req: NextRequest) {
       ),
     };
   });
+
+  const isAuthenticated = !!req.cookies.get(CUSTOMER_COOKIE)?.value;
+  if (!isAuthenticated) {
+    return Response.json({
+      items: itemsWithImages.map(({ price: _price, ...item }) => ({
+        ...item,
+        price: 0,
+        priceHidden: true,
+      })),
+      totals: stripGuestPrices(totals as Record<string, unknown>),
+    });
+  }
+
   return Response.json({ items: itemsWithImages, totals });
 }
