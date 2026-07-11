@@ -97,7 +97,13 @@ export default function CartContent() {
   function handleExportCsv() {
     const csv = isAuthenticated
       ? [
-          ["SKU", "Name", "Unit Price", "Qty", "Total"],
+          [
+            t("colSku"),
+            t("colName"),
+            t("colUnitPrice"),
+            t("colQuantity"),
+            t("colTotal"),
+          ],
           ...items.map((i) => [
             i.sku,
             `"${i.name}"`,
@@ -107,7 +113,7 @@ export default function CartContent() {
           ]),
         ]
       : [
-          ["SKU", "Name", "Qty"],
+          [t("colSku"), t("colName"), t("colQuantity")],
           ...items.map((i) => [i.sku, `"${i.name}"`, i.qty]),
         ];
     const blob = new Blob([csv.map((r) => r.join(",")).join("\n")], {
@@ -116,7 +122,7 @@ export default function CartContent() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cart-export.csv";
+    a.download = t("exportFilename");
     a.click();
     URL.revokeObjectURL(url);
   }

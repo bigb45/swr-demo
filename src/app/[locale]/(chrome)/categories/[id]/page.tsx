@@ -25,17 +25,18 @@ export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const { locale, id } = await params;
+  const t = await getTranslations({ locale, namespace: "categories" });
   const categoryId = parseInt(id, 10);
-  if (isNaN(categoryId)) return { title: "Category not found" };
+  if (isNaN(categoryId)) return { title: t("metaNotFoundTitle") };
 
   const category = await getCategoryById(
     categoryId,
     LOCALE_STORE_CODES[locale],
   );
-  if (!category) return { title: "Category not found" };
+  if (!category) return { title: t("metaNotFoundTitle") };
   return {
     title: category.name,
-    description: `Browse ${category.name}: professional tools and hardware.`,
+    description: t("metaDescription", { name: category.name }),
   };
 }
 

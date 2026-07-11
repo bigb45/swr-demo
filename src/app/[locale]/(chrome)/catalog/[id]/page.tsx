@@ -23,9 +23,9 @@ export async function generateMetadata({
   params,
 }: DocumentPageProps): Promise<Metadata> {
   const { locale, id } = await params;
-  const doc = await getDocument(id);
-  if (!doc) return { title: "Not found" };
   const t = await getTranslations({ locale, namespace: "catalog" });
+  const doc = await getDocument(id);
+  if (!doc) return { title: t("documentNotFoundTitle") };
   return {
     title: `${doc.title} · ${doc.brand}`,
     description: doc.description ?? t("metaDescription"),

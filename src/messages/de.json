@@ -23,6 +23,7 @@
     "help": "Hilfe",
     "technicalSupport": "Technischer Support",
     "bookConsultation": "Beratung vereinbaren",
+    "brandName": "SWR Lörrach",
     "home": "SWR Lörrach: Startseite",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
@@ -145,12 +146,6 @@
       "chip4Prompt": "Ich brauche ein Datenblatt, Handbuch oder Zertifikat aus dem Katalog."
     }
   },
-  "hero": {
-    "title": "Schweißtechnik, Werkzeuge & Reparatur.",
-    "subtitle": "Ihr 360°-Servicepartner in Lörrach. Hochwertige Produkte für Industrie und Handwerk – mit persönlicher Beratung und schneller Lieferung.",
-    "browseProducts": "Zum Shop",
-    "requestQuote": "Beratung anfragen"
-  },
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Seit 1987.",
@@ -265,6 +260,7 @@
     "browseByCategoryTitle": "Starten Sie mit einer Kategorie.",
     "browseByCategoryBody": "Der komplette Produktbestand ist zu groß für einen sinnvollen Einstieg ohne Filter. Wählen Sie eine Warengruppe oder nutzen Sie die Suche.",
     "noImage": "Kein Bild verfügbar",
+    "metaNotFoundTitle": "Produkt nicht gefunden",
     "options": {
       "chooseOption": "Bitte wählen…",
       "textPlaceholder": "Wert eingeben",
@@ -356,7 +352,9 @@
   },
   "categories": {
     "products": "Produkte",
-    "empty": "Keine Produkte in dieser Kategorie."
+    "empty": "Keine Produkte in dieser Kategorie.",
+    "metaNotFoundTitle": "Kategorie nicht gefunden",
+    "metaDescription": "{name}: professionelle Werkzeuge und Betriebsausstattung."
   },
   "shop": {
     "metaTitle": "Shop",
@@ -394,7 +392,10 @@
     "contactHeading": "Kontakt",
     "metaTitle": "SWR Lörrach, Schweißtechnik, Werkzeuge, Reparatur",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR GmbH: Ihr B2B-Partner für Schweißtechnik, Elektrowerkzeuge, Maschinen und Arbeitsschutz. Qualität verbindet."
+    "metaDescription": "SWR GmbH: Ihr B2B-Partner für Schweißtechnik, Elektrowerkzeuge, Maschinen und Arbeitsschutz. Qualität verbindet.",
+    "tagline": "Qualität verbindet.",
+    "locationLine": "Lörrach · Deutschland",
+    "siteName": "SWR Lörrach"
   },
   "cookieConsent": {
     "title": "Cookies und Datenschutz",
@@ -638,7 +639,8 @@
     "saving": "Wird gespeichert…",
     "resetError": "Passwort konnte nicht zurückgesetzt werden.",
     "resetTokenMissing": "Der Link ist unvollständig. Bitte neuen Link anfordern.",
-    "resetSuccess": "Ihr Passwort wurde aktualisiert. Melden Sie sich jetzt mit dem neuen Passwort an."
+    "resetSuccess": "Ihr Passwort wurde aktualisiert. Melden Sie sich jetzt mit dem neuen Passwort an.",
+    "brandEyebrow": "SWR GmbH"
   },
   "account": {
     "heading": "Kontoübersicht",
@@ -778,7 +780,19 @@
     "insufficientStockLine": "Für die SKU {sku} reicht die verkäufliche Menge in dieser Höhe nicht. Verringern Sie die Menge oder entfernen Sie die Position.",
     "insufficientStockGeneric": "Magento meldet eine unzureichende verkäufliche Menge für diese Bestellung. Verringern Sie Mengen oder lassen Sie Lagerbestand und Quellen im Magento-Admin prüfen.",
     "orderPlaceFailed": "Auftrag konnte nicht erteilt werden",
-    "backToCart": "Zurück zum Warenkorb"
+    "backToCart": "Zurück zum Warenkorb",
+    "errors": {
+      "notAuthenticated": "Nicht angemeldet",
+      "noActiveCart": "Kein aktiver Warenkorb",
+      "sessionExpired": "Sitzung abgelaufen",
+      "addressNotFound": "Adresse nicht gefunden",
+      "invalidAddress": "Ungültige Adresse",
+      "addressNotSelected": "Keine Adresse ausgewählt",
+      "backendUnavailable": "Backend nicht erreichbar",
+      "shippingSaveFailed": "Versandauswahl konnte nicht gespeichert werden",
+      "cartNotFound": "Warenkorb existiert nicht mehr",
+      "assignCustomerFailed": "Kunde konnte dem Warenkorb nicht zugeordnet werden"
+    }
   },
   "orders": {
     "heading": "Bestellhistorie",
@@ -854,7 +868,10 @@
       "partially_shipped": "Teilweise versendet",
       "backorder": "Nachlieferung"
     },
-    "downloadError": "Download fehlgeschlagen. Bitte versuchen Sie es später erneut."
+    "downloadError": "Download fehlgeschlagen. Bitte versuchen Sie es später erneut.",
+    "companyLegalName": "SWR Handelsgesellschaft mbH",
+    "companyTagline": "Lörrach · Qualität verbindet",
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
   },
   "quotations": {
     "heading": "Angebote",
@@ -927,6 +944,7 @@
     "emptyState": "Keine Dokumente entsprechen diesen Filtern.",
     "pageCount": "{count} S.",
     "breadcrumbCatalog": "Katalog",
+    "documentNotFoundTitle": "Dokument nicht gefunden",
     "filters": {
       "category": "Kategorie",
       "type": "Dokumenttyp",
@@ -1248,6 +1266,7 @@
       "itemQty": "Retourenmenge",
       "itemQtyRepair": "Menge",
       "itemQtyInspection": "Menge",
+      "itemSkuMax": "{sku} · max. {max}",
       "contactHeading": "Kontakt",
       "contactName": "Ihr Name",
       "contactEmail": "E-Mail",
@@ -1313,6 +1332,8 @@
     "browseProducts": "Zum Shop",
     "backToShop": "Zurück zum Shop",
     "colItem": "Artikelbeschreibung / SKU",
+    "colSku": "SKU",
+    "colName": "Name",
     "colUnitPrice": "Stückpreis",
     "colQuantity": "Menge",
     "colTotal": "Gesamt",
@@ -1323,6 +1344,7 @@
     "decreaseQuantity": "Menge verringern",
     "increaseQuantity": "Menge erhöhen",
     "exportCsv": "Als CSV exportieren",
+    "exportFilename": "warenkorb-export.csv",
     "csvImport": {
       "button": "CSV importieren",
       "importing": "Importiere…",
@@ -1470,6 +1492,7 @@
         "phone": "Telefon",
         "email": "E-Mail",
         "submit": "Anfrage senden",
+        "mailtoSubject": "Reparaturanfrage: {make} {model}",
         "note": "Beim Absenden öffnet sich Ihr E-Mail-Programm mit der vorausgefüllten Anfrage. Der Mailto-Transport kann später durch ein Backend ersetzt werden."
       }
     },

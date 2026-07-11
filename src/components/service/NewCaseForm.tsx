@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { submitServiceCase } from "@/app/[locale]/(chrome)/account/service/new/actions";
 import type { ServiceCaseKind, ServiceCaseReason } from "@/lib/service";
 
@@ -76,6 +77,7 @@ export default function NewCaseForm({
   showManualMachineFields = false,
   labels,
 }: NewCaseFormProps) {
+  const t = useTranslations("service");
   const [state, formAction, pending] = useActionState(submitServiceCase, {});
   const [selectedQty, setSelectedQty] = useState<Record<string, number>>(() => {
     const init: Record<string, number> = {};
@@ -126,7 +128,7 @@ export default function NewCaseForm({
                   {it.name}
                 </span>
                 <span className="text-xs font-mono text-on-surface-variant">
-                  {it.sku} · max {it.maxQty}
+                  {t("new.itemSkuMax", { sku: it.sku, max: it.maxQty })}
                 </span>
               </div>
               <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-on-surface-variant">

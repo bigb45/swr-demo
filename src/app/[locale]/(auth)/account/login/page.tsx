@@ -58,7 +58,7 @@ export default function LoginPage() {
         {/* Logo / heading */}
         <div className="mb-8 text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">
-            SWR GmbH
+            {t("brandEyebrow")}
           </p>
           <h1 className="text-2xl font-black text-primary">
             {t("loginHeading")}

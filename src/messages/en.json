@@ -23,6 +23,7 @@
     "help": "Help",
     "technicalSupport": "Technical Support",
     "bookConsultation": "Book a Consultation",
+    "brandName": "SWR Lörrach",
     "home": "SWR Lörrach: Home",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
@@ -145,12 +146,6 @@
       "chip4Prompt": "I need a datasheet, manual, or certificate from the catalog."
     }
   },
-  "hero": {
-    "title": "Welding, Tools & Repair.",
-    "subtitle": "Your 360° service partner in Lörrach. Premium products for industry and trade, with expert advice and fast delivery.",
-    "browseProducts": "Browse Shop",
-    "requestQuote": "Request Consultation"
-  },
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Since 1987.",
@@ -265,6 +260,7 @@
     "browseByCategoryTitle": "Start with a category.",
     "browseByCategoryBody": "The full product range is too large for a useful unfiltered entry point. Choose a category or use search.",
     "noImage": "No image available",
+    "metaNotFoundTitle": "Product not found",
     "options": {
       "chooseOption": "Please choose…",
       "textPlaceholder": "Enter value",
@@ -356,7 +352,9 @@
   },
   "categories": {
     "products": "products",
-    "empty": "No products found in this category."
+    "empty": "No products found in this category.",
+    "metaNotFoundTitle": "Category not found",
+    "metaDescription": "{name}: professional tools and industrial supplies."
   },
   "shop": {
     "metaTitle": "Shop",
@@ -394,7 +392,10 @@
     "contactHeading": "Contact Us",
     "metaTitle": "SWR Lörrach, Welding, Tools & Repair",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR GmbH: Your B2B partner for welding technology, power tools, machinery and workplace safety. Qualität verbindet."
+    "metaDescription": "SWR GmbH: Your B2B partner for welding technology, power tools, machinery and workplace safety. Qualität verbindet.",
+    "tagline": "Qualität verbindet.",
+    "locationLine": "Lörrach · Germany",
+    "siteName": "SWR Lörrach"
   },
   "cookieConsent": {
     "title": "Cookies and privacy",
@@ -638,7 +639,8 @@
     "saving": "Saving…",
     "resetError": "Could not reset the password.",
     "resetTokenMissing": "Reset link is incomplete. Request a new one.",
-    "resetSuccess": "Your password has been updated. Sign in with your new password."
+    "resetSuccess": "Your password has been updated. Sign in with your new password.",
+    "brandEyebrow": "SWR GmbH"
   },
   "account": {
     "heading": "Account overview",
@@ -778,7 +780,19 @@
     "insufficientStockLine": "Not enough salable stock for SKU {sku} at the requested quantity. Reduce the quantity or remove the line.",
     "insufficientStockGeneric": "Magento reported insufficient salable quantity for this order. Reduce line quantities or ask your administrator to check inventory and stock sources.",
     "orderPlaceFailed": "Failed to place order",
-    "backToCart": "Back to cart"
+    "backToCart": "Back to cart",
+    "errors": {
+      "notAuthenticated": "Not authenticated",
+      "noActiveCart": "No active cart",
+      "sessionExpired": "Session expired",
+      "addressNotFound": "Address not found",
+      "invalidAddress": "Invalid address",
+      "addressNotSelected": "Address not selected",
+      "backendUnavailable": "Backend unavailable",
+      "shippingSaveFailed": "Failed to save shipping selection",
+      "cartNotFound": "Cart no longer exists",
+      "assignCustomerFailed": "Failed to assign customer to cart"
+    }
   },
   "orders": {
     "heading": "Order History",
@@ -854,7 +868,10 @@
       "partially_shipped": "Partially Shipped",
       "backorder": "Back-order"
     },
-    "downloadError": "Download failed. Please try again later."
+    "downloadError": "Download failed. Please try again later.",
+    "companyLegalName": "SWR Handelsgesellschaft mbH",
+    "companyTagline": "Lörrach · Qualität verbindet",
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
   },
   "quotations": {
     "heading": "Quotations",
@@ -927,6 +944,7 @@
     "emptyState": "No documents match these filters.",
     "pageCount": "{count} pp.",
     "breadcrumbCatalog": "Catalog",
+    "documentNotFoundTitle": "Document not found",
     "filters": {
       "category": "Category",
       "type": "Document Type",
@@ -1248,6 +1266,7 @@
       "itemQty": "Return qty",
       "itemQtyRepair": "Qty",
       "itemQtyInspection": "Qty",
+      "itemSkuMax": "{sku} · max {max}",
       "contactHeading": "Contact",
       "contactName": "Your name",
       "contactEmail": "Email",
@@ -1313,6 +1332,8 @@
     "browseProducts": "Browse the shop",
     "backToShop": "Back to shop",
     "colItem": "Item Description / SKU",
+    "colSku": "SKU",
+    "colName": "Name",
     "colUnitPrice": "Unit Price",
     "colQuantity": "Quantity",
     "colTotal": "Total",
@@ -1323,6 +1344,7 @@
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
     "exportCsv": "Export as CSV",
+    "exportFilename": "cart-export.csv",
     "csvImport": {
       "button": "Import CSV",
       "importing": "Importing…",
@@ -1470,6 +1492,7 @@
         "phone": "Phone",
         "email": "Email",
         "submit": "Send request",
+        "mailtoSubject": "Repair request: {make} {model}",
         "note": "Submitting opens your email client with the request pre-filled. Replace the email transport later if you prefer not to use mailto."
       }
     },

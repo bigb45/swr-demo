@@ -23,6 +23,7 @@
     "help": "Aide",
     "technicalSupport": "Support technique",
     "bookConsultation": "Prendre rendez-vous",
+    "brandName": "SWR Lörrach",
     "home": "SWR Lörrach: Accueil",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
@@ -145,12 +146,6 @@
       "chip4Prompt": "J'ai besoin d'une fiche technique, d'un manuel ou d'un certificat du catalogue."
     }
   },
-  "hero": {
-    "title": "Soudage, Outillage & Réparation.",
-    "subtitle": "Votre partenaire de service 360° à Lörrach. Produits de qualité pour l'industrie et l'artisanat, avec conseil personnalisé et livraison rapide.",
-    "browseProducts": "Accéder à la boutique",
-    "requestQuote": "Demander un conseil"
-  },
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Depuis 1987.",
@@ -265,6 +260,7 @@
     "browseByCategoryTitle": "Commencez par une catégorie.",
     "browseByCategoryBody": "La gamme complète est trop vaste pour une entrée utile sans filtre. Choisissez une catégorie ou utilisez la recherche.",
     "noImage": "Aucune image disponible",
+    "metaNotFoundTitle": "Produit introuvable",
     "options": {
       "chooseOption": "Veuillez choisir…",
       "textPlaceholder": "Saisir une valeur",
@@ -356,7 +352,9 @@
   },
   "categories": {
     "products": "produits",
-    "empty": "Aucun produit trouvé dans cette catégorie."
+    "empty": "Aucun produit trouvé dans cette catégorie.",
+    "metaNotFoundTitle": "Catégorie introuvable",
+    "metaDescription": "{name} : outils professionnels et équipements industriels."
   },
   "shop": {
     "metaTitle": "Boutique",
@@ -394,7 +392,10 @@
     "contactHeading": "Contact",
     "metaTitle": "SWR Lörrach, Soudage, Outillage & Réparation",
     "metaTitleTemplate": "%s | SWR Lörrach",
-    "metaDescription": "SWR GmbH: Votre partenaire B2B pour la technologie de soudage, l'outillage électrique, les machines et la sécurité au travail. Qualität verbindet."
+    "metaDescription": "SWR GmbH: Votre partenaire B2B pour la technologie de soudage, l'outillage électrique, les machines et la sécurité au travail. Qualität verbindet.",
+    "tagline": "Qualität verbindet.",
+    "locationLine": "Lörrach · Allemagne",
+    "siteName": "SWR Lörrach"
   },
   "cookieConsent": {
     "title": "Cookies et confidentialité",
@@ -638,7 +639,8 @@
     "saving": "Enregistrement…",
     "resetError": "Impossible de réinitialiser le mot de passe.",
     "resetTokenMissing": "Le lien est incomplet. Demandez-en un nouveau.",
-    "resetSuccess": "Votre mot de passe a été mis à jour. Connectez-vous avec votre nouveau mot de passe."
+    "resetSuccess": "Votre mot de passe a été mis à jour. Connectez-vous avec votre nouveau mot de passe.",
+    "brandEyebrow": "SWR GmbH"
   },
   "account": {
     "heading": "Aperçu du compte",
@@ -778,7 +780,19 @@
     "insufficientStockLine": "Quantité vendable insuffisante pour la référence {sku} à la quantité demandée. Réduisez la quantité ou supprimez la ligne.",
     "insufficientStockGeneric": "Magento signale une quantité vendable insuffisante pour cette commande. Réduisez les quantités ou demandez à votre administrateur de vérifier les stocks et les sources.",
     "orderPlaceFailed": "Impossible de passer la commande",
-    "backToCart": "Retour au panier"
+    "backToCart": "Retour au panier",
+    "errors": {
+      "notAuthenticated": "Non authentifié",
+      "noActiveCart": "Aucun panier actif",
+      "sessionExpired": "Session expirée",
+      "addressNotFound": "Adresse introuvable",
+      "invalidAddress": "Adresse invalide",
+      "addressNotSelected": "Aucune adresse sélectionnée",
+      "backendUnavailable": "Backend indisponible",
+      "shippingSaveFailed": "Impossible d'enregistrer la sélection d'expédition",
+      "cartNotFound": "Le panier n'existe plus",
+      "assignCustomerFailed": "Impossible d'associer le client au panier"
+    }
   },
   "orders": {
     "heading": "Historique des commandes",
@@ -854,7 +868,10 @@
       "partially_shipped": "Partiellement expédiée",
       "backorder": "Commande en attente"
     },
-    "downloadError": "Le téléchargement a échoué. Veuillez réessayer plus tard."
+    "downloadError": "Le téléchargement a échoué. Veuillez réessayer plus tard.",
+    "companyLegalName": "SWR Handelsgesellschaft mbH",
+    "companyTagline": "Lörrach · Qualität verbindet",
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
   },
   "quotations": {
     "heading": "Devis",
@@ -927,6 +944,7 @@
     "emptyState": "Aucun document ne correspond à ces filtres.",
     "pageCount": "{count} p.",
     "breadcrumbCatalog": "Catalogue",
+    "documentNotFoundTitle": "Document introuvable",
     "filters": {
       "category": "Catégorie",
       "type": "Type de document",
@@ -1248,6 +1266,7 @@
       "itemQty": "Qté retournée",
       "itemQtyRepair": "Qté",
       "itemQtyInspection": "Qté",
+      "itemSkuMax": "{sku} · max. {max}",
       "contactHeading": "Contact",
       "contactName": "Votre nom",
       "contactEmail": "Email",
@@ -1313,6 +1332,8 @@
     "browseProducts": "Parcourir la boutique",
     "backToShop": "Retour à la boutique",
     "colItem": "Description de l'article / SKU",
+    "colSku": "SKU",
+    "colName": "Nom",
     "colUnitPrice": "Prix unitaire",
     "colQuantity": "Quantité",
     "colTotal": "Total",
@@ -1323,6 +1344,7 @@
     "decreaseQuantity": "Réduire la quantité",
     "increaseQuantity": "Augmenter la quantité",
     "exportCsv": "Exporter en CSV",
+    "exportFilename": "panier-export.csv",
     "csvImport": {
       "button": "Importer CSV",
       "importing": "Import en cours…",
@@ -1470,6 +1492,7 @@
         "phone": "Téléphone",
         "email": "E-mail",
         "submit": "Envoyer la demande",
+        "mailtoSubject": "Demande de réparation : {make} {model}",
         "note": "L'envoi ouvre votre client de messagerie avec la demande pré-remplie. Le transport mailto pourra être remplacé par un backend plus tard."
       }
     },

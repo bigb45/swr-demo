@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   extractMagentoMessage,
   getAdminToken,
@@ -19,20 +20,24 @@ export interface SelectShippingArgs {
 export async function selectShippingAction(
   args: SelectShippingArgs,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const t = await getTranslations({
+    locale: args.locale,
+    namespace: "checkout.errors",
+  });
   const cookieStore = await cookies();
   const customerToken = cookieStore.get("swr_customer_token")?.value;
-  if (!customerToken) return { ok: false, error: "Not authenticated" };
+  if (!customerToken) return { ok: false, error: t("notAuthenticated") };
 
   const state = await readCheckoutState();
   if (!state) {
-    return { ok: false, error: "Address not selected" };
+    return { ok: false, error: t("addressNotSelected") };
   }
 
   let adminToken: string;
   try {
     adminToken = await getAdminToken();
   } catch {
-    return { ok: false, error: "Backend unavailable" };
+    return { ok: false, error: t("backendUnavailable") };
   }
 
   const result = await setShippingInformation(state.cartId, adminToken, {
@@ -44,10 +49,7 @@ export async function selectShippingAction(
   if (!result.ok || !result.data) {
     return {
       ok: false,
-      error: extractMagentoMessage(
-        result.data,
-        "Failed to save shipping selection",
-      ),
+      error: extractMagentoMessage(result.data, t("shippingSaveFailed")),
     };
   }
 

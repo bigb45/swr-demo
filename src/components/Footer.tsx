@@ -82,7 +82,7 @@ export default async function Footer({ locale }: FooterProps) {
             SWR Handelsgesellschaft mbH
           </span>
           <p className="text-xs text-white/70 leading-relaxed">
-            Qualität verbindet.
+            {t("tagline")}
           </p>
           <address className="not-italic text-xs text-white/80 leading-relaxed">
             {tContact("company")}
@@ -135,7 +135,7 @@ export default async function Footer({ locale }: FooterProps) {
             {t("copyright", { year: new Date().getFullYear() })}
           </p>
           <p className="text-[11px] text-white/50 uppercase tracking-[0.08em]">
-            Lörrach · Deutschland
+            {t("locationLine")}
           </p>
         </div>
       </div>

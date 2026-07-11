@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   fetchCustomerMe,
   writeCheckoutState,
@@ -28,19 +29,23 @@ export interface SelectAddressArgs {
 export async function selectAddressAction(
   args: SelectAddressArgs,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
+  const t = await getTranslations({
+    locale: args.locale,
+    namespace: "checkout.errors",
+  });
   const cookieStore = await cookies();
   const customerToken = cookieStore.get("swr_customer_token")?.value;
   const cartId = cookieStore.get("swr_cart_id")?.value;
 
-  if (!customerToken) return { ok: false, error: "Not authenticated" };
-  if (!cartId) return { ok: false, error: "No active cart" };
+  if (!customerToken) return { ok: false, error: t("notAuthenticated") };
+  if (!cartId) return { ok: false, error: t("noActiveCart") };
 
   const me = await fetchCustomerMe(customerToken);
-  if (!me) return { ok: false, error: "Session expired" };
+  if (!me) return { ok: false, error: t("sessionExpired") };
 
   if (args.mode === "saved") {
     const saved = (me.addresses ?? []).find((a) => a.id === args.addressId);
-    if (!saved) return { ok: false, error: "Address not found" };
+    if (!saved) return { ok: false, error: t("addressNotFound") };
     await writeCheckoutState({
       cartId,
       addressId: saved.id,
@@ -53,7 +58,7 @@ export async function selectAddressAction(
     } catch (err) {
       return {
         ok: false,
-        error: err instanceof Error ? err.message : "Invalid address",
+        error: err instanceof Error ? err.message : t("invalidAddress"),
       };
     }
 

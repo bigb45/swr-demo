@@ -28,7 +28,7 @@ interface ProductDetailPageProps {
 export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
-  const { sku } = await params;
+  const { locale, sku } = await params;
   try {
     const product = await getProductBySku(decodeURIComponent(sku));
     return {
@@ -40,7 +40,8 @@ export async function generateMetadata({
         ) ?? `${product.name} · SKU: ${product.sku}`,
     };
   } catch {
-    return { title: "Product not found" };
+    const t = await getTranslations({ locale, namespace: "products" });
+    return { title: t("metaNotFoundTitle") };
   }
 }
 

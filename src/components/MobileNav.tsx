@@ -97,7 +97,7 @@ export default function MobileNav({
           className="flex items-center justify-between px-5 h-16 border-b border-outline-variant/30"
           style={{ backgroundColor: "#003a63" }}
         >
-          <span className="text-white font-bold text-base tracking-tight">SWR Lörrach</span>
+          <span className="text-white font-bold text-base tracking-tight">{t("brandName")}</span>
           <button
             onClick={close}
             className="p-3 -mr-2 text-white/80 hover:text-white"

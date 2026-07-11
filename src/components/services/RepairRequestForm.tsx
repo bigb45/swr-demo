@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface RepairRequestFormProps {
   recipientEmail: string;
@@ -46,8 +47,12 @@ const EMPTY: FormState = {
 // repair request without us standing up a backend transport for this chunk.
 // A Resend / SMTP integration is a separate ticket; this form's contract is
 // intentionally compatible with one (just swap the submit handler).
-function buildMailto(recipient: string, state: FormState, labels: RepairRequestFormProps["labels"]): string {
-  const subject = `Repair request: ${state.machineMake} ${state.machineModel}`.trim();
+function buildMailto(
+  recipient: string,
+  state: FormState,
+  labels: RepairRequestFormProps["labels"],
+  subject: string,
+): string {
   const lines = [
     `${labels.machineMake}: ${state.machineMake}`,
     `${labels.machineModel}: ${state.machineModel}`,
@@ -70,6 +75,7 @@ export default function RepairRequestForm({
   recipientEmail,
   labels,
 }: RepairRequestFormProps) {
+  const t = useTranslations("services.repair.form");
   const [state, setState] = useState<FormState>(EMPTY);
 
   const update = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -78,7 +84,11 @@ export default function RepairRequestForm({
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = buildMailto(recipientEmail, state, labels);
+    const subject = t("mailtoSubject", {
+      make: state.machineMake,
+      model: state.machineModel,
+    }).trim();
+    window.location.href = buildMailto(recipientEmail, state, labels, subject);
   };
 
   const inputCls =

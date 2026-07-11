@@ -51,7 +51,7 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       locale,
-      siteName: "SWR Lörrach",
+      siteName: t("siteName"),
       title: t("metaTitle"),
       description: t("metaDescription"),
       url: `${base}/${locale}`,

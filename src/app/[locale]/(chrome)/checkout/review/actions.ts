@@ -35,8 +35,8 @@ export async function placeOrderAction(
   const customerToken = cookieStore.get("swr_customer_token")?.value;
   const cartId = cookieStore.get("swr_cart_id")?.value;
 
-  if (!customerToken) return { ok: false, error: "Not authenticated" };
-  if (!cartId) return { ok: false, error: "No active cart" };
+  if (!customerToken) return { ok: false, error: t("errors.notAuthenticated") };
+  if (!cartId) return { ok: false, error: t("errors.noActiveCart") };
 
   const lines = await fetchGuestCartLineItems(cartId);
 
@@ -59,19 +59,19 @@ export async function placeOrderAction(
 
   const customer = await fetchCustomerMe(customerToken);
   if (!customer) {
-    return { ok: false, error: "Session expired" };
+    return { ok: false, error: t("errors.sessionExpired") };
   }
 
   let adminToken: string;
   try {
     adminToken = await getAdminToken();
   } catch {
-    return { ok: false, error: "Backend unavailable" };
+    return { ok: false, error: t("errors.backendUnavailable") };
   }
 
   const cart = await fetchGuestCart(cartId, adminToken);
   if (!cart) {
-    return { ok: false, error: "Cart no longer exists" };
+    return { ok: false, error: t("errors.cartNotFound") };
   }
 
   const storeId = cart.store_id ?? customer.store_id ?? 1;
@@ -91,7 +91,7 @@ export async function placeOrderAction(
         ok: false,
         error: extractMagentoMessage(
           assign.data,
-          "Failed to assign customer to cart",
+          t("errors.assignCustomerFailed"),
         ),
       };
     }

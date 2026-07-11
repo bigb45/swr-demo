@@ -60,9 +60,9 @@ export async function GET(
     shipping: t("shipping"),
     adjustment: t("adjustment"),
     refundTotal: t("refundTotal"),
-    companyName: "SWR Handelsgesellschaft mbH",
-    companyTagline: "Lörrach · Qualität verbindet",
-    footer: "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
+    companyName: t("companyLegalName"),
+    companyTagline: t("companyTagline"),
+    footer: t("pdfFooter"),
   };
 
   const element = createElement(CreditmemoPdf, {

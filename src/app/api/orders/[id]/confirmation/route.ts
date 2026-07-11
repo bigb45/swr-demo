@@ -62,9 +62,9 @@ export async function GET(
     subtotal: t("subtotal"),
     tax: t("tax"),
     grandTotal: t("grandTotal"),
-    companyName: "SWR Handelsgesellschaft mbH",
-    companyTagline: "Lörrach · Qualität verbindet",
-    footer: "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
+    companyName: t("companyLegalName"),
+    companyTagline: t("companyTagline"),
+    footer: t("pdfFooter"),
     statusLabel: resolved.label,
   };
 
