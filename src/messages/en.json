@@ -283,7 +283,16 @@
       "facets": {
         "manufacturer": "Manufacturer",
         "brand": "Brand",
-        "countryOfManufacture": "Country of manufacture"
+        "countryOfManufacture": "Country of manufacture",
+        "weldingProcess": "Welding process",
+        "currentType": "Current type",
+        "dutyCycle": "Duty cycle",
+        "voltage": "Voltage",
+        "batteryPlatform": "Battery platform",
+        "powerKw": "Power (kW)",
+        "pressureBar": "Pressure (bar)",
+        "protectionClass": "Protection class",
+        "norm": "Norm"
       }
     },
     "galleryPrevImage": "Previous product image",
@@ -295,7 +304,6 @@
     "priceOnRequest": "Price on request",
     "pricesLoginRequired": "Prices are shown after you sign in.",
     "signInForPrices": "Sign in",
-    "signInForPrice": "Sign in for price",
     "guestPricing": {
       "title": "Net pricing for registered customers",
       "body": "Sign in to view your contract and net prices. Registration is free for business accounts.",
@@ -316,6 +324,22 @@
     "specifications": "Technical Specifications",
     "weight": "Weight (Bare)",
     "productType": "Product Type",
+    "specs": {
+      "motor_type": "Motor type",
+      "max_torque": "Max. torque",
+      "no_load_speed": "No-load speed",
+      "chuck_capacity": "Chuck capacity",
+      "ip_rating": "IP rating",
+      "clutch_settings": "Clutch settings"
+    },
+    "types": {
+      "simple": "Simple",
+      "configurable": "Configurable",
+      "bundle": "Bundle",
+      "grouped": "Grouped",
+      "virtual": "Virtual",
+      "downloadable": "Downloadable"
+    },
     "standardPrice": "Standard Price",
     "bulkPricing": "Bulk pricing",
     "bulkPricingTableHint": "Buy more and pay less per unit.",
@@ -329,17 +353,7 @@
     "added": "Added!",
     "decreaseQuantity": "Decrease quantity",
     "increaseQuantity": "Increase quantity",
-    "sameDayDispatch": "Fast delivery with our own fleet",
     "skuLabel": "Part No.",
-    "warrantyLabel": "Certified Brand Quality",
-    "energyEfficient": "Professional Grade",
-    "engineeredForJobsite": "For Industry & Trade",
-    "feature1Title": "Premium Brand Products",
-    "feature1Desc": "We stock only tested, professional-grade products from leading manufacturers for industrial and trade use.",
-    "feature2Title": "Personal Expert Advice",
-    "feature2Desc": "Our specialists advise you individually, in person in Lörrach, by phone, or by email.",
-    "feature3Title": "Service & Repair",
-    "feature3Desc": "We repair and maintain your tools and machines. Fast, reliable, and handled by our own service team.",
     "adding": "Adding…",
     "addToCartError": "The item could not be added to the cart. Please try again."
   },
@@ -871,7 +885,14 @@
     "downloadError": "Download failed. Please try again later.",
     "companyLegalName": "SWR Handelsgesellschaft mbH",
     "companyTagline": "Lörrach · Qualität verbindet",
-    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
+    "paymentMethods": {
+      "checkmo": "Check / Money Order",
+      "banktransfer": "Bank Transfer",
+      "purchaseorder": "Purchase Order",
+      "cashondelivery": "Cash on Delivery",
+      "free": "Free"
+    }
   },
   "quotations": {
     "heading": "Quotations",
@@ -1363,9 +1384,14 @@
     "undoing": "Undoing…",
     "loading": "Loading your cart…",
     "fetchError": "We could not load your cart. Please check your connection and try again.",
+    "retry": "Retry",
+    "retrying": "Retrying…",
     "updateError": "Could not update the cart. Please try again.",
     "orderSummary": "Order Summary",
     "subtotal": "Subtotal ({count} items)",
+    "tax": "Tax",
+    "shipping": "Shipping",
+    "grandTotal": "Grand total",
     "shippingAndTaxNote": "Shipping and tax are calculated in checkout.",
     "proceedToCheckout": "Proceed to Checkout",
     "legalDisclaimer": "By proceeding you agree to the SWR Terms of Sale and General Terms and Conditions.",

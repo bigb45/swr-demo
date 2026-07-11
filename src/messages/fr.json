@@ -283,7 +283,16 @@
       "facets": {
         "manufacturer": "Fabricant",
         "brand": "Marque",
-        "countryOfManufacture": "Pays de fabrication"
+        "countryOfManufacture": "Pays de fabrication",
+        "weldingProcess": "Procédé de soudage",
+        "currentType": "Type de courant",
+        "dutyCycle": "Facteur de marche",
+        "voltage": "Tension",
+        "batteryPlatform": "Plateforme batterie",
+        "powerKw": "Puissance (kW)",
+        "pressureBar": "Pression (bar)",
+        "protectionClass": "Classe de protection",
+        "norm": "Norme"
       }
     },
     "galleryPrevImage": "Image produit précédente",
@@ -295,7 +304,6 @@
     "priceOnRequest": "Prix sur demande",
     "pricesLoginRequired": "Connectez-vous pour voir les prix.",
     "signInForPrices": "Se connecter",
-    "signInForPrice": "Se connecter pour le prix",
     "guestPricing": {
       "title": "Tarifs nets pour clients enregistrés",
       "body": "Connectez-vous pour voir vos tarifs contractuels et nets. L'inscription est gratuite pour les comptes professionnels.",
@@ -316,6 +324,22 @@
     "specifications": "Spécifications techniques",
     "weight": "Poids (nu)",
     "productType": "Type de produit",
+    "specs": {
+      "motor_type": "Type de moteur",
+      "max_torque": "Couple max.",
+      "no_load_speed": "Vitesse à vide",
+      "chuck_capacity": "Capacité du mandrin",
+      "ip_rating": "Indice IP",
+      "clutch_settings": "Réglages d'embrayage"
+    },
+    "types": {
+      "simple": "Simple",
+      "configurable": "Configurable",
+      "bundle": "Pack",
+      "grouped": "Groupé",
+      "virtual": "Virtuel",
+      "downloadable": "Téléchargeable"
+    },
     "standardPrice": "Prix standard",
     "bulkPricing": "Prix par quantité",
     "bulkPricingTableHint": "Achetez plus et payez moins par unité.",
@@ -329,17 +353,7 @@
     "added": "Ajouté !",
     "decreaseQuantity": "Réduire la quantité",
     "increaseQuantity": "Augmenter la quantité",
-    "sameDayDispatch": "Livraison rapide avec notre propre flotte",
     "skuLabel": "Réf.",
-    "warrantyLabel": "Qualité de marque certifiée",
-    "energyEfficient": "Usage professionnel",
-    "engineeredForJobsite": "Pour l'industrie & l'artisanat",
-    "feature1Title": "Produits de marque premium",
-    "feature1Desc": "Nous proposons uniquement des produits testés et de qualité professionnelle de fabricants reconnus pour l'industrie et l'artisanat.",
-    "feature2Title": "Conseil expert personnalisé",
-    "feature2Desc": "Nos spécialistes vous conseillent individuellement, en personne à Lörrach, par téléphone ou par e-mail.",
-    "feature3Title": "Service & Réparation",
-    "feature3Desc": "Nous réparons et entretenons vos outils et machines. Rapidement, de manière fiable, avec notre propre équipe de service.",
     "adding": "Ajout en cours…",
     "addToCartError": "L'article n'a pas pu être ajouté au panier. Veuillez réessayer."
   },
@@ -871,7 +885,14 @@
     "downloadError": "Le téléchargement a échoué. Veuillez réessayer plus tard.",
     "companyLegalName": "SWR Handelsgesellschaft mbH",
     "companyTagline": "Lörrach · Qualität verbindet",
-    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
+    "paymentMethods": {
+      "checkmo": "Chèque / Mandat",
+      "banktransfer": "Virement bancaire",
+      "purchaseorder": "Bon de commande",
+      "cashondelivery": "Paiement à la livraison",
+      "free": "Gratuit"
+    }
   },
   "quotations": {
     "heading": "Devis",
@@ -1363,9 +1384,14 @@
     "undoing": "Annulation…",
     "loading": "Chargement du panier…",
     "fetchError": "Impossible de charger votre panier. Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer",
+    "retrying": "Nouvelle tentative…",
     "updateError": "Impossible de mettre à jour le panier. Veuillez réessayer.",
     "orderSummary": "Récapitulatif de commande",
     "subtotal": "Sous-total ({count} articles)",
+    "tax": "TVA",
+    "shipping": "Livraison",
+    "grandTotal": "Total",
     "shippingAndTaxNote": "Les frais de livraison et la TVA sont calculés lors de la validation.",
     "proceedToCheckout": "Passer à la caisse",
     "legalDisclaimer": "En continuant, vous acceptez les conditions générales de vente de SWR.",

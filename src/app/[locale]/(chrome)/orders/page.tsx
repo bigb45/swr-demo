@@ -27,15 +27,14 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
   const email = await getCustomerEmail(token);
   const orders = email ? await listCustomerOrders(email) : [];
 
-  const fmt = new Intl.NumberFormat(
-    locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB",
-    { style: "currency", currency: "EUR" },
-  );
+  const localeTag =
+    locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB";
 
-  const dateFmt = new Intl.DateTimeFormat(
-    locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB",
-    { year: "numeric", month: "short", day: "numeric" },
-  );
+  const dateFmt = new Intl.DateTimeFormat(localeTag, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
   return (
     <div className="swr-page-shell py-10">
@@ -58,6 +57,11 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
           {orders.map((order) => {
             const resolved = resolveOrderStatus(order, t);
             const badgeClasses = statusBadgeClasses(resolved.tone);
+            const currency = order.order_currency_code || "EUR";
+            const fmt = new Intl.NumberFormat(localeTag, {
+              style: "currency",
+              currency,
+            });
             return (
               <div
                 key={order.entity_id}

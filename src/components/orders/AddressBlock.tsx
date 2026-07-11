@@ -1,8 +1,11 @@
 import type { MagentoOrderAddress } from "@/types/magento";
+import { formatCountryId } from "@/lib/order-labels";
 
 interface AddressBlockProps {
   title: string;
   address: MagentoOrderAddress | undefined | null;
+  /** BCP 47 locale for country name display. */
+  locale: string;
   /** Optional fallback node (e.g. "Same as billing" message). */
   fallback?: React.ReactNode;
 }
@@ -10,6 +13,7 @@ interface AddressBlockProps {
 export default function AddressBlock({
   title,
   address,
+  locale,
   fallback,
 }: AddressBlockProps) {
   const hasAddress =
@@ -47,7 +51,9 @@ export default function AddressBlock({
             </div>
           )}
           {address!.region ? <div>{address!.region}</div> : null}
-          {address!.country_id ? <div>{address!.country_id}</div> : null}
+          {address!.country_id ? (
+            <div>{formatCountryId(locale, address!.country_id)}</div>
+          ) : null}
           {address!.telephone ? (
             <div className="text-on-surface-variant mt-2 text-xs">
               {address!.telephone}

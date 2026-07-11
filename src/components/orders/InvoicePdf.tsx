@@ -5,6 +5,10 @@ import type {
 } from "@/types/magento";
 import { pdfStyles as styles } from "@/components/orders/pdfStyles";
 import PdfAddress from "@/components/orders/PdfAddress";
+import {
+  formatPaymentMethod,
+  type PaymentMethodLabels,
+} from "@/lib/order-labels";
 
 interface InvoicePdfLabels {
   title: string;
@@ -24,6 +28,7 @@ interface InvoicePdfLabels {
   shipping: string;
   grandTotal: string;
   paymentMethod: string;
+  paymentMethods: PaymentMethodLabels;
   companyName: string;
   companyTagline: string;
   footer: string;
@@ -92,11 +97,16 @@ export default function InvoicePdf({
         </View>
 
         <View style={styles.addressRow}>
-          <PdfAddress heading={labels.billingAddress} address={billing} />
+          <PdfAddress
+            heading={labels.billingAddress}
+            address={billing}
+            locale={locale}
+          />
           <PdfAddress
             heading={labels.shippingAddress}
             address={sameAsBilling ? undefined : shipping}
             fallback={labels.sameAsBilling}
+            locale={locale}
           />
         </View>
 
@@ -147,7 +157,12 @@ export default function InvoicePdf({
         {order.payment?.method ? (
           <View style={styles.paymentBlock}>
             <Text style={styles.sectionHeading}>{labels.paymentMethod}</Text>
-            <Text>{order.payment.method}</Text>
+            <Text>
+              {formatPaymentMethod(
+                order.payment.method,
+                labels.paymentMethods,
+              )}
+            </Text>
           </View>
         ) : null}
 

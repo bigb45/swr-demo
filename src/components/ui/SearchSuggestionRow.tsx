@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { MagentoProduct } from "@/types/magento";
 import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
+import { getSupportedOptions } from "@/lib/custom-options";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { notify } from "@/lib/toast";
 import { useCurrency } from "@/components/CurrencyProvider";
@@ -35,7 +36,12 @@ export default function SearchSuggestionRow({
   const [status, setStatus] = useState<AddStatus>("idle");
 
   const stock = getStockStatus(product);
-  const canAdd = isAuthenticated && product.price > 0 && stock.level !== "out";
+  // Guests may add to cart (prices stay hidden; checkout requires sign-in).
+  const canAdd = product.price > 0 && stock.level !== "out";
+  const hasRequiredOptions = getSupportedOptions(product.options).some(
+    (option) => option.is_require,
+  );
+  const shouldConfigureBeforeAdd = canAdd && hasRequiredOptions;
   const showGuestPriceGate = !isAuthenticated && product.price > 0;
   const stockLabel = getStockLabel(stock.level, tProducts);
 
@@ -44,7 +50,7 @@ export default function SearchSuggestionRow({
   async function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!canAdd || status === "loading") return;
+    if (!canAdd || shouldConfigureBeforeAdd || status === "loading") return;
 
     setStatus("loading");
     try {
@@ -144,7 +150,14 @@ export default function SearchSuggestionRow({
         </div>
 
         <div className="shrink-0 flex flex-col justify-center self-center gap-2">
-          {canAdd ? (
+          {shouldConfigureBeforeAdd ? (
+            <Link
+              href={href}
+              className="px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] bg-primary hover:brightness-110 transition-all whitespace-nowrap text-center"
+            >
+              {tProducts("selectOptions")}
+            </Link>
+          ) : canAdd ? (
             <button
               type="button"
               onClick={handleAdd}
@@ -181,13 +194,6 @@ export default function SearchSuggestionRow({
                 tProducts("addToCart")
               )}
             </button>
-          ) : showGuestPriceGate && stock.level !== "out" ? (
-            <Link
-              href="/account/login"
-              className="px-3 py-2 text-xs font-bold tracking-wide text-white rounded-[3px] bg-primary hover:brightness-110 transition-all whitespace-nowrap text-center"
-            >
-              {tProducts("signInForPrices")}
-            </Link>
           ) : stock.level === "out" ? (
             <span className="inline-flex items-center justify-center rounded-full bg-red-600/10 px-2.5 py-1 text-xs font-medium text-red-700 whitespace-nowrap">
               {tProducts("outOfStock")}

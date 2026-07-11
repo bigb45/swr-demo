@@ -78,11 +78,16 @@ export default function ShipmentPdf({
         </View>
 
         <View style={styles.addressRow}>
-          <PdfAddress heading={labels.billingAddress} address={billing} />
+          <PdfAddress
+            heading={labels.billingAddress}
+            address={billing}
+            locale={locale}
+          />
           <PdfAddress
             heading={labels.shippingAddress}
             address={sameAsBilling ? undefined : shipping}
             fallback={labels.sameAsBilling}
+            locale={locale}
           />
         </View>
 

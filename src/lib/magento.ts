@@ -699,7 +699,7 @@ function buildBrowseFacetsFromProducts(
   return [...counts.entries()]
     .map(([attribute_code, optionMap]) => ({
       attribute_code,
-      label: attribute_code.replace(/_/g, " "),
+      label: humanizeAttributeCode(attribute_code),
       options: [...optionMap.entries()]
         .map(([value, meta]) => ({
           value,
@@ -710,6 +710,15 @@ function buildBrowseFacetsFromProducts(
     }))
     .filter((bucket) => bucket.options.length > 0)
     .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+/** Title-case underscored Magento attribute codes for browse-mode facet labels. */
+function humanizeAttributeCode(code: string): string {
+  return code
+    .split("_")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 async function fetchMagentoSearchAggregations(

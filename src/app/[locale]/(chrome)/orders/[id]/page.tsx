@@ -11,6 +11,10 @@ import { getProductBySku } from "@/lib/magento";
 import { resolveSelectedOptionLabels } from "@/lib/custom-options";
 import { resolveOrderStatus, statusBadgeClasses } from "@/lib/orderStatus";
 import { listCasesForOrder } from "@/lib/service";
+import {
+  formatPaymentMethod,
+  paymentMethodLabelsFromT,
+} from "@/lib/order-labels";
 
 interface OrderDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -115,6 +119,8 @@ export default async function OrderDetailPage({
     JSON.stringify(shipping) === JSON.stringify(billing);
 
   const paymentMethod = order.payment?.method;
+  const paymentLabels = paymentMethodLabelsFromT(t);
+  const paymentLabel = formatPaymentMethod(paymentMethod, paymentLabels);
   const poRef = order.payment?.po_number;
 
   // Magento mixes internal staff notes and customer-facing comments in the
@@ -163,10 +169,11 @@ export default async function OrderDetailPage({
 
       {/* Billing + shipping + payment */}
       <div className="grid gap-4 md:grid-cols-3 mb-10">
-        <AddressBlock title={t("billingAddress")} address={billing} />
+        <AddressBlock title={t("billingAddress")} address={billing} locale={locale} />
         <AddressBlock
           title={t("shippingAddress")}
           address={sameAsBilling ? undefined : shipping}
+          locale={locale}
           fallback={t("sameAsBilling")}
         />
         <div className="bg-surface-container-lowest rounded-card p-5 shadow-ambient">
@@ -174,8 +181,8 @@ export default async function OrderDetailPage({
             {t("paymentMethod")}
           </h2>
           <div className="text-sm text-on-surface">
-            {paymentMethod ? (
-              <span className="font-medium">{paymentMethod}</span>
+            {paymentLabel ? (
+              <span className="font-medium">{paymentLabel}</span>
             ) : (
               <span className="text-on-surface-variant">-</span>
             )}

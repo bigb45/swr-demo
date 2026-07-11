@@ -19,6 +19,7 @@ import {
 } from "@/lib/custom-options";
 import type { MagentoProduct } from "@/types/magento";
 import { notify } from "@/lib/toast";
+import { getStockStatus } from "@/lib/stock";
 
 interface AddToCartClusterProps {
   product: MagentoProduct;
@@ -45,6 +46,7 @@ export default function AddToCartCluster({
   );
 
   const supportedOptions = getSupportedOptions(product.options);
+  const stock = getStockStatus(product);
 
   const optionsSurcharge = supportedOptions.reduce((sum, opt) => {
     if (!isSelectOption(opt.type)) return sum;
@@ -67,7 +69,7 @@ export default function AddToCartCluster({
     (a, b) => a.qty - b.qty,
   );
   const hideCatalogPrices = !isAuthenticated && product.price > 0;
-  const canAddToCart = product.price > 0;
+  const canAddToCart = product.price > 0 && stock.level !== "out";
   const watchlistImageUrl = getProductImageUrl(product);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -100,6 +102,8 @@ export default function AddToCartCluster({
   }
 
   async function handleAddToCart() {
+    if (!canAddToCart) return;
+
     const missing = getMissingRequiredOptions(product.options, optionSelection);
     if (missing.length > 0) {
       setMissingOptionIds(new Set(missing.map((o) => String(o.option_id))));
@@ -328,6 +332,11 @@ export default function AddToCartCluster({
       </div>
       ) : (
         <div className="flex flex-col gap-2">
+          {stock.level === "out" ? (
+            <span className="inline-flex items-center justify-center rounded-full bg-red-600/10 px-2.5 py-2 text-xs font-medium text-red-700">
+              {t("outOfStock")}
+            </span>
+          ) : null}
           <WatchlistButton
             variant="full"
             sku={product.sku}

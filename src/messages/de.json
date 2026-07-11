@@ -283,7 +283,16 @@
       "facets": {
         "manufacturer": "Hersteller",
         "brand": "Marke",
-        "countryOfManufacture": "Herstellungsland"
+        "countryOfManufacture": "Herstellungsland",
+        "weldingProcess": "Schweißverfahren",
+        "currentType": "Stromart",
+        "dutyCycle": "Einschaltdauer",
+        "voltage": "Spannung",
+        "batteryPlatform": "Akkuplattform",
+        "powerKw": "Leistung (kW)",
+        "pressureBar": "Druck (bar)",
+        "protectionClass": "Schutzklasse",
+        "norm": "Norm"
       }
     },
     "galleryPrevImage": "Vorheriges Produktbild",
@@ -295,7 +304,6 @@
     "priceOnRequest": "Preis auf Anfrage",
     "pricesLoginRequired": "Preise sehen Sie nach der Anmeldung.",
     "signInForPrices": "Anmelden",
-    "signInForPrice": "Anmelden für Preis",
     "guestPricing": {
       "title": "Nettopreise für registrierte Kunden",
       "body": "Melden Sie sich an, um Ihre Vertrags- und Nettopreise zu sehen. Die Registrierung ist für Geschäftskunden kostenlos.",
@@ -316,6 +324,22 @@
     "specifications": "Technische Spezifikationen",
     "weight": "Gewicht (ohne Zubehör)",
     "productType": "Produkttyp",
+    "specs": {
+      "motor_type": "Motortyp",
+      "max_torque": "Max. Drehmoment",
+      "no_load_speed": "Leerlaufdrehzahl",
+      "chuck_capacity": "Spannfutterkapazität",
+      "ip_rating": "IP-Schutzart",
+      "clutch_settings": "Kupplungseinstellungen"
+    },
+    "types": {
+      "simple": "Einfach",
+      "configurable": "Konfigurierbar",
+      "bundle": "Bundle",
+      "grouped": "Gruppiert",
+      "virtual": "Virtuell",
+      "downloadable": "Download"
+    },
     "standardPrice": "Standardpreis",
     "bulkPricing": "Mengenpreise",
     "bulkPricingTableHint": "Größere Mengen senken den Stückpreis.",
@@ -329,17 +353,7 @@
     "added": "Hinzugefügt!",
     "decreaseQuantity": "Menge verringern",
     "increaseQuantity": "Menge erhöhen",
-    "sameDayDispatch": "Schnelle Lieferung mit eigenem Fuhrpark",
     "skuLabel": "Art.-Nr.",
-    "warrantyLabel": "Geprüfte Markenqualität",
-    "energyEfficient": "Professioneller Einsatzbereich",
-    "engineeredForJobsite": "Für Industrie & Handwerk",
-    "feature1Title": "Hochwertige Markenprodukte",
-    "feature1Desc": "Wir führen ausschließlich geprüfte Produkte namhafter Hersteller für den professionellen Einsatz in Industrie und Handwerk.",
-    "feature2Title": "Persönliche Fachberatung",
-    "feature2Desc": "Unsere Experten beraten Sie individuell – ob vor Ort in Lörrach, telefonisch oder per E-Mail.",
-    "feature3Title": "Service & Reparatur",
-    "feature3Desc": "Wir reparieren und warten Ihre Werkzeuge und Maschinen. Schnell, zuverlässig und mit eigenem Serviceteam.",
     "adding": "Wird hinzugefügt…",
     "addToCartError": "Der Artikel konnte nicht in den Warenkorb gelegt werden. Bitte versuchen Sie es erneut."
   },
@@ -871,7 +885,14 @@
     "downloadError": "Download fehlgeschlagen. Bitte versuchen Sie es später erneut.",
     "companyLegalName": "SWR Handelsgesellschaft mbH",
     "companyTagline": "Lörrach · Qualität verbindet",
-    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de"
+    "pdfFooter": "SWR Handelsgesellschaft mbH · info@swr-loerrach.de",
+    "paymentMethods": {
+      "checkmo": "Scheck / Zahlungsanweisung",
+      "banktransfer": "Banküberweisung",
+      "purchaseorder": "Bestellschein",
+      "cashondelivery": "Nachnahme",
+      "free": "Kostenlos"
+    }
   },
   "quotations": {
     "heading": "Angebote",
@@ -1363,9 +1384,14 @@
     "undoing": "Wird wiederhergestellt…",
     "loading": "Warenkorb wird geladen…",
     "fetchError": "Der Warenkorb konnte nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.",
+    "retry": "Erneut versuchen",
+    "retrying": "Wird erneut versucht…",
     "updateError": "Der Warenkorb konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
     "orderSummary": "Bestellübersicht",
     "subtotal": "Zwischensumme ({count} Artikel)",
+    "tax": "MwSt.",
+    "shipping": "Versand",
+    "grandTotal": "Gesamtsumme",
     "shippingAndTaxNote": "Versand und MwSt. werden im Bestellvorgang berechnet.",
     "proceedToCheckout": "Zur Kasse",
     "legalDisclaimer": "Mit dem Fortfahren stimmen Sie den SWR Verkaufsbedingungen und AGB zu.",

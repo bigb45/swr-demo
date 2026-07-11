@@ -52,6 +52,15 @@ const FACET_LABEL_KEYS: Record<string, string> = {
   manufacturer: "facets.manufacturer",
   brand: "facets.brand",
   country_of_manufacture: "facets.countryOfManufacture",
+  welding_process: "facets.weldingProcess",
+  current_type: "facets.currentType",
+  duty_cycle: "facets.dutyCycle",
+  voltage: "facets.voltage",
+  battery_platform: "facets.batteryPlatform",
+  power_kw: "facets.powerKw",
+  pressure_bar: "facets.pressureBar",
+  protection_class: "facets.protectionClass",
+  norm: "facets.norm",
 };
 
 function PriceFilterFields({

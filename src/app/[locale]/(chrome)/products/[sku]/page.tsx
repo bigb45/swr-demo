@@ -15,8 +15,6 @@ import ProductGallery from "@/components/ui/ProductGallery";
 import SpecTable from "@/components/ui/SpecTable";
 import BulkPricingTable from "@/components/ui/BulkPricingTable";
 import AddToCartCluster from "@/components/ui/AddToCartCluster";
-import CertBadge from "@/components/ui/CertBadge";
-import FeatureCard from "@/components/ui/FeatureCard";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import StockBadge from "@/components/ui/StockBadge";
 import CopilotPageContextSetter from "@/components/copilot/CopilotPageContextSetter";
@@ -45,42 +43,27 @@ export async function generateMetadata({
   }
 }
 
-/* Feature icons */
-const ICON_BRUSHLESS = (
-  <svg width="27" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-  </svg>
-);
-const ICON_GEARBOX = (
-  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-  </svg>
-);
-const ICON_LIGHT = (
-  <svg width="22" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-    <circle cx="12" cy="10" r="3" />
-  </svg>
-);
+const SPEC_ATTRIBUTE_CODES = [
+  "motor_type",
+  "max_torque",
+  "no_load_speed",
+  "chuck_capacity",
+  "ip_rating",
+  "clutch_settings",
+] as const;
 
-const CERT_ICON_ISO = (
-  <svg width="13" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    <polyline points="9 12 11 14 15 10" />
-  </svg>
-);
-const CERT_ICON_WARRANTY = (
-  <svg width="9" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-  </svg>
-);
-const CERT_ICON_ENERGY = (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="9 12 11 14 15 10" />
-  </svg>
-);
+type SpecAttributeCode = (typeof SPEC_ATTRIBUTE_CODES)[number];
+
+const PRODUCT_TYPE_IDS = [
+  "simple",
+  "configurable",
+  "bundle",
+  "grouped",
+  "virtual",
+  "downloadable",
+] as const;
+
+type ProductTypeId = (typeof PRODUCT_TYPE_IDS)[number];
 
 export default async function ProductDetailPage({
   params,
@@ -110,7 +93,6 @@ export default async function ProductDetailPage({
 
   const stock = getStockStatus(product);
   const stockLabel = getStockLabel(stock.level, (key) => t(key));
-  const showDispatchHint = stock.level === "in" || stock.level === "low";
 
   /* Build spec table rows from product attributes */
   const specRows: { attribute: React.ReactNode; value: React.ReactNode }[] = [];
@@ -123,21 +105,24 @@ export default async function ProductDetailPage({
   }
 
   if (product.type_id) {
+    const typeId = product.type_id as ProductTypeId;
+    const typeLabel = (PRODUCT_TYPE_IDS as readonly string[]).includes(product.type_id)
+      ? t(`types.${typeId}`)
+      : product.type_id.replace(/_/g, " ");
     specRows.push({
       attribute: <span className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">{t("productType")}</span>,
-      value: <span className="text-sm text-on-surface capitalize">{product.type_id.replace(/_/g, " ")}</span>,
+      value: <span className="text-sm text-on-surface capitalize">{typeLabel}</span>,
     });
   }
 
   /* Add any custom attributes as spec rows */
-  const specAttributeCodes = ["motor_type", "max_torque", "no_load_speed", "chuck_capacity", "ip_rating", "clutch_settings"];
-  for (const code of specAttributeCodes) {
+  for (const code of SPEC_ATTRIBUTE_CODES) {
     const val = getCustomAttribute(product, code);
     if (val) {
       specRows.push({
         attribute: (
           <span className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant">
-            {code.replace(/_/g, " ")}
+            {t(`specs.${code as SpecAttributeCode}`)}
           </span>
         ),
         value: <span className="text-sm text-on-surface">{val}</span>,
@@ -261,11 +246,6 @@ export default async function ProductDetailPage({
                           {t("lowStockRemaining", { qty: stock.qty })}
                         </p>
                       )}
-                      {showDispatchHint && (
-                        <p className="text-xs text-on-surface-variant mt-1 leading-relaxed text-pretty">
-                          {t("sameDayDispatch")}
-                        </p>
-                      )}
                     </div>
                   )}
                 </div>
@@ -324,39 +304,8 @@ export default async function ProductDetailPage({
                   />
                 </div>
               )}
-
-              {/* Certification badges */}
-              <div className="flex flex-wrap gap-3">
-                <CertBadge icon={CERT_ICON_ISO} label="ISO 9001:2015" />
-                <CertBadge icon={CERT_ICON_WARRANTY} label={t("warrantyLabel")} />
-                <CertBadge icon={CERT_ICON_ENERGY} label={t("energyEfficient")} />
-              </div>
             </div>
           </div>
-
-          {/* Features grid */}
-          <section>
-            <h2 className="text-xl font-black text-secondary uppercase tracking-[-0.01em] mb-8">
-              {t("engineeredForJobsite")}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <FeatureCard
-                icon={ICON_BRUSHLESS}
-                title={t("feature1Title")}
-                description={t("feature1Desc")}
-              />
-              <FeatureCard
-                icon={ICON_GEARBOX}
-                title={t("feature2Title")}
-                description={t("feature2Desc")}
-              />
-              <FeatureCard
-                icon={ICON_LIGHT}
-                title={t("feature3Title")}
-                description={t("feature3Desc")}
-              />
-            </div>
-          </section>
         </div>
       </div>
     </div>

@@ -19,11 +19,12 @@ export default function CartContent() {
   const tProducts = useTranslations("products");
   const tQuotations = useTranslations("quotations");
   const { isAuthenticated } = useCustomerSession();
-  const { items, totals, loading, fetchError, updateQty, removeItem, restoreItem } =
+  const { items, totals, loading, fetchError, updateQty, removeItem, restoreItem, refreshTotals } =
     useCart();
   const { formatAmount } = useCurrency();
   const [removedItem, setRemovedItem] = useState<(typeof items)[number] | null>(null);
   const [undoLoading, setUndoLoading] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const undoTimeoutRef = useRef<number | null>(null);
 
   // Use Magento-calculated totals when available; fall back to client-side
@@ -31,6 +32,9 @@ export default function CartContent() {
   const subtotal =
     totals?.subtotal_with_discount ??
     items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
+  const taxAmount = totals?.tax_amount ?? 0;
+  const shippingAmount = totals?.shipping_amount ?? 0;
+  const grandTotal = totals?.grand_total ?? subtotal;
 
   useEffect(() => {
     return () => {
@@ -161,12 +165,27 @@ export default function CartContent() {
           </Link>
         </header>
 
-        {fetchError && items.length === 0 && !loading && (
+        {fetchError && !loading && (
           <div
             role="alert"
-            className="mb-6 rounded-card border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+            className="mb-6 flex flex-col gap-3 rounded-card border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 sm:flex-row sm:items-center sm:justify-between"
           >
-            {t("fetchError")}
+            <span>{t("fetchError")}</span>
+            <button
+              type="button"
+              disabled={retrying}
+              onClick={async () => {
+                setRetrying(true);
+                try {
+                  await refreshTotals();
+                } finally {
+                  setRetrying(false);
+                }
+              }}
+              className="self-start text-sm font-bold text-red-800 underline underline-offset-2 hover:text-red-950 disabled:opacity-50 disabled:no-underline"
+            >
+              {retrying ? t("retrying") : t("retry")}
+            </button>
           </div>
         )}
 
@@ -417,9 +436,28 @@ export default function CartContent() {
                 <span className="font-semibold text-on-surface">{formatAmount(subtotal)}</span>
               </div>
 
-              <p className="text-[11px] text-on-surface-variant/70 mb-6 leading-relaxed">
-                {t("shippingAndTaxNote")}
-              </p>
+              {totals ? (
+                <>
+                  <div className="flex justify-between items-center mb-2 text-sm">
+                    <span className="text-on-surface-variant font-medium">{t("tax")}</span>
+                    <span className="font-semibold text-on-surface">{formatAmount(taxAmount)}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2 text-sm">
+                    <span className="text-on-surface-variant font-medium">{t("shipping")}</span>
+                    <span className="font-semibold text-on-surface">
+                      {formatAmount(shippingAmount)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center mb-6 text-sm border-t border-outline-variant/30 pt-3">
+                    <span className="font-bold text-on-surface">{t("grandTotal")}</span>
+                    <span className="font-bold text-primary">{formatAmount(grandTotal)}</span>
+                  </div>
+                </>
+              ) : (
+                <p className="text-[11px] text-on-surface-variant/70 mb-6 leading-relaxed">
+                  {t("shippingAndTaxNote")}
+                </p>
+              )}
 
               <Link
                 href="/checkout/address"

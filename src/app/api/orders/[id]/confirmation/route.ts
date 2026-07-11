@@ -16,6 +16,7 @@ import { getOrderForCustomer } from "@/lib/orders";
 import { resolveOrderStatus } from "@/lib/orderStatus";
 import OrderConfirmationPdf from "@/components/orders/OrderConfirmationPdf";
 import { routing } from "@/i18n/routing";
+import { paymentMethodLabelsFromT } from "@/lib/order-labels";
 
 export const runtime = "nodejs";
 
@@ -54,6 +55,7 @@ export async function GET(
     shippingAddress: t("shippingAddress"),
     sameAsBilling: t("sameAsBilling"),
     paymentMethod: t("paymentMethod"),
+    paymentMethods: paymentMethodLabelsFromT(t),
     product: t("colProduct"),
     sku: t("colSku"),
     qty: t("colQty"),

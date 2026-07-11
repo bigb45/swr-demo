@@ -16,6 +16,7 @@ import type { Readable } from "node:stream";
 import { getInvoiceForCustomer } from "@/lib/orders";
 import InvoicePdf from "@/components/orders/InvoicePdf";
 import { routing } from "@/i18n/routing";
+import { paymentMethodLabelsFromT } from "@/lib/order-labels";
 
 export const runtime = "nodejs";
 
@@ -62,6 +63,7 @@ export async function GET(
     shipping: t("shipping"),
     grandTotal: t("grandTotal"),
     paymentMethod: t("paymentMethod"),
+    paymentMethods: paymentMethodLabelsFromT(t),
     companyName: t("companyLegalName"),
     companyTagline: t("companyTagline"),
     footer: t("pdfFooter"),

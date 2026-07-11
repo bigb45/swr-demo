@@ -2,6 +2,11 @@ import { Document, Page, Text, View } from "@react-pdf/renderer";
 import type { MagentoOrderDetail } from "@/types/magento";
 import type { FriendlyStatus } from "@/lib/orderStatus";
 import { pdfStyles as styles } from "@/components/orders/pdfStyles";
+import {
+  formatCountryId,
+  formatPaymentMethod,
+  type PaymentMethodLabels,
+} from "@/lib/order-labels";
 
 interface Labels {
   title: string;
@@ -12,6 +17,7 @@ interface Labels {
   shippingAddress: string;
   sameAsBilling: string;
   paymentMethod: string;
+  paymentMethods: PaymentMethodLabels;
   product: string;
   sku: string;
   qty: string;
@@ -116,7 +122,9 @@ export default function OrderConfirmationPdf({
                   <Text style={styles.addressText}>{billing.cityLine}</Text>
                 ) : null}
                 {billing.country_id ? (
-                  <Text style={styles.addressText}>{billing.country_id}</Text>
+                  <Text style={styles.addressText}>
+                    {formatCountryId(locale, billing.country_id)}
+                  </Text>
                 ) : null}
                 {billing.telephone ? (
                   <Text style={styles.addressText}>{billing.telephone}</Text>
@@ -151,7 +159,9 @@ export default function OrderConfirmationPdf({
                   <Text style={styles.addressText}>{shipping.cityLine}</Text>
                 ) : null}
                 {shipping.country_id ? (
-                  <Text style={styles.addressText}>{shipping.country_id}</Text>
+                  <Text style={styles.addressText}>
+                    {formatCountryId(locale, shipping.country_id)}
+                  </Text>
                 ) : null}
                 {shipping.telephone ? (
                   <Text style={styles.addressText}>{shipping.telephone}</Text>
@@ -198,7 +208,12 @@ export default function OrderConfirmationPdf({
         {order.payment?.method ? (
           <View style={styles.paymentBlock}>
             <Text style={styles.sectionHeading}>{labels.paymentMethod}</Text>
-            <Text>{order.payment.method}</Text>
+            <Text>
+              {formatPaymentMethod(
+                order.payment.method,
+                labels.paymentMethods,
+              )}
+            </Text>
           </View>
         ) : null}
 
