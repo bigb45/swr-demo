@@ -52,7 +52,7 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
       {quotations.length > 0 ? (
         <>
           <div
-            className="hidden sm:grid text-xs font-semibold uppercase tracking-wide text-on-surface-variant bg-surface-container-low px-4 py-2 mb-1 rounded-t"
+            className="hidden sm:grid text-xs font-semibold text-on-surface-variant bg-surface-container-low px-4 py-2 mb-1"
             style={{ gridTemplateColumns: "1fr 160px 140px 120px 80px" }}
           >
             <span>{t("colQuotation")}</span>
@@ -86,7 +86,7 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
                 </span>
                 <span>
                   <span
-                    className={`inline-block px-2 py-0.5 text-xs font-semibold uppercase tracking-wide rounded ${quotationStatusTone(q.status)}`}
+                    className={`inline-block px-2 py-0.5 text-xs font-semibold ${quotationStatusTone(q.status)}`}
                   >
                     {t(`status.${q.status}`)}
                   </span>
@@ -108,25 +108,13 @@ export default async function QuotationsPage({ params }: QuotationsPageProps) {
           })}
         </>
       ) : (
-        <div className="py-16 text-center text-on-surface-variant bg-surface-container-lowest rounded-card">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mx-auto mb-4 opacity-30"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="9" y1="13" x2="15" y2="13" />
-            <line x1="9" y1="17" x2="13" y2="17" />
-          </svg>
-          <p className="text-sm font-medium">{t("empty")}</p>
-          <p className="text-xs mt-2 max-w-md mx-auto">{t("emptyHint")}</p>
+        <div className="py-12 px-6 text-left text-on-surface bg-surface-container-low max-w-xl">
+          <h2 className="text-base font-bold text-primary mb-2">
+            {t("empty")}
+          </h2>
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            {t("emptyHint")}
+          </p>
         </div>
       )}
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useWatchlist } from "@/components/WatchlistProvider";
@@ -8,16 +9,39 @@ import { useWatchlist } from "@/components/WatchlistProvider";
 export default function WatchlistPageClient() {
   const t = useTranslations("watchlist");
   const { ready, items, remove, clear } = useWatchlist();
+  const [confirmClear, setConfirmClear] = useState(false);
 
   if (!ready) {
     return (
-      <div className="min-h-[40vh]" aria-hidden />
+      <div
+        className="flex flex-col gap-4"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="sr-only">{t("loading")}</span>
+        <div className="h-7 w-40 animate-pulse bg-surface-container-high" />
+        <ul className="flex flex-col gap-3">
+          {[0, 1, 2].map((i) => (
+            <li
+              key={i}
+              className="flex items-center gap-4 bg-surface-container-lowest p-3 sm:p-4"
+            >
+              <div className="h-20 w-20 shrink-0 animate-pulse bg-surface-container-low" />
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="h-3 w-24 animate-pulse bg-surface-container-high" />
+                <div className="h-4 w-48 animate-pulse bg-surface-container-high" />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-card bg-surface-container-lowest px-6 py-16 text-center shadow-ambient">
+      <div className="flex flex-col items-center gap-4 bg-surface-container-lowest px-6 py-16 text-center">
         <span
           className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-container-low text-on-surface-variant"
           aria-hidden
@@ -48,13 +72,42 @@ export default function WatchlistPageClient() {
           {t("title")}{" "}
           <span className="text-on-surface-variant">({items.length})</span>
         </h1>
-        <button
-          type="button"
-          onClick={clear}
-          className="text-xs font-semibold text-on-surface-variant underline hover:text-on-surface"
-        >
-          {t("clearAll")}
-        </button>
+        {confirmClear ? (
+          <div
+            className="flex flex-wrap items-center gap-2"
+            role="group"
+            aria-label={t("clearConfirm")}
+          >
+            <span className="text-xs text-on-surface-variant">
+              {t("clearConfirm")}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                clear();
+                setConfirmClear(false);
+              }}
+              className="text-xs font-semibold text-error hover:underline"
+            >
+              {t("clearConfirmYes")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmClear(false)}
+              className="text-xs font-semibold text-on-surface-variant hover:underline"
+            >
+              {t("clearConfirmNo")}
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setConfirmClear(true)}
+            className="text-xs font-semibold text-on-surface-variant underline hover:text-on-surface"
+          >
+            {t("clearAll")}
+          </button>
+        )}
       </div>
 
       <ul className="flex flex-col gap-3">
@@ -63,7 +116,7 @@ export default function WatchlistPageClient() {
           return (
             <li
               key={item.sku}
-              className="flex items-center gap-4 rounded-card bg-surface-container-lowest p-3 sm:p-4 shadow-ambient"
+              className="flex items-center gap-4 bg-surface-container-lowest p-3 sm:p-4"
             >
               <Link
                 href={href}
@@ -85,7 +138,7 @@ export default function WatchlistPageClient() {
               </Link>
 
               <div className="flex min-w-0 flex-1 flex-col gap-1">
-                <span className="font-mono text-[11px] uppercase tracking-wide text-on-surface-variant">
+                <span className="font-mono text-[11px] text-on-surface-variant">
                   {item.sku}
                 </span>
                 <Link

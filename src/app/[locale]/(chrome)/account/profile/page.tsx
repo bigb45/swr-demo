@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { fetchCustomerMe } from "@/lib/checkout";
 import { readCustomerPhone } from "@/lib/customer-phone";
 import ProfileForm from "./ProfileForm";
@@ -28,24 +30,29 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <div className="swr-page-shell py-10">
       <div className="mx-auto w-full max-w-[700px]">
-      <h1 className="text-2xl font-black text-primary mb-8">
-        {t("profileHeading")}
-      </h1>
+        <Link
+          href="/account"
+          className="mb-6 inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
+        >
+          <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
+          {t("backToAccount")}
+        </Link>
 
-      <div
-        className="bg-surface-container-lowest p-6 sm:p-8 rounded-card"
-        style={{ boxShadow: "var(--shadow-ambient)" }}
-      >
-        <ProfileForm
-          initial={{
-            firstname: me.firstname ?? "",
-            lastname: me.lastname ?? "",
-            email: me.email,
-            phone: readCustomerPhone(me),
-          }}
-          redirectTo="/account"
-        />
-      </div>
+        <h1 className="mb-6 text-2xl font-black text-primary">
+          {t("profileHeading")}
+        </h1>
+
+        <div className="bg-surface-container-lowest p-6 sm:p-8">
+          <ProfileForm
+            initial={{
+              firstname: me.firstname ?? "",
+              lastname: me.lastname ?? "",
+              email: me.email,
+              phone: readCustomerPhone(me),
+            }}
+            redirectTo="/account"
+          />
+        </div>
       </div>
     </div>
   );

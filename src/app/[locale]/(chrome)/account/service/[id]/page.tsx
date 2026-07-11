@@ -71,29 +71,23 @@ export default async function ServiceCasePage({ params }: PageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account/service"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
           <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
           {t("backToHub")}
         </Link>
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${serviceKindAccent(c.kind)}`}
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
+      <div className="flex flex-wrap items-center gap-2">
+          <span className={`text-xs font-semibold ${serviceKindAccent(c.kind)} px-2 py-0.5`}>
             {t(`kind.${c.kind}`)}
           </span>
-          <span
-            className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${serviceStatusTone(c.status)}`}
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
+          <span className={`text-xs font-semibold ${serviceStatusTone(c.status)} px-2 py-0.5`}>
             {t(`status.${c.status}`)}
           </span>
           <span className="text-xs font-mono text-on-surface-variant ml-auto">
             {c.id}
           </span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl font-black tracking-tight text-primary">
           {c.machineLabel ??
             (c.orderIncrementId
               ? `${t("orderLabel")} #${c.orderIncrementId}`
@@ -146,7 +140,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
                 key={i}
                 className="bg-surface-container-lowest p-4 flex flex-col gap-1"
               >
-                <dt className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                <dt className="text-xs font-medium text-on-surface-variant">
                   {field.dt}
                 </dt>
                 <dd
@@ -206,10 +200,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
       {c.attachments.length > 0 ? (
         <section className="flex flex-col gap-3">
           <header className="flex flex-col gap-1">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-              {t("attachments.eyebrow")}
-            </p>
-            <h2 className="text-2xl font-black uppercase text-primary tracking-[-0.02em]">
+            <h2 className="text-xl font-bold tracking-tight text-primary">
               {t("attachments.heading")}
             </h2>
           </header>
@@ -264,10 +255,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
       {/* Timeline */}
       <section className="flex flex-col gap-4">
         <header className="flex flex-col gap-1 max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-            {t("timeline.eyebrow")}
-          </p>
-          <h2 className="text-2xl font-black uppercase text-primary tracking-[-0.02em]">
+          <h2 className="text-xl font-bold tracking-tight text-primary">
             {t("timeline.heading")}
           </h2>
           <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -291,7 +279,7 @@ export default async function ServiceCasePage({ params }: PageProps) {
           className="p-6 bg-primary text-white"
           style={{ borderRadius: "var(--radius-card)" }}
         >
-          <p className="text-[10px] font-bold uppercase tracking-widest text-white/70 mb-2">
+          <p className="text-sm font-semibold text-white/80 mb-2">
             {t("detail.resolution")}
           </p>
           <p className="text-sm leading-relaxed">{c.resolution}</p>

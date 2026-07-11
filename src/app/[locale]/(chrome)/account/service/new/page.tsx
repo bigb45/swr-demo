@@ -210,7 +210,7 @@ export default async function NewServiceCasePage({
         >
           {context.orderIncrementId ? (
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+              <span className="text-xs font-medium opacity-80">
                 {t("new.contextOrder")}
               </span>
               <Link
@@ -223,7 +223,7 @@ export default async function NewServiceCasePage({
           ) : null}
           {context.machineLabel ? (
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+              <span className="text-xs font-medium opacity-80">
                 {t("new.contextMachine")}
               </span>
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -246,7 +246,7 @@ export default async function NewServiceCasePage({
                         : `/account/service/pick?kind=${encodeURIComponent(kind)}`
                     }
                     replace
-                    className="text-[10px] font-bold uppercase tracking-widest underline opacity-80 hover:opacity-100"
+                    className="text-xs font-semibold underline opacity-80 hover:opacity-100"
                   >
                     {t("new.contextBanner.changeMachine")}
                   </Link>

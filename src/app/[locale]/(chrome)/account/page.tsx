@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { AccountDashboardCard } from "@/components/account/AccountDashboardCard";
 import { getAccountDashboardStats } from "@/lib/account-dashboard";
 import LogoutButton from "./LogoutButton";
@@ -133,28 +134,6 @@ function ServiceIcon() {
   );
 }
 
-function TechnicalDataIcon() {
-  return (
-    <svg
-      width="25"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={iconClass}
-      aria-hidden
-    >
-      <rect x="2" y="3" width="20" height="14" rx="1.5" />
-      <path d="M6 17h12" />
-      <path d="M6 11l2 2 1.5-1.5" />
-      <line x1="11" y1="14" x2="16" y2="14" />
-    </svg>
-  );
-}
-
 export default async function AccountPage({ params }: AccountPageProps) {
   const { locale } = await params;
 
@@ -167,95 +146,106 @@ export default async function AccountPage({ params }: AccountPageProps) {
   const t = await getTranslations({ locale, namespace: "account" });
   const stats = await getAccountDashboardStats(token);
 
-  const ordersBadge =
+  const ordersMeta =
     stats.activeOrders > 0 ? t("badgeOrders", { count: stats.activeOrders }) : null;
-  const quotationsBadge =
+  const quotationsMeta =
     stats.pendingQuotations > 0
       ? t("badgeQuotations", { count: stats.pendingQuotations })
       : null;
-  const fleetBadge =
+  const fleetMeta =
     stats.fleetAlerts > 0 ? t("badgeFleetAlerts", { count: stats.fleetAlerts }) : null;
 
   return (
     <div className="swr-page-shell py-10">
       <div className="mx-auto w-full max-w-[1280px]">
-        <header className="mb-10 flex flex-col gap-1.5">
-          <div
-            className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase leading-4 tracking-[0.06em]"
-            aria-label={t("breadcrumbAria")}
-          >
-            <span className="text-on-surface-variant">{t("breadcrumbAccount")}</span>
-            <span className="text-on-surface-variant/60" aria-hidden>
-              /
-            </span>
-            <span className="text-primary">{t("breadcrumbDashboard")}</span>
-          </div>
-          <h1 className="text-4xl font-black uppercase leading-10 tracking-[-0.045em] text-primary">
+        <header className="mb-8 flex flex-col gap-1">
+          <h1 className="text-3xl font-black leading-tight tracking-tight text-primary">
             {t("heading")}
           </h1>
-          <p className="max-w-2xl text-sm leading-relaxed text-on-surface-variant">
+          <p className="max-w-xl text-sm leading-relaxed text-on-surface-variant">
             {t("intro")}
           </p>
         </header>
 
-        <nav
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          aria-label={t("navAria")}
-        >
-          <AccountDashboardCard
-            href="/orders"
-            title={t("orderHistory")}
-            tagline={t("orderHistoryTagline")}
-            icon={<OrderIcon />}
-            badge={ordersBadge}
-            badgeTone="primary"
-          />
-          <AccountDashboardCard
-            href="/account/quotations"
-            title={t("quotations")}
-            tagline={t("quotationsTagline")}
-            icon={<QuotationIcon />}
-            badge={quotationsBadge}
-            badgeTone="primary"
-          />
-          <AccountDashboardCard
-            href="/account/addresses"
-            title={t("addresses")}
-            tagline={t("addressesTagline")}
-            icon={<AddressIcon />}
-          />
-          <AccountDashboardCard
-            href="/account/profile"
-            title={t("profile")}
-            tagline={t("profileTagline")}
-            icon={<ProfileIcon />}
-          />
-          <AccountDashboardCard
-            href="/account/fleet"
-            title={t("fleet")}
-            tagline={t("fleetTagline")}
-            icon={<FleetIcon />}
-            badge={fleetBadge}
-            badgeTone="danger"
-          />
-          <AccountDashboardCard
-            href="/account/service"
-            title={t("service")}
-            tagline={t("serviceTagline")}
-            icon={<ServiceIcon />}
-          />
-          <AccountDashboardCard
+        <section className="mb-6" aria-labelledby="account-primary-heading">
+          <h2
+            id="account-primary-heading"
+            className="mb-3 text-sm font-semibold text-on-surface"
+          >
+            {t("sectionPrimary")}
+          </h2>
+          <nav
+            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+            aria-label={t("navPrimaryAria")}
+          >
+            <AccountDashboardCard
+              href="/orders"
+              title={t("orderHistory")}
+              tagline={t("orderHistoryTagline")}
+              icon={<OrderIcon />}
+              meta={ordersMeta}
+              metaTone="primary"
+            />
+            <AccountDashboardCard
+              href="/account/addresses"
+              title={t("addresses")}
+              tagline={t("addressesTagline")}
+              icon={<AddressIcon />}
+            />
+            <AccountDashboardCard
+              href="/account/profile"
+              title={t("profile")}
+              tagline={t("profileTagline")}
+              icon={<ProfileIcon />}
+            />
+          </nav>
+        </section>
+
+        <section className="mb-8" aria-labelledby="account-more-heading">
+          <h2
+            id="account-more-heading"
+            className="mb-3 text-sm font-semibold text-on-surface"
+          >
+            {t("sectionMore")}
+          </h2>
+          <nav
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            aria-label={t("navMoreAria")}
+          >
+            <AccountDashboardCard
+              href="/account/quotations"
+              title={t("quotations")}
+              tagline={t("quotationsTagline")}
+              icon={<QuotationIcon />}
+              meta={quotationsMeta}
+              metaTone="primary"
+            />
+            <AccountDashboardCard
+              href="/account/fleet"
+              title={t("fleet")}
+              tagline={t("fleetTagline")}
+              icon={<FleetIcon />}
+              meta={fleetMeta}
+              metaTone="danger"
+            />
+            <AccountDashboardCard
+              href="/account/service"
+              title={t("service")}
+              tagline={t("serviceTagline")}
+              icon={<ServiceIcon />}
+            />
+          </nav>
+        </section>
+
+        <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-outline-variant/25 pt-6">
+          <Link
             href="/catalog"
-            title={t("technicalData")}
-            tagline={t("technicalDataTagline")}
-            icon={<TechnicalDataIcon />}
-          />
-          <LogoutButton
-            variant="dashboardTile"
-            label={t("logout")}
-            tagline={t("logoutTagline")}
-          />
-        </nav>
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            {t("technicalData")}
+          </Link>
+          <LogoutButton variant="inline" label={t("logout")} />
+        </footer>
       </div>
     </div>
   );

@@ -39,12 +39,12 @@ export default async function FleetPage({ params }: FleetPageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
           <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
           {t("backToAccount")}
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl font-black tracking-tight text-primary">
           {t("heading")}
         </h1>
         <p className="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
@@ -88,7 +88,7 @@ export default async function FleetPage({ params }: FleetPageProps) {
               <span className="text-2xl font-black text-primary tracking-[-0.02em]">
                 {c.value}
               </span>
-              <span className="text-xs text-on-surface-variant uppercase tracking-[0.08em]">
+              <span className="text-xs text-on-surface-variant">
                 {c.label}
               </span>
             </div>
@@ -102,7 +102,7 @@ export default async function FleetPage({ params }: FleetPageProps) {
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-primary uppercase tracking-[-0.01em]">
+            <h2 className="text-xl font-bold text-primary tracking-tight">
               {t("empty.heading")}
             </h2>
             <p className="text-sm text-on-surface-variant leading-relaxed max-w-xl">
@@ -122,14 +122,14 @@ export default async function FleetPage({ params }: FleetPageProps) {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/contact"
-              className="text-xs font-bold uppercase tracking-[0.12em] bg-primary text-white px-4 py-3 hover:bg-primary-container transition-colors"
+              className="text-sm font-semibold bg-primary text-white px-4 py-2.5 hover:bg-primary-container transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {t("empty.ctaContact")}
             </Link>
             <Link
               href="/orders"
-              className="text-xs font-bold uppercase tracking-[0.12em] text-primary px-4 py-3 hover:bg-surface-container-lowest transition-colors"
+              className="text-sm font-semibold text-primary px-4 py-2.5 hover:bg-surface-container-lowest transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {t("empty.ctaOrders")}

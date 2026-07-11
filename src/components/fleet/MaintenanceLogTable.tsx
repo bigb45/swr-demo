@@ -61,10 +61,7 @@ export default function MaintenanceLogTable({
   const rows = records.map((r) => ({
     date: <span className="font-mono text-sm">{formatDate(r.date, locale)}</span>,
     kind: (
-      <span
-        className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 inline-block ${KIND_BG[r.kind]}`}
-        style={{ borderRadius: "var(--radius-btn)" }}
-      >
+      <span className={`text-xs font-semibold inline-block ${KIND_BG[r.kind]} px-2 py-0.5`}>
         {labels.kinds[r.kind]}
       </span>
     ),
@@ -82,7 +79,7 @@ export default function MaintenanceLogTable({
     document: r.documentId ? (
       <Link
         href={`/catalog/${r.documentId}`}
-        className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary hover:underline"
+        className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
       >
         {labels.openDocument}
         <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />

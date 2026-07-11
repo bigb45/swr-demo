@@ -57,16 +57,13 @@ export default function ServiceTimeline({
           </div>
           <div className="flex flex-col gap-1 flex-1 pb-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span
-                className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${serviceStatusTone(ev.status)}`}
-                style={{ borderRadius: "var(--radius-btn)" }}
-              >
+              <span className={`text-xs font-semibold px-2 py-0.5 ${serviceStatusTone(ev.status)}`}>
                 {labels.status[ev.status]}
               </span>
               <span className="text-xs font-mono text-on-surface-variant">
                 {formatDateTime(ev.at, locale)}
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              <span className="text-xs text-on-surface-variant">
                 · {ev.author === "customer" ? labels.customer : labels.swr}
               </span>
             </div>

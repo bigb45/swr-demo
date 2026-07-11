@@ -75,12 +75,12 @@ export default async function AddressesPage({ params }: AddressesPageProps) {
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   {a.default_billing && (
-                    <span className="text-[10px] font-bold uppercase tracking-wide bg-primary/10 text-primary px-2 py-0.5 rounded">
+                    <span className="text-xs font-semibold text-primary">
                       {t("defaultBillingBadge")}
                     </span>
                   )}
                   {a.default_shipping && (
-                    <span className="text-[10px] font-bold uppercase tracking-wide bg-secondary/10 text-secondary px-2 py-0.5 rounded">
+                    <span className="text-xs font-semibold text-secondary">
                       {t("defaultShippingBadge")}
                     </span>
                   )}

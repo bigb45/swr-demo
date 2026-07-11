@@ -75,15 +75,15 @@ export default async function ServicePickEquipmentPage({
       <div className="flex flex-col gap-2">
         <Link
           href="/account/service"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
           <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
           {t("backToHub")}
         </Link>
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+        <p className="text-sm font-semibold text-primary">
           {t("pick.stepLabel")}
         </p>
-        <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl font-black tracking-tight text-primary">
           {t(`pick.${kind}.heading`)}
         </h1>
         <p className="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
@@ -125,16 +125,13 @@ export default async function ServicePickEquipmentPage({
             boxShadow: "var(--shadow-ambient)",
           }}
         >
-          <span className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-            {t("pick.altOrder.eyebrow")}
-          </span>
           <span className="text-base font-bold text-primary">
             {t("pick.altOrder.title")}
           </span>
           <span className="text-sm text-on-surface-variant leading-relaxed">
             {t("pick.altOrder.body")}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary mt-1">
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary mt-1">
             {t("pick.altOrder.cta")}
             <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
           </span>
@@ -148,16 +145,13 @@ export default async function ServicePickEquipmentPage({
             boxShadow: "var(--shadow-ambient)",
           }}
         >
-          <span className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-            {t("pick.altManual.eyebrow")}
-          </span>
           <span className="text-base font-bold text-primary">
             {t("pick.altManual.title")}
           </span>
           <span className="text-sm text-on-surface-variant leading-relaxed">
             {t("pick.altManual.body")}
           </span>
-          <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary mt-1">
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary mt-1">
             {t("pick.altManual.cta")}
             <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
           </span>

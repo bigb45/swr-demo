@@ -77,23 +77,20 @@ export default async function MachinePage({ params }: PageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account/fleet"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
           <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
           {t("backToFleet")}
         </Link>
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-bold uppercase tracking-[0.12em] text-secondary">
+          <span className="text-sm font-semibold text-secondary">
             {machine.brand}
           </span>
-          <span
-            className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${statusBg}`}
-            style={{ borderRadius: "var(--radius-btn)" }}
-          >
+          <span className={`text-xs font-semibold px-2 py-0.5 ${statusBg}`}>
             {statusLabel}
           </span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl font-black tracking-tight text-primary">
           {machine.model}
         </h1>
         {machine.notes ? (
@@ -131,7 +128,7 @@ export default async function MachinePage({ params }: PageProps) {
               .filter((x): x is NonNullable<typeof x> => x !== null)
               .map((field, i) => (
                 <div key={i} className="bg-surface-container-lowest p-4 flex flex-col gap-1">
-                  <dt className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                  <dt className="text-xs font-medium text-on-surface-variant">
                     {field.dt}
                   </dt>
                   <dd
@@ -153,7 +150,7 @@ export default async function MachinePage({ params }: PageProps) {
           {machine.specs && machine.specs.length > 0 ? (
             <SpecTable
               header={
-                <span className="text-xs font-bold uppercase tracking-[0.12em]">
+                <span className="text-sm font-semibold">
                   {t("detail.specsTitle")}
                 </span>
               }
@@ -174,10 +171,7 @@ export default async function MachinePage({ params }: PageProps) {
           className="flex flex-col gap-3 p-5 bg-primary text-white"
           style={{ borderRadius: "var(--radius-card)" }}
         >
-          <span className="text-xs font-bold uppercase tracking-[0.12em] text-white/70">
-            {t("actions.eyebrow")}
-          </span>
-          <h2 className="text-lg font-black uppercase tracking-[-0.01em]">
+          <h2 className="text-lg font-bold tracking-tight">
             {t("actions.heading")}
           </h2>
           <p className="text-xs text-white/80 leading-relaxed">
@@ -186,21 +180,21 @@ export default async function MachinePage({ params }: PageProps) {
           <div className="flex flex-col gap-2 mt-2">
             <Link
               href={`/account/service/new?kind=repair&machineId=${machine.id}`}
-              className="text-xs font-bold uppercase tracking-[0.12em] bg-white text-primary px-4 py-3 text-center hover:bg-white/90 transition-colors"
+              className="text-sm font-semibold bg-white text-primary px-4 py-2.5 text-center hover:bg-white/90 transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {tService("actions.repair.cta")}
             </Link>
             <Link
               href={`/account/service/new?kind=inspection&machineId=${machine.id}`}
-              className="text-xs font-bold uppercase tracking-[0.12em] border border-white/40 text-white px-4 py-3 text-center hover:bg-white/10 transition-colors"
+              className="text-sm font-semibold border border-white/40 text-white px-4 py-2.5 text-center hover:bg-white/10 transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {tService("actions.inspection.cta")}
             </Link>
             <Link
               href="/services/repair"
-              className="text-xs font-bold uppercase tracking-[0.12em] text-white/80 hover:text-white underline text-center pt-1"
+              className="text-sm font-semibold text-white/80 hover:text-white underline text-center pt-1"
             >
               {tServices("repair.title")}
             </Link>
@@ -212,10 +206,7 @@ export default async function MachinePage({ params }: PageProps) {
       {serviceCases.length > 0 ? (
         <section className="flex flex-col gap-4">
           <header className="flex flex-col gap-1 max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-              {tService("machineSection.eyebrow")}
-            </p>
-            <h2 className="text-2xl font-black uppercase text-primary tracking-[-0.02em]">
+            <h2 className="text-xl font-bold tracking-tight text-primary">
               {tService("machineSection.heading")}
             </h2>
             <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -234,16 +225,10 @@ export default async function MachinePage({ params }: PageProps) {
                   }}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-secondary text-white"
-                      style={{ borderRadius: "var(--radius-btn)" }}
-                    >
+                    <span className="text-xs font-semibold text-secondary">
                       {tService(`kind.${c.kind}`)}
                     </span>
-                    <span
-                      className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-secondary/10 text-secondary"
-                      style={{ borderRadius: "var(--radius-btn)" }}
-                    >
+                    <span className="text-xs font-semibold text-on-surface-variant">
                       {tService(`status.${c.status}`)}
                     </span>
                     <span className="ml-auto text-xs font-mono text-on-surface-variant">
@@ -263,10 +248,7 @@ export default async function MachinePage({ params }: PageProps) {
       {/* Maintenance log */}
       <section className="flex flex-col gap-4">
         <header className="flex flex-col gap-1 max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
-            {t("log.eyebrow")}
-          </p>
-          <h2 className="text-2xl font-black uppercase text-primary tracking-[-0.02em]">
+          <h2 className="text-xl font-bold tracking-tight text-primary">
             {t("log.heading")}
           </h2>
           <p className="text-sm text-on-surface-variant leading-relaxed">

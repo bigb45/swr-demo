@@ -46,16 +46,10 @@ export default function ServiceCaseRow({
       }}
     >
       <div className="flex flex-wrap items-center gap-2">
-        <span
-          className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${serviceKindAccent(c.kind)}`}
-          style={{ borderRadius: "var(--radius-btn)" }}
-        >
+        <span className={`text-xs font-semibold px-2 py-0.5 ${serviceKindAccent(c.kind)}`}>
           {labels.kind[c.kind]}
         </span>
-        <span
-          className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${serviceStatusTone(c.status)}`}
-          style={{ borderRadius: "var(--radius-btn)" }}
-        >
+        <span className={`text-xs font-semibold px-2 py-0.5 ${serviceStatusTone(c.status)}`}>
           {labels.status[c.status]}
         </span>
         <span className="ml-auto text-xs font-mono text-on-surface-variant">
@@ -64,7 +58,7 @@ export default function ServiceCaseRow({
       </div>
 
       <div className="flex flex-col gap-1">
-        <span className="text-base font-black text-primary uppercase tracking-[-0.01em]">
+        <span className="text-base font-bold text-primary tracking-tight">
           {c.machineLabel ??
             (c.orderIncrementId
               ? `${labels.orderLabel} #${c.orderIncrementId}`
@@ -79,7 +73,7 @@ export default function ServiceCaseRow({
         <span className="text-xs text-on-surface-variant">
           {labels.updated}: {formatDate(c.updatedAt, locale)}
         </span>
-        <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
           {labels.viewCase}
           <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
         </span>

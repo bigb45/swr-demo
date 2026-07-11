@@ -128,23 +128,20 @@ export default function FleetMachinePicker({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="text-xs font-bold uppercase tracking-[0.12em] text-secondary">
+                    <span className="text-sm font-semibold text-secondary">
                       {m.brand}
                     </span>
-                    <span className="text-base font-black text-primary uppercase tracking-[-0.01em] truncate">
+                    <span className="text-base font-bold text-primary tracking-tight truncate">
                       {m.model}
                     </span>
                   </div>
-                  <span
-                    className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 shrink-0 ${statusBg}`}
-                    style={{ borderRadius: "var(--radius-btn)" }}
-                  >
+                  <span className={`text-xs font-semibold px-2 py-0.5 shrink-0 ${statusBg}`}>
                     {statusLabel}
                   </span>
                 </div>
                 <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
                   <div className="flex flex-col">
-                    <dt className="text-on-surface-variant uppercase tracking-[0.08em]">
+                    <dt className="text-on-surface-variant">
                       {labels.warrantyUntil}
                     </dt>
                     <dd className="font-mono text-on-surface">
@@ -152,7 +149,7 @@ export default function FleetMachinePicker({
                     </dd>
                   </div>
                   <div className="flex flex-col">
-                    <dt className="text-on-surface-variant uppercase tracking-[0.08em]">
+                    <dt className="text-on-surface-variant">
                       {labels.lastService}
                     </dt>
                     <dd className="font-mono text-on-surface">
@@ -162,14 +159,14 @@ export default function FleetMachinePicker({
                     </dd>
                   </div>
                   <div className="flex flex-col col-span-2">
-                    <dt className="text-on-surface-variant uppercase tracking-[0.08em]">
+                    <dt className="text-on-surface-variant">
                       {labels.serial}
                     </dt>
                     <dd className="font-mono text-on-surface">{m.serial}</dd>
                   </div>
                 </dl>
                 <div className="pt-3 border-t border-outline-variant/30 flex items-center justify-end">
-                  <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-primary group-hover:translate-x-0.5 transition-transform">
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary group-hover:translate-x-0.5 transition-transform">
                     {labels.selectCta}
                     <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
                   </span>

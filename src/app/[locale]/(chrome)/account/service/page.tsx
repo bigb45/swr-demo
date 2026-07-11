@@ -68,12 +68,12 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
       <div className="flex flex-col gap-2">
         <Link
           href="/account"
-          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-on-surface-variant hover:text-on-surface"
         >
           <ChevronLeft aria-hidden="true" className="h-3.5 w-3.5" />
           {t("backToAccount")}
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl font-black tracking-tight text-primary">
           {t("heading")}
         </h1>
         <p className="text-sm text-on-surface-variant max-w-2xl leading-relaxed">
@@ -95,16 +95,13 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
             className="flex flex-col gap-2 p-5 bg-primary text-white hover:brightness-110 transition-all"
             style={{ borderRadius: "var(--radius-card)" }}
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
-              {t(`actions.${kind}.eyebrow`)}
-            </span>
-            <span className="text-lg font-black uppercase tracking-[-0.01em]">
+            <span className="text-lg font-bold tracking-tight">
               {t(`actions.${kind}.title`)}
             </span>
             <span className="text-xs text-white/80 leading-relaxed">
               {t(`actions.${kind}.body`)}
             </span>
-            <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-white">
+            <span className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-white">
               {t(`actions.${kind}.cta`)}
               <ChevronRight aria-hidden="true" className="h-3.5 w-3.5" />
             </span>
@@ -135,7 +132,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
               <span className="text-2xl font-black text-primary tracking-[-0.02em]">
                 {c.value}
               </span>
-              <span className="text-xs text-on-surface-variant uppercase tracking-[0.08em]">
+              <span className="text-xs text-on-surface-variant">
                 {c.label}
               </span>
             </div>
@@ -148,7 +145,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
           className="p-8 sm:p-10 bg-surface-container-low flex flex-col items-start gap-4 max-w-3xl"
           style={{ borderRadius: "var(--radius-card)" }}
         >
-          <h2 className="text-xl font-black text-primary uppercase tracking-[-0.01em]">
+          <h2 className="text-xl font-bold text-primary tracking-tight">
             {t("empty.heading")}
           </h2>
           <p className="text-sm text-on-surface-variant leading-relaxed max-w-xl">
@@ -157,14 +154,14 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/account/service/new?kind=return"
-              className="text-xs font-bold uppercase tracking-[0.12em] bg-primary text-white px-4 py-3 hover:bg-primary-container transition-colors"
+              className="text-sm font-semibold bg-primary text-white px-4 py-2.5 hover:bg-primary-container transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {t("empty.ctaReturn")}
             </Link>
             <Link
               href="/account/service/pick?kind=repair"
-              className="text-xs font-bold uppercase tracking-[0.12em] text-primary px-4 py-3 hover:bg-surface-container-lowest transition-colors"
+              className="text-sm font-semibold text-primary px-4 py-2.5 hover:bg-surface-container-lowest transition-colors"
               style={{ borderRadius: "var(--radius-btn)" }}
             >
               {t("empty.ctaRepair")}
@@ -175,7 +172,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
         <div className="flex flex-col gap-10">
           {open.length > 0 ? (
             <section className="flex flex-col gap-3">
-              <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+              <h2 className="text-sm font-semibold text-on-surface">
                 {t("sections.open")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -193,7 +190,7 @@ export default async function ServiceHubPage({ params }: ServicePageProps) {
 
           {closed.length > 0 ? (
             <section className="flex flex-col gap-3">
-              <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
+              <h2 className="text-sm font-semibold text-on-surface">
                 {t("sections.closed")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
