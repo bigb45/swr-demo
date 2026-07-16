@@ -327,6 +327,62 @@ export async function getCategoryTree(
   return magentoGet<MagentoCategoryTree>("/categories", 300, storeCode);
 }
 
+/**
+ * Active category ids for the sitemap.
+ *
+ * Prefer this over `getCategoryTree()` — full `GET /categories` takes minutes
+ * on this catalog and will trip Next.js's 60s static-generation budget.
+ */
+export async function listActiveCategoryIdsForSitemap(
+  pageSize = 200,
+  maxPages = 10,
+): Promise<number[]> {
+  const ids: number[] = [];
+  for (let page = 1; page <= maxPages; page++) {
+    const params = new URLSearchParams({
+      "searchCriteria[filter_groups][0][filters][0][field]": "is_active",
+      "searchCriteria[filter_groups][0][filters][0][value]": "1",
+      "searchCriteria[filter_groups][0][filters][0][condition_type]": "eq",
+      "searchCriteria[pageSize]": String(pageSize),
+      "searchCriteria[currentPage]": String(page),
+      fields: "items[id],total_count",
+    });
+    const list = await magentoGet<{
+      items?: Array<{ id: number }>;
+      total_count?: number;
+    }>(`/categories/list?${params.toString()}`, 300);
+
+    const items = list.items ?? [];
+    for (const item of items) {
+      // Skip Magento Root (1) and Default Category (2) — not storefront routes.
+      if (item.id !== 1 && item.id !== 2) ids.push(item.id);
+    }
+
+    const total = list.total_count ?? 0;
+    if (items.length === 0 || page * pageSize >= total) break;
+  }
+  return ids;
+}
+
+/**
+ * Product SKUs for the sitemap — `fields=items[sku]` keeps the payload tiny
+ * vs full product documents (attributes, media, tier prices, …).
+ */
+export async function listProductSkusForSitemap(
+  pageSize = 500,
+): Promise<string[]> {
+  const params = new URLSearchParams({
+    "searchCriteria[pageSize]": String(pageSize),
+    "searchCriteria[currentPage]": "1",
+    fields: "items[sku],total_count",
+  });
+  const list = await magentoGet<{ items?: Array<{ sku: string }> }>(
+    `/products?${params.toString()}`,
+    300,
+  );
+  return (list.items ?? []).map((p) => p.sku).filter(Boolean);
+}
+
 /** Magento "Default Category" — immediate children are the shop top-level set. */
 const ROOT_CATEGORY_ID = 2;
 

@@ -1,8 +1,13 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { listAllDocumentIds } from "@/lib/catalog";
-import { getProductsPaginated, getCategoryTree } from "@/lib/magento";
-import type { MagentoCategory } from "@/types/magento";
+import {
+  listActiveCategoryIdsForSitemap,
+  listProductSkusForSitemap,
+} from "@/lib/magento";
+
+/** Soft cap so a hanging Magento call cannot stall `next build` past Next's budget. */
+const MAGENTO_SITEMAP_TIMEOUT_MS = 20_000;
 
 function getBaseUrl(): string {
   return (
@@ -37,17 +42,6 @@ const STATIC_PATHS: string[] = [
   "/legal/sds",
 ];
 
-function flattenCategories(
-  root: MagentoCategory,
-  out: MagentoCategory[] = []
-): MagentoCategory[] {
-  if (root.id !== 1 && root.id !== 2) out.push(root);
-  if (Array.isArray(root.children_data)) {
-    for (const child of root.children_data) flattenCategories(child, out);
-  }
-  return out;
-}
-
 function buildAlternates(path: string): Record<string, string> {
   const base = getBaseUrl();
   const alternates: Record<string, string> = {};
@@ -72,6 +66,23 @@ function entry(
   };
 }
 
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timer = setTimeout(
+          () => reject(new Error(`sitemap Magento call timed out after ${ms}ms`)),
+          ms,
+        );
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = STATIC_PATHS.map((p) =>
     entry(p, p === "" ? "daily" : "weekly", p === "" ? 1 : 0.7)
@@ -86,32 +97,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Catalog repository unavailable: skip document entries.
   }
 
+  // Use /categories/list (fast) — never getCategoryTree() / GET /categories,
+  // which takes minutes on this catalog and trips the 60s build timeout.
   try {
-    const tree = await getCategoryTree();
-    const categories = flattenCategories(tree);
-    for (const cat of categories) {
-      entries.push(entry(`/categories/${cat.id}`, "weekly", 0.5));
+    const categoryIds = await withTimeout(
+      listActiveCategoryIdsForSitemap(),
+      MAGENTO_SITEMAP_TIMEOUT_MS,
+    );
+    for (const id of categoryIds) {
+      entries.push(entry(`/categories/${id}`, "weekly", 0.5));
     }
   } catch {
-    // Magento offline: skip category entries rather than failing the sitemap.
+    // Magento offline / slow: skip category entries rather than failing the build.
   }
 
-  // Pull a capped list of products. Full product catalogs can be large; we
-  // fetch a single page to keep the sitemap cheap to generate. Increase the
-  // size if SEO needs the full catalog surfaced.
+  // Cap + SKU-only fields keep generation cheap for SEO without full payloads.
   try {
-    const list = await getProductsPaginated(1, 500);
-    for (const product of list.items) {
+    const skus = await withTimeout(
+      listProductSkusForSitemap(500),
+      MAGENTO_SITEMAP_TIMEOUT_MS,
+    );
+    for (const sku of skus) {
       entries.push(
-        entry(
-          `/products/${encodeURIComponent(product.sku)}`,
-          "weekly",
-          0.6
-        )
+        entry(`/products/${encodeURIComponent(sku)}`, "weekly", 0.6),
       );
     }
   } catch {
-    // Magento offline: skip product entries.
+    // Magento offline / slow: skip product entries.
   }
 
   return entries;
