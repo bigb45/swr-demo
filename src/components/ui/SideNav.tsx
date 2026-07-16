@@ -182,11 +182,11 @@ export default async function SideNav({
       </nav>
 
       {/* Bottom actions — always visible */}
-      <div className="border-t border-[rgba(193,199,209,0.15)] shrink-0">
+      <div className="shrink-0 bg-surface-container-low">
         <div className="px-6 py-6">
           <Link
             href="/bulk-order"
-            className="block w-full text-center py-2 text-sm font-semibold text-primary border border-primary hover:bg-primary hover:text-white transition-colors"
+            className="block w-full py-2 text-center text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white bg-surface-container-lowest"
             style={{ borderRadius: "var(--radius-btn)" }}
           >
             {t("bulkOrderCsv")}

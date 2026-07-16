@@ -15,7 +15,7 @@ interface CopilotHeaderTriggerProps {
 function CopilotHeaderPlaceholder() {
   return (
     <span
-      className="inline-flex h-9 w-9 shrink-0 items-center sm:min-w-22"
+      className="inline-flex h-8 w-8 shrink-0 items-center sm:min-w-20"
       aria-hidden
     />
   );
@@ -48,12 +48,9 @@ export default function CopilotHeaderTrigger({
     <button
       type="button"
       onClick={toggle}
-      className={`inline-flex items-center gap-2 rounded-[var(--radius-btn)] border border-primary/15 px-3 py-2.5 text-sm font-bold text-primary transition-colors md:px-4 md:py-2.5 ${
-        isExpanded ? "bg-surface-container-low" : "bg-surface-container-lowest"
+      className={`inline-flex items-center gap-1.5 rounded-[var(--radius-btn)] px-2.5 py-1.5 text-sm font-semibold text-primary transition-colors md:gap-2 md:px-3 md:py-1.5 ${
+        isExpanded ? "bg-surface-container-highest" : "bg-surface-container-low"
       } ${className}`}
-      style={{
-        boxShadow: isExpanded ? undefined : ("var(--shadow-ambient)" as const),
-      }}
       aria-expanded={isExpanded}
       aria-controls="swr-copilot-panel-root"
       aria-label={isExpanded ? t("minimizeAria") : t("openHeaderAria")}

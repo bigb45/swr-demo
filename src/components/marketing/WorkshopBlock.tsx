@@ -48,10 +48,7 @@ export default function WorkshopBlock({
             }}
           >
             {contactLines.map((line) => (
-              <div
-                key={line.label}
-                className="flex flex-col gap-0.5 border-b border-outline-variant/30 pb-3 last:border-0 last:pb-0"
-              >
+              <div key={line.label} className="flex flex-col gap-0.5">
                 <dt className="text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
                   {line.label}
                 </dt>

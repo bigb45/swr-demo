@@ -15,10 +15,7 @@ export default function IndustryHero({
 }: IndustryHeroProps) {
   return (
     <section
-      className="relative overflow-hidden py-12 sm:py-16 border-b border-outline-variant/30"
-      style={{
-        background: "linear-gradient(160deg, #f9f9f9 0%, #ffffff 100%)",
-      }}
+      className="relative overflow-hidden bg-surface-container-low py-12 sm:py-16"
     >
       <div className="swr-page-shell">
         {eyebrow ? (

@@ -93,8 +93,7 @@
     "optionsChoose": "Choisir…",
     "optionsSubmit": "Ajouter au panier",
     "optionsSubmitting": "Ajout…",
-    "optionsSelectionMessage": "Ajoutez le {name} à mon panier avec {selections}.",
-    "optionsSelectionMessageNoName": "Utilisez ces options: {selections}.",
+    "optionsSkuMissing": "Ce produit n’a pas pu être identifié. Utilisez « Choisir les options » sur la fiche produit ci-dessus.",
     "productLoading": "Chargement du produit…",
     "productNotFound": "Ce produit n’a pas pu être chargé ({sku}).",
     "widgetAddToCart": "Ajouter au panier",
@@ -228,7 +227,7 @@
       "cta": "Parcourir toute la boutique"
     },
     "people": {
-      "eyebrow": "Vrais noms. Vrais bureaux.",
+      "eyebrow": "Onze personnes. Un atelier.",
       "heading": "Quand vous appelez, une personne décroche.",
       "body": "Nous sommes onze dans l'équipe. La personne avec qui vous parlez d'un devis reconnaîtra votre voix lorsque vous appellerez pour la réparation. Découvrez-nous sur la page À propos.",
       "cta": "Voir l'équipe",

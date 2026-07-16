@@ -22,7 +22,7 @@ export default function PersonCard({
     .join("");
   return (
     <div
-      className="flex flex-col sm:flex-row gap-6 items-stretch p-6 sm:p-8 bg-surface-container-lowest"
+      className="flex flex-col items-stretch gap-4 bg-surface-container-lowest p-5 sm:flex-row sm:gap-5 sm:p-6"
       style={{
         borderRadius: "var(--radius-card)",
         boxShadow: "var(--shadow-ambient)",
@@ -34,35 +34,33 @@ export default function PersonCard({
           <img
             src={imageUrl}
             alt={name}
-            className="w-24 h-24 sm:w-28 sm:h-28 object-cover"
+            className="h-20 w-20 object-cover sm:h-24 sm:w-24"
             style={{ borderRadius: "var(--radius-card)" }}
           />
         ) : (
           <div
-            className="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center bg-primary text-white text-2xl font-black"
+            className="flex h-20 w-20 items-center justify-center bg-primary text-xl font-black text-white sm:h-24 sm:w-24"
             style={{ borderRadius: "var(--radius-card)" }}
           >
             {initials}
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-2 flex-1">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-secondary">
-          {role}
-        </p>
-        <h3 className="text-xl font-black text-primary tracking-[-0.01em]">
+      <div className="flex flex-1 flex-col gap-1.5">
+        <p className="text-xs font-semibold text-secondary">{role}</p>
+        <h3 className="text-lg font-bold tracking-tight text-primary sm:text-xl">
           {name}
         </h3>
         {quote ? (
-          <p className="text-sm text-on-surface-variant leading-relaxed italic">
+          <p className="text-sm leading-relaxed text-on-surface-variant">
             &ldquo;{quote}&rdquo;
           </p>
         ) : null}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-5 mt-2 text-sm">
+        <div className="mt-1.5 flex flex-col gap-1.5 text-sm sm:flex-row sm:gap-4">
           {phone ? (
             <a
               href={`tel:${phone.replace(/\s+/g, "")}`}
-              className="text-primary hover:underline font-semibold"
+              className="font-semibold text-primary hover:underline"
             >
               {phone}
             </a>
@@ -70,7 +68,7 @@ export default function PersonCard({
           {email ? (
             <a
               href={`mailto:${email}`}
-              className="text-primary hover:underline font-semibold"
+              className="font-semibold text-primary hover:underline"
             >
               {email}
             </a>

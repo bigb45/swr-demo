@@ -21,7 +21,7 @@ export default function ServiceCard({
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col gap-4 p-6 bg-surface-container-lowest border border-transparent hover:border-secondary/40 hover:bg-surface-container-low transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+      className="group flex h-full flex-col gap-4 bg-surface-container-lowest p-6 transition-colors hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
       style={{
         borderRadius: "var(--radius-card)",
         boxShadow: "var(--shadow-ambient)",

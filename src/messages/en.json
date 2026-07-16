@@ -93,8 +93,7 @@
     "optionsChoose": "Choose…",
     "optionsSubmit": "Add to cart",
     "optionsSubmitting": "Adding…",
-    "optionsSelectionMessage": "Add the {name} to my cart with {selections}.",
-    "optionsSelectionMessageNoName": "Use these options: {selections}.",
+    "optionsSkuMissing": "This product could not be identified. Use Select options on the product card above.",
     "productLoading": "Loading product…",
     "productNotFound": "This product could not be loaded ({sku}).",
     "widgetAddToCart": "Add to cart",
@@ -228,7 +227,7 @@
       "cta": "Browse the full shop"
     },
     "people": {
-      "eyebrow": "Real names. Real desks.",
+      "eyebrow": "Eleven people. One workshop.",
       "heading": "When you call, a person answers.",
       "body": "We are eleven on the team. The same person you talk to about a quote will recognise your voice when you call about the repair. Meet us on the about page.",
       "cta": "Meet the team",
@@ -1136,7 +1135,7 @@
       "ctaContact": "Talk to us",
       "ctaOrders": "View past orders"
     },
-    "demoNotice": "Demo data — this area shows sample content; the ERP connection is in progress."
+    "demoNotice": "Demo data - this area shows sample content; the ERP connection is in progress."
   },
   "service": {
     "metaTitle": "Returns & service",
@@ -1355,7 +1354,7 @@
       "heading": "Open service cases.",
       "subheading": "Every ticket we have open for this machine, with the same status view our workshop uses."
     },
-    "demoNotice": "Demo data — this area shows sample content; the ERP connection is in progress."
+    "demoNotice": "Demo data - this area shows sample content; the ERP connection is in progress."
   },
   "cart": {
     "heading": "Your cart",

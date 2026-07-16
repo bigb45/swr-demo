@@ -67,7 +67,7 @@ export default async function Footer({ locale }: FooterProps) {
         { href: "/legal/sds", label: t("sdsSheets") },
       ],
       afterLinks: (
-        <div className="mt-3 pt-1 border-t border-white/10">
+        <div className="mt-3 bg-primary-container/40 px-2 py-2">
           <CookieSettingsLink />
         </div>
       ),
@@ -129,12 +129,12 @@ export default async function Footer({ locale }: FooterProps) {
         ))}
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="swr-page-shell py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <div className="bg-primary-container/35">
+        <div className="swr-page-shell flex flex-col items-start justify-between gap-2 py-5 sm:flex-row sm:items-center">
           <p className="text-[11px] text-white/60">
             {t("copyright", { year: new Date().getFullYear() })}
           </p>
-          <p className="text-[11px] text-white/50 uppercase tracking-[0.08em]">
+          <p className="text-[11px] uppercase tracking-[0.08em] text-white/50">
             {t("locationLine")}
           </p>
         </div>

@@ -5,7 +5,7 @@ interface HeroProps {
   title: string;
   subtitle?: string;
   children?: ReactNode;
-  /** Optional visual rendered in a right-hand column on large screens. */
+  /** Optional visual — shown under copy on small screens, beside it from lg up. */
   media?: ReactNode;
 }
 
@@ -45,11 +45,11 @@ export default function Hero({
         }}
       />
 
-      <div className="swr-page-shell relative z-10 py-16 sm:py-24">
+      <div className="swr-page-shell relative z-10 py-10 sm:py-16 lg:py-20">
         <div
           className={
             media
-              ? "grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]"
+              ? "grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10"
               : ""
           }
         >
@@ -63,23 +63,23 @@ export default function Hero({
                 {eyebrow}
               </p>
             ) : null}
-            <h1 className="swr-hero-in swr-hero-in-1 mt-4 text-balance text-3xl font-black uppercase leading-[1.05] tracking-[-0.03em] sm:text-4xl lg:text-5xl">
+            <h1 className="swr-hero-in swr-hero-in-1 mt-3 text-balance text-3xl font-black uppercase leading-[1.05] tracking-[-0.03em] sm:mt-4 sm:text-4xl lg:text-5xl">
               {title}
             </h1>
             {subtitle ? (
-              <p className="swr-hero-in swr-hero-in-2 mt-5 max-w-xl text-pretty text-sm leading-relaxed text-white/80 sm:text-lg">
+              <p className="swr-hero-in swr-hero-in-2 mt-4 max-w-xl text-pretty text-sm leading-relaxed text-white/80 sm:mt-5 sm:text-lg">
                 {subtitle}
               </p>
             ) : null}
             {children ? (
-              <div className="swr-hero-in swr-hero-in-3 mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+              <div className="swr-hero-in swr-hero-in-3 mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
                 {children}
               </div>
             ) : null}
           </div>
 
           {media ? (
-            <div className="swr-hero-in swr-hero-in-2 relative hidden lg:block">
+            <div className="swr-hero-in swr-hero-in-2 relative mx-auto w-full max-w-[220px] sm:max-w-xs lg:mx-0 lg:max-w-none">
               {media}
             </div>
           ) : null}

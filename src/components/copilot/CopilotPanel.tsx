@@ -630,10 +630,7 @@ export default function CopilotPanel() {
                     <CopilotOptionsPicker
                       request={m.optionsRequest}
                       disabled={pending}
-                      onSubmit={(text) => {
-                        clearSubmitError();
-                        void submitSuggestion(text);
-                      }}
+                      widgetSkus={m.widgetSkus}
                     />
                   )}
                   {m.id === dynamicPromptsMessageId && m.suggestedPrompts && (

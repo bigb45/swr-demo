@@ -19,6 +19,7 @@ import {
   extractStructuredProductReply,
   extractSuggestedPrompts,
   extractNeedsOptions,
+  resolveOptionsRequestSku,
   type CopilotSuggestedPrompt,
   type CopilotOptionsRequest,
 } from "@/lib/copilot-stream";
@@ -372,6 +373,10 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
             ? t("fallbackProductsIntro")
             : text;
 
+      const resolvedOptions = optionsRequest
+        ? resolveOptionsRequestSku(optionsRequest, widgetSkus)
+        : null;
+
       setMessages((prev) =>
         prev.map((m) => {
           if (m.id !== messageId || m.role !== "assistant") return m;
@@ -384,7 +389,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               suggestedPrompts && suggestedPrompts.length > 0
                 ? suggestedPrompts
                 : m.suggestedPrompts,
-            optionsRequest: optionsRequest ?? m.optionsRequest,
+            optionsRequest: resolvedOptions ?? m.optionsRequest,
           };
         }),
       );
@@ -601,6 +606,9 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               structured?.message?.trim() ||
               parsed.displayText.trim() ||
               reply.trim();
+            const resolvedOptions = optionsRequest
+              ? resolveOptionsRequestSku(optionsRequest, widgetSkus)
+              : undefined;
             setMessages((prev) => [
               ...prev,
               newMsg({
@@ -612,7 +620,7 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
                 widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
                 suggestedPrompts:
                   suggestedPrompts.length > 0 ? suggestedPrompts : undefined,
-                optionsRequest: optionsRequest ?? undefined,
+                optionsRequest: resolvedOptions,
               }),
             ]);
             await finalizeCartAfterAgentReply();

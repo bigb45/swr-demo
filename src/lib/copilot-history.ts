@@ -12,6 +12,7 @@ import type { CopilotMessage } from "@/components/copilot/types";
 import {
   extractSuggestedPrompts,
   extractNeedsOptions,
+  resolveOptionsRequestSku,
 } from "@/lib/copilot-stream";
 
 interface TeiaProductItem {
@@ -99,6 +100,9 @@ export function mapSessionHistory(
       const widgetSkus = productSkusFromResponse(response);
       const suggestedPrompts = extractSuggestedPrompts(entry);
       const optionsRequest = extractNeedsOptions(entry);
+      const resolvedOptions = optionsRequest
+        ? resolveOptionsRequestSku(optionsRequest, widgetSkus)
+        : undefined;
       out.push({
         id: crypto.randomUUID(),
         role: "assistant",
@@ -107,7 +111,7 @@ export function mapSessionHistory(
         widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
         suggestedPrompts:
           suggestedPrompts.length > 0 ? suggestedPrompts : undefined,
-        optionsRequest: optionsRequest ?? undefined,
+        optionsRequest: resolvedOptions,
         createdAt,
       });
     }

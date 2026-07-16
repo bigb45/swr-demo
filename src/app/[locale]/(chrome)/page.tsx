@@ -90,28 +90,22 @@ export default async function HomePage({ params }: HomePageProps) {
   ];
 
   const heroMedia = (
-    <div className="relative mx-auto w-full max-w-md">
-      <div
-        aria-hidden
-        className="absolute inset-0 translate-x-4 translate-y-4 border border-white/15"
-        style={{ borderRadius: "var(--radius-card)" }}
+    <div
+      className="relative aspect-square overflow-hidden"
+      style={{
+        borderRadius: "var(--radius-card)",
+        boxShadow: "0 20px 40px rgba(0,18,40,0.4)",
+      }}
+    >
+      <Image
+        src="/hero-valve.png"
+        alt=""
+        width={620}
+        height={620}
+        priority
+        sizes="(max-width: 1024px) 220px, 40vw"
+        className="h-full w-full object-cover object-center"
       />
-      <div
-        className="relative overflow-hidden ring-1 ring-white/15"
-        style={{
-          borderRadius: "var(--radius-card)",
-          boxShadow: "0 30px 60px rgba(0,18,40,0.45)",
-        }}
-      >
-        <Image
-          src="/hero-valve.png"
-          alt=""
-          width={620}
-          height={620}
-          priority
-          className="h-auto w-full object-cover"
-        />
-      </div>
     </div>
   );
 

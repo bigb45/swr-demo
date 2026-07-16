@@ -93,8 +93,7 @@
     "optionsChoose": "Auswählen…",
     "optionsSubmit": "In den Warenkorb",
     "optionsSubmitting": "Wird hinzugefügt…",
-    "optionsSelectionMessage": "Füge {name} mit {selections} in meinen Warenkorb.",
-    "optionsSelectionMessageNoName": "Verwende diese Optionen: {selections}.",
+    "optionsSkuMissing": "Dieses Produkt konnte nicht identifiziert werden. Nutzen Sie „Optionen wählen“ auf der Produktkarte oben.",
     "productLoading": "Produkt wird geladen…",
     "productNotFound": "Dieses Produkt konnte nicht geladen werden ({sku}).",
     "widgetAddToCart": "In den Warenkorb",
@@ -228,7 +227,7 @@
       "cta": "Kompletten Shop durchsuchen"
     },
     "people": {
-      "eyebrow": "Echte Namen. Echte Schreibtische.",
+      "eyebrow": "Elf Personen. Eine Werkstatt.",
       "heading": "Wenn Sie anrufen, geht ein Mensch ran.",
       "body": "Wir sind elf im Team. Die Person, mit der Sie über das Angebot sprechen, erkennt Ihre Stimme bei der Reparatur wieder. Lernen Sie uns auf der Über-uns-Seite kennen.",
       "cta": "Zum Team",

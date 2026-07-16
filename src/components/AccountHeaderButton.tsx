@@ -23,14 +23,14 @@ export default function AccountHeaderButton({
   return (
     <Link
       href={href}
-      className={`inline-flex flex-col items-center justify-center gap-0.5 min-w-[2.75rem] px-2 py-1.5 rounded-[3px] transition-colors hover:bg-surface-container-low ${className}`}
+      className={`inline-flex h-9 max-h-9 flex-col items-center justify-center gap-0 min-w-[2.75rem] px-2 rounded-[3px] transition-colors hover:bg-surface-container-low ${className}`}
       aria-label={label}
       title={label}
       style={{ color: "#003a63" }}
     >
       <svg
-        width="22"
-        height="22"
+        width="18"
+        height="18"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -42,7 +42,7 @@ export default function AccountHeaderButton({
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
-      <span className="hidden lg:block text-[10px] font-semibold uppercase tracking-wide max-w-[5rem] truncate">
+      <span className="hidden max-w-[5rem] truncate text-[10px] font-semibold uppercase leading-none tracking-wide lg:block">
         {label}
       </span>
     </Link>

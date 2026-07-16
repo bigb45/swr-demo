@@ -118,6 +118,20 @@ export function extractNeedsOptions(
 }
 
 /**
+ * When Teia omits `sku` on `needs_options`, recover it from the sole product
+ * card on the same assistant turn so the picker can add client-side.
+ */
+export function resolveOptionsRequestSku(
+  request: CopilotOptionsRequest,
+  widgetSkus?: string[],
+): CopilotOptionsRequest {
+  if (request.sku?.trim()) return request;
+  const sole = widgetSkus?.length === 1 ? widgetSkus[0]?.trim() : "";
+  if (sole) return { ...request, sku: sole };
+  return request;
+}
+
+/**
  * Reads the `suggested_prompts: [{ short, expanded }]` array carried on the
  * terminal reply envelope (stream `done` event or non-stream JSON body).
  * Tolerates entries that only provide one of the two fields by mirroring it.
