@@ -1,8 +1,8 @@
 /**
  * POST /api/search/visual
  *
- * Sends an image to Teia `POST /api/v1/chat/image` (SSE, same event shape as
- * `/api/v1/chat/stream`), prefers the terminal StructuredResponse product list,
+ * Sends an image to Teia `POST /api/v1/chat/image` (SSE or JSON envelope),
+ * prefers the StructuredResponse product list (`response.items[].sku`),
  * and resolves products from Magento.
  */
 
@@ -88,16 +88,27 @@ export async function POST(req: NextRequest) {
     }
   } else {
     const text = await res.text().catch(() => "");
-    reply = extractCompletionText(
-      (() => {
-        try {
-          return JSON.parse(text) as unknown;
-        } catch {
-          return text;
-        }
-      })(),
-    );
+    let parsedBody: unknown = text;
+    try {
+      parsedBody = JSON.parse(text) as unknown;
+    } catch {
+      /* keep raw text */
+    }
+    reply = extractCompletionText(parsedBody);
     if (!reply) reply = text;
+
+    // Teia often returns application/json (not SSE) with
+    // { reply, response: { type: "product_list", items: [{ sku, ... }] } }.
+    if (
+      parsedBody &&
+      typeof parsedBody === "object" &&
+      !Array.isArray(parsedBody) &&
+      "response" in parsedBody
+    ) {
+      terminal.structuredResponse = parseTeiaStructuredResponse(
+        (parsedBody as Record<string, unknown>).response,
+      );
+    }
   }
 
   const parsed = parseCopilotAssistantMessage(reply);
