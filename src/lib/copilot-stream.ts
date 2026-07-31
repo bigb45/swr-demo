@@ -5,7 +5,16 @@
 export interface ParsedTeiaStructuredResponse {
   displayText: string;
   skus: string[];
+  orders: CopilotOrderRow[];
   suppressAssistantNote: boolean;
+}
+
+/** One row of a Teia `order_list` artifact (order-history reply). */
+export interface CopilotOrderRow {
+  orderNumber: string;
+  date?: string;
+  total?: string;
+  status?: string;
 }
 
 /** One backend-supplied follow-up chip: `short` is the label, `expanded` the prompt sent on tap. */
@@ -274,6 +283,77 @@ function collectStructuredSkus(
   }
 }
 
+function firstStringField(
+  obj: Record<string, unknown>,
+  keys: string[],
+): string {
+  for (const key of keys) {
+    const v = obj[key];
+    if (typeof v === "string" && v.trim()) return v.trim();
+    if (typeof v === "number" && Number.isFinite(v)) return String(v);
+  }
+  return "";
+}
+
+/**
+ * Normalize one raw `order_list` item into a display row. Order artifacts key
+ * their fields differently across Teia/Magento shapes, so probe the common
+ * aliases and keep only rows that carry an order identifier.
+ */
+function normalizeOrderRow(raw: unknown): CopilotOrderRow | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const orderNumber = firstStringField(o, [
+    "order_number",
+    "increment_id",
+    "order_id",
+    "number",
+    "id",
+  ]);
+  if (!orderNumber) return null;
+
+  const date = firstStringField(o, [
+    "date",
+    "created_at",
+    "order_date",
+    "placed_at",
+  ]);
+  const total = firstStringField(o, [
+    "total_formatted",
+    "grand_total_formatted",
+    "total",
+    "grand_total",
+  ]);
+  const status = firstStringField(o, ["status", "state"]);
+
+  return {
+    orderNumber,
+    date: date || undefined,
+    total: total || undefined,
+    status: status || undefined,
+  };
+}
+
+/** Read the rows of an `order_list` structured response (order-history reply). */
+function collectStructuredOrders(data: Record<string, unknown>): CopilotOrderRow[] {
+  if (data.type !== "order_list") return [];
+  const rawItems = Array.isArray(data.items)
+    ? data.items
+    : Array.isArray(data.orders)
+      ? data.orders
+      : [];
+  const rows: CopilotOrderRow[] = [];
+  const seen = new Set<string>();
+  for (const item of rawItems) {
+    const row = normalizeOrderRow(item);
+    if (row && !seen.has(row.orderNumber)) {
+      seen.add(row.orderNumber);
+      rows.push(row);
+    }
+  }
+  return rows;
+}
+
 function extractStructuredText(data: Record<string, unknown>): string {
   for (const key of [
     "message",
@@ -298,18 +378,25 @@ export function parseTeiaStructuredResponse(
   response: unknown,
 ): ParsedTeiaStructuredResponse {
   if (!response || typeof response !== "object" || Array.isArray(response)) {
-    return { displayText: "", skus: [], suppressAssistantNote: false };
+    return {
+      displayText: "",
+      skus: [],
+      orders: [],
+      suppressAssistantNote: false,
+    };
   }
 
   const data = response as Record<string, unknown>;
   const type = typeof data.type === "string" ? data.type : "";
   const skus: string[] = [];
   collectStructuredSkus(data, skus, new Set());
+  const orders = collectStructuredOrders(data);
 
   return {
     displayText: extractStructuredText(data),
     skus,
-    suppressAssistantNote: type === "product_list",
+    orders,
+    suppressAssistantNote: type === "product_list" || type === "order_list",
   };
 }
 
@@ -337,6 +424,32 @@ export function extractStructuredProductReply(
     (typeof o.reply === "string" ? o.reply.trim() : "");
 
   return { message: replyText, skus: parsed.skus };
+}
+
+/**
+ * Order-history counterpart to {@link extractStructuredProductReply}. Reads a
+ * Teia `order_list` envelope (`{ reply, response }` or the inner `response`
+ * directly) and returns the order rows plus a display message, or null when the
+ * reply carries no orders.
+ */
+export function extractStructuredOrderReply(
+  envelope: unknown,
+): { message: string; orders: CopilotOrderRow[] } | null {
+  if (!envelope || typeof envelope !== "object" || Array.isArray(envelope)) {
+    return null;
+  }
+  const o = envelope as Record<string, unknown>;
+  const response =
+    o.response && typeof o.response === "object" ? o.response : o;
+  const parsed = parseTeiaStructuredResponse(response);
+
+  if (parsed.orders.length === 0) return null;
+
+  const replyText =
+    parsed.displayText ||
+    (typeof o.reply === "string" ? o.reply.trim() : "");
+
+  return { message: replyText, orders: parsed.orders };
 }
 
 /**

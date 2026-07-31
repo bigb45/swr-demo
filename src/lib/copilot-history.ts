@@ -12,6 +12,7 @@ import type { CopilotMessage } from "@/components/copilot/types";
 import {
   extractSuggestedPrompts,
   extractNeedsOptions,
+  extractStructuredOrderReply,
   resolveOptionsRequestSku,
 } from "@/lib/copilot-stream";
 
@@ -96,7 +97,12 @@ export function mapSessionHistory(
         response && typeof response === "object"
           ? asString((response as TeiaStructuredResponse).message).trim()
           : "";
-      const content = structuredMessage || asString(m.reply).trim();
+      const orderReply = extractStructuredOrderReply(entry);
+      const orderRows = orderReply?.orders ?? [];
+      const content =
+        structuredMessage ||
+        orderReply?.message?.trim() ||
+        asString(m.reply).trim();
       const widgetSkus = productSkusFromResponse(response);
       const suggestedPrompts = extractSuggestedPrompts(entry);
       const optionsRequest = extractNeedsOptions(entry);
@@ -109,6 +115,7 @@ export function mapSessionHistory(
         content,
         streaming: false,
         widgetSkus: widgetSkus.length > 0 ? widgetSkus : undefined,
+        orderRows: orderRows.length > 0 ? orderRows : undefined,
         suggestedPrompts:
           suggestedPrompts.length > 0 ? suggestedPrompts : undefined,
         optionsRequest: resolvedOptions,

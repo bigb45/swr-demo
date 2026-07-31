@@ -96,6 +96,8 @@
     "optionsSkuMissing": "Ce produit n’a pas pu être identifié. Utilisez « Choisir les options » sur la fiche produit ci-dessus.",
     "productLoading": "Chargement du produit…",
     "productNotFound": "Ce produit n’a pas pu être chargé ({sku}).",
+    "orderNumberLabel": "Commande #{number}",
+    "ordersViewAll": "Voir toutes les commandes",
     "widgetAddToCart": "Ajouter au panier",
     "widgetSelectOptions": "Choisir les options",
     "widgetConfigureHint": "Veuillez choisir les options requises avant d’ajouter au panier.",

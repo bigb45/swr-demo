@@ -16,6 +16,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { useCopilot } from "./CopilotProvider";
 import CopilotProductWidget from "./CopilotProductWidget";
+import CopilotOrderWidget from "./CopilotOrderWidget";
 import CopilotOptionsPicker from "./CopilotOptionsPicker";
 import type { CopilotStatus, CopilotSuggestedPrompt } from "./types";
 
@@ -621,6 +622,11 @@ export default function CopilotPanel() {
                         sku={widgetSku}
                       />
                     ))}
+                  </div>
+                )}
+                {!m.streaming && m.orderRows && m.orderRows.length > 0 && (
+                  <div className="mt-3">
+                    <CopilotOrderWidget orders={m.orderRows} />
                   </div>
                 )}
               </div>

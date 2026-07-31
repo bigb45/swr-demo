@@ -1,6 +1,7 @@
 import type {
   CopilotSuggestedPrompt,
   CopilotOptionsRequest,
+  CopilotOrderRow,
 } from "@/lib/copilot-stream";
 
 export interface CopilotMessage {
@@ -11,6 +12,8 @@ export interface CopilotMessage {
   imageName?: string;
   /** Optional product cards below the prose (SKUs parsed post-reply). */
   widgetSkus?: string[];
+  /** Optional order-history rows below the prose (parsed from an `order_list` reply). */
+  orderRows?: CopilotOrderRow[];
   /** Backend-supplied follow-up chips, rendered (animated) once the reply settles. */
   suggestedPrompts?: CopilotSuggestedPrompt[];
   /** Required-options gate ("needs_options"); renders an inline picker under the bubble. */
@@ -40,4 +43,5 @@ export type {
   CopilotOptionsRequest,
   CopilotOptionGroup,
   CopilotOptionValue,
+  CopilotOrderRow,
 } from "@/lib/copilot-stream";

@@ -96,6 +96,8 @@
     "optionsSkuMissing": "This product could not be identified. Use Select options on the product card above.",
     "productLoading": "Loading product…",
     "productNotFound": "This product could not be loaded ({sku}).",
+    "orderNumberLabel": "Order #{number}",
+    "ordersViewAll": "View all orders",
     "widgetAddToCart": "Add to cart",
     "widgetSelectOptions": "Select options",
     "widgetConfigureHint": "Choose the required options before adding to cart.",

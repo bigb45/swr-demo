@@ -96,6 +96,8 @@
     "optionsSkuMissing": "Dieses Produkt konnte nicht identifiziert werden. Nutzen Sie „Optionen wählen“ auf der Produktkarte oben.",
     "productLoading": "Produkt wird geladen…",
     "productNotFound": "Dieses Produkt konnte nicht geladen werden ({sku}).",
+    "orderNumberLabel": "Bestellung #{number}",
+    "ordersViewAll": "Alle Bestellungen anzeigen",
     "widgetAddToCart": "In den Warenkorb",
     "widgetSelectOptions": "Optionen wählen",
     "widgetConfigureHint": "Bitte wählen Sie die erforderlichen Optionen, bevor Sie in den Warenkorb legen.",
