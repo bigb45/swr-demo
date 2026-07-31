@@ -30,10 +30,10 @@ export function teiaAiBaseUrl(): string {
 
 /**
  * Validates Teia chat POST bodies and enriches with Magento `customer_id` when
- * a valid storefront customer session cookie is present and no guest `cart_id`
- * was supplied — so Teia can still personalize *non-cart* flows. When
- * `cart_id` is set, `customer_id` is intentionally omitted so cart tools target
- * the storefront guest quote (never trusts client-supplied customer_id).
+ * a valid storefront customer session cookie is present. Both `cart_id` (guest
+ * quote for cart tools) and `customer_id` (order history / account tools) may
+ * be sent together — Teia routes each by purpose. Never trusts client-supplied
+ * `customer_id`.
  */
 export async function buildTeiaChatPayload(
   raw: unknown,
@@ -108,17 +108,7 @@ export async function buildTeiaChatPayload(
 
   const cookieStore = await cookies();
   const token = cookieStore.get("swr_customer_token")?.value;
-  const hasGuestCartId =
-    payload.cart_id != null &&
-    String(
-      typeof payload.cart_id === "number" ? payload.cart_id : payload.cart_id,
-    ).trim() !== "";
-
-  // Storefront cart UI is always the masked *guest* quote (`/guest-carts/...`).
-  // If we also send `customer_id`, Teia typically mutates the customer's active
-  // quote instead — a different Magento cart than `swr_cart_id`, so lines
-  // "succeed" but the Next.js cart stays empty.
-  if (token && !hasGuestCartId) {
+  if (token) {
     const me = await fetchCustomerMe(token);
     if (me?.id != null) payload.customer_id = me.id;
   }
@@ -202,13 +192,7 @@ export async function buildTeiaImageChatPayload(
 
   const cookieStore = await cookies();
   const token = cookieStore.get("swr_customer_token")?.value;
-  const hasGuestCartId =
-    payload.cart_id != null &&
-    String(
-      typeof payload.cart_id === "number" ? payload.cart_id : payload.cart_id,
-    ).trim() !== "";
-
-  if (token && !hasGuestCartId) {
+  if (token) {
     const me = await fetchCustomerMe(token);
     if (me?.id != null) payload.customer_id = me.id;
   }

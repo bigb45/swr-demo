@@ -3,9 +3,9 @@
  *
  * Proxies JSON to Teia `POST /api/v1/chat/stream` and passes through the SSE
  * response body. Requires `session_id` and `message`; optionally forwards
- * `cart_id`. When a guest cart id is present, `customer_id` is omitted so Teia
- * mutates the same masked guest quote the storefront uses (`/guest-carts/...`),
- * not the customer's separate active quote.
+ * `cart_id`. When a storefront customer session is present, also attaches
+ * `customer_id` (from Magento `/customers/me`) so account tools like order
+ * history work alongside cart tools that use the guest quote `cart_id`.
  */
 
 import { NextRequest } from "next/server";
