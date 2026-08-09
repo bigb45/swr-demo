@@ -54,6 +54,18 @@ export interface MagentoStockItem {
 }
 
 /**
+ * Enventa unified-catalog payload Magento may attach when the product REST
+ * call includes `X-Enventa-Customer-Id`. Fields are optional — guests and
+ * SKUs without an ERP match omit the whole object or leave values null.
+ */
+export interface MagentoUnifiedCatalogData {
+  erp_price?: number | null;
+  erp_stock?: boolean | number | null;
+  erp_currency?: string | null;
+  [key: string]: unknown;
+}
+
+/**
  * Magento product extension attributes surface inventory alongside any other
  * server-side extensions. We only type the fields the frontend reads.
  * `website_ids` is commonly present and kept here to avoid breaking callers.
@@ -64,6 +76,7 @@ export interface MagentoProductExtensionAttributes {
   website_ids?: number[];
   stock_item?: MagentoStockItem;
   salable_quantity?: unknown;
+  unified_catalog_data?: MagentoUnifiedCatalogData;
 }
 
 /** A single selectable value of a select-type customizable option. */

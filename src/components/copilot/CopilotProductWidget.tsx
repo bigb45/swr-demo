@@ -26,10 +26,44 @@ interface CopilotProductDto {
   imageUrl: string | null;
   stockLevel: StockLevel;
   options?: MagentoProductOption[];
+  erpPriceGross?: number | null;
+  erpPriceCurrency?: string | null;
+  erpStockAvailable?: boolean | null;
 }
 
 type LoadState = "loading" | "ready" | "error";
 type AddStatus = "idle" | "loading" | "success" | "error";
+
+function formatErpPrice(
+  amount: number,
+  currency: string,
+  locale: string,
+): string {
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${currency}`;
+  }
+}
+
+function effectiveStockLevel(product: CopilotProductDto): StockLevel {
+  if (product.erpStockAvailable === true) return "in";
+  if (product.erpStockAvailable === false) return "out";
+  return product.stockLevel;
+}
+
+function effectivePrice(product: CopilotProductDto): number {
+  if (
+    product.erpPriceGross != null &&
+    Number.isFinite(product.erpPriceGross)
+  ) {
+    return product.erpPriceGross;
+  }
+  return product.price;
+}
 
 export default function CopilotProductWidget({ sku }: { sku: string }) {
   const tc = useTranslations("copilot");
@@ -109,8 +143,10 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
   );
 
   const handleAdd = useCallback(async () => {
-    if (!product || product.price <= 0 || product.stockLevel === "out")
-      return;
+    if (!product) return;
+    const price = effectivePrice(product);
+    const stockLevel = effectiveStockLevel(product);
+    if (price <= 0 || stockLevel === "out") return;
     if (addStatus === "loading") return;
 
     if (hasOptions && !optionsOpen) {
@@ -181,27 +217,58 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
   }
 
   const href = `/products/${encodeURIComponent(product.sku)}`;
+  const stockLevel = effectiveStockLevel(product);
+  const displayPrice = effectivePrice(product);
+  const hasErpPrice =
+    product.erpPriceGross != null && Number.isFinite(product.erpPriceGross);
   // No badge is rendered for "unknown" stock — never claim availability.
   const stockLabel =
-    product.stockLevel !== "unknown"
-      ? getStockLabel(product.stockLevel, (key) =>
+    stockLevel !== "unknown"
+      ? getStockLabel(stockLevel, (key) =>
           tp(key as "inStock" | "lowStock" | "outOfStock"),
         )
       : null;
-  const showCatalogPrice = isAuthenticated || product.price <= 0;
-  const showAddToCart =
-    product.stockLevel !== "out" && product.price > 0;
+  const showCatalogPrice =
+    isAuthenticated || displayPrice <= 0 || hasErpPrice;
+  const showAddToCart = stockLevel !== "out" && displayPrice > 0;
+
+  const priceNode = (() => {
+    if (hasErpPrice && product.erpPriceGross != null) {
+      return formatErpPrice(
+        product.erpPriceGross,
+        product.erpPriceCurrency?.trim() || "EUR",
+        locale,
+      );
+    }
+    if (!showCatalogPrice && product.price > 0) {
+      return (
+        <span className="text-sm font-normal text-on-surface-variant">
+          {tp("pricesLoginRequired")}{" "}
+          <Link
+            href="/account/login"
+            className="font-bold text-secondary underline"
+          >
+            {tp("signInForPrices")}
+          </Link>
+        </span>
+      );
+    }
+    if (product.price > 0) {
+      return formatPrice(product.price, locale);
+    }
+    return tp("priceOnRequest");
+  })();
 
   const addButtonLabel =
     addStatus === "loading"
       ? tc("addingToCart")
       : addStatus === "success"
         ? tc("addToCartSuccess")
-        : addStatus === "error"
-          ? tc("addToCartFailed")
-          : hasOptions && !optionsOpen
-            ? tc("widgetSelectOptions")
-            : tc("widgetAddToCart");
+      : addStatus === "error"
+        ? tc("addToCartFailed")
+        : hasOptions && !optionsOpen
+          ? tc("widgetSelectOptions")
+          : tc("widgetAddToCart");
 
   return (
     <div
@@ -232,12 +299,8 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
             <span className="font-mono text-[10px] uppercase tracking-wide text-on-surface-variant">
               {product.sku}
             </span>
-            {product.stockLevel !== "unknown" && stockLabel && (
-              <StockBadge
-                level={product.stockLevel}
-                label={stockLabel}
-                size="sm"
-              />
+            {stockLevel !== "unknown" && stockLabel && (
+              <StockBadge level={stockLevel} label={stockLabel} size="sm" />
             )}
           </div>
           <Link
@@ -248,21 +311,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
           </Link>
           <div className="flex flex-wrap items-end justify-between gap-2 pt-1">
             <span className="text-base font-bold tabular-nums text-on-surface">
-              {!showCatalogPrice && product.price > 0 ? (
-                <span className="text-sm font-normal text-on-surface-variant">
-                  {tp("pricesLoginRequired")}{" "}
-                  <Link
-                    href="/account/login"
-                    className="font-bold text-secondary underline"
-                  >
-                    {tp("signInForPrices")}
-                  </Link>
-                </span>
-              ) : product.price > 0 ? (
-                formatPrice(product.price, locale)
-              ) : (
-                tp("priceOnRequest")
-              )}
+              {priceNode}
             </span>
           </div>
           {optionsOpen && hasOptions ? (
@@ -297,7 +346,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
                 type="button"
                 className="px-2 py-1 text-sm text-on-surface hover:bg-surface-container-highest disabled:opacity-40"
                 aria-label={tc("qtyIncrease")}
-                disabled={qty >= 99 || product.stockLevel === "out"}
+                disabled={qty >= 99 || stockLevel === "out"}
                 onClick={() => setQty((q) => Math.min(99, q + 1))}
               >
                 +

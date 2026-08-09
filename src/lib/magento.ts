@@ -5,10 +5,21 @@ import type {
   MagentoAggregation,
   MagentoCategory,
   MagentoCategoryTree,
+  MagentoCustomerMe,
   MagentoProduct,
   MagentoProductList,
   MagentoProductListWithAggregations,
 } from "@/types/magento";
+
+/** Customer custom attribute that maps Magento customers to enventa ERP. */
+const ENVENTA_CUSTOMER_ID_ATTRIBUTE = "enventa_customer_id";
+
+/** Parsed ERP price/stock for Copilot (and similar) product cards. */
+export interface ErpSkuData {
+  erpPriceGross: number | null;
+  erpPriceCurrency: string | null;
+  erpStockAvailable: boolean | null;
+}
 
 /** Busts `unstable_cache` for the admin token after a 401 from Magento. */
 const ADMIN_TOKEN_CACHE_TAG = "magento-admin-token";
@@ -908,4 +919,133 @@ export async function getFilteredProducts(
     `/products?${params.toString()}`,
     cacheSeconds,
   );
+}
+
+/**
+ * Resolve a Magento customer id to their enventa ERP customer id.
+ * Returns null on any failure or when the attribute is missing — never throws.
+ */
+export async function fetchEnventaCustomerId(
+  customerId: number,
+): Promise<string | null> {
+  if (!Number.isFinite(customerId) || customerId <= 0) return null;
+  try {
+    const customer = await magentoGet<MagentoCustomerMe>(
+      `/customers/${customerId}`,
+      false,
+    );
+    const raw = customer.custom_attributes?.find(
+      (a) => a.attribute_code === ENVENTA_CUSTOMER_ID_ATTRIBUTE,
+    )?.value;
+    if (raw == null) return null;
+    const trimmed = String(raw).trim();
+    return trimmed.length > 0 ? trimmed : null;
+  } catch {
+    return null;
+  }
+}
+
+function parseErpStock(value: unknown): boolean | null {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number" && Number.isFinite(value)) return value > 0;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true" || normalized === "1") return true;
+    if (normalized === "false" || normalized === "0") return false;
+    const asNum = Number(normalized);
+    if (Number.isFinite(asNum)) return asNum > 0;
+  }
+  return null;
+}
+
+/**
+ * Fetch enventa ERP price/stock for a SKU via Magento product REST.
+ * When `enventaCustomerId` is set, sends `X-Enventa-Customer-Id` so Magento
+ * can attach contract pricing in `extension_attributes.unified_catalog_data`.
+ * Uses a dedicated no-store fetch (not `magentoGet`) for the custom header.
+ * Returns null on any failure — never throws.
+ */
+export async function fetchErpDataForSku(
+  sku: string,
+  enventaCustomerId: string | null,
+): Promise<ErpSkuData | null> {
+  const trimmed = sku.trim();
+  if (!trimmed) return null;
+
+  try {
+    const path = `/products/${encodeURIComponent(trimmed)}`;
+    const url = `${BASE}/rest/V1${path}`;
+
+    const doFetch = async (token: string) => {
+      const reqHeaders: Record<string, string> = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      if (enventaCustomerId) {
+        reqHeaders["X-Enventa-Customer-Id"] = enventaCustomerId;
+      }
+      const start = Date.now();
+      const res = await fetch(url, {
+        headers: reqHeaders,
+        cache: "no-store",
+      });
+      await logMagentoCall({
+        method: "GET",
+        url,
+        reqHeaders,
+        res,
+        ms: Date.now() - start,
+      });
+      return res;
+    };
+
+    let token = await getAdminToken();
+    let res = await doFetch(token);
+    if (res.status === 401) {
+      invalidateAdminToken();
+      token = await getAdminToken(true);
+      res = await doFetch(token);
+    }
+
+    if (!res.ok) return null;
+
+    const product = (await res.json()) as MagentoProduct;
+    const unified = product.extension_attributes?.unified_catalog_data;
+    if (!unified) return null;
+
+    const priceRaw = unified.erp_price;
+    const priceNum =
+      typeof priceRaw === "number"
+        ? priceRaw
+        : typeof priceRaw === "string"
+          ? Number(priceRaw)
+          : NaN;
+    const erpPriceGross = Number.isFinite(priceNum) ? priceNum : null;
+
+    const erpStockAvailable = parseErpStock(unified.erp_stock);
+
+    const currencyRaw = unified.erp_currency;
+    const erpPriceCurrency =
+      typeof currencyRaw === "string" && currencyRaw.trim().length > 0
+        ? currencyRaw.trim().toUpperCase()
+        : erpPriceGross != null
+          ? "EUR"
+          : null;
+
+    if (
+      erpPriceGross == null &&
+      erpStockAvailable == null &&
+      erpPriceCurrency == null
+    ) {
+      return null;
+    }
+
+    return {
+      erpPriceGross,
+      erpPriceCurrency,
+      erpStockAvailable,
+    };
+  } catch {
+    return null;
+  }
 }
