@@ -9,9 +9,10 @@ import { getProductImageUrl, getCustomAttribute } from "@/lib/magento-shared";
 import { getSupportedOptions } from "@/lib/custom-options";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { notify } from "@/lib/toast";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { formatErpPrice, mergeErpStock, resolvePriceDisplay } from "@/lib/erp-shared";
 import { useCart } from "@/components/CartProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
+import { useErpProductState } from "@/components/ErpPricingProvider";
 
 type AddStatus = "idle" | "loading" | "success" | "error";
 
@@ -26,7 +27,6 @@ export default function SearchSuggestionRow({
 }) {
   const imageUrl = getProductImageUrl(product);
   const shortDescription = getCustomAttribute(product, "short_description");
-  const { formatPrice } = useCurrency();
   const { isAuthenticated } = useCustomerSession();
   const locale = useLocale();
   const tProducts = useTranslations("products");
@@ -35,17 +35,37 @@ export default function SearchSuggestionRow({
   const { addItem } = useCart();
   const [status, setStatus] = useState<AddStatus>("idle");
 
-  const stock = getStockStatus(product);
-  // Guests may add to cart (prices stay hidden; checkout requires sign-in).
-  const canAdd = product.price > 0 && stock.level !== "out";
+  const isConfigurable = product.type_id === "configurable";
+  const erpState = useErpProductState(isConfigurable ? "" : product.sku);
+  const erp = erpState.data;
+  const stock = mergeErpStock(getStockStatus(product), erp);
+  const priceDisplay = resolvePriceDisplay(erp, {
+    isAuthenticated,
+    hasEnventaCustomer: !erpState.noCustomer,
+    loading: erpState.loading,
+  });
+  const hasErpAmount = priceDisplay.kind === "amount";
+  const canAdd =
+    !isConfigurable && hasErpAmount && stock.level !== "out";
   const hasRequiredOptions = getSupportedOptions(product.options).some(
     (option) => option.is_require,
   );
-  const shouldConfigureBeforeAdd = canAdd && hasRequiredOptions;
-  const showGuestPriceGate = !isAuthenticated && product.price > 0;
+  const shouldConfigureBeforeAdd =
+    isConfigurable || (canAdd && hasRequiredOptions);
+  const showGuestPriceGate = !isConfigurable && priceDisplay.kind === "login";
   const stockLabel = getStockLabel(stock.level, tProducts);
 
   const href = `/products/${encodeURIComponent(product.sku)}`;
+
+  const priceLabel = isConfigurable
+    ? tProducts("selectOptions")
+    : priceDisplay.kind === "amount"
+      ? formatErpPrice(priceDisplay.net, priceDisplay.currency, locale)
+      : priceDisplay.kind === "loading"
+        ? tProducts("priceLoading")
+        : priceDisplay.kind === "login"
+          ? null
+          : tProducts("priceOnRequest");
 
   async function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
@@ -135,10 +155,8 @@ export default function SearchSuggestionRow({
                   {tProducts("signInForPrices")}
                 </Link>
               </span>
-            ) : product.price > 0 ? (
-              formatPrice(product.price, locale)
             ) : (
-              tProducts("priceOnRequest")
+              priceLabel
             )}
           </p>
           {shortDescription ? (

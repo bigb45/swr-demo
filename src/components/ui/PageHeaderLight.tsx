@@ -18,7 +18,7 @@ export default function PageHeaderLight({
           {eyebrow}
         </p>
       ) : null}
-      <h1 className="text-3xl sm:text-5xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
+      <h1 className="text-3xl sm:text-5xl font-black text-primary tracking-[-0.02em] leading-tight">
         {title}
       </h1>
       {subtitle ? (

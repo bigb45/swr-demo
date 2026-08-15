@@ -30,8 +30,8 @@ export default function ServicePillarPage({
     <>
       <IndustryHero
         eyebrow={fallback.eyebrow}
-        title={page?.content_heading ?? page?.title ?? fallback.title}
-        subtitle={page?.meta_description ?? fallback.subtitle}
+        title={fallback.title}
+        subtitle={fallback.subtitle}
       >
         <Cta href={ctaHref} label={ctaLabel} variant="primary" />
         {secondaryCta ? (
@@ -59,7 +59,7 @@ export default function ServicePillarPage({
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <div>
-            <h3 className="text-xl font-black uppercase tracking-[-0.01em]">
+            <h3 className="text-xl font-black tracking-[-0.01em]">
               {ctaHeading}
             </h3>
             <p className="text-sm text-white/80 mt-2 max-w-xl">{ctaBody}</p>

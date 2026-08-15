@@ -5,6 +5,7 @@
  */
 
 import type { MagentoCustomOptionSelection } from "@/types/magento";
+import type { AddToCartOptions } from "@/components/CartProvider";
 
 export type TeiaCartOpType = "add_to_cart" | "remove_from_cart" | "update_cart";
 
@@ -193,7 +194,7 @@ export async function applyTeiaCartAction(
     addBySku: (
       sku: string,
       qty: number,
-      customOptions?: MagentoCustomOptionSelection[],
+      options?: AddToCartOptions,
     ) => Promise<void>;
     updateQty: (itemId: number, sku: string, qty: number) => Promise<void>;
     removeItem: (itemId: number) => Promise<void>;
@@ -211,7 +212,7 @@ export async function applyTeiaCartAction(
     await addBySku(
       op.sku,
       op.qty || 1,
-      customOptions?.length ? customOptions : undefined,
+      customOptions?.length ? { customOptions } : undefined,
     );
     return;
   }

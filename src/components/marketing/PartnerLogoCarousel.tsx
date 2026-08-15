@@ -33,7 +33,7 @@ export default function PartnerLogoCarousel({
       <div className="swr-page-shell flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="max-w-2xl">
-            <h2 className="text-xs font-bold uppercase tracking-[0.18em] text-secondary mb-2">
+            <h2 className="text-xs font-bold tracking-[0.06em] text-secondary mb-2">
               {heading}
             </h2>
             <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
@@ -90,7 +90,7 @@ export default function PartnerLogoCarousel({
                   {partner.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
-              <span className="text-sm font-bold uppercase tracking-[0.06em] text-primary">
+              <span className="text-sm font-bold tracking-[0.02em] text-primary">
                 {partner.name}
               </span>
             </div>

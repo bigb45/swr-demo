@@ -23,7 +23,7 @@ export default function IndustryHero({
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="text-3xl sm:text-5xl font-black text-primary tracking-[-0.02em] uppercase">
+        <h1 className="text-3xl sm:text-5xl font-black text-primary tracking-[-0.02em]">
           {title}
         </h1>
         {subtitle ? (

@@ -18,6 +18,7 @@ import { useCopilot } from "./CopilotProvider";
 import CopilotProductWidget from "./CopilotProductWidget";
 import CopilotOrderWidget from "./CopilotOrderWidget";
 import CopilotOptionsPicker from "./CopilotOptionsPicker";
+import { useCustomerSession } from "@/components/CustomerSessionProvider";
 import type { CopilotStatus, CopilotSuggestedPrompt } from "./types";
 
 const STATUS_LABEL_KEY: Record<Exclude<CopilotStatus, "idle">, string> = {
@@ -28,6 +29,18 @@ const STATUS_LABEL_KEY: Record<Exclude<CopilotStatus, "idle">, string> = {
   analyzingImage: "statusAnalyzingImage",
   working: "statusWorking",
 };
+
+/** Teia often suggests "Sign in for price" even when the shopper already is. */
+function isLoginNudgePrompt(prompt: CopilotSuggestedPrompt): boolean {
+  const hay = `${prompt.short} ${prompt.expanded}`.toLowerCase();
+  return (
+    /\bsign\s*in\b/.test(hay) ||
+    /\blog\s*in\b/.test(hay) ||
+    /\banmelden\b/.test(hay) ||
+    /\bconnecter\b/.test(hay) ||
+    /\bse connecter\b/.test(hay)
+  );
+}
 
 function getFocusable(root: HTMLElement | null): HTMLElement[] {
   if (!root) return [];
@@ -151,6 +164,7 @@ function CopilotStatusRow({ label }: { label: string }) {
 export default function CopilotPanel() {
   const t = useTranslations("copilot");
   const locale = useLocale();
+  const { isAuthenticated } = useCustomerSession();
   const {
     close,
     minimize,
@@ -365,15 +379,22 @@ export default function CopilotPanel() {
 
   /**
    * Once the newest turn is a settled assistant reply, surface its backend
-   * `suggested_prompts` (animated, below the bubble).
+   * `suggested_prompts` (animated, below the bubble). Drop login nudges when
+   * the shopper already has a Magento session — Teia often still emits them.
    */
   const lastMessage = messages[messages.length - 1];
+  const filteredSuggestedPrompts = useMemo(() => {
+    const prompts = lastMessage?.suggestedPrompts;
+    if (!prompts || prompts.length === 0) return undefined;
+    if (!isAuthenticated) return prompts;
+    const filtered = prompts.filter((p) => !isLoginNudgePrompt(p));
+    return filtered.length > 0 ? filtered : undefined;
+  }, [lastMessage?.suggestedPrompts, isAuthenticated]);
   const dynamicPromptsMessageId =
     lastMessage &&
     lastMessage.role === "assistant" &&
     !lastMessage.streaming &&
-    lastMessage.suggestedPrompts &&
-    lastMessage.suggestedPrompts.length > 0
+    filteredSuggestedPrompts
       ? lastMessage.id
       : null;
 
@@ -639,9 +660,9 @@ export default function CopilotPanel() {
                       widgetSkus={m.widgetSkus}
                     />
                   )}
-                  {m.id === dynamicPromptsMessageId && m.suggestedPrompts && (
+                  {m.id === dynamicPromptsMessageId && filteredSuggestedPrompts && (
                     <CopilotSuggestedPrompts
-                      prompts={m.suggestedPrompts}
+                      prompts={filteredSuggestedPrompts}
                       disabled={pending}
                       label={t("suggestedFollowupsAria")}
                       onPick={(text) => {

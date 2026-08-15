@@ -16,7 +16,14 @@ import type {
   MagentoProduct,
   MagentoCartTotals,
   MagentoCustomOptionSelection,
+  MagentoConfigurableItemOption,
 } from "@/types/magento";
+
+/** Options bag for addItem / addBySku (custom + configurable). */
+export interface AddToCartOptions {
+  customOptions?: MagentoCustomOptionSelection[];
+  configurableOptions?: MagentoConfigurableItemOption[];
+}
 
 /** Resolved (human-readable) custom-option pick shown on a cart/order line. */
 export interface CartItemSelectedOption {
@@ -62,7 +69,7 @@ interface CartContextValue {
   addItem: (
     product: MagentoProduct,
     qty: number,
-    customOptions?: MagentoCustomOptionSelection[],
+    options?: AddToCartOptions,
   ) => Promise<void>;
   /**
    * Add a line to the cart by SKU alone. Used for reorder + CSV import where
@@ -72,7 +79,7 @@ interface CartContextValue {
   addBySku: (
     sku: string,
     qty: number,
-    customOptions?: MagentoCustomOptionSelection[],
+    options?: AddToCartOptions,
   ) => Promise<void>;
   updateQty: (itemId: number, sku: string, qty: number) => Promise<void>;
   removeItem: (itemId: number) => Promise<void>;
@@ -236,12 +243,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addItem = useCallback(async (
     product: MagentoProduct,
     qty: number,
-    customOptions?: MagentoCustomOptionSelection[],
+    options?: AddToCartOptions,
   ) => {
     let id = await ensureCart();
     setCartId(id);
 
-    let res = await postCartItem(id, product.sku, qty, customOptions);
+    let res = await postCartItem(id, product.sku, qty, options);
 
     if (!res.ok && (await isStaleCartResponse(res))) {
       // Stored cart id no longer exists in Magento — wipe it and retry once
@@ -249,7 +256,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearPersistedCartId();
       id = await ensureCart();
       setCartId(id);
-      res = await postCartItem(id, product.sku, qty, customOptions);
+      res = await postCartItem(id, product.sku, qty, options);
     }
 
     if (!res.ok) {
@@ -257,11 +264,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       throw new Error(err.error ?? "Failed to add item");
     }
 
-    // With custom options the same SKU can map to multiple distinct quote
-    // lines, and the line carries selected-option labels only via the cart
-    // GET. Refetch to get the authoritative items (correct itemId + resolved
-    // options) instead of the optimistic merge-by-sku below.
-    if (customOptions && customOptions.length > 0) {
+    // With custom or configurable options the same parent SKU can map to
+    // multiple distinct quote lines. Refetch for authoritative items.
+    const hasOptions =
+      (options?.customOptions?.length ?? 0) > 0 ||
+      (options?.configurableOptions?.length ?? 0) > 0;
+    if (hasOptions) {
       await res.json().catch(() => ({}));
       await fetchCart(id);
       return;
@@ -289,24 +297,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
         },
       ];
     });
-  }, [ensureCart, fetchCart]);
+    // Magento quote prices are often 0 — refetch so ERP overlay can fill them.
+    await fetchCart(id);
+  }, [fetchCart]);
 
   const addBySku = useCallback(
     async (
       sku: string,
       qty: number,
-      customOptions?: MagentoCustomOptionSelection[],
+      options?: AddToCartOptions,
     ) => {
       let id = await ensureCart();
       setCartId(id);
 
-      let res = await postCartItem(id, sku, qty, customOptions);
+      let res = await postCartItem(id, sku, qty, options);
 
       if (!res.ok && (await isStaleCartResponse(res))) {
         clearPersistedCartId();
         id = await ensureCart();
         setCartId(id);
-        res = await postCartItem(id, sku, qty, customOptions);
+        res = await postCartItem(id, sku, qty, options);
       }
 
       if (!res.ok) {
@@ -314,8 +324,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         throw new Error(err.error ?? "Failed to add item");
       }
 
-      // Same SKU can map to multiple quote lines when custom options differ.
-      if (customOptions && customOptions.length > 0) {
+      // Same SKU can map to multiple quote lines when options differ.
+      if (
+        (options?.customOptions?.length ?? 0) > 0 ||
+        (options?.configurableOptions?.length ?? 0) > 0
+      ) {
         await res.json().catch(() => ({}));
         await fetchCart(id);
         return;
@@ -458,12 +471,18 @@ function postCartItem(
   cartId: string,
   sku: string,
   qty: number,
-  customOptions?: MagentoCustomOptionSelection[],
+  options?: AddToCartOptions,
 ): Promise<Response> {
   return fetch("/api/cart/items", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cartId, sku, qty, customOptions }),
+    body: JSON.stringify({
+      cartId,
+      sku,
+      qty,
+      customOptions: options?.customOptions,
+      configurableOptions: options?.configurableOptions,
+    }),
   });
 }
 

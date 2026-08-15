@@ -1,9 +1,16 @@
 /**
  * POST /api/cart  › create a new Magento guest cart, returns { cartId }
  * GET  /api/cart?cartId=xxx › fetch cart items + totals
+ *
+ * Signed-in shoppers with an enventa customer id get ERP net prices overlaid
+ * on Magento quote lines (Magento catalog/quote amounts are often 0).
  */
 
 import { NextRequest } from "next/server";
+import {
+  applyErpPricingToCartDisplay,
+  resolveEnventaCustomerId,
+} from "@/lib/erp";
 import { getProductBySku } from "@/lib/magento";
 import { getProductImageUrl } from "@/lib/magento-shared";
 import { resolveSelectedOptionLabels } from "@/lib/custom-options";
@@ -77,7 +84,7 @@ export async function GET(req: NextRequest) {
 
   const [items, totals] = await Promise.all([
     itemsRes.json() as Promise<MagentoCartItem[]>,
-    totalsRes.json(),
+    totalsRes.json() as Promise<Record<string, unknown>>,
   ]);
 
   const productsBySku = new Map(
@@ -115,9 +122,32 @@ export async function GET(req: NextRequest) {
         price: 0,
         priceHidden: true,
       })),
-      totals: stripGuestPrices(totals as Record<string, unknown>),
+      totals: stripGuestPrices(totals),
     });
   }
 
-  return Response.json({ items: itemsWithImages, totals });
+  const enventaId = await resolveEnventaCustomerId();
+  const priced = await applyErpPricingToCartDisplay(
+    itemsWithImages,
+    totals as {
+      subtotal?: number;
+      subtotal_with_discount?: number;
+      tax_amount?: number;
+      shipping_amount?: number;
+      grand_total?: number;
+      items?: Array<{
+        item_id: number;
+        price?: number;
+        row_total?: number;
+        row_total_incl_tax?: number;
+        qty?: number;
+      }>;
+    },
+    enventaId,
+  );
+
+  return Response.json(
+    { items: priced.items, totals: priced.totals },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

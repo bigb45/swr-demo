@@ -26,7 +26,7 @@ export default function WorkshopBlock({
               {eyebrow}
             </p>
           ) : null}
-          <h2 className="text-2xl sm:text-4xl font-black uppercase text-primary tracking-[-0.02em] leading-tight">
+          <h2 className="text-2xl sm:text-4xl font-black text-primary tracking-[-0.02em] leading-tight">
             {heading}
           </h2>
           <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">

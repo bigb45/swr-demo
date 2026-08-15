@@ -302,7 +302,10 @@ export async function fetchGuestCartLineItems(
 
 /**
  * Best-effort salable check using the same product payload + rules as PDP/cart.
- * Skips configurable parent rows (children carry the simple SKU + qty).
+ *
+ * Magento guest-carts usually returns ONE line per configurable selection with
+ * `product_type: "configurable"` and the child SKU (no `parent_item_id`).
+ * Only skip a configurable row when Magento also returned linked child rows.
  */
 export async function assertGuestCartLinesSalable(
   lines: GuestCartLineItem[],
@@ -311,9 +314,19 @@ export async function assertGuestCartLinesSalable(
 > {
   if (lines.length === 0) return { ok: false, reason: "empty" };
 
+  const childParentIds = new Set(
+    lines
+      .map((i) => i.parent_item_id)
+      .filter((id): id is number => id != null),
+  );
+
   const totalsBySku = new Map<string, number>();
   for (const item of lines) {
-    if (item.product_type === "configurable" && item.parent_item_id == null) {
+    if (
+      item.product_type === "configurable" &&
+      item.parent_item_id == null &&
+      childParentIds.has(item.item_id)
+    ) {
       continue;
     }
     const q = Number(item.qty);

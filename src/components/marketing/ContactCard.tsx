@@ -30,7 +30,7 @@ export default function ContactCard({
         boxShadow: "var(--shadow-ambient)",
       }}
     >
-      <h2 className="text-sm font-black uppercase tracking-[0.05em] text-primary">
+      <h2 className="text-sm font-black tracking-[-0.01em] text-primary">
         {title}
       </h2>
       <address className="not-italic text-sm text-on-surface leading-relaxed">

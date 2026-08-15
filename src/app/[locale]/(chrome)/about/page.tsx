@@ -39,8 +39,8 @@ export default async function Page({ params }: PageProps) {
     <>
       <Hero
         eyebrow={t("eyebrow")}
-        title={page?.content_heading ?? page?.title ?? t("heading")}
-        subtitle={page?.meta_description ?? t("subheading")}
+        title={t("heading")}
+        subtitle={t("subheading")}
       >
         <Cta href="/contact" label={t("bookConsultation")} variant="primary" />
         <Cta href="/services" label={t("explore360")} variant="white" />
@@ -60,7 +60,7 @@ export default async function Page({ params }: PageProps) {
         )}
 
         <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-black uppercase tracking-[-0.02em] text-primary">
+          <h2 className="text-xl font-black tracking-[-0.02em] text-primary">
             {t("valuesHeading")}
           </h2>
           <FeatureGrid items={values} columns={3} />
@@ -71,7 +71,7 @@ export default async function Page({ params }: PageProps) {
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <div>
-            <h3 className="text-xl font-black uppercase tracking-[-0.01em]">
+            <h3 className="text-xl font-black tracking-[-0.01em]">
               {t("ctaHeading")}
             </h3>
             <p className="text-sm text-white/80 mt-2 max-w-xl">

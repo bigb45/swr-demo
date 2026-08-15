@@ -4,7 +4,9 @@
  */
 import type {
   MagentoCategory,
+  MagentoPimFeature,
   MagentoProduct,
+  MagentoUnifiedCatalogData,
   TeiaPimImage,
 } from "@/types/magento";
 
@@ -33,6 +35,130 @@ export const PRODUCT_LIST_RESERVED_PARAMS = new Set([
   "priceMax",
   "view",
 ]);
+
+/** Parse a JSON string; pass plain objects through. Never throws. */
+function safeJsonParse<T>(raw: unknown): T | null {
+  if (raw == null) return null;
+  if (typeof raw !== "string") return raw as T;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  try {
+    return JSON.parse(trimmed) as T;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Resolve a list that Magento may double-encode: the container can be a JSON
+ * string, and each element can itself be a JSON string. Bad elements are
+ * dropped rather than failing the whole list.
+ */
+function parseJsonArray<T>(raw: unknown): T[] {
+  const container = safeJsonParse<unknown>(raw);
+  if (!Array.isArray(container)) return [];
+  const out: T[] = [];
+  for (const entry of container) {
+    const parsed = safeJsonParse<T>(entry);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      out.push(parsed);
+    }
+  }
+  return out;
+}
+
+/** The enventa unified-catalog payload, from either carrier, or null. */
+export function getUnifiedCatalogData(
+  product: MagentoProduct,
+): MagentoUnifiedCatalogData | null {
+  const fromExt = safeJsonParse<MagentoUnifiedCatalogData>(
+    product.extension_attributes?.unified_catalog_data,
+  );
+  if (fromExt && typeof fromExt === "object" && !Array.isArray(fromExt)) {
+    return fromExt;
+  }
+
+  const attrRaw = product.custom_attributes?.find(
+    (a) => a.attribute_code === "unified_catalog_data",
+  )?.value;
+  const fromAttr = safeJsonParse<MagentoUnifiedCatalogData>(attrRaw);
+  if (fromAttr && typeof fromAttr === "object" && !Array.isArray(fromAttr)) {
+    return fromAttr;
+  }
+  return null;
+}
+
+/** One display-ready PIM feature row. */
+export interface PimFeature {
+  code: string;
+  label: string;
+  values: string[];
+  position: number;
+}
+
+function normalizeFeatures(raw: unknown): PimFeature[] {
+  const entries = parseJsonArray<MagentoPimFeature>(raw);
+  const out: PimFeature[] = [];
+
+  entries.forEach((entry, index) => {
+    const code = typeof entry.code === "string" ? entry.code.trim() : "";
+    if (!code) return;
+
+    const rawValues = Array.isArray(entry.values)
+      ? entry.values
+      : typeof entry.values === "string"
+        ? (safeJsonParse<unknown>(entry.values) ?? entry.values)
+        : [];
+    const list = Array.isArray(rawValues) ? rawValues : [rawValues];
+
+    const values = list
+      .map((v) => (typeof v === "string" ? v.trim() : String(v ?? "").trim()))
+      .filter((v) => v.length > 0);
+    if (values.length === 0) return;
+
+    const label =
+      (typeof entry.label === "string" && entry.label.trim()) ||
+      (typeof entry.name === "string" && entry.name.trim()) ||
+      code;
+
+    out.push({
+      code,
+      label,
+      values,
+      // `pim.features` carries no position — fall back to payload order.
+      position:
+        typeof entry.position === "number" && Number.isFinite(entry.position)
+          ? entry.position
+          : index,
+    });
+  });
+
+  return out
+    .map((f, i) => ({ f, i }))
+    .sort((a, b) => a.f.position - b.f.position || a.i - b.i)
+    .map(({ f }) => f);
+}
+
+/**
+ * Curated PIM features for the PDP "Product information" block.
+ * Prefers `teia_pim_specs` (label + position) and falls back to
+ * `pim.features` (name, unordered). Never reads `pim.attributes` — that is
+ * the raw PIM dump, full of internal codes and empty values.
+ */
+export function getPimFeatures(product: MagentoProduct): PimFeature[] {
+  const fromExt = normalizeFeatures(
+    product.extension_attributes?.teia_pim_specs,
+  );
+  if (fromExt.length > 0) return fromExt;
+
+  const attrRaw = product.custom_attributes?.find(
+    (a) => a.attribute_code === "teia_pim_specs",
+  )?.value;
+  const fromAttr = normalizeFeatures(attrRaw);
+  if (fromAttr.length > 0) return fromAttr;
+
+  return normalizeFeatures(getUnifiedCatalogData(product)?.pim?.features);
+}
 
 export function getTeiaPimImages(product: MagentoProduct): TeiaPimImage[] {
   const raw = getCustomAttribute(product, "teia_pim_images");

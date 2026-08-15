@@ -50,6 +50,11 @@ const nextConfig: NextConfig = {
         hostname: "bimblobs.blob.core.windows.net",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "app.nextpim.de",
+        pathname: "/**",
+      },
     ],
   },
 };

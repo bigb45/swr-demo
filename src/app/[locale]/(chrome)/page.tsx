@@ -1,7 +1,13 @@
-import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { Headset, Wrench, Truck, FileCheck, ArrowRight } from "lucide-react";
+import {
+  Headset,
+  Wrench,
+  Truck,
+  FileCheck,
+  ArrowRight,
+  PackageSearch,
+} from "lucide-react";
 import { getProducts } from "@/lib/magento";
 import {
   Hero,
@@ -12,8 +18,10 @@ import {
   PartnerLogoCarousel,
   WorkshopBlock,
   FeaturedProductsRail,
+  HeroEntryPanel,
 } from "@/components/marketing";
 import CopilotHero from "@/components/copilot/CopilotHero";
+import SearchBar from "@/components/ui/SearchBar";
 import type { RealityItem } from "@/components/marketing";
 import { PARTNER_BRANDS } from "@/lib/partners";
 
@@ -89,33 +97,43 @@ export default async function HomePage({ params }: HomePageProps) {
     },
   ];
 
-  const heroMedia = (
-    <div
-      className="relative aspect-square overflow-hidden"
-      style={{
-        borderRadius: "var(--radius-card)",
-        boxShadow: "0 20px 40px rgba(0,18,40,0.4)",
-      }}
-    >
-      <Image
-        src="/hero-valve.png"
-        alt=""
-        width={620}
-        height={620}
-        priority
-        sizes="(max-width: 1024px) 220px, 40vw"
-        className="h-full w-full object-cover object-center"
-      />
-    </div>
-  );
-
   return (
     <>
       <Hero
         eyebrow={t("hero.eyebrow")}
         title={t("hero.title")}
         subtitle={t("hero.subtitle")}
-        media={heroMedia}
+        tagline={t("hero.tagline")}
+        searchLabel={t("hero.searchLabel")}
+        search={<SearchBar />}
+        media={
+          <HeroEntryPanel
+            heading={t("hero.panel.heading")}
+            items={[
+              {
+                icon: <PackageSearch size={18} strokeWidth={1.75} aria-hidden />,
+                title: t("hero.panel.shop.title"),
+                description: t("hero.panel.shop.description"),
+                metric: t("reality.skus.value"),
+                href: "/shop",
+              },
+              {
+                icon: <Wrench size={18} strokeWidth={1.75} aria-hidden />,
+                title: t("hero.panel.repair.title"),
+                description: t("hero.panel.repair.description"),
+                metric: t("reality.repair.value"),
+                href: "/services/repair",
+              },
+              {
+                icon: <Headset size={18} strokeWidth={1.75} aria-hidden />,
+                title: t("hero.panel.advice.title"),
+                description: t("hero.panel.advice.description"),
+                metric: t("reality.years.value"),
+                href: "/contact",
+              },
+            ]}
+          />
+        }
       >
         <Cta href="/shop" label={t("hero.openShop")} variant="primary" />
         <Cta href="/catalog" label={t("hero.openCatalog")} variant="white" />
@@ -155,7 +173,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 <span aria-hidden className="inline-block h-1.5 w-1.5 bg-secondary" />
                 {t("services.eyebrow")}
               </p>
-              <h2 className="text-2xl font-black uppercase leading-tight tracking-[-0.02em] text-primary sm:text-4xl">
+              <h2 className="text-2xl font-black leading-tight tracking-[-0.02em] text-primary sm:text-4xl">
                 {t("services.heading")}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-on-surface-variant sm:text-base">
@@ -199,7 +217,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <section className="py-14 sm:py-20">
         <div className="swr-page-shell swr-reveal grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
           <div className="flex max-w-md flex-col gap-3">
-            <h2 className="text-2xl font-black uppercase leading-tight tracking-[-0.02em] text-primary sm:text-3xl">
+            <h2 className="text-2xl font-black leading-tight tracking-[-0.02em] text-primary sm:text-3xl">
               {t("people.heading")}
             </h2>
             <p className="text-sm leading-relaxed text-on-surface-variant sm:text-base">

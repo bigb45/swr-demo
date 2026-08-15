@@ -11,9 +11,10 @@ import { getDisplayShortDescription } from "@/lib/product-display";
 import NoImagePlaceholder from "@/components/ui/NoImagePlaceholder";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { notify } from "@/lib/toast";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { formatErpPrice, mergeErpStock, resolvePriceDisplay } from "@/lib/erp-shared";
 import { useCart } from "@/components/CartProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
+import { useErpProductState } from "@/components/ErpPricingProvider";
 import WatchlistButton from "@/components/WatchlistButton";
 import StockBadge from "@/components/ui/StockBadge";
 
@@ -28,7 +29,6 @@ export default function ProductSearchResultRow({
   const shortDescription = getDisplayShortDescription(
     getCustomAttribute(product, "short_description"),
   );
-  const { formatPrice } = useCurrency();
   const { isAuthenticated } = useCustomerSession();
   const locale = useLocale();
   const tProducts = useTranslations("products");
@@ -38,24 +38,42 @@ export default function ProductSearchResultRow({
   const [status, setStatus] = useState<AddStatus>("idle");
   const [qty, setQty] = useState(1);
 
-  const stock = getStockStatus(product);
+  const isConfigurable = product.type_id === "configurable";
+  const erpState = useErpProductState(isConfigurable ? "" : product.sku);
+  const erp = erpState.data;
+  const stock = mergeErpStock(getStockStatus(product), erp);
+  const priceDisplay = resolvePriceDisplay(erp, {
+    isAuthenticated,
+    hasEnventaCustomer: !erpState.noCustomer,
+    loading: erpState.loading,
+  });
   const maxQty =
     typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
-  // Guests may add to cart (prices stay hidden; checkout requires sign-in).
-  const canAddToCart = product.price > 0 && stock.level !== "out";
-  // Products with required custom options must be configured on the PDP
-  // before adding — same guard as ProductCard.
+  const hasErpAmount = priceDisplay.kind === "amount";
+  const canAddToCart =
+    !isConfigurable && hasErpAmount && stock.level !== "out";
   const hasRequiredOptions = getSupportedOptions(product.options).some(
     (option) => option.is_require,
   );
-  const shouldConfigureBeforeAdd = canAddToCart && hasRequiredOptions;
-  const showGuestPriceGate = !isAuthenticated && product.price > 0;
+  const shouldConfigureBeforeAdd =
+    isConfigurable || (canAddToCart && hasRequiredOptions);
+  const showGuestPriceGate = !isConfigurable && priceDisplay.kind === "login";
   const stockLabel = getStockLabel(stock.level, tProducts);
 
   const href = `/products/${encodeURIComponent(product.sku)}`;
   const typeLabel = product.type_id
     ? product.type_id.replace(/_/g, " ")
     : null;
+
+  const priceLabel = isConfigurable
+    ? tProducts("selectOptions")
+    : priceDisplay.kind === "amount"
+      ? formatErpPrice(priceDisplay.net, priceDisplay.currency, locale)
+      : priceDisplay.kind === "loading"
+        ? tProducts("priceLoading")
+        : priceDisplay.kind === "login"
+          ? null
+          : tProducts("priceOnRequest");
 
   function updateQty(next: number) {
     const clamped = Math.max(1, Math.min(maxQty ?? 9999, Math.floor(next)));
@@ -163,10 +181,8 @@ export default function ProductSearchResultRow({
                     {tProducts("signInForPrices")}
                   </Link>
                 </span>
-              ) : product.price > 0 ? (
-                formatPrice(product.price, locale)
               ) : (
-                tProducts("priceOnRequest")
+                priceLabel
               )}
             </p>
           </div>

@@ -99,7 +99,7 @@ function CopilotOptionsPickerDirect({
       await addBySku(
         request.sku,
         1,
-        customOptions.length > 0 ? customOptions : undefined,
+        customOptions.length > 0 ? { customOptions } : undefined,
       );
       setAddStatus("success");
       setSubmitted(true);

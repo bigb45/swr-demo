@@ -131,8 +131,8 @@
     "suggestionsPdpConsumablesPrompt": "Proposez des consommables pour {name} dans la catégorie {category}.",
     "home": {
       "eyebrow": "Assistant IA",
-      "heading": "Copilot: votre entrée dans le assortiment",
-      "subtitle": "Trouvez des produits, clarifiez des specs ou cherchez des documents, sans fouiller les menus.",
+      "heading": "Assistant boutique",
+      "subtitle": "Trouver des produits, clarifier des specs ou chercher des documents.",
       "inputLabel": "Question pour Copilot",
       "placeholder": "p. ex. pièce de rechange Makita, fil de soudure 1,0 mm, douane Suisse…",
       "submit": "Demander",
@@ -150,99 +150,87 @@
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Depuis 1987.",
-      "title": "Qui appelez-vous quand le poste à souder lâche un vendredi après-midi ?",
-      "subtitle": "Nous sommes un fournisseur industriel familial à Lörrach. Onze personnes qui décrochent le téléphone, font tourner l'atelier, conduisent les livraisons et connaissent le catalogue par cœur.",
+      "title": "SWR – La qualité relie !",
+      "subtitle": "SWR GmbH est plus qu'une société de négoce qui vend des marchandises.",
+      "tagline": "Nous sommes différents !",
+      "searchLabel": "Rechercher par produit, référence ou photo",
+      "panel": {
+        "heading": "Accès direct",
+        "shop": {
+          "title": "Parcourir l'assortiment",
+          "description": "Soudage, outillage, machines, sécurité"
+        },
+        "repair": {
+          "title": "Envoyer en réparation",
+          "description": "Atelier interne, prêt sur demande"
+        },
+        "advice": {
+          "title": "Parler à un spécialiste",
+          "description": "Équipe de Lörrach, ligne directe"
+        }
+      },
       "openShop": "Aller à la boutique",
       "openCatalog": "Ouvrir le catalogue"
     },
     "reality": {
-      "heading": "Comment l'atelier tourne, vraiment",
+      "heading": "En bref",
       "years": {
         "value": "1987",
-        "label": "Familial depuis",
-        "sublabel": "Deuxième génération, même adresse."
+        "label": "À Lörrach depuis",
+        "sublabel": "Commerce spécialisé familial au même emplacement."
       },
       "skus": {
-        "value": "12 000+",
-        "label": "Références actives",
-        "sublabel": "En stock, préparées et expédiées depuis Lörrach."
+        "value": "Boutique",
+        "label": "Assortiment en ligne",
+        "sublabel": "Commander et retirer des articles à Lörrach."
       },
       "repair": {
-        "value": "48 h",
-        "label": "Délai de réparation moyen",
-        "sublabel": "La plupart des outils reviennent à l'atelier en deux jours."
+        "value": "Service",
+        "label": "Réparation et maintenance",
+        "sublabel": "Outils et machines de notre assortiment."
       },
       "brands": {
-        "value": "60+",
-        "label": "Marques partenaires",
-        "sublabel": "Distributeur agréé pour les fabricants que nous référençons."
+        "value": "Marques",
+        "label": "Fabricants référencés",
+        "sublabel": "Soudage, outillage, machines et protection."
       }
-    },
-    "intents": {
-      "eyebrow": "Commencez ici",
-      "heading": "Dites-nous pourquoi vous êtes vraiment ici.",
-      "part": {
-        "question": "Il me faut une pièce maintenant.",
-        "answer": "Parcourez la boutique en direct, avec stocks et prix. Expédition le jour même pour les articles en stock commandés avant midi.",
-        "cta": "Aller à la boutique"
-      },
-      "repair": {
-        "question": "Mon outil est en panne.",
-        "answer": "Déposez-le à Lörrach ou envoyez-le. Diagnostic sous 24 h, réparation sous 48 h dans la majorité des cas. Outils de prêt disponibles.",
-        "cta": "Portail de réparation"
-      },
-      "swiss": {
-        "question": "Je livre en Suisse.",
-        "answer": "Nous prenons en charge les déclarations douanières, avançons les droits et facturons le coût rendu. Statut AEO.",
-        "cta": "Centre Suisse"
-      },
-      "catalog": {
-        "question": "Je veux lire un catalogue de marque.",
-        "answer": "Bibliothèque cherchable de brochures, manuels, fiches techniques et certificats des fabricants. À lire en ligne.",
-        "cta": "Ouvrir le catalogue"
-      }
-    },
-    "catalogPreview": {
-      "heading": "Lire avant d'acheter.",
-      "subheading": "Catalogues des fabricants que nous référençons: cherchables, filtrables, téléchargeables.",
-      "cta": "Ouvrir la bibliothèque"
     },
     "partners": {
       "heading": "Nos partenaires",
-      "subheading": "Fabricants sélectionnés de l'assortiment SWR. Les liens catalogue suivront dès que les documents fournisseur correspondants seront validés.",
+      "subheading": "Fabricants sélectionnés de l'assortiment SWR.",
       "previous": "Afficher les partenaires précédents",
       "next": "Afficher d'autres partenaires"
     },
     "services": {
-      "eyebrow": "Au-delà du produit",
-      "heading": "Quatre engagements.",
-      "subheading": "Des promesses concrètes, pas du discours marketing. Si nous les manquons, dites-le-nous, nous corrigeons.",
+      "eyebrow": "Services",
+      "heading": "Conseil, réparation, livraison et douane",
+      "subheading": "Prestations complémentaires autour des achats et de l'exploitation.",
       "cta": "Tous les services",
-      "consulting": "Conseil sur site dans la zone des trois pays. Réponse sous 4 heures ouvrées, déplacement à votre convenance.",
-      "repair": "Atelier intégré avec outils de prêt. La plupart des réparations sont rendues sous 48 h après dépôt.",
-      "delivery": "Flotte de livraison en propre, tournées quotidiennes Lörrach, Bâle et Mulhouse. Articles en stock expédiés le jour même avant midi.",
-      "customs": "Statut douanier AEO. Nous gérons les formalités, avançons les droits, et facturons le coût rendu en CHF ou EUR."
+      "consulting": "Conseil technique sur site et par téléphone pour outils, machines et consommables.",
+      "repair": "Réparation et maintenance des appareils et machines de notre assortiment.",
+      "delivery": "Livraison régionale autour de Lörrach, Bâle et Mulhouse, et expédition nationale.",
+      "customs": "Accompagnement pour les livraisons en Suisse et le dédouanement."
     },
     "featured": {
-      "heading": "Récemment en boutique",
-      "subheading": "Un échantillon en direct du catalogue, en stock, expédié et entretenu en interne.",
-      "cta": "Parcourir toute la boutique"
+      "heading": "Dans la boutique",
+      "subheading": "Une sélection de l'assortiment actuel.",
+      "cta": "Parcourir la boutique"
     },
     "people": {
-      "eyebrow": "Onze personnes. Un atelier.",
-      "heading": "Quand vous appelez, une personne décroche.",
-      "body": "Nous sommes onze dans l'équipe. La personne avec qui vous parlez d'un devis reconnaîtra votre voix lorsque vous appellerez pour la réparation. Découvrez-nous sur la page À propos.",
-      "cta": "Voir l'équipe",
+      "eyebrow": "Équipe",
+      "heading": "Vente et service à Lörrach",
+      "body": "Les questions sur les articles, devis ou réparations sont traitées par notre équipe sur place. En savoir plus sur la page À propos.",
+      "cta": "À propos",
       "featured": {
-        "name": "Équipe SWR Lörrach",
-        "role": "Vente & Service",
-        "quote": "Si vous ne trouvez pas dans la boutique ou le catalogue, appelez-nous. C'est probablement sur l'étagère du fond."
+        "name": "SWR Lörrach",
+        "role": "Vente et service",
+        "quote": "Si vous ne trouvez pas un article, appelez-nous. Nous vous aidons à le rechercher."
       }
     },
     "workshop": {
-      "eyebrow": "Parlons-nous",
-      "heading": "Pas d'auto-réponse. Chaque e-mail est lu par un humain.",
-      "body": "Envoyez un brief, appelez l'atelier ou prenez rendez-vous. Réponse sous un jour ouvré, avec une réponse ferme ou la prochaine question à clarifier.",
+      "eyebrow": "Contact",
+      "heading": "Écrire ou appeler",
+      "body": "Pour devis, questions techniques et demandes de service, contactez-nous par téléphone ou e-mail.",
       "phoneLabel": "Téléphone",
       "emailLabel": "E-mail",
       "hoursLabel": "Horaires"
@@ -258,8 +246,8 @@
     "searchEmptyClear": "Voir les catégories",
     "noFilterResults": "Aucun produit ne correspond à ces filtres.",
     "browseByCategoryEyebrow": "Assortiment",
-    "browseByCategoryTitle": "Commencez par une catégorie.",
-    "browseByCategoryBody": "La gamme complète est trop vaste pour une entrée utile sans filtre. Choisissez une catégorie ou utilisez la recherche.",
+    "browseByCategoryTitle": "Commencer par une catégorie",
+    "browseByCategoryBody": "Choisissez une famille de produits ou utilisez la recherche.",
     "noImage": "Aucune image disponible",
     "metaNotFoundTitle": "Produit introuvable",
     "options": {
@@ -320,9 +308,22 @@
     "unavailable": "Indisponible",
     "addToCart": "Ajouter au panier",
     "selectOptions": "Choisir les options",
+    "variantChoose": "Choisir {label}…",
+    "variantUnavailable": "indisponible",
+    "variantSelectForPrice": "Sélectionnez les options pour voir votre prix",
+    "variantIncomplete": "Veuillez sélectionner toutes les options.",
+    "variantSelectToAdd": "Faites une sélection pour ajouter ce produit au panier.",
+    "priceLoading": "Chargement du prix…",
+    "priceUpdating": "Mise à jour du prix…",
+    "discontinued": "Abandonné",
     "requestQuote": "Demander un devis",
     "description": "Description du produit",
     "specifications": "Spécifications techniques",
+    "productInformation": "Informations produit",
+    "showMoreFeatures": "Afficher plus de caractéristiques",
+    "showFewerFeatures": "Afficher moins de caractéristiques",
+    "copyValue": "Copier",
+    "copied": "Copié",
     "weight": "Poids (nu)",
     "productType": "Type de produit",
     "specs": {
@@ -375,8 +376,8 @@
     "metaTitle": "Boutique",
     "metaDescription": "Vue d'ensemble de l'assortiment, soudage, outils, machines, sécurité et fournitures d'atelier.",
     "eyebrow": "Assortiment SWR",
-    "heading": "Choisissez votre famille de produits.",
-    "subheading": "La boutique commence par les catégories principales afin d'éviter une liste catalogue complète et ingérable.",
+    "heading": "Groupes de produits",
+    "subheading": "Choisissez une catégorie ou utilisez la recherche pour trouver des articles.",
     "sidebarHeading": "Catégories",
     "empty": "Les catégories n'ont pas pu être chargées.",
     "allProducts": "Tous les produits"
@@ -542,35 +543,35 @@
   },
   "about": {
     "eyebrow": "Depuis 1987",
-    "heading": "La qualité qui rassemble.",
-    "subheading": "SWR GmbH est votre partenaire service 360° à Lörrach pour le soudage, l'outillage, les machines et la sécurité au travail, avec un conseil expert, une livraison rapide et un service de réparation en Allemagne, en Suisse et en France.",
+    "heading": "SWR Handelsgesellschaft mbH",
+    "subheading": "Fournisseur industriel à Lörrach pour le soudage, l'outillage, les machines et la sécurité au travail, avec conseil, livraison et service de réparation en Allemagne, en Suisse et en France.",
     "bookConsultation": "Prendre rendez-vous",
-    "explore360": "Découvrir le service 360°",
-    "fallbackIntro": "SWR GmbH fournit depuis près de quatre décennies l'industrie et l'artisanat du triangle frontalier autour de Lörrach en outillage, soudage, machines et équipements de sécurité de qualité professionnelle.",
-    "missionHeading": "Notre mission",
-    "missionBody": "Nous équipons les ateliers, les fabricants et les artisans avec des produits professionnels, et nous y associons les services de conseil, de réparation et de dédouanement qui assurent la continuité de l'exploitation.",
-    "approachHeading": "Notre approche",
-    "approachBody": "Nos ingénieurs et spécialistes d'application connaissent notre gamme sur le bout des doigts. Nous écoutons d'abord, puis nous recommandons exactement ce dont le chantier a besoin, sans vente additionnelle inutile.",
-    "valuesHeading": "Nos valeurs",
+    "explore360": "Voir les services",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH fournit l'industrie et l'artisanat du triangle frontalier autour de Lörrach en soudage, outillage, machines et équipements de sécurité.",
+    "missionHeading": "Ce que nous faisons",
+    "missionBody": "Nous fournissons des produits professionnels et les complétons par du conseil, de la réparation et du dédouanement.",
+    "approachHeading": "Notre façon de travailler",
+    "approachBody": "Nous clarifions le besoin et recommandons des articles adaptés de notre assortiment. Sans vente additionnelle inutile.",
+    "valuesHeading": "Axes principaux",
     "values": {
       "qualityTitle": "Qualité de marque",
-      "qualityBody": "Nous ne stockons que des produits professionnels éprouvés issus de fabricants de référence. Chaque article est conforme aux normes européennes.",
-      "service360Title": "Service 360°",
-      "service360Body": "Du conseil à la livraison, de la réparation sur site au dédouanement, un seul partenaire pour tout le cycle de vie.",
-      "partnershipTitle": "Partenariat durable",
-      "partnershipBody": "Nous construisons des relations qui durent. Nos clients restent parce que nous tenons nos promesses, année après année."
+      "qualityBody": "Nous référons des produits professionnels de fabricants établis pour l'industrie et l'artisanat.",
+      "service360Title": "Services",
+      "service360Body": "Conseil, livraison, réparation et dédouanement complètent la vente de produits.",
+      "partnershipTitle": "Coopération durable",
+      "partnershipBody": "Nous travaillons avec clients et fabricants sur la durée."
     },
-    "ctaHeading": "Parlons de votre prochain projet.",
-    "ctaBody": "Devis ponctuel ou contrat d'approvisionnement à long terme: nos spécialistes sont à votre écoute."
+    "ctaHeading": "Discuter de votre prochain projet",
+    "ctaBody": "Pour devis et questions techniques, contactez notre équipe à Lörrach."
   },
   "contact": {
-    "eyebrow": "Nous sommes à votre disposition",
-    "heading": "Nous contacter",
-    "subheading": "Parlez à notre équipe à Lörrach, pour des devis, du conseil technique, des demandes de réparation ou le dédouanement.",
+    "eyebrow": "Lörrach",
+    "heading": "Contact",
+    "subheading": "Téléphone et e-mail pour devis, questions techniques, demandes de réparation et dédouanement.",
     "reachOutHeading": "Nous joindre",
-    "reachOutBody": "Le téléphone et l'e-mail sont les moyens les plus rapides pour joindre notre équipe pendant les heures d'ouverture. Pour les demandes de réparation urgentes, merci de nous appeler directement.",
+    "reachOutBody": "Pendant les heures d'ouverture, le téléphone et l'e-mail sont les moyens les plus rapides. Pour les demandes de réparation urgentes, merci d'appeler directement.",
     "consultationHeading": "Conseil sur site",
-    "consultationBody": "Nos spécialistes rendent visite aux clients dans tout le triangle frontalier. Prenez rendez-vous et nous nous déplaçons chez vous.",
+    "consultationBody": "Les rendez-vous de conseil sur site dans le triangle frontalier se prennent par téléphone ou e-mail.",
     "cardTitle": "SWR Handelsgesellschaft mbH",
     "company": "SWR Handelsgesellschaft mbH",
     "street": "Industriestraße 1",
@@ -969,10 +970,10 @@
   },
   "catalog": {
     "metaTitle": "Catalogue de documents, manuels, fiches techniques, brochures",
-    "metaDescription": "Catalogues fabricants, manuels, fiches techniques, certificats et fiches de sécurité pour toutes nos marques. Lecture en ligne, téléchargement, impression.",
+    "metaDescription": "Catalogues fabricants, manuels, fiches techniques, certificats et fiches de sécurité pour les marques de notre assortiment. Lecture en ligne ou téléchargement.",
     "eyebrow": "Bibliothèque documentaire",
-    "heading": "Le catalogue. Cherchable.",
-    "subheading": "Catalogues de marques, listes de prix, manuels, fiches techniques, certificats et fiches de sécurité, pour chaque marque que nous distribuons. À lire en ligne, à télécharger ou à imprimer.",
+    "heading": "Catalogues, manuels et fiches techniques",
+    "subheading": "Catalogues fabricants, listes de prix, manuels, fiches techniques, certificats et fiches de sécurité. À lire en ligne, télécharger ou imprimer.",
     "searchPlaceholder": "Rechercher par marque, produit ou mot-clé…",
     "resultsCount": "{count} documents",
     "emptyState": "Aucun document ne correspond à ces filtres.",
@@ -1420,37 +1421,37 @@
     "bookConsultation": "Prendre rendez-vous",
     "requestService": "Demander un service",
     "hub": {
-      "eyebrow": "Service 360°",
-      "heading": "Au-delà du produit.",
-      "subheading": "Conseil, réparation, livraison et dédouanement, quatre piliers pour faire tourner votre activité. Un partenaire, un interlocuteur.",
+      "eyebrow": "Services",
+      "heading": "Conseil, réparation, livraison et dédouanement",
+      "subheading": "Prestations complémentaires pour les achats et l'exploitation. Un interlocuteur à Lörrach.",
       "learnMore": "En savoir plus",
       "bookConsultation": "Prendre rendez-vous"
     },
     "consulting": {
       "eyebrow": "Conseil",
-      "title": "Conseil d'expert",
-      "shortBody": "Choix d'outils, optimisation du flux et conseils techniques par des spécialistes qui connaissent notre catalogue à fond.",
-      "subtitle": "Nos ingénieurs et spécialistes d'application se déplacent chez vous, analysent vos besoins et recommandent exactement ce qu'il faut.",
-      "body1": "Choisir le bon équipement est rarement simple. Paramètres de soudage, géométrie de l'outil, réglementation de sécurité et coût total de possession, une mauvaise décision peut coûter des semaines de production.",
-      "body2": "Notre équipe de spécialistes d'application cumule des décennies d'expérience en soudage, usinage et équipement d'atelier. Nous venons sur place, comprenons votre processus et recommandons la configuration qui convient, sans vente additionnelle.",
-      "body3": "Le conseil est toujours gratuit pour les clients actuels et prospects. Si vous n'êtes pas sûr qu'un produit convienne à votre application, demandez-nous d'abord.",
-      "ctaHeading": "Prêt à discuter ?",
-      "ctaBody": "Réservez 30 minutes de conseil et nous venons chez vous."
+      "title": "Conseil technique",
+      "shortBody": "Aide au choix d'outils, machines et consommables.",
+      "subtitle": "Conseil sur site et par téléphone sur l'assortiment et l'application.",
+      "body1": "Le choix d'un équipement dépend de l'application, des normes et des coûts d'exploitation. Nous aidons à cadrer les options.",
+      "body2": "Notre équipe conseille sur le soudage, l'outillage et l'équipement d'atelier et recommande des articles de l'assortiment.",
+      "body3": "En cas de doute sur l'adéquation d'un produit, demandez-nous avant de commander.",
+      "ctaHeading": "Demander un conseil",
+      "ctaBody": "Contactez-nous par téléphone ou e-mail."
     },
     "repair": {
       "eyebrow": "Réparation",
-      "title": "Portail Service & Réparation",
-      "shortBody": "Les outils et machines sont essentiels à votre production. Notre équipe de service gère les réparations et la maintenance, rapide, fiable, sur site.",
-      "subtitle": "Déposez à Lörrach, envoyez ou faites enlever par notre flotte. Diagnostic sous 24 heures, la plupart des réparations remises en service en 48.",
-      "body1": "L'arrêt de production coûte cher. Quand un poste à souder ou un outil électroportatif tombe en panne, chaque heure compte. C'est pourquoi notre atelier de réparation est en activité toute l'année et la plupart des réparations sont terminées sous 48 heures.",
-      "body2": "Nous entretenons toutes les grandes marques: postes à souder, outils électriques, outils pneumatiques et machines d'atelier. Du matériel de prêt est disponible pour les réparations plus longues afin de maintenir votre production.",
-      "body3": "Des contrats de maintenance préventive sont disponibles pour les clients à forte utilisation. Une inspection régulière prolonge la durée de vie et évite les arrêts non planifiés.",
-      "ctaHeading": "Besoin d'une réparation urgente ?",
-      "ctaBody": "Appelez-nous pour les demandes urgentes et le matériel de prêt.",
+      "title": "Service et réparation",
+      "shortBody": "Réparation et maintenance pour outils et machines de notre assortiment.",
+      "subtitle": "Dépôt à Lörrach, envoi, ou enlèvement sur accord.",
+      "body1": "En cas de panne de poste à souder ou d'outil électroportatif, nous aidons au diagnostic et à la réparation.",
+      "body2": "Nous entretenons des marques courantes en soudage, outillage électrique, air comprimé et machines d'atelier. Du matériel de prêt peut être disponible.",
+      "body3": "Des intervalles de maintenance peuvent être convenus pour un usage régulier.",
+      "ctaHeading": "Demander une réparation",
+      "ctaBody": "Appelez-nous ou ouvrez une demande de service dans votre compte.",
       "categories": {
-        "eyebrow": "Ce que nous réparons",
-        "heading": "Six catégories. Un atelier.",
-        "subheading": "Outils, machines ou équipements d'atelier des marques que nous distribuons ? Nous les entretenons probablement. Cliquez sur une catégorie pour démarrer une demande de réparation.",
+        "eyebrow": "Catégories de réparation",
+        "heading": "Appareils et machines",
+        "subheading": "Choisissez une catégorie pour démarrer une demande de réparation.",
         "requestQuote": "Démarrer une demande",
         "items": {
           "welding": {
@@ -1537,25 +1538,25 @@
     },
     "delivery": {
       "eyebrow": "Livraison",
-      "title": "Livraison rapide, flotte propre",
-      "shortBody": "Nous livrons avec notre propre flotte dans la région de Lörrach et expédions dans toute l'Allemagne. Expédition le jour même pour le stock commandé avant midi.",
-      "subtitle": "Notre flotte de livraison propre rend votre planning prévisible. Expédition le jour même, suivi transparent et aucune mauvaise surprise.",
-      "body1": "Nous exploitons une flotte de véhicules de livraison avec nos propres chauffeurs, les mêmes personnes qui déchargent chez vous connaissent nos produits et peuvent répondre à vos questions sur place.",
-      "body2": "Les articles en stock commandés avant midi sont expédiés le jour même. Les livraisons régionales (Lörrach, Bâle, Mulhouse et alentours) arrivent généralement sous 24 heures.",
-      "body3": "Les expéditions nationales passent par des transporteurs établis avec suivi complet. Pour les projets urgents, nous proposons des options express. Contactez-nous pour coordonner.",
-      "ctaHeading": "Grosse commande ?",
-      "ctaBody": "Renseignez-vous sur les créneaux de livraison planifiés et les envois groupés."
+      "title": "Livraison et expédition",
+      "shortBody": "Livraison régionale autour de Lörrach et expédition nationale.",
+      "subtitle": "Livraison régionale et expédition via des transporteurs établis.",
+      "body1": "Pour la région Lörrach, Bâle et Mulhouse, nous proposons des livraisons sur accord.",
+      "body2": "Les envois nationaux passent par des transporteurs avec suivi.",
+      "body3": "Pour les projets plus importants, créneaux de livraison et envois groupés peuvent être discutés.",
+      "ctaHeading": "Demander une livraison",
+      "ctaBody": "Demandez-nous les options pour votre commande."
     },
     "customs": {
       "eyebrow": "Douane",
-      "title": "Centre de livraison Suisse",
-      "shortBody": "Dédouanement complet pour les clients suisses. Nous préparons les documents, payons les droits et livrons prêts à l'emploi de l'autre côté de la frontière.",
-      "subtitle": "Lörrach est à 10 minutes de la frontière suisse. Nous transformons cette géographie en un véritable service transfrontalier: OEA, TVA correcte, livraison en CHF ou EUR.",
-      "body1": "Le commerce transfrontalier implique nomenclatures tarifaires, justificatifs d'origine préférentielle, récupération de TVA et transport, chaque erreur entraîne des retards ou des coûts imprévus.",
-      "body2": "Pour les clients suisses, nous établissons toutes les déclarations douanières nous-mêmes, avançons les droits et facturons le coût rendu en CHF ou EUR. Votre envoi arrive comme une commande nationale.",
-      "body3": "Nous détenons le statut AEO (opérateur économique agréé) auprès des douanes allemandes, ce qui signifie un traitement plus rapide et moins de contrôles à la frontière.",
-      "ctaHeading": "Expédition vers la Suisse ?",
-      "ctaBody": "Nous nous occupons des papiers. Vous recevez la marchandise.",
+      "title": "Livraisons en Suisse",
+      "shortBody": "Accompagnement pour les livraisons en Suisse et le dédouanement.",
+      "subtitle": "Conseil et traitement pour les envois transfrontaliers.",
+      "body1": "Les livraisons en Suisse exigent des documents et droits corrects. Nous vous accompagnons.",
+      "body2": "Les coûts et le processus dépendent de la marchandise, du poids et de la destination. Les détails sont précisés dans le devis.",
+      "body3": "Pour les questions de douane et de documentation, contactez notre équipe à Lörrach.",
+      "ctaHeading": "Demander une livraison Suisse",
+      "ctaBody": "Contactez-nous avec l'adresse de livraison et la liste d'articles.",
       "facts": {
         "aeo": {
           "value": "AEO-F",

@@ -14,6 +14,7 @@ import { routing } from "@/i18n/routing";
 import type { Locale } from "@/i18n/routing";
 import { getSiteBaseUrl, localeAlternates } from "@/lib/seo";
 import { CustomerSessionProvider } from "@/components/CustomerSessionProvider";
+import { ErpPricingProvider } from "@/components/ErpPricingProvider";
 import { CopilotProvider } from "@/components/copilot/CopilotProvider";
 import { CookieConsentProvider } from "@/components/CookieConsentProvider";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
@@ -108,6 +109,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col bg-surface">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <CustomerSessionProvider isAuthenticated={isAuthenticated}>
+            <ErpPricingProvider isAuthenticated={isAuthenticated}>
             <CookieConsentProvider>
               <CurrencyProvider rates={rates} defaultCurrency={defaultCurrency}>
                 <CartProvider>
@@ -124,6 +126,7 @@ export default async function LocaleLayout({
                 </CartProvider>
               </CurrencyProvider>
             </CookieConsentProvider>
+            </ErpPricingProvider>
           </CustomerSessionProvider>
         </NextIntlClientProvider>
       </body>

@@ -35,7 +35,7 @@ export default function FeatureGrid({
           {item.icon ? (
             <div className="text-primary">{item.icon}</div>
           ) : null}
-          <h3 className="text-sm font-black uppercase tracking-[0.05em] text-primary">
+          <h3 className="text-sm font-black tracking-[-0.01em] text-primary">
             {item.title}
           </h3>
           <p className="text-sm text-on-surface-variant leading-relaxed">

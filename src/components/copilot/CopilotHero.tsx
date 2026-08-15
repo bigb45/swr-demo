@@ -71,7 +71,7 @@ export default function CopilotHero() {
                 className="shrink-0 text-primary-fixed"
                 aria-hidden
               />
-              <h2 className="text-2xl sm:text-4xl font-black uppercase tracking-[-0.02em] leading-tight">
+              <h2 className="text-2xl sm:text-4xl font-black tracking-[-0.02em] leading-tight">
                 {t("home.heading")}
               </h2>
             </div>

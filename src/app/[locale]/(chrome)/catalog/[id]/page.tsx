@@ -97,7 +97,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
         <p className="text-xs font-bold uppercase tracking-[0.12em] text-secondary">
           {doc.brand}
         </p>
-        <h1 className="text-2xl sm:text-3xl font-black uppercase text-primary tracking-[-0.01em]">
+        <h1 className="text-2xl sm:text-3xl font-black text-primary tracking-[-0.01em]">
           {doc.title}
         </h1>
         {doc.description ? (

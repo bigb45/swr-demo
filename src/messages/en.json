@@ -131,8 +131,8 @@
     "suggestionsPdpConsumablesPrompt": "Suggest consumables for {name} in category {category}.",
     "home": {
       "eyebrow": "AI assistant",
-      "heading": "Copilot: your shop entry point",
-      "subtitle": "Find products, clarify specs, or search documents, without menu hunting.",
+      "heading": "Shop assistant",
+      "subtitle": "Find products, clarify specs, or search documents.",
       "inputLabel": "Question for Copilot",
       "placeholder": "e.g. spare part for Makita drill, 1.0 mm welding wire, Swiss customs…",
       "submit": "Ask",
@@ -150,99 +150,87 @@
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Since 1987.",
-      "title": "Who do you call when the welder dies on Friday afternoon?",
-      "subtitle": "We are a family-run industrial supplier in Lörrach. Eleven people who pick up the phone, run the workshop, drive the deliveries, and know the catalog by heart.",
+      "title": "SWR – Quality connects!",
+      "subtitle": "SWR GmbH is more than just a trading company that sells goods.",
+      "tagline": "We are different!",
+      "searchLabel": "Search by product, SKU or photo",
+      "panel": {
+        "heading": "Direct entry",
+        "shop": {
+          "title": "Browse the assortment",
+          "description": "Welding, tools, machines, safety"
+        },
+        "repair": {
+          "title": "Send in a repair",
+          "description": "In-house workshop, loaner on request"
+        },
+        "advice": {
+          "title": "Talk to a specialist",
+          "description": "Lörrach team, direct line"
+        }
+      },
       "openShop": "Open the shop",
       "openCatalog": "Open the catalog"
     },
     "reality": {
-      "heading": "How the shop actually runs",
+      "heading": "At a glance",
       "years": {
         "value": "1987",
-        "label": "Family-run since",
-        "sublabel": "Second-generation owners, same address."
+        "label": "Based in Lörrach since",
+        "sublabel": "Family-run specialist retailer at the same address."
       },
       "skus": {
-        "value": "12,000+",
-        "label": "Active SKUs",
-        "sublabel": "Stocked, picked, and shipped from Lörrach."
+        "value": "Shop",
+        "label": "Live assortment",
+        "sublabel": "Order and collect products from Lörrach."
       },
       "repair": {
-        "value": "48 h",
-        "label": "Average repair turnaround",
-        "sublabel": "Most tools back on your bench in two days."
+        "value": "Service",
+        "label": "Repair and maintenance",
+        "sublabel": "Tools and machines from our range."
       },
       "brands": {
-        "value": "60+",
-        "label": "Brand partners",
-        "sublabel": "Authorised dealer for the manufacturers we carry."
+        "value": "Brands",
+        "label": "Manufacturers we stock",
+        "sublabel": "Welding, tools, machines and workplace safety."
       }
-    },
-    "intents": {
-      "eyebrow": "Start here",
-      "heading": "Tell us what you came for.",
-      "part": {
-        "question": "I need a part now.",
-        "answer": "Browse the live shop with stock and pricing. Same-day dispatch on stock items ordered before noon.",
-        "cta": "Open the shop"
-      },
-      "repair": {
-        "question": "My tool is broken.",
-        "answer": "Drop it off in Lörrach or send it in. Diagnosis within 24 hours, most repairs in 48. Loaner equipment available.",
-        "cta": "Open the repair portal"
-      },
-      "swiss": {
-        "question": "I'm shipping to Switzerland.",
-        "answer": "We file customs ourselves, pay the duties upfront, and invoice the landed cost. AEO-certified.",
-        "cta": "Swiss delivery center"
-      },
-      "catalog": {
-        "question": "I want to read a brand catalog.",
-        "answer": "Searchable library of manufacturer brochures, manuals, datasheets and certificates. Read in your browser.",
-        "cta": "Open the catalog"
-      }
-    },
-    "catalogPreview": {
-      "heading": "Read before you buy.",
-      "subheading": "Brand catalogs from the manufacturers we carry, searchable, filterable, downloadable.",
-      "cta": "Open the document library"
     },
     "partners": {
       "heading": "Our partners",
-      "subheading": "Selected manufacturers from the SWR range. Catalog links follow once the matching supplier documents are approved.",
+      "subheading": "Selected manufacturers from the SWR range.",
       "previous": "Show previous partners",
       "next": "Show more partners"
     },
     "services": {
-      "eyebrow": "Beyond the product",
-      "heading": "Four things we promise.",
-      "subheading": "Specific commitments, not generic value props. If we miss them, tell us and we will make it right.",
+      "eyebrow": "Services",
+      "heading": "Consulting, repair, delivery and customs",
+      "subheading": "Supporting services around purchasing and operations.",
       "cta": "All services",
-      "consulting": "On-site consultation in the three-country region. We respond within 4 working hours and visit at your convenience.",
-      "repair": "In-house workshop with loaner equipment. Most repairs back on your bench within 48 hours of drop-off.",
-      "delivery": "Own delivery fleet on daily routes through Lörrach, Basel and Mulhouse. Stock items dispatched same-day before noon.",
-      "customs": "AEO-certified customs status. We file the paperwork, pay the duties, and invoice the landed cost in CHF or EUR."
+      "consulting": "Technical advice on site and by phone for tools, machines and consumables.",
+      "repair": "Repair and maintenance for equipment and machines from our range.",
+      "delivery": "Regional delivery around Lörrach, Basel and Mulhouse, plus nationwide shipping.",
+      "customs": "Support for deliveries to Switzerland and customs clearance."
     },
     "featured": {
-      "heading": "Recently in the shop",
-      "subheading": "A live slice of the catalog, stocked, shipped, and serviced in-house.",
-      "cta": "Browse the full shop"
+      "heading": "From the shop",
+      "subheading": "A selection from the current assortment.",
+      "cta": "Browse the shop"
     },
     "people": {
-      "eyebrow": "Eleven people. One workshop.",
-      "heading": "When you call, a person answers.",
-      "body": "We are eleven on the team. The same person you talk to about a quote will recognise your voice when you call about the repair. Meet us on the about page.",
-      "cta": "Meet the team",
+      "eyebrow": "Team",
+      "heading": "Sales and service in Lörrach",
+      "body": "Questions about products, quotes or repairs are handled by our team on site. Learn more on the about page.",
+      "cta": "About us",
       "featured": {
-        "name": "SWR Lörrach Team",
-        "role": "Sales & Service",
-        "quote": "If you cannot find what you need in the shop or the catalog, ring us. We probably keep it on the back shelf."
+        "name": "SWR Lörrach",
+        "role": "Sales and service",
+        "quote": "If you cannot find an item, call us. We will help you look it up."
       }
     },
     "workshop": {
-      "eyebrow": "Talk to us",
-      "heading": "We don't auto-respond. A real human reads every email.",
-      "body": "Send us a short brief, ring the workshop, or book a consultation. We reply within one working day with a firm answer or the next question we need to ask.",
+      "eyebrow": "Contact",
+      "heading": "Write or call",
+      "body": "For quotes, technical questions and service requests, reach us by phone or email.",
       "phoneLabel": "Phone",
       "emailLabel": "Email",
       "hoursLabel": "Hours"
@@ -258,8 +246,8 @@
     "searchEmptyClear": "View categories",
     "noFilterResults": "No products match these filters.",
     "browseByCategoryEyebrow": "Assortment",
-    "browseByCategoryTitle": "Start with a category.",
-    "browseByCategoryBody": "The full product range is too large for a useful unfiltered entry point. Choose a category or use search.",
+    "browseByCategoryTitle": "Start by category",
+    "browseByCategoryBody": "Choose a product group or use search.",
     "noImage": "No image available",
     "metaNotFoundTitle": "Product not found",
     "options": {
@@ -320,9 +308,22 @@
     "unavailable": "Unavailable",
     "addToCart": "Add to Cart",
     "selectOptions": "Select options",
+    "variantChoose": "Choose {label}…",
+    "variantUnavailable": "unavailable",
+    "variantSelectForPrice": "Select options to see your price",
+    "variantIncomplete": "Please select all options.",
+    "variantSelectToAdd": "Make a selection to add this product to cart.",
+    "priceLoading": "Loading price…",
+    "priceUpdating": "Updating price…",
+    "discontinued": "Discontinued",
     "requestQuote": "Request Quote",
     "description": "Product Description",
     "specifications": "Technical Specifications",
+    "productInformation": "Product information",
+    "showMoreFeatures": "Show more item features",
+    "showFewerFeatures": "Show fewer item features",
+    "copyValue": "Copy",
+    "copied": "Copied",
     "weight": "Weight (Bare)",
     "productType": "Product Type",
     "specs": {
@@ -375,8 +376,8 @@
     "metaTitle": "Shop",
     "metaDescription": "Assortment overview for welding, tools, machinery, safety, and workshop supplies.",
     "eyebrow": "SWR assortment",
-    "heading": "Choose your product group.",
-    "subheading": "The shop starts with main categories so you do not land in an unbounded full-catalog listing.",
+    "heading": "Product groups",
+    "subheading": "Choose a category or use search to find products.",
     "sidebarHeading": "Categories",
     "empty": "Categories could not be loaded.",
     "allProducts": "All products"
@@ -542,35 +543,35 @@
   },
   "about": {
     "eyebrow": "Since 1987",
-    "heading": "Quality Connects.",
-    "subheading": "SWR GmbH is your 360° service partner in Lörrach for welding, tools, machines, and safety equipment, with expert consultation, fast delivery, and repair service across Germany, Switzerland, and France.",
-    "bookConsultation": "Book a Consultation",
-    "explore360": "Explore 360° Service",
-    "fallbackIntro": "SWR GmbH has supplied industry and trade in the three-country region around Lörrach with premium tools, welding equipment, machines, and workplace safety gear for nearly four decades.",
-    "missionHeading": "Our Mission",
-    "missionBody": "We equip workshops, manufacturers, and tradespeople with professional-grade products, and pair them with the consultation, repair, and customs services that keep operations running.",
-    "approachHeading": "Our Approach",
-    "approachBody": "Our engineers and application specialists know our assortment inside out. We listen first, then recommend exactly what the job needs, no upselling, no shortcuts.",
-    "valuesHeading": "What We Stand For",
+    "heading": "SWR Handelsgesellschaft mbH",
+    "subheading": "Industrial supplier in Lörrach for welding equipment, tools, machines and workplace safety, with consulting, delivery and repair service across Germany, Switzerland and France.",
+    "bookConsultation": "Book a consultation",
+    "explore360": "View services",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH supplies industry and trade in the three-country region around Lörrach with welding equipment, tools, machines and workplace safety gear.",
+    "missionHeading": "What we do",
+    "missionBody": "We supply professional products and complement them with consulting, repair and customs clearance.",
+    "approachHeading": "How we work",
+    "approachBody": "We clarify the requirement and recommend suitable items from our range. No unnecessary upselling.",
+    "valuesHeading": "Focus areas",
     "values": {
-      "qualityTitle": "Premium Brand Quality",
-      "qualityBody": "We stock only audited, professional-grade products from leading manufacturers. Every SKU meets the relevant European standards.",
-      "service360Title": "360° Service",
-      "service360Body": "From consultation and delivery to on-site repair and customs clearance, a single partner for the entire lifecycle.",
-      "partnershipTitle": "Long-term Partnership",
-      "partnershipBody": "We build relationships that last. Our customers stay because we deliver on what we promise, year after year."
+      "qualityTitle": "Brand quality",
+      "qualityBody": "We stock professional products from established manufacturers for industrial and trade use.",
+      "service360Title": "Services",
+      "service360Body": "Consulting, delivery, repair and customs clearance complement product sales.",
+      "partnershipTitle": "Long-term cooperation",
+      "partnershipBody": "We work with customers and manufacturers over longer periods."
     },
-    "ctaHeading": "Let's talk about your next project.",
-    "ctaBody": "Whether you need a single quote or a long-term supply agreement, our specialists are ready to help."
+    "ctaHeading": "Discuss your next project",
+    "ctaBody": "For quotes and technical questions, contact our team in Lörrach."
   },
   "contact": {
-    "eyebrow": "We're here to help",
-    "heading": "Get in Touch",
-    "subheading": "Talk to our team in Lörrach for quotes, technical consultation, repair requests, or customs advice.",
-    "reachOutHeading": "Reach out",
-    "reachOutBody": "Phone and email are the fastest way to reach our team during business hours. For urgent repair requests, please call us directly.",
+    "eyebrow": "Lörrach",
+    "heading": "Contact",
+    "subheading": "Phone and email for quotes, technical questions, repair requests and customs clearance.",
+    "reachOutHeading": "How to reach us",
+    "reachOutBody": "During business hours, phone and email are the fastest ways to reach us. For urgent repair requests, please call directly.",
     "consultationHeading": "On-site consultation",
-    "consultationBody": "Our specialists visit customers throughout the three-country region. Book a consultation and we'll come to you.",
+    "consultationBody": "Appointments for on-site advice in the three-country region can be arranged by phone or email.",
     "cardTitle": "SWR Handelsgesellschaft mbH",
     "company": "SWR Handelsgesellschaft mbH",
     "street": "Industriestraße 1",
@@ -968,11 +969,11 @@
     "loading": "Loading watchlist…"
   },
   "catalog": {
-    "metaTitle": "Document Catalog, manuals, datasheets, brochures",
-    "metaDescription": "Browse manufacturer catalogs, manuals, datasheets, certificates, and safety sheets for the brands we carry. Search, filter, and read PDFs in your browser.",
-    "eyebrow": "Document Library",
-    "heading": "The catalog. Searchable.",
-    "subheading": "Brand catalogs, price lists, manuals, datasheets, certificates and safety sheets, for every brand we carry. Read in your browser, download, or print.",
+    "metaTitle": "Document catalog, manuals, datasheets, brochures",
+    "metaDescription": "Manufacturer catalogs, manuals, datasheets, certificates and safety sheets for brands we stock. Read in the browser or download.",
+    "eyebrow": "Document library",
+    "heading": "Catalogs, manuals and datasheets",
+    "subheading": "Manufacturer catalogs, price lists, manuals, datasheets, certificates and safety sheets. Read in the browser, download or print.",
     "searchPlaceholder": "Search by brand, product, or keyword…",
     "resultsCount": "{count} documents",
     "emptyState": "No documents match these filters.",
@@ -1420,37 +1421,37 @@
     "bookConsultation": "Book a Consultation",
     "requestService": "Request Service",
     "hub": {
-      "eyebrow": "360° Service",
-      "heading": "Beyond the Product.",
-      "subheading": "Consultation, repair, delivery, and customs clearance, four pillars that keep your operation running. One partner, one point of contact.",
-      "learnMore": "Learn More",
-      "bookConsultation": "Book a Consultation"
+      "eyebrow": "Services",
+      "heading": "Consulting, repair, delivery and customs clearance",
+      "subheading": "Supporting services for purchasing and operations. One point of contact in Lörrach.",
+      "learnMore": "Learn more",
+      "bookConsultation": "Book a consultation"
     },
     "consulting": {
       "eyebrow": "Consulting",
-      "title": "Expert Consultation",
-      "shortBody": "Tool selection, workflow optimization, and technical application advice from specialists who know our catalog inside out.",
-      "subtitle": "Our engineers and application specialists visit your site, analyze your requirements, and recommend exactly what the job needs.",
-      "body1": "Choosing the right equipment is rarely straightforward. Welding parameters, tool geometry, safety regulations, and total cost of ownership all factor in, and one wrong decision can cost weeks of production.",
-      "body2": "Our team of application specialists has decades of combined experience across welding, machining, and workshop equipment. We visit your site, understand your process, and recommend the exact setup that fits, without upselling.",
-      "body3": "Consultation is always free for existing and prospective customers. If you're unsure whether a product is right for your application, ask us first.",
-      "ctaHeading": "Ready to talk?",
-      "ctaBody": "Book a 30-minute consultation and we'll come to you."
+      "title": "Technical consulting",
+      "shortBody": "Help selecting tools, machines and consumables.",
+      "subtitle": "Advice on site and by phone for assortment and application.",
+      "body1": "Choosing equipment depends on the application, standards and operating costs. We help narrow the options.",
+      "body2": "Our team advises on welding, tools and workshop equipment and recommends items from the assortment.",
+      "body3": "If you are unsure whether a product fits, ask us before ordering.",
+      "ctaHeading": "Request consulting",
+      "ctaBody": "Contact us by phone or email."
     },
     "repair": {
       "eyebrow": "Repair",
-      "title": "Service & Repair Portal",
-      "shortBody": "Tools and machines are critical to your production. Our service team handles repairs and maintenance, fast, reliable, and on-site.",
-      "subtitle": "Drop off in Lörrach, send it in, or have us pick it up. Diagnostics within 24 hours, most repairs back on your bench in 48.",
-      "body1": "Downtime is expensive. When a welding machine or power tool fails, every hour matters. Which is why our repair workshop is staffed year-round and most repairs are completed within 48 hours.",
-      "body2": "We service all major brands, welding equipment, power tools, pneumatic tools, and workshop machines. Loaner equipment is available for longer repairs to keep your production moving.",
-      "body3": "Preventive maintenance contracts are available for high-usage customers. Regular inspection extends service life and prevents unplanned downtime.",
-      "ctaHeading": "Need a repair now?",
-      "ctaBody": "Call us for urgent service requests and loaner equipment.",
+      "title": "Service and repair",
+      "shortBody": "Repair and maintenance for tools and machines from our range.",
+      "subtitle": "Drop-off in Lörrach, shipment, or pickup by arrangement.",
+      "body1": "When welding equipment or power tools fail, we support diagnosis and repair.",
+      "body2": "We service common brands in welding, power tools, compressed air and workshop machines. Loaner equipment may be available.",
+      "body3": "Maintenance intervals can be arranged for regular use.",
+      "ctaHeading": "Request a repair",
+      "ctaBody": "Call us or open a service request in your account.",
       "categories": {
-        "eyebrow": "What we repair",
-        "heading": "Six categories. One workshop.",
-        "subheading": "If it's tools, machines, or workshop equipment from a brand we carry, we probably service it. Click any category to start a repair request.",
+        "eyebrow": "Repair categories",
+        "heading": "Equipment and machines",
+        "subheading": "Choose a category to start a repair request.",
         "requestQuote": "Start a request",
         "items": {
           "welding": {
@@ -1537,25 +1538,25 @@
     },
     "delivery": {
       "eyebrow": "Delivery",
-      "title": "Fast Delivery, Own Fleet",
-      "shortBody": "We deliver with our own fleet across the Lörrach region and ship nationwide. Same-day dispatch for stock items ordered before noon.",
-      "subtitle": "Our own delivery fleet keeps your schedule predictable. Same-day dispatch, transparent tracking, and no third-party surprises.",
-      "body1": "We maintain a fleet of delivery vehicles operated by our own drivers, the same people who unload at your facility know our products and can answer questions on the spot.",
-      "body2": "Stock items ordered before noon ship same-day. Regional deliveries (Lörrach, Basel, Mulhouse and surrounding areas) typically arrive within 24 hours.",
-      "body3": "Nationwide shipments go via established freight partners with full tracking. For urgent projects we offer express delivery options. Contact us to coordinate.",
-      "ctaHeading": "Have a large order?",
-      "ctaBody": "Ask us about scheduled delivery windows and bulk shipping."
+      "title": "Delivery and shipping",
+      "shortBody": "Regional delivery around Lörrach and nationwide shipping.",
+      "subtitle": "Regional delivery and shipping via established freight partners.",
+      "body1": "For the Lörrach, Basel and Mulhouse area we offer deliveries by arrangement.",
+      "body2": "Nationwide shipments go via freight partners with tracking.",
+      "body3": "For larger projects, delivery windows and bulk shipping can be discussed.",
+      "ctaHeading": "Ask about delivery",
+      "ctaBody": "Ask us about options for your order."
     },
     "customs": {
       "eyebrow": "Customs",
-      "title": "Swiss Delivery Center",
-      "shortBody": "Complete customs handling for Swiss customers. We file paperwork, pay duties, and deliver ready-for-use across the border.",
-      "subtitle": "Lörrach sits 10 minutes from the Swiss border. We turn that geography into a true cross-border service, AEO-cleared, VAT-correct, delivered in CHF or EUR.",
-      "body1": "Cross-border trade involves tariff codes, preferential origin documentation, VAT recovery, and freight forwarding, any mistake triggers delays or unexpected costs.",
-      "body2": "For Swiss customers we file all customs declarations ourselves, pay duties upfront, and invoice the landed cost in CHF or EUR. Your shipment arrives as if it were a domestic order.",
-      "body3": "We hold the AEO (Authorised Economic Operator) status with German customs, which means faster processing and fewer inspections at the border.",
-      "ctaHeading": "Shipping to Switzerland?",
-      "ctaBody": "We handle the paperwork. You get the goods.",
+      "title": "Deliveries to Switzerland",
+      "shortBody": "Support for deliveries to Switzerland and customs clearance.",
+      "subtitle": "Advice and handling for cross-border shipments.",
+      "body1": "Deliveries to Switzerland require correct paperwork and duties. We help with that.",
+      "body2": "Costs and process depend on goods, weight and destination. We clarify details in the quote.",
+      "body3": "For customs and documentation questions, contact our team in Lörrach.",
+      "ctaHeading": "Ask about Swiss delivery",
+      "ctaBody": "Contact us with the delivery address and item list.",
       "facts": {
         "aeo": {
           "value": "AEO-F",

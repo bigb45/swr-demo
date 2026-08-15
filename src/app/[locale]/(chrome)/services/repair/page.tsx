@@ -67,7 +67,7 @@ export default async function Page({ params }: PageProps) {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
               {t("categories.eyebrow")}
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black uppercase text-primary tracking-[-0.02em]">
+            <h2 className="text-2xl sm:text-3xl font-black text-primary tracking-[-0.02em]">
               {t("categories.heading")}
             </h2>
             <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -95,7 +95,7 @@ export default async function Page({ params }: PageProps) {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
               {t("timeline.eyebrow")}
             </p>
-            <h2 className="text-2xl sm:text-3xl font-black uppercase text-primary tracking-[-0.02em]">
+            <h2 className="text-2xl sm:text-3xl font-black text-primary tracking-[-0.02em]">
               {t("timeline.heading")}
             </h2>
           </header>
@@ -134,7 +134,7 @@ export default async function Page({ params }: PageProps) {
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <div>
-            <h3 className="text-xl font-black uppercase tracking-[-0.01em]">
+            <h3 className="text-xl font-black tracking-[-0.01em]">
               {t("ctaHeading")}
             </h3>
             <p className="text-sm text-white/80 mt-2 max-w-xl">{t("ctaBody")}</p>

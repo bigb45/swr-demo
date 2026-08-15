@@ -38,7 +38,7 @@ export default function ShopCategoryGrid({
             <ShopCategoryIcon icon={category.icon} className="h-9 w-9" />
           </span>
           <span className="mt-6 flex items-center justify-between gap-4">
-            <span className="text-base font-black uppercase tracking-[-0.01em] text-primary">
+            <span className="text-base font-black tracking-[-0.01em] text-primary">
               {category.name}
             </span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary transition-transform group-hover:translate-x-1" aria-hidden="true">
@@ -64,7 +64,7 @@ export default function ShopCategoryGrid({
             </svg>
           </span>
           <span className="mt-6 flex items-center justify-between gap-4">
-            <span className="text-base font-black uppercase tracking-[-0.01em] text-primary">
+            <span className="text-base font-black tracking-[-0.01em] text-primary">
               {allProductsLabel}
             </span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-secondary transition-transform group-hover:translate-x-1" aria-hidden="true">

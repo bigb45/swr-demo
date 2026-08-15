@@ -68,8 +68,8 @@ export default async function Page({ params }: PageProps) {
     <>
       <Hero
         eyebrow={t("eyebrow")}
-        title={page?.content_heading ?? page?.title ?? t("heading")}
-        subtitle={page?.meta_description ?? t("subheading")}
+        title={t("heading")}
+        subtitle={t("subheading")}
       />
 
       <div className="swr-page-shell py-12 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-10">

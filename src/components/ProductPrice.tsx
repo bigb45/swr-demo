@@ -2,14 +2,18 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { useCurrency } from "./CurrencyProvider";
-import { useCustomerSession } from "./CustomerSessionProvider";
+import { formatErpPrice } from "@/lib/erp-shared";
 
 interface ProductPriceProps {
   eurPrice: number;
   exclVatLabel: string;
   priceOnRequestLabel: string;
   className?: string;
+  /**
+   * When set, formats `eurPrice` in this ISO currency via Intl (ERP contract
+   * amounts). Magento catalog prices are never displayed.
+   */
+  currency?: string | null;
 }
 
 export default function ProductPrice({
@@ -17,13 +21,12 @@ export default function ProductPrice({
   exclVatLabel,
   priceOnRequestLabel,
   className = "",
+  currency = null,
 }: ProductPriceProps) {
-  const { isAuthenticated } = useCustomerSession();
-  const { formatPrice } = useCurrency();
   const locale = useLocale();
   const t = useTranslations("products");
 
-  if (!isAuthenticated && eurPrice > 0) {
+  if (!currency) {
     return (
       <span className={`inline-flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-2 ${className}`}>
         <span className="text-sm font-normal text-on-surface-variant">
@@ -39,7 +42,7 @@ export default function ProductPrice({
     );
   }
 
-  if (eurPrice <= 0) {
+  if (eurPrice <= 0 || !Number.isFinite(eurPrice)) {
     return (
       <span className={`text-on-surface-variant ${className}`}>
         {priceOnRequestLabel}
@@ -47,9 +50,11 @@ export default function ProductPrice({
     );
   }
 
+  const formatted = formatErpPrice(eurPrice, currency, locale);
+
   return (
     <span className={className}>
-      {formatPrice(eurPrice, locale)}
+      {formatted}
       {exclVatLabel ? (
         <span className="text-sm font-normal text-on-surface-variant ml-2">
           {exclVatLabel}

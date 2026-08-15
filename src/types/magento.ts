@@ -53,16 +53,108 @@ export interface MagentoStockItem {
   max_sale_qty?: number;
 }
 
+/** Enventa ERP price object inside `unified_catalog_data`. */
+export interface MagentoErpPriceData {
+  net_amount?: number | null;
+  gross_amount?: number | null;
+  currency?: string | null;
+  tax_rate?: number | null;
+  tax_amount?: number | null;
+  is_special_price?: boolean | null;
+  quantity_unit?: string | null;
+  customer_id?: number | null;
+  article_id?: string | null;
+  quantity?: number | null;
+}
+
+/** Enventa ERP stock object inside `unified_catalog_data`. */
+export interface MagentoErpStockData {
+  article_id?: string | null;
+  quantity_available?: number | null;
+  quantity_available_plan?: number | null;
+  quantity_stock_level?: number | null;
+  quantity_reserved?: number | null;
+  quantity_ordered?: number | null;
+  quantity_in_production?: number | null;
+  quantity_unit?: string | null;
+  storage_id?: number | null;
+  storage_group?: string | null;
+  is_commerce_parts_list?: boolean | null;
+}
+
+export interface MagentoPimAttribute {
+  code: string;
+  value: string;
+}
+
+/**
+ * One curated display feature. Magento returns these double-encoded: the
+ * container is an array whose elements are each a JSON string.
+ * `teia_pim_specs` uses `label` + `position`; `pim.features` uses `name` and
+ * omits `position` entirely.
+ */
+export interface MagentoPimFeature {
+  code: string;
+  label?: string | null;
+  name?: string | null;
+  values?: string[] | string | null;
+  position?: number | null;
+}
+
+/** A JSON-encoded array, an array of JSON-encoded elements, or plain objects. */
+export type MagentoMaybeEncodedList<T> = Array<T | string> | string;
+
+export interface MagentoPimImage {
+  url?: string | null;
+  thumbnail_url?: string | null;
+  normalized_url?: string | null;
+  type?: string | null;
+  label?: string | null;
+  position?: number | null;
+}
+
+export interface MagentoPimProductData {
+  name?: string | null;
+  internal_ref?: string | null;
+  description?: string | null;
+  is_discontinued?: boolean | null;
+  attributes?: MagentoMaybeEncodedList<MagentoPimAttribute> | null;
+  images?: MagentoMaybeEncodedList<MagentoPimImage> | null;
+  /** Curated, display-ready subset of `attributes`. */
+  features?: MagentoMaybeEncodedList<MagentoPimFeature> | null;
+}
+
 /**
  * Enventa unified-catalog payload Magento may attach when the product REST
  * call includes `X-Enventa-Customer-Id`. Fields are optional — guests and
  * SKUs without an ERP match omit the whole object or leave values null.
  */
 export interface MagentoUnifiedCatalogData {
-  erp_price?: number | null;
-  erp_stock?: boolean | number | null;
-  erp_currency?: string | null;
-  [key: string]: unknown;
+  sku?: string | null;
+  internal_ref?: string | null;
+  fetched_at?: string | null;
+  errors?: string[] | null;
+  pim?: MagentoPimProductData | null;
+  erp_price?: MagentoErpPriceData | null;
+  erp_stock?: MagentoErpStockData | null;
+}
+
+/** One selectable value on a Magento configurable product option. */
+export interface MagentoConfigurableProductOptionValue {
+  value_index: number;
+}
+
+/**
+ * Magento configurable attribute option on a parent product
+ * (`extension_attributes.configurable_product_options`).
+ */
+export interface MagentoConfigurableProductOption {
+  id: number;
+  attribute_id: string;
+  label: string;
+  position: number;
+  values: MagentoConfigurableProductOptionValue[];
+  product_id?: number;
 }
 
 /**
@@ -76,7 +168,37 @@ export interface MagentoProductExtensionAttributes {
   website_ids?: number[];
   stock_item?: MagentoStockItem;
   salable_quantity?: unknown;
-  unified_catalog_data?: MagentoUnifiedCatalogData;
+  unified_catalog_data?: MagentoUnifiedCatalogData | string;
+  teia_pim_specs?: MagentoMaybeEncodedList<MagentoPimFeature>;
+  configurable_product_options?: MagentoConfigurableProductOption[];
+  configurable_product_links?: number[];
+}
+
+/**
+ * Configurable option selection for cart add
+ * (`product_option.extension_attributes.configurable_item_options`).
+ * `option_id` is the Magento attribute id as a string.
+ */
+export interface MagentoConfigurableItemOption {
+  option_id: string;
+  option_value: number;
+}
+
+/** Magento EAV product attribute (for configurable value labels). */
+export interface MagentoProductAttributeOption {
+  label: string;
+  value: string;
+}
+
+export interface MagentoProductAttribute {
+  attribute_id: number;
+  attribute_code: string;
+  default_frontend_label?: string;
+  options?: MagentoProductAttributeOption[];
+}
+
+export interface MagentoProductAttributeList {
+  items: MagentoProductAttribute[];
 }
 
 /** A single selectable value of a select-type customizable option. */

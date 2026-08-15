@@ -33,7 +33,7 @@ export default function ServiceCard({
           {eyebrow}
         </p>
       ) : null}
-      <h3 className="text-xl font-black uppercase tracking-[-0.01em] text-primary">
+      <h3 className="text-xl font-black tracking-[-0.01em] text-primary">
         {title}
       </h3>
       <p className="text-sm text-on-surface-variant leading-relaxed flex-1">

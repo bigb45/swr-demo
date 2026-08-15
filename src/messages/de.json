@@ -131,8 +131,8 @@
     "suggestionsPdpConsumablesPrompt": "Schlage Verbrauchsmaterial für {name} in der Kategorie {category} vor.",
     "home": {
       "eyebrow": "KI-Assistent",
-      "heading": "Copilot: Ihr Einstieg ins Sortiment",
-      "subtitle": "Produkte finden, Spezifikationen klären oder Dokumente suchen, ohne Menü-Chaos.",
+      "heading": "Shop-Assistent",
+      "subtitle": "Produkte finden, Spezifikationen klären oder Dokumente suchen.",
       "inputLabel": "Frage an Copilot",
       "placeholder": "z. B. Ersatzteil für Makita-Bohrer, Schweißdraht 1,0 mm, Zollabfertigung Schweiz…",
       "submit": "Fragen",
@@ -150,99 +150,87 @@
   "home": {
     "hero": {
       "eyebrow": "Lörrach. Seit 1987.",
-      "title": "Wen rufen Sie an, wenn das Schweißgerät am Freitagnachmittag stehen bleibt?",
-      "subtitle": "Wir sind ein familiengeführter Industriefachhandel in Lörrach. Elf Personen, die ans Telefon gehen, die Werkstatt führen, die Auslieferung fahren und das Sortiment im Kopf haben.",
+      "title": "SWR – Qualität verbindet!",
+      "subtitle": "SWR GmbH ist mehr als nur ein Handelsunternehmen, das Waren verkauft.",
+      "tagline": "Wir sind anders!",
+      "searchLabel": "Suche nach Produkt, Artikelnummer oder Foto",
+      "panel": {
+        "heading": "Direkter Einstieg",
+        "shop": {
+          "title": "Sortiment durchsuchen",
+          "description": "Schweißen, Werkzeuge, Maschinen, Schutz"
+        },
+        "repair": {
+          "title": "Reparatur einsenden",
+          "description": "Eigene Werkstatt, Leihgerät auf Anfrage"
+        },
+        "advice": {
+          "title": "Fachberatung sprechen",
+          "description": "Team Lörrach, direkte Leitung"
+        }
+      },
       "openShop": "Zum Shop",
       "openCatalog": "Zum Katalog"
     },
     "reality": {
-      "heading": "So läuft der Betrieb",
+      "heading": "Auf einen Blick",
       "years": {
         "value": "1987",
-        "label": "Familiengeführt seit",
-        "sublabel": "Zweite Generation, gleicher Standort."
+        "label": "In Lörrach seit",
+        "sublabel": "Familiengeführter Fachhandel am gleichen Standort."
       },
       "skus": {
-        "value": "12.000+",
-        "label": "Aktive Artikel",
-        "sublabel": "Bevorratet, kommissioniert und versendet aus Lörrach."
+        "value": "Shop",
+        "label": "Live-Sortiment",
+        "sublabel": "Artikel aus Lörrach bestellen und abholen."
       },
       "repair": {
-        "value": "48 Std.",
-        "label": "Reparatur-Durchlaufzeit",
-        "sublabel": "Die meisten Werkzeuge nach zwei Tagen wieder in der Werkstatt."
+        "value": "Service",
+        "label": "Reparatur und Wartung",
+        "sublabel": "Werkzeuge und Maschinen aus unserem Sortiment."
       },
       "brands": {
-        "value": "60+",
-        "label": "Markenpartner",
-        "sublabel": "Autorisierter Händler für die Hersteller in unserem Sortiment."
+        "value": "Marken",
+        "label": "Hersteller im Sortiment",
+        "sublabel": "Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz."
       }
-    },
-    "intents": {
-      "eyebrow": "Hier starten",
-      "heading": "Sagen Sie uns, weshalb Sie wirklich hier sind.",
-      "part": {
-        "question": "Ich brauche jetzt ein Teil.",
-        "answer": "Im Live-Shop mit Lagerbestand und Preisen stöbern. Versand am selben Tag bei Bestellung bis 12 Uhr.",
-        "cta": "Zum Shop"
-      },
-      "repair": {
-        "question": "Mein Werkzeug ist kaputt.",
-        "answer": "In Lörrach abgeben oder einsenden. Diagnose innerhalb von 24 Stunden, die meisten Reparaturen in 48. Leihgeräte verfügbar.",
-        "cta": "Zum Reparaturportal"
-      },
-      "swiss": {
-        "question": "Ich liefere in die Schweiz.",
-        "answer": "Wir verzollen selbst, legen die Abgaben aus und stellen den Endpreis frei Haus. AEO-zertifiziert.",
-        "cta": "Schweiz-Center"
-      },
-      "catalog": {
-        "question": "Ich möchte einen Markenkatalog lesen.",
-        "answer": "Durchsuchbare Bibliothek mit Herstellerprospekten, Anleitungen, Datenblättern und Zertifikaten, direkt im Browser.",
-        "cta": "Zum Katalog"
-      }
-    },
-    "catalogPreview": {
-      "heading": "Erst lesen, dann kaufen.",
-      "subheading": "Markenkataloge der Hersteller in unserem Sortiment, durchsuchbar, filterbar, herunterladbar.",
-      "cta": "Zur Dokumentenbibliothek"
     },
     "partners": {
       "heading": "Unsere Partner",
-      "subheading": "Ausgewählte Hersteller aus dem SWR Sortiment. Katalogverlinkungen folgen, sobald die passenden Herstellerunterlagen freigegeben sind.",
+      "subheading": "Ausgewählte Hersteller aus dem SWR-Sortiment.",
       "previous": "Vorherige Partner anzeigen",
       "next": "Weitere Partner anzeigen"
     },
     "services": {
-      "eyebrow": "Mehr als das Produkt",
-      "heading": "Vier Versprechen.",
-      "subheading": "Konkrete Zusagen, keine Marketingfloskeln. Wenn wir sie nicht einhalten, sagen Sie uns Bescheid und wir bringen es in Ordnung.",
+      "eyebrow": "Services",
+      "heading": "Beratung, Reparatur, Lieferung und Zoll",
+      "subheading": "Ergänzende Leistungen rund um Einkauf und Betrieb.",
       "cta": "Alle Services",
-      "consulting": "Vor-Ort-Beratung im Dreiländereck. Antwort innerhalb von 4 Arbeitsstunden, Termine zu Ihrer Zeit.",
-      "repair": "Eigene Werkstatt mit Leihgeräten. Die meisten Reparaturen sind innerhalb von 48 Stunden nach Abgabe wieder einsatzbereit.",
-      "delivery": "Eigener Fuhrpark mit Tagesrouten in Lörrach, Basel und Mulhouse. Lagerware bis 12 Uhr, Versand am selben Tag.",
-      "customs": "AEO-zertifizierter Zollstatus. Wir filen die Papiere, legen die Zölle aus und stellen den Endpreis in CHF oder EUR."
+      "consulting": "Fachberatung vor Ort und am Telefon für die Auswahl von Werkzeugen, Maschinen und Verbrauchsmaterial.",
+      "repair": "Reparatur und Wartung für Geräte und Maschinen aus unserem Sortiment.",
+      "delivery": "Lieferung in der Region Lörrach, Basel und Mulhouse sowie Versand deutschlandweit.",
+      "customs": "Unterstützung bei Lieferungen in die Schweiz und Zollabwicklung."
     },
     "featured": {
       "heading": "Aktuell aus dem Shop",
-      "subheading": "Ein Live-Ausschnitt aus dem Sortiment, bevorratet, versendet und im eigenen Haus serviciert.",
-      "cta": "Kompletten Shop durchsuchen"
+      "subheading": "Ein Ausschnitt aus dem aktuellen Sortiment.",
+      "cta": "Zum Shop"
     },
     "people": {
-      "eyebrow": "Elf Personen. Eine Werkstatt.",
-      "heading": "Wenn Sie anrufen, geht ein Mensch ran.",
-      "body": "Wir sind elf im Team. Die Person, mit der Sie über das Angebot sprechen, erkennt Ihre Stimme bei der Reparatur wieder. Lernen Sie uns auf der Über-uns-Seite kennen.",
-      "cta": "Zum Team",
+      "eyebrow": "Team",
+      "heading": "Verkauf und Service in Lörrach",
+      "body": "Fragen zu Artikeln, Angeboten oder Reparaturen beantwortet unser Team vor Ort. Mehr über das Unternehmen erfahren Sie auf der Über-uns-Seite.",
+      "cta": "Über uns",
       "featured": {
-        "name": "SWR Lörrach Team",
-        "role": "Verkauf & Service",
-        "quote": "Wenn Sie im Shop oder im Katalog nicht finden, was Sie brauchen, rufen Sie an. Wahrscheinlich liegt es bei uns im hinteren Regal."
+        "name": "SWR Lörrach",
+        "role": "Verkauf und Service",
+        "quote": "Wenn Sie einen Artikel nicht finden, rufen Sie uns an. Wir helfen bei der Suche."
       }
     },
     "workshop": {
-      "eyebrow": "Sprechen Sie uns an",
-      "heading": "Keine Auto-Antworten. Jede Mail liest ein Mensch.",
-      "body": "Schreiben Sie uns kurz, rufen Sie die Werkstatt an oder vereinbaren Sie eine Beratung. Antwort innerhalb eines Arbeitstags, mit einer verbindlichen Aussage oder der nächsten Rückfrage.",
+      "eyebrow": "Kontakt",
+      "heading": "Schreiben oder anrufen",
+      "body": "Für Angebote, technische Fragen und Serviceanfragen erreichen Sie uns telefonisch oder per E-Mail.",
       "phoneLabel": "Telefon",
       "emailLabel": "E-Mail",
       "hoursLabel": "Öffnungszeiten"
@@ -258,8 +246,8 @@
     "searchEmptyClear": "Kategorien anzeigen",
     "noFilterResults": "Keine Produkte entsprechen diesen Filtern.",
     "browseByCategoryEyebrow": "Sortiment",
-    "browseByCategoryTitle": "Starten Sie mit einer Kategorie.",
-    "browseByCategoryBody": "Der komplette Produktbestand ist zu groß für einen sinnvollen Einstieg ohne Filter. Wählen Sie eine Warengruppe oder nutzen Sie die Suche.",
+    "browseByCategoryTitle": "Nach Kategorie starten",
+    "browseByCategoryBody": "Wählen Sie eine Warengruppe oder nutzen Sie die Suche.",
     "noImage": "Kein Bild verfügbar",
     "metaNotFoundTitle": "Produkt nicht gefunden",
     "options": {
@@ -320,9 +308,22 @@
     "unavailable": "Nicht verfügbar",
     "addToCart": "In den Warenkorb",
     "selectOptions": "Optionen auswählen",
+    "variantChoose": "{label} wählen…",
+    "variantUnavailable": "nicht verfügbar",
+    "variantSelectForPrice": "Optionen wählen, um Ihren Preis zu sehen",
+    "variantIncomplete": "Bitte alle Optionen auswählen.",
+    "variantSelectToAdd": "Auswahl treffen, um das Produkt in den Warenkorb zu legen.",
+    "priceLoading": "Preis wird geladen…",
+    "priceUpdating": "Preis wird aktualisiert…",
+    "discontinued": "Ausgelaufen",
     "requestQuote": "Angebot anfordern",
     "description": "Produktbeschreibung",
     "specifications": "Technische Spezifikationen",
+    "productInformation": "Produktinformationen",
+    "showMoreFeatures": "Mehr Artikelmerkmale anzeigen",
+    "showFewerFeatures": "Weniger Artikelmerkmale anzeigen",
+    "copyValue": "Kopieren",
+    "copied": "Kopiert",
     "weight": "Gewicht (ohne Zubehör)",
     "productType": "Produkttyp",
     "specs": {
@@ -375,8 +376,8 @@
     "metaTitle": "Shop",
     "metaDescription": "Sortimentsübersicht für Schweißtechnik, Werkzeuge, Maschinen, Arbeitsschutz und Werkstattbedarf.",
     "eyebrow": "SWR Sortiment",
-    "heading": "Wählen Sie Ihre Warengruppe.",
-    "subheading": "Der Shop beginnt mit den Hauptkategorien. So landen Sie nicht in einer unüberschaubaren Vollsortimentsliste, sondern direkt im passenden Bereich.",
+    "heading": "Produktgruppen",
+    "subheading": "Wählen Sie eine Warengruppe oder nutzen Sie die Suche, um Artikel zu finden.",
     "sidebarHeading": "Kategorien",
     "empty": "Kategorien konnten nicht geladen werden.",
     "allProducts": "Alle Produkte"
@@ -542,35 +543,35 @@
   },
   "about": {
     "eyebrow": "Seit 1987",
-    "heading": "Qualität verbindet.",
-    "subheading": "SWR GmbH ist Ihr 360°-Servicepartner in Lörrach für Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz, mit kompetenter Beratung, schneller Lieferung und Reparaturservice in Deutschland, der Schweiz und Frankreich.",
+    "heading": "SWR Handelsgesellschaft mbH",
+    "subheading": "Industriefachhandel in Lörrach für Schweißtechnik, Werkzeuge, Maschinen und Arbeitsschutz, mit Beratung, Lieferung und Reparaturservice in Deutschland, der Schweiz und Frankreich.",
     "bookConsultation": "Beratung vereinbaren",
-    "explore360": "360°-Service entdecken",
-    "fallbackIntro": "SWR GmbH beliefert seit fast vier Jahrzehnten Industrie und Handwerk im Dreiländereck rund um Lörrach mit hochwertigen Werkzeugen, Schweißtechnik, Maschinen und Arbeitsschutz.",
-    "missionHeading": "Unser Auftrag",
-    "missionBody": "Wir rüsten Werkstätten, Hersteller und Handwerker mit professionellen Produkten aus, und verbinden sie mit den Beratungs-, Reparatur- und Zolldienstleistungen, die den Betrieb am Laufen halten.",
-    "approachHeading": "Unser Ansatz",
-    "approachBody": "Unsere Ingenieure und Anwendungsspezialisten kennen unser Sortiment in- und auswendig. Wir hören zuerst zu und empfehlen dann genau das, was der Auftrag erfordert, ohne unnötiges Up-Selling.",
-    "valuesHeading": "Wofür wir stehen",
+    "explore360": "Services ansehen",
+    "fallbackIntro": "SWR Handelsgesellschaft mbH beliefert Industrie und Handwerk im Dreiländereck rund um Lörrach mit Schweißtechnik, Werkzeugen, Maschinen und Arbeitsschutz.",
+    "missionHeading": "Was wir tun",
+    "missionBody": "Wir liefern professionelle Produkte und ergänzen sie mit Beratung, Reparatur und Zollabwicklung.",
+    "approachHeading": "Wie wir arbeiten",
+    "approachBody": "Wir klären den Bedarf und empfehlen passende Artikel aus unserem Sortiment. Ohne unnötiges Upselling.",
+    "valuesHeading": "Schwerpunkte",
     "values": {
       "qualityTitle": "Markenqualität",
-      "qualityBody": "Wir führen ausschließlich geprüfte Profi-Produkte führender Hersteller. Jeder Artikel entspricht den einschlägigen europäischen Normen.",
-      "service360Title": "360°-Service",
-      "service360Body": "Von Beratung und Lieferung über Vor-Ort-Reparatur bis zur Zollabwicklung, ein Partner für den gesamten Lebenszyklus.",
-      "partnershipTitle": "Langfristige Partnerschaft",
-      "partnershipBody": "Wir bauen Beziehungen auf, die halten. Unsere Kunden bleiben, weil wir Jahr für Jahr liefern, was wir versprechen."
+      "qualityBody": "Wir führen Profi-Produkte etablierter Hersteller für den industriellen und handwerklichen Einsatz.",
+      "service360Title": "Services",
+      "service360Body": "Beratung, Lieferung, Reparatur und Zollabwicklung ergänzen den Produktverkauf.",
+      "partnershipTitle": "Langfristige Zusammenarbeit",
+      "partnershipBody": "Wir arbeiten mit Kunden und Herstellern über längere Zeiträume zusammen."
     },
-    "ctaHeading": "Sprechen wir über Ihr nächstes Projekt.",
-    "ctaBody": "Ob einmaliges Angebot oder langfristige Lieferbeziehung, unsere Spezialisten sind für Sie da."
+    "ctaHeading": "Nächstes Projekt besprechen",
+    "ctaBody": "Für Angebote und technische Fragen erreichen Sie unser Team in Lörrach."
   },
   "contact": {
-    "eyebrow": "Wir sind für Sie da",
-    "heading": "Kontakt aufnehmen",
-    "subheading": "Sprechen Sie mit unserem Team in Lörrach, für Angebote, technische Beratung, Reparaturanfragen oder Zollabwicklung.",
+    "eyebrow": "Lörrach",
+    "heading": "Kontakt",
+    "subheading": "Telefon und E-Mail für Angebote, technische Fragen, Reparaturanfragen und Zollabwicklung.",
     "reachOutHeading": "So erreichen Sie uns",
-    "reachOutBody": "Während der Geschäftszeiten sind Telefon und E-Mail der schnellste Weg zu unserem Team. Bei dringenden Reparaturanfragen rufen Sie uns bitte direkt an.",
+    "reachOutBody": "Während der Geschäftszeiten erreichen Sie uns am schnellsten per Telefon oder E-Mail. Bei dringenden Reparaturanfragen bitte direkt anrufen.",
     "consultationHeading": "Vor-Ort-Beratung",
-    "consultationBody": "Unsere Spezialisten besuchen Kunden im gesamten Dreiländereck. Vereinbaren Sie einen Termin, und wir kommen zu Ihnen.",
+    "consultationBody": "Termine für Beratung vor Ort im Dreiländereck können Sie telefonisch oder per E-Mail vereinbaren.",
     "cardTitle": "SWR Handelsgesellschaft mbH",
     "company": "SWR Handelsgesellschaft mbH",
     "street": "Industriestraße 1",
@@ -969,10 +970,10 @@
   },
   "catalog": {
     "metaTitle": "Dokumentenkatalog, Anleitungen, Datenblätter, Prospekte",
-    "metaDescription": "Hauptkataloge, Bedienungsanleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter für alle Marken in unserem Sortiment. Online lesen, herunterladen oder ausdrucken.",
+    "metaDescription": "Herstellerkataloge, Anleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter für Marken aus unserem Sortiment. Im Browser lesen oder herunterladen.",
     "eyebrow": "Dokumentenbibliothek",
-    "heading": "Der Katalog. Durchsuchbar.",
-    "subheading": "Markenkataloge, Preislisten, Anleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter, für jede Marke aus unserem Sortiment. Im Browser lesen, herunterladen oder ausdrucken.",
+    "heading": "Kataloge, Anleitungen und Datenblätter",
+    "subheading": "Herstellerkataloge, Preislisten, Anleitungen, Datenblätter, Zertifikate und Sicherheitsdatenblätter. Im Browser lesen, herunterladen oder ausdrucken.",
     "searchPlaceholder": "Nach Marke, Produkt oder Stichwort suchen…",
     "resultsCount": "{count} Dokumente",
     "emptyState": "Keine Dokumente entsprechen diesen Filtern.",
@@ -1420,37 +1421,37 @@
     "bookConsultation": "Beratung vereinbaren",
     "requestService": "Service anfragen",
     "hub": {
-      "eyebrow": "360° Service",
-      "heading": "Mehr als ein Produkt.",
-      "subheading": "Beratung, Reparatur, Lieferung und Zollabwicklung, vier Säulen, die Ihren Betrieb am Laufen halten. Ein Partner, ein Ansprechpartner.",
+      "eyebrow": "Services",
+      "heading": "Beratung, Reparatur, Lieferung und Zollabwicklung",
+      "subheading": "Ergänzende Leistungen zu Einkauf und Betrieb. Ein Ansprechpartner in Lörrach.",
       "learnMore": "Mehr erfahren",
       "bookConsultation": "Beratung vereinbaren"
     },
     "consulting": {
       "eyebrow": "Beratung",
-      "title": "Fachkundige Beratung",
-      "shortBody": "Werkzeugauswahl, Prozessoptimierung und technische Anwendungsberatung von Spezialisten, die unseren Katalog in- und auswendig kennen.",
-      "subtitle": "Unsere Ingenieure und Anwendungsspezialisten kommen vor Ort, analysieren Ihre Anforderungen und empfehlen genau das, was der Auftrag erfordert.",
-      "body1": "Die richtige Ausrüstung zu wählen ist selten einfach. Schweißparameter, Werkzeuggeometrie, Sicherheitsvorschriften und die Gesamtbetriebskosten spielen eine Rolle, und eine falsche Entscheidung kann Wochen an Produktion kosten.",
-      "body2": "Unser Team von Anwendungsspezialisten verfügt über jahrzehntelange Erfahrung in Schweißtechnik, Zerspanung und Werkstattausrüstung. Wir besuchen Sie, verstehen Ihren Prozess und empfehlen genau die Ausrüstung, die passt, ohne Up-Selling.",
-      "body3": "Beratung ist für bestehende und potenzielle Kunden immer kostenlos. Wenn Sie unsicher sind, ob ein Produkt für Ihre Anwendung geeignet ist, fragen Sie uns zuerst.",
-      "ctaHeading": "Bereit für ein Gespräch?",
-      "ctaBody": "Vereinbaren Sie eine 30-minütige Beratung und wir kommen zu Ihnen."
+      "title": "Fachberatung",
+      "shortBody": "Unterstützung bei der Auswahl von Werkzeugen, Maschinen und Verbrauchsmaterial.",
+      "subtitle": "Beratung vor Ort und am Telefon zu Sortiment und Anwendung.",
+      "body1": "Die passende Ausrüstung hängt von Anwendung, Normen und Betriebskosten ab. Wir helfen bei der Eingrenzung.",
+      "body2": "Unser Team berät zu Schweißtechnik, Werkzeugen und Werkstattausrüstung und empfiehlt Artikel aus dem Sortiment.",
+      "body3": "Bei Unsicherheit zur Eignung eines Produkts können Sie uns vor der Bestellung fragen.",
+      "ctaHeading": "Beratung anfragen",
+      "ctaBody": "Kontaktieren Sie uns telefonisch oder per E-Mail."
     },
     "repair": {
       "eyebrow": "Reparatur",
-      "title": "Service- und Reparaturportal",
-      "shortBody": "Werkzeuge und Maschinen sind entscheidend für Ihre Produktion. Unser Service-Team übernimmt Reparaturen und Wartung, schnell, zuverlässig, vor Ort.",
-      "subtitle": "In Lörrach abgeben, einsenden oder von uns abholen lassen. Diagnose innerhalb von 24 Stunden, die meisten Reparaturen in 48 wieder einsatzbereit.",
-      "body1": "Stillstand ist teuer. Wenn ein Schweißgerät oder Elektrowerkzeug ausfällt, zählt jede Stunde. Deshalb ist unsere Reparaturwerkstatt ganzjährig besetzt und die meisten Reparaturen sind innerhalb von 48 Stunden erledigt.",
-      "body2": "Wir warten alle großen Marken, Schweißgeräte, Elektrowerkzeuge, Druckluftwerkzeuge und Werkstattmaschinen. Leihgeräte für längere Reparaturen sind verfügbar, damit Ihre Produktion weiterläuft.",
-      "body3": "Wartungsverträge für vorbeugende Instandhaltung sind für Vielnutzer verfügbar. Regelmäßige Inspektion verlängert die Lebensdauer und verhindert ungeplante Ausfälle.",
-      "ctaHeading": "Dringende Reparatur?",
-      "ctaBody": "Rufen Sie uns für eilige Service-Anfragen und Leihgeräte an.",
+      "title": "Service und Reparatur",
+      "shortBody": "Reparatur und Wartung für Werkzeuge und Maschinen aus unserem Sortiment.",
+      "subtitle": "Abgabe in Lörrach, Einsendung oder Absprache zur Abholung.",
+      "body1": "Bei Ausfällen von Schweißgeräten oder Elektrowerkzeugen unterstützen wir mit Diagnose und Reparatur.",
+      "body2": "Wir warten gängige Marken aus Schweißtechnik, Elektrowerkzeugen, Druckluft und Werkstattmaschinen. Leihgeräte sind nach Verfügbarkeit möglich.",
+      "body3": "Für regelmäßige Nutzung können Wartungsintervalle vereinbart werden.",
+      "ctaHeading": "Reparatur anfragen",
+      "ctaBody": "Rufen Sie uns an oder öffnen Sie eine Serviceanfrage im Konto.",
       "categories": {
-        "eyebrow": "Was wir reparieren",
-        "heading": "Sechs Kategorien. Eine Werkstatt.",
-        "subheading": "Werkzeuge, Maschinen oder Werkstattgeräte aus den Marken in unserem Sortiment? Wahrscheinlich servicieren wir es. Klicken Sie auf eine Kategorie, um eine Reparaturanfrage zu starten.",
+        "eyebrow": "Reparaturkategorien",
+        "heading": "Geräte und Maschinen",
+        "subheading": "Wählen Sie eine Kategorie, um eine Reparaturanfrage zu starten.",
         "requestQuote": "Anfrage starten",
         "items": {
           "welding": {
@@ -1537,25 +1538,25 @@
     },
     "delivery": {
       "eyebrow": "Lieferung",
-      "title": "Schnelle Lieferung, eigener Fuhrpark",
-      "shortBody": "Wir liefern mit unserem eigenen Fuhrpark in der Region Lörrach und versenden bundesweit. Same-Day-Versand für Lagerware, bestellt vor 12 Uhr.",
-      "subtitle": "Unser eigener Fuhrpark macht Ihren Zeitplan kalkulierbar. Same-Day-Versand, transparentes Tracking, keine Überraschungen durch Drittanbieter.",
-      "body1": "Wir betreiben einen Fuhrpark mit eigenen Fahrern, die gleichen Menschen, die bei Ihnen abladen, kennen unsere Produkte und können vor Ort Fragen beantworten.",
-      "body2": "Lagerware, bestellt vor 12 Uhr, wird am gleichen Tag versandt. Regionale Lieferungen (Lörrach, Basel, Mülhausen und Umgebung) treffen in der Regel innerhalb von 24 Stunden ein.",
-      "body3": "Bundesweite Sendungen gehen über etablierte Spediteure mit vollständigem Tracking. Für dringende Projekte bieten wir Express-Optionen. Sprechen Sie uns an.",
-      "ctaHeading": "Große Bestellung?",
-      "ctaBody": "Fragen Sie nach festen Lieferfenstern und Sammelversand."
+      "title": "Lieferung und Versand",
+      "shortBody": "Regionale Lieferung um Lörrach sowie Versand deutschlandweit.",
+      "subtitle": "Lieferung in der Region und Versand über etablierte Speditionen.",
+      "body1": "Für die Region Lörrach, Basel und Mulhouse bieten wir Lieferungen nach Absprache an.",
+      "body2": "Deutschlandweite Sendungen gehen über Speditionen mit Sendungsverfolgung.",
+      "body3": "Für größere Projekte können Lieferfenster und Sammelversand besprochen werden.",
+      "ctaHeading": "Lieferung anfragen",
+      "ctaBody": "Fragen Sie uns nach Optionen für Ihre Bestellung."
     },
     "customs": {
       "eyebrow": "Zoll",
-      "title": "Schweiz-Lieferzentrum",
-      "shortBody": "Komplette Zollabwicklung für Schweizer Kunden. Wir erstellen die Papiere, zahlen Abgaben und liefern einsatzbereit über die Grenze.",
-      "subtitle": "Lörrach liegt 10 Minuten von der Schweizer Grenze. Aus dieser Lage machen wir einen echten grenzüberschreitenden Service, AEO-zertifiziert, mehrwertsteuersicher, Lieferung in CHF oder EUR.",
-      "body1": "Grenzüberschreitender Handel umfasst Zolltarifnummern, Präferenznachweise, Vorsteuererstattung und Spedition, jeder Fehler führt zu Verzögerungen oder unerwarteten Kosten.",
-      "body2": "Für Schweizer Kunden erstellen wir alle Zollanmeldungen selbst, zahlen die Abgaben vor und rechnen die Gesamtkosten in CHF oder EUR ab. Ihre Sendung kommt an wie eine Inlandsbestellung.",
-      "body3": "Wir sind AEO (Zugelassener Wirtschaftsbeteiligter) beim deutschen Zoll, was schnellere Abfertigung und weniger Grenzkontrollen bedeutet.",
-      "ctaHeading": "Versand in die Schweiz?",
-      "ctaBody": "Wir erledigen die Papiere. Sie bekommen die Ware.",
+      "title": "Lieferungen in die Schweiz",
+      "shortBody": "Unterstützung bei Lieferungen in die Schweiz und bei der Zollabwicklung.",
+      "subtitle": "Beratung und Abwicklung für grenzüberschreitende Lieferungen.",
+      "body1": "Lieferungen in die Schweiz erfordern korrekte Papiere und Abgaben. Wir unterstützen dabei.",
+      "body2": "Kosten und Abläufe hängen von Ware, Gewicht und Bestimmungsort ab. Details klären wir im Angebot.",
+      "body3": "Bei Fragen zu Verzollung und Dokumentation erreichen Sie unser Team in Lörrach.",
+      "ctaHeading": "Schweiz-Lieferung anfragen",
+      "ctaBody": "Kontaktieren Sie uns mit Lieferadresse und Artikelliste.",
       "facts": {
         "aeo": {
           "value": "AEO-F",

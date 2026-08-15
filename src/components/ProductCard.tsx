@@ -11,9 +11,10 @@ import { getSupportedOptions } from "@/lib/custom-options";
 import { getDisplayShortDescription } from "@/lib/product-display";
 import { getStockStatus, type StockLevel } from "@/lib/stock";
 import { notify } from "@/lib/toast";
-import { useCurrency } from "./CurrencyProvider";
+import { formatErpPrice, mergeErpStock, resolvePriceDisplay } from "@/lib/erp-shared";
 import { useCart } from "./CartProvider";
 import { useCustomerSession } from "./CustomerSessionProvider";
+import { useErpProductState } from "./ErpPricingProvider";
 import WatchlistButton from "./WatchlistButton";
 import StockBadge from "./ui/StockBadge";
 import NoImagePlaceholder from "./ui/NoImagePlaceholder";
@@ -195,7 +196,6 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const shortDescription = getDisplayShortDescription(
     getCustomAttribute(product, "short_description"),
   );
-  const { formatPrice } = useCurrency();
   const { isAuthenticated } = useCustomerSession();
   const { addItem } = useCart();
   const locale = useLocale();
@@ -204,17 +204,38 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
   const [status, setStatus] = useState<AddStatus>("idle");
   const [qty, setQty] = useState(1);
 
-  const stock = getStockStatus(product);
+  const isConfigurable = product.type_id === "configurable";
+  const erpState = useErpProductState(isConfigurable ? "" : product.sku);
+  const erp = erpState.data;
+  const stock = mergeErpStock(getStockStatus(product), erp);
+  const priceDisplay = resolvePriceDisplay(erp, {
+    isAuthenticated,
+    hasEnventaCustomer: !erpState.noCustomer,
+    loading: erpState.loading,
+  });
   const maxQty =
     typeof stock.qty === "number" && stock.qty > 0 ? Math.floor(stock.qty) : null;
-  const canAddToCart = product.price > 0 && stock.level !== "out";
+  const hasErpAmount = priceDisplay.kind === "amount";
+  const canAddToCart =
+    !isConfigurable && hasErpAmount && stock.level !== "out";
   const hasRequiredOptions = getSupportedOptions(product.options).some(
     (option) => option.is_require,
   );
-  const shouldConfigureBeforeAdd = canAddToCart && hasRequiredOptions;
-  const showGuestPriceGate = !isAuthenticated && product.price > 0;
+  const shouldConfigureBeforeAdd =
+    isConfigurable || (canAddToCart && hasRequiredOptions);
+  const showGuestPriceGate = !isConfigurable && priceDisplay.kind === "login";
   const stockLabel = getStockLabel(stock.level, t);
   const watchlistImageUrl = getProductImageUrl(product);
+
+  const priceLabel = isConfigurable
+    ? null
+    : priceDisplay.kind === "amount"
+      ? formatErpPrice(priceDisplay.net, priceDisplay.currency, locale)
+      : priceDisplay.kind === "loading"
+        ? t("priceLoading")
+        : priceDisplay.kind === "login"
+          ? null
+          : t("priceOnRequest");
 
   function updateQty(next: number) {
     const clamped = Math.max(1, Math.min(maxQty ?? 9999, Math.floor(next)));
@@ -299,7 +320,11 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
 
       <div className="relative z-2 mt-auto border-t border-outline-variant/15 bg-surface-container-low px-4 py-3">
         <div className="mb-2.5 min-h-5.5">
-          {showGuestPriceGate ? (
+          {isConfigurable ? (
+            <span className="text-sm text-on-surface-variant">
+              {t("selectOptions")}
+            </span>
+          ) : showGuestPriceGate ? (
             <p className="relative z-2 text-xs text-on-surface-variant">
               {t("pricesLoginRequired")}{" "}
               <Link
@@ -311,73 +336,69 @@ export default function ProductCard({ product, priorityImage }: ProductCardProps
             </p>
           ) : (
             <span className="text-base font-bold tabular-nums text-primary">
-              {product.price > 0
-                ? formatPrice(product.price, locale)
-                : t("priceOnRequest")}
+              {priceLabel}
             </span>
           )}
         </div>
 
-        {canAddToCart ? (
-          shouldConfigureBeforeAdd ? (
-            <Link
-              href={href}
-              className="inline-flex h-9 w-full items-center justify-center rounded-(--radius-btn) bg-secondary px-2 text-xs font-bold tracking-wide text-white transition-all hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+        {isConfigurable || shouldConfigureBeforeAdd ? (
+          <Link
+            href={href}
+            className="inline-flex h-9 w-full items-center justify-center rounded-(--radius-btn) bg-secondary px-2 text-xs font-bold tracking-wide text-white transition-all hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+          >
+            <span className="truncate">{t("selectOptions")}</span>
+          </Link>
+        ) : canAddToCart ? (
+          <div className="flex items-stretch gap-2">
+            <div
+              className="inline-flex h-9 min-w-0 shrink-0 items-center rounded-(--radius-btn) bg-surface-container-lowest"
+              onClick={(e) => e.stopPropagation()}
             >
-              <span className="truncate">{t("selectOptions")}</span>
-            </Link>
-          ) : (
-            <div className="flex items-stretch gap-2">
-              <div
-                className="inline-flex h-9 min-w-0 shrink-0 items-center rounded-(--radius-btn) bg-surface-container-lowest"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  type="button"
-                  onClick={() => updateQty(qty - 1)}
-                  disabled={qty <= 1 || status === "loading"}
-                  aria-label={t("decreaseQuantity")}
-                  className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  min={1}
-                  max={maxQty ?? undefined}
-                  value={qty}
-                  onChange={(e) => updateQty(Number(e.target.value))}
-                  disabled={status === "loading"}
-                  aria-label={t("quantity")}
-                  className="h-9 w-9 min-w-0 bg-transparent text-center text-xs font-bold tabular-nums text-on-surface outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => updateQty(qty + 1)}
-                  disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
-                  aria-label={t("increaseQuantity")}
-                  className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
-                >
-                  +
-                </button>
-              </div>
               <button
                 type="button"
-                onClick={handleAdd}
-                disabled={status === "loading"}
-                className={`inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) px-2 text-xs font-bold tracking-wide text-white transition-all disabled:cursor-not-allowed ${
-                  status === "success"
-                    ? "bg-green-600"
-                    : status === "error"
-                      ? "bg-red-600"
-                      : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
-                }`}
+                onClick={() => updateQty(qty - 1)}
+                disabled={qty <= 1 || status === "loading"}
+                aria-label={t("decreaseQuantity")}
+                className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
               >
-                <AddToCartIcon status={status} />
-                <span className="truncate">{t("addToCart")}</span>
+                -
+              </button>
+              <input
+                type="number"
+                min={1}
+                max={maxQty ?? undefined}
+                value={qty}
+                onChange={(e) => updateQty(Number(e.target.value))}
+                disabled={status === "loading"}
+                aria-label={t("quantity")}
+                className="h-9 w-9 min-w-0 bg-transparent text-center text-xs font-bold tabular-nums text-on-surface outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => updateQty(qty + 1)}
+                disabled={(maxQty !== null && qty >= maxQty) || status === "loading"}
+                aria-label={t("increaseQuantity")}
+                className="flex h-9 w-8 shrink-0 items-center justify-center text-sm font-semibold text-primary disabled:opacity-40"
+              >
+                +
               </button>
             </div>
-          )
+            <button
+              type="button"
+              onClick={handleAdd}
+              disabled={status === "loading"}
+              className={`inline-flex h-9 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) px-2 text-xs font-bold tracking-wide text-white transition-all disabled:cursor-not-allowed ${
+                status === "success"
+                  ? "bg-green-600"
+                  : status === "error"
+                    ? "bg-red-600"
+                    : "bg-secondary hover:brightness-110 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]"
+              }`}
+            >
+              <AddToCartIcon status={status} />
+              <span className="truncate">{t("addToCart")}</span>
+            </button>
+          </div>
         ) : (
           <WatchlistButton
             variant="full"

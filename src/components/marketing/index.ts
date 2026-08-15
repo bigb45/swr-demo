@@ -1,4 +1,6 @@
 export { default as Hero } from "./Hero";
+export { default as HeroEntryPanel } from "./HeroEntryPanel";
+export type { HeroEntryItem } from "./HeroEntryPanel";
 export { default as IndustryHero } from "./IndustryHero";
 export { default as Cta } from "./Cta";
 export { default as FeatureGrid } from "./FeatureGrid";

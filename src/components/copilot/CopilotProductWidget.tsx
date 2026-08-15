@@ -5,8 +5,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { StockLevel } from "@/lib/stock";
+import {
+  formatErpPrice,
+  mergeErpStock,
+  resolvePriceDisplay,
+  type ErpSkuData,
+} from "@/lib/erp-shared";
 import { useCart } from "@/components/CartProvider";
-import { useCurrency } from "@/components/CurrencyProvider";
 import { useCustomerSession } from "@/components/CustomerSessionProvider";
 import StockBadge from "@/components/ui/StockBadge";
 import ProductCustomOptions from "@/components/ui/ProductCustomOptions";
@@ -23,53 +28,41 @@ interface CopilotProductDto {
   sku: string;
   name: string;
   price: number;
+  typeId?: string;
   imageUrl: string | null;
   stockLevel: StockLevel;
   options?: MagentoProductOption[];
-  erpPriceGross?: number | null;
-  erpPriceCurrency?: string | null;
+  netAmount?: number | null;
+  currency?: string | null;
   erpStockAvailable?: boolean | null;
+  erpStockQty?: number | null;
 }
 
 type LoadState = "loading" | "ready" | "error";
 type AddStatus = "idle" | "loading" | "success" | "error";
 
-function formatErpPrice(
-  amount: number,
-  currency: string,
-  locale: string,
-): string {
-  try {
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency,
-    }).format(amount);
-  } catch {
-    return `${amount.toFixed(2)} ${currency}`;
-  }
-}
-
-function effectiveStockLevel(product: CopilotProductDto): StockLevel {
-  if (product.erpStockAvailable === true) return "in";
-  if (product.erpStockAvailable === false) return "out";
-  return product.stockLevel;
-}
-
-function effectivePrice(product: CopilotProductDto): number {
+function toErpData(product: CopilotProductDto): ErpSkuData | null {
   if (
-    product.erpPriceGross != null &&
-    Number.isFinite(product.erpPriceGross)
+    product.netAmount == null &&
+    product.erpStockAvailable == null &&
+    product.erpStockQty == null
   ) {
-    return product.erpPriceGross;
+    return null;
   }
-  return product.price;
+  return {
+    netAmount: product.netAmount ?? null,
+    grossAmount: null,
+    currency: product.currency ?? null,
+    quantityUnit: null,
+    erpStockAvailable: product.erpStockAvailable ?? null,
+    erpStockQty: product.erpStockQty ?? null,
+  };
 }
 
 export default function CopilotProductWidget({ sku }: { sku: string }) {
   const tc = useTranslations("copilot");
   const tp = useTranslations("products");
   const locale = useLocale();
-  const { formatPrice } = useCurrency();
   const { addBySku } = useCart();
   const { isAuthenticated } = useCustomerSession();
   const [state, setState] = useState<LoadState>("loading");
@@ -89,7 +82,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
       try {
         const res = await fetch(
           `/api/copilot/product?sku=${encodeURIComponent(sku)}`,
-          { cache: "no-store" },
+          { cache: "no-store", credentials: "same-origin" },
         );
         if (!res.ok) {
           if (process.env.NODE_ENV === "development") {
@@ -144,9 +137,13 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
 
   const handleAdd = useCallback(async () => {
     if (!product) return;
-    const price = effectivePrice(product);
-    const stockLevel = effectiveStockLevel(product);
-    if (price <= 0 || stockLevel === "out") return;
+    const erp = toErpData(product);
+    const priceDisplay = resolvePriceDisplay(erp, { isAuthenticated });
+    const stock = mergeErpStock(
+      { level: product.stockLevel, qty: product.erpStockQty ?? null },
+      erp,
+    );
+    if (priceDisplay.kind !== "amount" || stock.level === "out") return;
     if (addStatus === "loading") return;
 
     if (hasOptions && !optionsOpen) {
@@ -179,7 +176,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
       await addBySku(
         product.sku,
         qty,
-        customOptions.length > 0 ? customOptions : undefined,
+        customOptions.length > 0 ? { customOptions } : undefined,
       );
       setAddStatus("success");
       notify.success(tc("addToCartSuccess"));
@@ -197,6 +194,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
     hasOptions,
     optionsOpen,
     optionSelection,
+    isAuthenticated,
     tc,
   ]);
 
@@ -217,30 +215,39 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
   }
 
   const href = `/products/${encodeURIComponent(product.sku)}`;
-  const stockLevel = effectiveStockLevel(product);
-  const displayPrice = effectivePrice(product);
-  const hasErpPrice =
-    product.erpPriceGross != null && Number.isFinite(product.erpPriceGross);
-  // No badge is rendered for "unknown" stock — never claim availability.
+  const erp = toErpData(product);
+  const priceDisplay = resolvePriceDisplay(erp, { isAuthenticated });
+  const stock = mergeErpStock(
+    { level: product.stockLevel, qty: product.erpStockQty ?? null },
+    erp,
+  );
+  const isConfigurable = product.typeId === "configurable";
+  const stockLevel = stock.level;
   const stockLabel =
     stockLevel !== "unknown"
       ? getStockLabel(stockLevel, (key) =>
           tp(key as "inStock" | "lowStock" | "outOfStock"),
         )
       : null;
-  const showCatalogPrice =
-    isAuthenticated || displayPrice <= 0 || hasErpPrice;
-  const showAddToCart = stockLevel !== "out" && displayPrice > 0;
+  const showAddToCart =
+    !isConfigurable && stockLevel !== "out" && priceDisplay.kind === "amount";
 
   const priceNode = (() => {
-    if (hasErpPrice && product.erpPriceGross != null) {
+    if (isConfigurable) {
+      return (
+        <span className="text-sm font-normal text-on-surface-variant">
+          {tp("selectOptions")}
+        </span>
+      );
+    }
+    if (priceDisplay.kind === "amount") {
       return formatErpPrice(
-        product.erpPriceGross,
-        product.erpPriceCurrency?.trim() || "EUR",
+        priceDisplay.net,
+        priceDisplay.currency,
         locale,
       );
     }
-    if (!showCatalogPrice && product.price > 0) {
+    if (priceDisplay.kind === "login") {
       return (
         <span className="text-sm font-normal text-on-surface-variant">
           {tp("pricesLoginRequired")}{" "}
@@ -252,9 +259,6 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
           </Link>
         </span>
       );
-    }
-    if (product.price > 0) {
-      return formatPrice(product.price, locale);
     }
     return tp("priceOnRequest");
   })();
@@ -324,10 +328,20 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
                 value={optionSelection}
                 onChange={handleOptionChange}
                 missingOptionIds={missingOptionIds}
-                hidePrices={!showCatalogPrice}
+                hidePrices={priceDisplay.kind !== "amount"}
               />
             </div>
           ) : null}
+          {isConfigurable ? (
+            <div className="border-t border-outline-variant/25 pt-2">
+              <Link
+                href={href}
+                className="inline-flex h-9 w-full items-center justify-center rounded-[var(--radius-btn)] bg-secondary px-3 text-xs font-bold tracking-wide text-white transition-all hover:brightness-110"
+              >
+                {tp("selectOptions")}
+              </Link>
+            </div>
+          ) : (
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-outline-variant/25 pt-2">
             <div className="flex items-center rounded-[var(--radius-btn)] border border-outline-variant bg-surface-container-lowest">
               <button
@@ -369,6 +383,7 @@ export default function CopilotProductWidget({ sku }: { sku: string }) {
               </button>
             )}
           </div>
+          )}
         </div>
       </div>
     </div>

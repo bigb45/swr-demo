@@ -11,15 +11,12 @@ import type {
   MagentoProductListWithAggregations,
 } from "@/types/magento";
 
+import type { ErpSkuData } from "@/lib/erp-shared";
+
+export type { ErpSkuData } from "@/lib/erp-shared";
+
 /** Customer custom attribute that maps Magento customers to enventa ERP. */
 const ENVENTA_CUSTOMER_ID_ATTRIBUTE = "enventa_customer_id";
-
-/** Parsed ERP price/stock for Copilot (and similar) product cards. */
-export interface ErpSkuData {
-  erpPriceGross: number | null;
-  erpPriceCurrency: string | null;
-  erpStockAvailable: boolean | null;
-}
 
 /** Busts `unstable_cache` for the admin token after a 401 from Magento. */
 const ADMIN_TOKEN_CACHE_TAG = "magento-admin-token";
@@ -260,19 +257,43 @@ async function magentoPost<T>(
   return res.json() as Promise<T>;
 }
 
+/**
+ * Magento visibility: Catalog, Search. Variant children are "Not Visible
+ * Individually" (1) and must stay out of list/search while remaining
+ * reachable via configurable children / GET by SKU on the PDP.
+ */
+export const MAGENTO_VISIBILITY_CATALOG_SEARCH = 4;
+
+/** Append a visibility=4 filter group at the next free index. */
+function appendCatalogVisibilityFilter(
+  params: URLSearchParams,
+  groupIndex: number,
+): void {
+  const prefix = `searchCriteria[filter_groups][${groupIndex}][filters][0]`;
+  params.set(`${prefix}[field]`, "visibility");
+  params.set(`${prefix}[value]`, String(MAGENTO_VISIBILITY_CATALOG_SEARCH));
+  params.set(`${prefix}[condition_type]`, "eq");
+}
+
 export async function getProducts(pageSize = 8): Promise<MagentoProductList> {
-  return magentoGet<MagentoProductList>(
-    `/products?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=1`
-  );
+  const params = new URLSearchParams({
+    "searchCriteria[pageSize]": String(pageSize),
+    "searchCriteria[currentPage]": "1",
+  });
+  appendCatalogVisibilityFilter(params, 0);
+  return magentoGet<MagentoProductList>(`/products?${params.toString()}`);
 }
 
 export async function getProductsPaginated(
   page = 1,
   pageSize = 20
 ): Promise<MagentoProductList> {
-  return magentoGet<MagentoProductList>(
-    `/products?searchCriteria[pageSize]=${pageSize}&searchCriteria[currentPage]=${page}`
-  );
+  const params = new URLSearchParams({
+    "searchCriteria[pageSize]": String(pageSize),
+    "searchCriteria[currentPage]": String(page),
+  });
+  appendCatalogVisibilityFilter(params, 0);
+  return magentoGet<MagentoProductList>(`/products?${params.toString()}`);
 }
 
 export async function getProductBySku(sku: string): Promise<MagentoProduct> {
@@ -332,6 +353,28 @@ export async function resolveMagentoProductBySkuFlexible(
   }
 }
 
+/**
+ * Enabled child SKUs of a configurable parent. Returns `[]` on any failure —
+ * callers treat an empty list as "no variant data available".
+ */
+export async function getConfigurableChildSkus(
+  parentSku: string,
+): Promise<string[]> {
+  const trimmed = parentSku.trim();
+  if (!trimmed) return [];
+  try {
+    const children = await magentoGet<MagentoProduct[]>(
+      `/configurable-products/${encodeURIComponent(trimmed)}/children`,
+      false,
+    );
+    return children
+      .filter((c) => c?.sku && (c.status == null || c.status === 1))
+      .map((c) => c.sku);
+  } catch {
+    return [];
+  }
+}
+
 export async function getCategoryTree(
   storeCode?: string,
 ): Promise<MagentoCategoryTree> {
@@ -387,6 +430,7 @@ export async function listProductSkusForSitemap(
     "searchCriteria[currentPage]": "1",
     fields: "items[sku],total_count",
   });
+  appendCatalogVisibilityFilter(params, 0);
   const list = await magentoGet<{ items?: Array<{ sku: string }> }>(
     `/products?${params.toString()}`,
     300,
@@ -548,6 +592,7 @@ export async function getProductsByCategory(
     "searchCriteria[currentPage]": String(page),
     "searchCriteria[pageSize]": String(pageSize),
   });
+  appendCatalogVisibilityFilter(params, 1);
   return magentoGet<MagentoProductList>(`/products?${params.toString()}`);
 }
 
@@ -704,6 +749,17 @@ function buildMagentoSearchCriteriaBody(
       });
     }
   }
+
+  // Exclude Not Visible Individually (variant children) from search facets.
+  filterGroups.push({
+    filters: [
+      {
+        field: "visibility",
+        value: String(MAGENTO_VISIBILITY_CATALOG_SEARCH),
+        conditionType: "eq",
+      },
+    ],
+  });
 
   return {
     requestName: filters.q?.trim()
@@ -911,6 +967,11 @@ export async function getFilteredProducts(
     }
   }
 
+  // Always exclude Magento "Not Visible Individually" (variant children).
+  // Parents / standalones are visibility 4; children stay reachable on PDP
+  // via configurable-products children + GET /products/{sku}.
+  addFilter("visibility", String(MAGENTO_VISIBILITY_CATALOG_SEARCH), "eq");
+
   params.set("searchCriteria[currentPage]", String(page));
   params.set("searchCriteria[pageSize]", String(pageSize));
 
@@ -925,6 +986,17 @@ export async function getFilteredProducts(
  * Resolve a Magento customer id to their enventa ERP customer id.
  * Returns null on any failure or when the attribute is missing — never throws.
  */
+export function enventaIdFromCustomerAttrs(
+  customer: Pick<MagentoCustomerMe, "custom_attributes"> | null | undefined,
+): string | null {
+  const raw = customer?.custom_attributes?.find(
+    (a) => a.attribute_code === ENVENTA_CUSTOMER_ID_ATTRIBUTE,
+  )?.value;
+  if (raw == null) return null;
+  const trimmed = String(Array.isArray(raw) ? raw[0] : raw).trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export async function fetchEnventaCustomerId(
   customerId: number,
 ): Promise<string | null> {
@@ -934,28 +1006,101 @@ export async function fetchEnventaCustomerId(
       `/customers/${customerId}`,
       false,
     );
-    const raw = customer.custom_attributes?.find(
-      (a) => a.attribute_code === ENVENTA_CUSTOMER_ID_ATTRIBUTE,
-    )?.value;
-    if (raw == null) return null;
-    const trimmed = String(raw).trim();
-    return trimmed.length > 0 ? trimmed : null;
+    return enventaIdFromCustomerAttrs(customer);
   } catch {
     return null;
   }
 }
 
-function parseErpStock(value: unknown): boolean | null {
-  if (typeof value === "boolean") return value;
-  if (typeof value === "number" && Number.isFinite(value)) return value > 0;
-  if (typeof value === "string") {
-    const normalized = value.trim().toLowerCase();
-    if (normalized === "true" || normalized === "1") return true;
-    if (normalized === "false" || normalized === "0") return false;
-    const asNum = Number(normalized);
-    if (Number.isFinite(asNum)) return asNum > 0;
+function asFiniteNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.trim().length > 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
   }
   return null;
+}
+
+function asOptionalString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+/**
+ * Parse Magento `extension_attributes.unified_catalog_data` into ErpSkuData.
+ * Gates price on `erp_price.net_amount != null` — the erp_price object can be
+ * non-null with all-null amounts when the customer exists but enventa has no
+ * price for the article.
+ */
+function parseUnifiedCatalogData(raw: unknown): ErpSkuData | null {
+  let unified: Record<string, unknown> | null = null;
+  if (typeof raw === "string") {
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        unified = parsed as Record<string, unknown>;
+      }
+    } catch {
+      return null;
+    }
+  } else if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    unified = raw as Record<string, unknown>;
+  }
+  if (!unified) return null;
+
+  const priceObj =
+    unified.erp_price &&
+    typeof unified.erp_price === "object" &&
+    !Array.isArray(unified.erp_price)
+      ? (unified.erp_price as Record<string, unknown>)
+      : null;
+
+  const netAmount = priceObj ? asFiniteNumber(priceObj.net_amount) : null;
+  const grossAmount = priceObj ? asFiniteNumber(priceObj.gross_amount) : null;
+  const currencyRaw = priceObj ? asOptionalString(priceObj.currency) : null;
+  const quantityUnit = priceObj
+    ? asOptionalString(priceObj.quantity_unit)
+    : null;
+  const currency =
+    currencyRaw?.toUpperCase() ?? (netAmount != null ? "EUR" : null);
+
+  const stockObj =
+    unified.erp_stock &&
+    typeof unified.erp_stock === "object" &&
+    !Array.isArray(unified.erp_stock)
+      ? (unified.erp_stock as Record<string, unknown>)
+      : null;
+
+  const qtyAvailable = stockObj
+    ? asFiniteNumber(stockObj.quantity_available)
+    : null;
+  const qtyLevel = stockObj
+    ? asFiniteNumber(stockObj.quantity_stock_level)
+    : null;
+  const erpStockQty = qtyAvailable ?? qtyLevel;
+  const erpStockAvailable =
+    erpStockQty != null ? erpStockQty > 0 : null;
+
+  if (
+    netAmount == null &&
+    grossAmount == null &&
+    currency == null &&
+    quantityUnit == null &&
+    erpStockAvailable == null &&
+    erpStockQty == null
+  ) {
+    return null;
+  }
+
+  return {
+    netAmount,
+    grossAmount,
+    currency,
+    quantityUnit,
+    erpStockAvailable,
+    erpStockQty,
+  };
 }
 
 /**
@@ -1009,42 +1154,20 @@ export async function fetchErpDataForSku(
 
     if (!res.ok) return null;
 
-    const product = (await res.json()) as MagentoProduct;
-    const unified = product.extension_attributes?.unified_catalog_data;
-    if (!unified) return null;
-
-    const priceRaw = unified.erp_price;
-    const priceNum =
-      typeof priceRaw === "number"
-        ? priceRaw
-        : typeof priceRaw === "string"
-          ? Number(priceRaw)
-          : NaN;
-    const erpPriceGross = Number.isFinite(priceNum) ? priceNum : null;
-
-    const erpStockAvailable = parseErpStock(unified.erp_stock);
-
-    const currencyRaw = unified.erp_currency;
-    const erpPriceCurrency =
-      typeof currencyRaw === "string" && currencyRaw.trim().length > 0
-        ? currencyRaw.trim().toUpperCase()
-        : erpPriceGross != null
-          ? "EUR"
-          : null;
-
-    if (
-      erpPriceGross == null &&
-      erpStockAvailable == null &&
-      erpPriceCurrency == null
-    ) {
-      return null;
-    }
-
-    return {
-      erpPriceGross,
-      erpPriceCurrency,
-      erpStockAvailable,
+    const product = (await res.json()) as MagentoProduct & {
+      custom_attributes?: Array<{ attribute_code: string; value: unknown }>;
     };
+
+    const fromExt = parseUnifiedCatalogData(
+      product.extension_attributes?.unified_catalog_data,
+    );
+    if (fromExt) return fromExt;
+
+    // Some Magento builds expose the payload as a custom attribute JSON blob.
+    const attrRaw = product.custom_attributes?.find(
+      (a) => a.attribute_code === "unified_catalog_data",
+    )?.value;
+    return parseUnifiedCatalogData(attrRaw);
   } catch {
     return null;
   }
