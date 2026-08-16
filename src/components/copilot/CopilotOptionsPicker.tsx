@@ -14,7 +14,7 @@ import {
 import { resolveOptionsRequestSku } from "@/lib/copilot-stream";
 import { notify } from "@/lib/toast";
 import type { MagentoProductOption } from "@/types/magento";
-import type { CopilotOptionsRequest } from "./types";
+import type { CopilotOptionsRequest, CopilotOptionGroup } from "./types";
 
 type AddStatus = "idle" | "loading" | "success" | "error";
 
@@ -214,6 +214,90 @@ function CopilotOptionsPickerNoSku({
   );
 }
 
+/**
+ * Configurable-variant picker (Teia option_id "variant"): each value_id is a
+ * concrete CHILD SKU. Renders the variants as buttons; clicking one adds THAT
+ * exact child — never a parent or harvested SKU.
+ */
+function CopilotVariantPicker({
+  request,
+  group,
+  disabled,
+}: {
+  request: CopilotOptionsRequest;
+  group: CopilotOptionGroup;
+  disabled: boolean;
+}) {
+  const t = useTranslations("copilot");
+  const reduce = useReducedMotion();
+  const { addBySku } = useCart();
+  const [addingId, setAddingId] = useState<string | null>(null);
+  const [addedId, setAddedId] = useState<string | null>(null);
+
+  const handlePick = async (valueId: string) => {
+    if (disabled || addingId) return;
+    setAddingId(valueId);
+    try {
+      // valueId IS the chosen child variant SKU — add THAT exact product.
+      // No parent/harvested-SKU fallback: the shopper's explicit choice is the
+      // only add-target.
+      await addBySku(valueId, 1);
+      setAddedId(valueId);
+      notify.success(t("addToCartSuccess"));
+      window.setTimeout(() => setAddedId(null), 1600);
+    } catch {
+      notify.error(t("addToCartFailed"));
+    } finally {
+      setAddingId(null);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      className="mt-2 rounded-card bg-surface-container-lowest p-3 shadow-(--shadow-ambient)"
+      aria-disabled={disabled}
+    >
+      <div className="mb-2 flex flex-col gap-0.5">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-on-surface-variant">
+          {group.title || t("optionsConfigureLabel")}
+        </span>
+        {request.productName ? (
+          <span className="text-sm font-semibold leading-snug text-on-surface">
+            {request.productName}
+          </span>
+        ) : null}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {group.values.map((v) => {
+          const busy = addingId === v.valueId;
+          const done = addedId === v.valueId;
+          return (
+            <button
+              key={v.valueId}
+              type="button"
+              disabled={disabled || addingId !== null}
+              onClick={() => handlePick(v.valueId)}
+              className="flex items-center justify-between gap-2 rounded-[3px] bg-surface-container-low px-3 py-2 text-left text-sm text-on-surface transition-colors hover:bg-surface-container-highest disabled:opacity-60"
+            >
+              <span className="truncate">{v.label}</span>
+              <span className="shrink-0 text-xs text-on-surface-variant">
+                {done
+                  ? t("addToCartSuccess")
+                  : busy
+                    ? t("optionsSubmitting")
+                    : v.price || null}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function CopilotOptionsPicker({
   request,
   disabled,
@@ -224,6 +308,23 @@ export default function CopilotOptionsPicker({
   /** Same-turn product cards; used to recover SKU when Teia omitted it. */
   widgetSkus?: string[];
 }) {
+  // Configurable-variant picker: Teia marks the group option_id "variant" and
+  // each value_id is a concrete child SKU. Render it directly (add the chosen
+  // child). This fires ONLY for option_id === "variant" and never touches the
+  // pre-existing custom-options Direct/NoSku flow below.
+  const variantGroup = request.options.find(
+    (o) => o.optionId === "variant" && o.values.length > 0,
+  );
+  if (variantGroup) {
+    return (
+      <CopilotVariantPicker
+        request={request}
+        group={variantGroup}
+        disabled={disabled}
+      />
+    );
+  }
+
   const resolved = resolveOptionsRequestSku(request, widgetSkus);
 
   if (resolved.sku) {
