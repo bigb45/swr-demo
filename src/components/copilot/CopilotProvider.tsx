@@ -354,7 +354,17 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
       const text =
         structured?.message?.trim() || displayText.trim() || finalText.trim();
 
-      let widgetSkus = structuredSkus.length > 0 ? structuredSkus : skus;
+      // A needs_options reply must render ONLY the variant picker — never a
+      // product card. widgetSkus here comes from prose-harvested "SKU X"
+      // mentions (parseCopilotAssistantMessage), which for a configurable is the
+      // PARENT SKU; that card 404s ("could not be loaded"). Suppress widgetSkus
+      // on the options path (structuredSkus is already [] for needs_options).
+      // Strictly scoped to optionsRequest — other response types are unaffected.
+      let widgetSkus = optionsRequest
+        ? []
+        : structuredSkus.length > 0
+          ? structuredSkus
+          : skus;
       let usedFallback = false;
       // A required-options gate or an order-history reply carries no products;
       // never pad it with a fallback catalog search — the shopper is not asking
@@ -610,8 +620,13 @@ export function CopilotProvider({ children }: { children: ReactNode }) {
               throw new Error(t("emptyReply"));
             }
             const parsed = parseCopilotAssistantMessage(reply.trim());
-            let widgetSkus =
-              structuredSkus.length > 0 ? structuredSkus : parsed.skus;
+            // Same guard as the streaming path: a needs_options reply renders
+            // only the picker, never a prose-harvested (parent) product card.
+            let widgetSkus = optionsRequest
+              ? []
+              : structuredSkus.length > 0
+                ? structuredSkus
+                : parsed.skus;
             let usedFallback = false;
             if (
               !optionsRequest &&
