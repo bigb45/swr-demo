@@ -22,7 +22,8 @@ import { toShopCategoryNavItems } from "@/lib/shop-categories";
 
 export const revalidate = 60;
 
-const PAGE_SIZE = 20;
+// Divisible by 1/2/3/4 so the auto-fill grid never ends in a partial row
+const PAGE_SIZE = 24;
 
 interface ProductsPageProps {
   params: Promise<{ locale: string }>;

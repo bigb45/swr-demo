@@ -309,6 +309,8 @@
     "addToCart": "In den Warenkorb",
     "selectOptions": "Optionen auswählen",
     "variantChoose": "{label} wählen…",
+    "variantCombinedLabel": "Ausführung",
+    "variantChooseCombined": "Ausführung wählen…",
     "variantUnavailable": "nicht verfügbar",
     "variantSelectForPrice": "Optionen wählen, um Ihren Preis zu sehen",
     "variantIncomplete": "Bitte alle Optionen auswählen.",

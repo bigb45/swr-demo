@@ -2,9 +2,12 @@
 
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
-import type {
-  ConfigurableOption,
-  ConfigurableVariant,
+import {
+  buildCombinedChoices,
+  findVariantSku,
+  shouldCollapseOptions,
+  type ConfigurableOption,
+  type ConfigurableVariant,
 } from "@/lib/configurable-shared";
 
 export type VariantSelection = Record<string, number>;
@@ -59,6 +62,11 @@ export default function VariantPicker({
     return map;
   }, [options, variants, selection]);
 
+  const collapsed = useMemo(() => {
+    if (!shouldCollapseOptions(options, variants)) return null;
+    return buildCombinedChoices(options, variants);
+  }, [options, variants]);
+
   function handleSelect(attributeCode: string, raw: string) {
     if (!raw) {
       const next = { ...selection };
@@ -69,6 +77,45 @@ export default function VariantPicker({
     const valueIndex = Number(raw);
     if (!Number.isFinite(valueIndex)) return;
     onChange({ ...selection, [attributeCode]: valueIndex });
+  }
+
+  function handleCombinedSelect(raw: string) {
+    if (!raw || !collapsed) {
+      onChange({});
+      return;
+    }
+    const choice = collapsed.find((c) => c.sku === raw);
+    onChange(choice ? choice.selection : {});
+  }
+
+  if (collapsed && collapsed.length > 0) {
+    const currentSku = findVariantSku(variants, selection);
+    const selectId = "variant-combined";
+    return (
+      <div className="flex flex-col gap-3" aria-busy={busy || undefined}>
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor={selectId}
+            className="text-xs font-semibold uppercase tracking-[0.05em] text-on-surface-variant"
+          >
+            {t("variantCombinedLabel")}
+          </label>
+          <select
+            id={selectId}
+            value={currentSku ?? ""}
+            onChange={(e) => handleCombinedSelect(e.target.value)}
+            className="h-10 w-full rounded-(--radius-btn) border border-outline-variant/40 bg-surface-container-lowest px-3 text-sm text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <option value="">{t("variantChooseCombined")}</option>
+            {collapsed.map((c) => (
+              <option key={c.sku} value={c.sku}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    );
   }
 
   return (

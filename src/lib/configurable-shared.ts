@@ -64,3 +64,73 @@ export function findVariant(
   if (!sku) return null;
   return variants.find((v) => v.sku === sku) ?? null;
 }
+
+/**
+ * True when attributes are perfectly correlated: every multi-value option
+ * has exactly as many values as there are variants, so each value identifies
+ * one variant. In that case the UI can collapse to a single dropdown.
+ */
+export function shouldCollapseOptions(
+  options: ConfigurableOption[],
+  variants: ConfigurableVariant[],
+): boolean {
+  if (options.length < 2 || variants.length < 2) return false;
+  const choiceOptions = options.filter((o) => o.values.length > 1);
+  if (choiceOptions.length < 2) return false;
+  return choiceOptions.every((o) => o.values.length === variants.length);
+}
+
+/** One row in a collapsed combined-variant dropdown. */
+export interface CombinedVariantChoice {
+  sku: string;
+  label: string;
+  selection: Record<string, number>;
+}
+
+/**
+ * Build dropdown rows for collapsed mode: each variant becomes one choice
+ * labelled with all option/value pairs (e.g. "Height 1 · Width 3").
+ */
+export function buildCombinedChoices(
+  options: ConfigurableOption[],
+  variants: ConfigurableVariant[],
+): CombinedVariantChoice[] {
+  const firstChoice = options.find((o) => o.values.length > 1);
+  const sortOrder = new Map<number, number>();
+  if (firstChoice) {
+    firstChoice.values.forEach((v, i) => {
+      sortOrder.set(v.valueIndex, i);
+    });
+  }
+
+  const choices: CombinedVariantChoice[] = [];
+  for (const v of variants) {
+    const selection = { ...v.attributes };
+    if (findVariantSku(variants, selection) !== v.sku) continue;
+
+    const label = options
+      .map((o) => {
+        const value = o.values.find(
+          (x) => x.valueIndex === v.attributes[o.attributeCode],
+        );
+        return value ? `${o.label} ${value.label}` : null;
+      })
+      .filter((part): part is string => part != null)
+      .join(" · ");
+
+    if (!label) continue;
+    choices.push({ sku: v.sku, label, selection });
+  }
+
+  if (firstChoice) {
+    choices.sort((a, b) => {
+      const aIdx =
+        sortOrder.get(a.selection[firstChoice.attributeCode]!) ?? 999;
+      const bIdx =
+        sortOrder.get(b.selection[firstChoice.attributeCode]!) ?? 999;
+      return aIdx - bIdx;
+    });
+  }
+
+  return choices;
+}

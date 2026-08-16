@@ -309,6 +309,8 @@
     "addToCart": "Ajouter au panier",
     "selectOptions": "Choisir les options",
     "variantChoose": "Choisir {label}…",
+    "variantCombinedLabel": "Configuration",
+    "variantChooseCombined": "Choisir la configuration…",
     "variantUnavailable": "indisponible",
     "variantSelectForPrice": "Sélectionnez les options pour voir votre prix",
     "variantIncomplete": "Veuillez sélectionner toutes les options.",
